@@ -430,7 +430,7 @@
     }
     .notice-close:hover{ color:var(--primary); }
 
-    /* --- Accordion --- */
+    /* --- Accordion (Details/Summary) --- */
     summary.section-title {
       display: flex;
       justify-content: space-between;
@@ -463,7 +463,9 @@
       overflow: hidden;
       transition: grid-template-rows 0.3s ease-out;
     }
+    /* 애니메이션 핵심: details가 열려있고 closing 클래스가 없을 때 1fr */
     details[open]:not(.closing) .details-content-wrapper { grid-template-rows: 1fr; }
+    
     .details-content-wrapper > .link-grid {
       min-height: 0;
       margin-top: 16px;
@@ -472,6 +474,7 @@
       min-height: 0;
     }
 
+    /* --- Icons --- */
     .external-icon {
       width: 18px; height: 18px;
       margin-right: 8px;
@@ -497,6 +500,7 @@
       transition: flex-grow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
     }
 
+    /* Lap Animations */
     @keyframes slideDown {
         from { opacity: 0; transform: translateY(-15px); }
         to { opacity: 1; transform: translateY(0); }
@@ -736,7 +740,6 @@
         <ul>
           <li><a href="http://www.v1ctorym1n.kro.kr" target="_blank" rel="noopener noreferrer">Home</a></li>
           <li><a href="http://admin.bridge.v1ctorym1n.kro.kr" target="_blank" rel="noopener noreferrer">Admin</a></li>
-          <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">Github</a></li>
           <li><a href="http://test.bridge.v1ctorym1n.kro.kr" target="_blank" rel="noopener noreferrer">Laboratory</a></li>
         </ul>
         <br>
@@ -898,7 +901,10 @@
       <div class="section-body">
         <details>
           <summary class="section-title">
-            <div><span class="cal-sans-regular">Stopwatch</span></div>
+            <div>
+                <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span class="cal-sans-regular">Stopwatch</span>
+            </div>
             <svg class="fold-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
