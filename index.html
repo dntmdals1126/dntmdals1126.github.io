@@ -463,16 +463,30 @@
       overflow: hidden;
       transition: grid-template-rows 0.3s ease-out;
     }
-    /* 애니메이션이 적용되기 위해 자식 요소의 min-height 0 필수 */
+    /* Animation Trigger */
+    details[open]:not(.closing) .details-content-wrapper { grid-template-rows: 1fr; }
+    
+    /* Ensure children have min-height for grid animation to work */
     .details-content-wrapper > * {
       min-height: 0;
     }
+
+    /* --- Music Card Style (Fix for animation) --- */
+    .music-card {
+      margin-top: 16px; 
+      width: 100%; 
+      height: 80px; 
+      border-radius: 12px; 
+      overflow: hidden; 
+      border: 1px solid var(--border-strong);
+    }
     
-    details[open]:not(.closing) .details-content-wrapper { grid-template-rows: 1fr; }
-    
-    .details-content-wrapper > .link-grid,
-    .details-content-wrapper > .music-container {
+    /* Add margin to grid child as well */
+    .details-content-wrapper > .link-grid {
       margin-top: 16px;
+    }
+    .details-content-wrapper > .stopwatch-wrap {
+      /* Stopwatch handles its own spacing internally/via flex */
     }
 
     /* --- Icons --- */
@@ -891,7 +905,7 @@
             </svg>
           </summary>
           <div class="details-content-wrapper">
-            <div class="music-container" style="width: 100%; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-strong);">
+            <div class="music-card">
               <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
           </div>
