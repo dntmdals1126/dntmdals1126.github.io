@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>WebHub</title>
   <meta name="theme-color" content="#0c0f14" />
   
@@ -11,20 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
-  
   <style>
-    /* --- Premium Design System --- */
+    /* --- Design System --- */
     :root {
-      --bg-0: #080a0e;
-      --bg-1: #0c0f14;
-      /* Deep, subtle gradient for background */
-      --bg-gradient: radial-gradient(circle at 50% -20%, #1a212e 0%, #080a0e 100%);
-      
-      /* Glassmorphism Surfaces */
-      --surface: rgba(30, 35, 45, 0.5);
-      --surface-hover: rgba(45, 50, 65, 0.7);
+      --bg-0: #0c0f14;
+      --surface: #151920;
       --surface-border: rgba(255, 255, 255, 0.08);
+      --surface-inner: rgba(0, 0, 0, 0.2);
       
       --ink-0: #ffffff;
       --ink-1: #9ca3af;
@@ -34,33 +27,31 @@
       --primary-glow: rgba(91, 140, 255, 0.15);
       --accent: #facc15;
       
-      --radius: 20px;
-      --shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.4);
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
       
       --font-main: 'Noto Sans KR', sans-serif;
       --font-display: 'Cal Sans', sans-serif;
       
-      color-scheme: dark light;
+      color-scheme: dark;
     }
 
+    /* Light Mode overrides */
     html[data-theme="light"] {
-      --bg-0: #f0f4f8;
-      --bg-1: #ffffff;
-      --bg-gradient: radial-gradient(circle at 50% -20%, #ffffff 0%, #f0f4f8 100%);
-      
-      --surface: rgba(255, 255, 255, 0.65);
-      --surface-hover: rgba(255, 255, 255, 0.9);
-      --surface-border: rgba(0, 0, 0, 0.05);
+      --bg-0: #f2f4f7;
+      --surface: #ffffff;
+      --surface-border: rgba(0, 0, 0, 0.08);
+      --surface-inner: #f8fafc;
       
       --ink-0: #111827;
       --ink-1: #4b5563;
       --ink-2: #9ca3af;
       
       --primary: #3b82f6;
-      --primary-glow: rgba(59, 130, 246, 0.15);
+      --primary-glow: rgba(59, 130, 246, 0.1);
       --accent: #d97706;
       
-      --shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     /* --- Reset & Base --- */
@@ -69,361 +60,335 @@
     
     html {
       height: 100%;
-      /* Fix for mobile overscroll color */
-      background-color: var(--bg-0);
-      overscroll-behavior-y: none;
+      background-color: var(--bg-0); /* 그라데이션 제거, 단색 배경 */
     }
     
     body {
       margin: 0; padding: 0;
       font-family: var(--font-main);
-      background: var(--bg-0);
-      background-image: var(--bg-gradient);
-      background-attachment: fixed;
+      background-color: var(--bg-0);
       color: var(--ink-0);
-      min-height: 100vh;
-      overflow-x: hidden;
+      min-height: 100%;
+      /* 모바일 스크롤 개선 */
+      overflow-y: auto; 
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: none; /* 바운스 효과 제거 */
       transition: background 0.3s, color 0.3s;
-      /* Prevent pull-to-refresh on mobile web apps if needed */
-      overscroll-behavior-y: none; 
     }
-    body.scroll-lock { overflow: hidden; }
+    body.scroll-lock { overflow: hidden !important; }
 
     .cal-sans { font-family: var(--font-display); }
 
-    /* --- Background Animation (Subtle Blobs) --- */
-    .bg-blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-    .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.25; animation: float 25s infinite alternate ease-in-out; }
-    .blob-1 { top: -10%; left: 10%; width: 60vw; height: 60vw; background: var(--primary); animation-delay: 0s; }
-    .blob-2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: #8b5cf6; animation-delay: -8s; }
-    html[data-theme="light"] .blob-2 { background: #a5b4fc; }
-    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 30px) scale(1.05); } }
-
     /* --- Layout --- */
     .container {
-      max-width: 1000px; margin: 0 auto; padding: 0 20px 40px;
-      display: grid; gap: 20px;
+      max-width: 1000px; 
+      margin: 0 auto; 
+      padding: 0 16px 40px; /* 모바일 패딩 */
+      display: grid; 
+      gap: 16px;
+      /* PC: 2열, 높이 260px 고정 */
       grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 260px; 
     }
 
-    /* --- Unified Card Style --- */
-    /* Applies to all main containers: Search, Details, Notice */
+    /* --- Card Components --- */
     .card, details, .notice-bar {
       background: var(--surface);
       border: 1px solid var(--surface-border);
       border-radius: var(--radius);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       box-shadow: var(--shadow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
       overflow: hidden;
+      display: flex; flex-direction: column;
+      height: 100%; /* 높이 꽉 채우기 */
     }
-    /* Hover effect mainly for visual depth, disabled for static layouts if needed */
-    /* .card:hover, details:hover { transform: translateY(-2px); box-shadow: 0 12px 40px -10px rgba(0,0,0,0.3); } */
 
-    /* --- Header (Compact) --- */
+    /* --- Header --- */
     .header-bar {
       grid-column: span 2;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 4px; /* Compact Padding */
+      padding: 16px 0;
+      height: auto !important; /* 헤더는 높이 제한 없음 */
+      min-height: auto !important;
     }
     .brand {
-      font-family: var(--font-display); font-size: 20px; font-weight: 400;
+      font-family: var(--font-display); font-size: 20px; 
       display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink-0);
     }
-    .brand-by { opacity: 0.5; font-size: 12px; font-family: var(--font-main); font-weight: 400; letter-spacing: 0.5px; }
+    .brand-by { opacity: 0.5; font-size: 12px; font-family: var(--font-main); font-weight: 400; }
     
     .header-actions { display: flex; gap: 8px; }
     .icon-btn {
-      background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border);
+      background: transparent; border: 1px solid var(--surface-border);
       color: var(--ink-0); width: 36px; height: 36px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s; backdrop-filter: blur(10px);
+      cursor: pointer; transition: all 0.2s;
     }
-    html[data-theme="light"] .icon-btn { background: rgba(255,255,255,0.5); }
-    .icon-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
+    .icon-btn:hover { background: var(--surface-inner); }
 
     /* --- 1. Search Hero Section --- */
     .w-search { 
-      grid-column: span 2; padding: 36px; 
-      display: flex; flex-direction: column; gap: 24px; 
-      position: relative;
+      grid-column: span 2; 
+      padding: 24px; 
+      display: flex; flex-direction: column; justify-content: center; gap: 20px;
+      height: auto !important; /* 검색창은 내용물에 맞게 */
+      min-height: 240px;
     }
     
-    /* Clock Typography */
-    .time-header { 
-        display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        text-align: center; margin-bottom: 12px;
-    }
-    .time-date { font-family: var(--font-main); font-size: 15px; color: var(--primary); font-weight: 500; margin-bottom: 4px; letter-spacing: 0.5px; }
+    /* Clock */
+    .time-header { text-align: center; margin-bottom: 4px; }
+    .time-date { font-size: 13px; color: var(--primary); font-weight: 500; margin-bottom: 2px; }
     .time-clock { 
-        font-family: var(--font-display); font-size: 56px; color: var(--ink-0); 
-        line-height: 1; letter-spacing: -1px; text-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        font-family: var(--font-display); font-size: 42px; color: var(--ink-0); /* 크기 줄임 */
+        line-height: 1; letter-spacing: 0.5px;
     }
     
-    /* Search Engine Chips */
-    .engine-wrap { width: 100%; position: relative; }
+    /* Search Engine Box */
+    .engine-box {
+        background: var(--surface-inner);
+        border: 1px solid var(--surface-border);
+        border-radius: 14px;
+        padding: 8px;
+        width: 100%;
+    }
     .engine-seg {
-      display: flex; gap: 10px; overflow-x: auto; 
-      padding: 4px 4px 12px 4px; /* Padding bottom for shadow space */
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      justify-content: center; /* Center on PC */
+      display: flex; gap: 8px; overflow-x: auto; 
+      justify-content: flex-start; /* 왼쪽 정렬 */
+      scrollbar-width: none; 
+      padding-bottom: 2px;
     }
     .engine-btn {
-      appearance: none; border: 1px solid var(--surface-border); 
-      background: rgba(255,255,255,0.03);
-      color: var(--ink-1); padding: 8px 16px; border-radius: 14px;
-      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px;
-      font-size: 14px; font-weight: 500; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-      font-family: var(--font-main);
+      appearance: none; border: 1px solid transparent; 
+      background: var(--surface);
+      color: var(--ink-1); padding: 6px 12px; border-radius: 8px;
+      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500; transition: all 0.2s;
       flex-shrink: 0;
     }
-    html[data-theme="light"] .engine-btn { background: rgba(255,255,255,0.5); }
-    
-    .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-2px); }
-    
     .engine-btn[data-active="true"] {
       background: var(--surface); 
       border-color: var(--primary); 
-      color: var(--ink-0);
-      box-shadow: 0 4px 12px var(--primary-glow);
+      color: var(--primary);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .engine-icon { width: 8px; height: 8px; border-radius: 50%; transition: 0.2s; opacity: 0.7; }
-    .engine-btn[data-active="true"] .engine-icon { opacity: 1; transform: scale(1.2); }
+    .engine-icon { width: 8px; height: 8px; border-radius: 50%; }
 
     /* Search Bar */
-    .search-bar { width: 100%; max-width: 600px; margin: 0 auto; }
+    .search-bar { width: 100%; }
     .input-shell {
-      display: flex; align-items: center; gap: 12px;
-      background: rgba(0,0,0,0.2); border: 1px solid var(--surface-border);
-      border-radius: 18px; padding: 8px 8px 8px 20px;
-      transition: all 0.2s ease;
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-0); border: 1px solid var(--surface-border);
+      border-radius: 14px; padding: 4px 4px 4px 16px;
+      transition: border-color 0.2s;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
-    html[data-theme="light"] .input-shell { background: rgba(255,255,255,0.5); }
-    
-    .input-shell:focus-within { 
-        border-color: var(--primary); 
-        background: var(--bg-0);
-        box-shadow: 0 0 0 3px var(--primary-glow); 
-    }
+    .input-shell:focus-within { border-color: var(--primary); }
     .input-shell input {
       flex: 1; background: transparent; border: none; color: var(--ink-0);
-      font-size: 16px; height: 44px; font-family: var(--font-main); font-weight: 500;
+      font-size: 15px; height: 42px; font-family: var(--font-main);
     }
-    .input-shell input::placeholder { color: var(--ink-2); }
     .search-btn {
       background: var(--primary); color: white; border: none;
-      border-radius: 12px; padding: 0 24px; height: 44px;
-      font-weight: 700; cursor: pointer; transition: 0.2s; font-family: var(--font-main);
-      box-shadow: 0 4px 12px var(--primary-glow);
+      border-radius: 10px; padding: 0 20px; height: 42px;
+      font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px;
     }
-    .search-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    /* --- 2. Details/Summary (Cards) --- */
-    
+    /* --- Accordions / Cards --- */
     summary.section-title {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 20px 24px; cursor: pointer; list-style: none;
-        font-weight: 400; color: var(--ink-0);
-        font-family: var(--font-display); font-size: 18px; 
-        user-select: none;
-        transition: background 0.2s;
+        padding: 16px 20px; cursor: pointer; list-style: none;
+        font-weight: 500; color: var(--ink-0);
+        font-family: var(--font-display); font-size: 16px; /* 제목 크기 축소 */
+        border-bottom: 1px solid transparent;
+        transition: 0.2s;
+        background: var(--surface);
+        height: 54px; /* 제목 영역 높이 고정 */
+        flex-shrink: 0;
     }
-    summary:hover { background: var(--surface-hover); }
+    summary:hover { background: var(--surface-inner); }
     summary::-webkit-details-marker { display: none; }
-    
-    .title-group { display: flex; align-items: center; gap: 10px; }
-    .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.3s ease; }
+    .title-group { display: flex; align-items: center; gap: 8px; }
+    .fold-icon { width: 18px; height: 18px; color: var(--ink-1); transition: transform 0.3s; }
     details[open] > summary .fold-icon { transform: rotate(180deg); }
+    details[open] summary { border-bottom-color: var(--surface-border); }
 
-    /* Accordion Animation Wrapper */
     .details-content-wrapper {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-top: 1px solid transparent;
+        flex: 1; /* 남은 공간 채우기 */
+        overflow: hidden;
+        background: var(--surface-inner);
+        display: flex; flex-direction: column;
     }
-    details[open]:not(.closing) .details-content-wrapper {
-        grid-template-rows: 1fr;
-        border-top-color: var(--surface-border); 
+    .details-inner { 
+        padding: 16px; 
+        height: 100%; overflow-y: auto; 
     }
-    .details-inner { overflow: hidden; } 
 
-    /* Link Grid */
+    /* Link Grid (Always 2 Columns) */
     .link-grid { 
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; 
-        padding: 24px;
+        display: grid; 
+        grid-template-columns: 1fr 1fr; /* 무조건 2열 */
+        gap: 10px; 
     }
-
     .link {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 10px; padding: 16px; background: rgba(255,255,255,0.03);
-        border: 1px solid var(--surface-border); border-radius: 14px;
-        color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
-        transition: 0.2s; text-align: center;
+        gap: 8px; padding: 12px; background: var(--surface);
+        border: 1px solid var(--surface-border); border-radius: 12px;
+        color: var(--ink-0); text-decoration: none; font-size: 12px; font-weight: 500;
+        transition: 0.2s; text-align: center; height: 100%; min-height: 70px;
     }
-    html[data-theme="light"] .link { background: rgba(255,255,255,0.4); }
-    
-    .link:hover { 
-        transform: translateY(-3px); 
-        border-color: var(--primary); 
-        background: var(--surface-hover);
-        box-shadow: 0 4px 12px var(--primary-glow);
-    }
-    .link img { width: 28px; height: 28px; opacity: 1; border-radius: 6px; }
+    .link:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .link img { width: 24px; height: 24px; border-radius: 6px; }
+    .external-icon { width: 16px; height: 16px; color: var(--primary); }
 
-    .external-icon { width: 20px; height: 20px; color: var(--primary); opacity: 0.9; }
-
-    /* --- Stopwatch --- */
+    /* --- Stopwatch (Full Height) --- */
     .stopwatch-wrap { 
-        display: flex; flex-direction: column; align-items: center; 
-        padding: 24px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        height: 100%; padding: 10px;
     }
-
     .stopwatch-display {
-        font-family: var(--font-display); font-size: 52px; font-weight: 400;
-        color: var(--ink-0); margin: 10px 0 24px; letter-spacing: 1px;
-        font-variant-numeric: tabular-nums;
+        font-family: var(--font-display); font-size: 42px; font-weight: 400;
+        color: var(--ink-0); margin-bottom: 16px; font-variant-numeric: tabular-nums;
     }
-    .timer-controls { display: flex; gap: 12px; margin-bottom: 10px; }
+    .timer-controls { display: flex; gap: 8px; }
     .timer-btn {
-        padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 600;
-        border: 1px solid var(--surface-border); background: rgba(255,255,255,0.03); color: var(--ink-0);
-        cursor: pointer; transition: 0.2s; font-family: var(--font-main);
+        padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+        border: 1px solid var(--surface-border); background: var(--surface); color: var(--ink-0);
+        cursor: pointer; transition: 0.2s; 
     }
-    html[data-theme="light"] .timer-btn { background: rgba(255,255,255,0.5); }
-    
-    .timer-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
-    .btn-start { 
-        color: #fff; border-color: transparent; 
-        background: var(--primary) !important; 
-        box-shadow: 0 4px 12px var(--primary-glow);
-    }
+    .btn-start { color: #fff; background: var(--primary) !important; border-color: transparent; }
     
     .lap-list-container {
-        width: 100%; border-top: 1px solid var(--surface-border); padding-top: 10px; margin-top: 16px;
-        max-height: 160px; overflow-y: auto; display: none;
+        width: 100%; border-top: 1px solid var(--surface-border); padding-top: 8px; margin-top: 12px;
+        flex: 1; overflow-y: auto; display: none; font-size: 13px;
     }
-    .lap-list-container.active { display: block; animation: fadeIn 0.3s; }
-    .lap-item {
-        display: flex; justify-content: space-between; padding: 10px 12px;
-        font-family: var(--font-display); font-size: 15px; color: var(--ink-1);
-        border-bottom: 1px solid var(--surface-border);
-    }
-    .lap-index { color: var(--primary); font-weight: bold; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .lap-list-container.active { display: block; }
+    .lap-item { display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid var(--surface-border); color: var(--ink-1); }
 
-    /* --- Stopwatch Fullscreen Mode (Fixed) --- */
-    .stopwatch-wrap.fullscreen-mode {
-        position: fixed; inset: 0; z-index: 9999;
-        background: var(--bg-0); width: 100vw; height: 100vh;
-        justify-content: center; padding: 20px; margin: 0;
-        border-radius: 0;
-        animation: fsEnter 0.3s ease forwards;
+    /* --- Stopwatch Fullscreen (Fixed to Window) --- */
+    /* This styling applies when moved to document.body */
+    .fs-overlay {
+        position: fixed; inset: 0; z-index: 99999;
+        background: var(--bg-0); 
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        animation: fsFadeIn 0.3s ease;
     }
-    @keyframes fsEnter { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes fsFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     
-    .stopwatch-wrap.fullscreen-mode .stopwatch-display { font-size: 15vw; }
-    .stopwatch-wrap.fullscreen-mode .timer-btn { padding: 20px 40px; font-size: 18px; }
+    .fs-overlay .stopwatch-display { font-size: 18vw; margin-bottom: 40px; }
+    .fs-overlay .timer-btn { padding: 20px 40px; font-size: 20px; border-radius: 16px; }
+    .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; }
+
+    /* --- Music (Full Height) --- */
+    .music-card {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: #000;
+    }
+    .music-card iframe { width: 100%; height: 100%; border: none; }
+
+    /* --- To-Do List --- */
+    .todo-wrap { display: flex; flex-direction: column; height: 100%; }
+    .todo-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .todo-input { 
+        flex: 1; background: var(--bg-0); border: 1px solid var(--surface-border);
+        padding: 8px 12px; border-radius: 8px; color: var(--ink-0); font-size: 13px;
+    }
+    .todo-add-btn { 
+        background: var(--surface); border: 1px solid var(--surface-border); color: var(--primary);
+        width: 32px; border-radius: 8px; cursor: pointer; font-weight: bold;
+    }
+    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
+    .todo-item { 
+        display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--surface-border);
+        font-size: 13px; 
+    }
+    .todo-check { 
+        width: 16px; height: 16px; border: 2px solid var(--ink-2); border-radius: 4px; 
+        display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .todo-item.done .todo-check { background: var(--primary); border-color: var(--primary); }
+    .todo-item.done span { text-decoration: line-through; color: var(--ink-2); }
+    .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 16px; }
 
     /* --- Notice Bar --- */
     .notice-bar {
         grid-column: span 2; 
-        padding: 14px 24px; display: flex; align-items: center; gap: 16px;
-        color: var(--ink-0);
+        padding: 0 16px; display: flex; align-items: center; gap: 12px;
+        color: var(--ink-0); height: 48px; /* 높이 고정 */
+        min-height: 48px; grid-row: auto;
     }
-    .notice-label { font-weight: 700; color: var(--accent); font-family: var(--font-display); font-size: 12px; letter-spacing: 1px; padding: 4px 8px; background: rgba(250, 204, 21, 0.1); border-radius: 6px; }
+    .notice-label { font-weight: 700; color: var(--accent); font-size: 11px; padding: 2px 6px; background: rgba(250, 204, 21, 0.1); border-radius: 4px; white-space: nowrap; }
     html[data-theme="light"] .notice-label { color: var(--primary); background: rgba(59, 130, 246, 0.1); }
     .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 20px; }
     .notice-text {
-      display: inline-block; animation: marquee 20s linear infinite; position: absolute; white-space: nowrap; font-size: 14px; font-weight: 400;
+      display: inline-block; animation: marquee 15s linear infinite; position: absolute; white-space: nowrap; font-size: 13px; top: 1px;
     }
     @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 18px; font-weight: bold; transition: color 0.2s; }
-    .notice-close:hover { color: var(--ink-0); }
+    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 18px; }
 
     /* --- Drawer --- */
     .drawer-root { position: fixed; inset: 0; z-index: 1200; pointer-events: none; }
-    .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); opacity: 0; transition: 0.3s; }
+    .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); opacity: 0; transition: 0.3s; }
     .drawer-nav {
-        position: absolute; top: 0; right: 0; height: 100dvh; width: 280px;
-        background: var(--bg-1); border-left: 1px solid var(--surface-border);
+        position: absolute; top: 0; right: 0; height: 100dvh; width: 260px;
+        background: var(--bg-0); border-left: 1px solid var(--surface-border);
         transform: translateX(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        padding: 24px; display: flex; flex-direction: column; gap: 24px;
+        padding: 20px; display: flex; flex-direction: column; gap: 16px;
     }
     .drawer-root.active { pointer-events: auto; }
     .drawer-root.active .drawer-overlay { opacity: 1; }
     .drawer-root.active .drawer-nav { transform: translateX(0); }
-    .drawer-nav h3 { margin: 0 0 12px; font-size: 12px; color: var(--ink-2); letter-spacing: 1px; font-family: var(--font-display); }
-    .drawer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .drawer-nav h3 { margin: 0 0 8px; font-size: 11px; color: var(--ink-2); letter-spacing: 1px; font-family: var(--font-display); }
+    .drawer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
     .drawer-nav a {
-        display: flex; align-items: center; padding: 14px; border-radius: 12px;
+        display: flex; align-items: center; padding: 10px; border-radius: 8px;
         background: var(--surface); border: 1px solid var(--surface-border);
-        color: var(--ink-0); text-decoration: none; font-size: 14px; font-weight: 500;
-        transition: 0.2s;
+        color: var(--ink-0); text-decoration: none; font-size: 13px;
     }
-    .drawer-nav a:hover { background: var(--surface-hover); border-color: var(--primary); }
-    .drawer-close-btn {
-        align-self: flex-end; background: none; border: none; color: var(--ink-0);
-        font-size: 24px; cursor: pointer; margin-bottom: 10px;
-    }
+    .drawer-close-btn { align-self: flex-end; background: none; border: none; color: var(--ink-0); font-size: 24px; cursor: pointer; }
 
-    /* --- Footer --- */
-    footer {
-        grid-column: span 2; text-align: center; padding: 40px 0;
-        color: var(--ink-2); font-size: 13px;
-    }
-    
-    /* --- Scroll Buttons --- */
+    /* --- Footer & Scroll --- */
+    footer { grid-column: span 2; text-align: center; padding: 20px 0; color: var(--ink-2); font-size: 11px; height: auto; min-height: auto; }
     .scroll-btn {
-      position: fixed; right: 20px; width: 48px; height: 48px;
+      position: fixed; right: 16px; width: 40px; height: 40px;
       background: var(--surface); border: 1px solid var(--surface-border);
-      border-radius: 14px; color: var(--ink-0); cursor: pointer;
+      border-radius: 10px; color: var(--ink-0); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       z-index: 900; box-shadow: var(--shadow); transition: 0.2s;
-      backdrop-filter: blur(10px);
     }
-    .scroll-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
-    .scroll-btn.up { bottom: 80px; }
+    .scroll-btn.up { bottom: 70px; }
     .scroll-btn.down { bottom: 20px; }
-    .scroll-btn.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
+    .scroll-btn.hidden { opacity: 0; pointer-events: none; }
 
-    /* --- PC: Disable Accordion (Force Open) --- */
+    /* --- PC Specific --- */
     @media (min-width: 769px) {
-        details summary { pointer-events: none; cursor: default; }
-        details summary .fold-icon { display: none; } /* Hide arrow */
-        details[open]:not(.closing) .details-content-wrapper {
-            grid-template-rows: 1fr !important;
-            border-top-color: var(--surface-border) !important;
-        }
-        /* Ensure internal links still work */
-        .details-content-wrapper a { pointer-events: auto; }
+        details { height: 100% !important; } /* PC: Force height */
+        summary { cursor: default; pointer-events: none; } /* Disable toggle */
+        .fold-icon { display: none; }
+        details[open] .details-content-wrapper { grid-template-rows: 1fr !important; }
     }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-        .container { grid-template-columns: 1fr; padding: 0 16px 30px; gap: 16px; }
-        .header-bar { grid-column: span 1; padding: 12px 0; }
-        .w-search { grid-column: span 1; padding: 24px 20px; gap: 20px; }
-        .time-clock { font-size: 42px; }
-        .engine-seg { justify-content: flex-start; }
-        .notice-bar { grid-column: span 1; }
-        footer { grid-column: span 1; }
+        .container { 
+            grid-template-columns: 1fr; /* 1 Column */
+            grid-auto-rows: auto; /* 높이 자동 (접기/펼치기 위해) */
+            padding-bottom: 80px;
+        }
+        .header-bar, .w-search, .notice-bar, footer { grid-column: span 1; }
         
-        .link-grid { grid-template-columns: repeat(3, 1fr); padding: 16px; gap: 8px; }
-        .link { padding: 12px 8px; font-size: 12px; }
-        .link img { width: 24px; height: 24px; }
+        /* 카드 높이 초기화 (내용물에 맞게) */
+        details { height: auto; } 
+        /* 펼쳐졌을 때만 높이 가짐 */
+        details[open] { min-height: 200px; } 
+        
+        /* 스톱워치, 뮤직, 투두는 항상 펼쳐져 있거나 특정 높이 가짐 */
+        .details-inner { min-height: 180px; }
     }
   </style>
 </head>
 
 <body>
-
-  <div class="bg-blobs">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-  </div>
 
   <div class="container">
     
@@ -433,11 +398,11 @@
       </h1>
       <div class="header-actions">
         <button id="themeToggle" class="icon-btn" aria-label="테마 전환">
-          <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/></svg>
-          <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/></svg>
+          <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </button>
         <button class="icon-btn menu-toggle" aria-label="메뉴 열기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </div>
     </header>
@@ -449,7 +414,7 @@
       </div>
 
       <div class="search-wrap">
-        <div class="engine-wrap">
+        <div class="engine-box">
             <div class="engine-seg" id="engineSeg">
                 <button type="button" class="engine-btn" data-engine="google" data-active="true">
                   <span class="engine-icon" style="background:#4285F4"></span> Google
@@ -464,7 +429,7 @@
                   <span class="engine-icon" style="background:#00a495"></span> 나무위키
                 </button>
                 <button type="button" class="engine-btn" data-engine="cbnul">
-                  <span class="engine-icon" style="background:#B52555"></span> 충북대학교 도서관
+                  <span class="engine-icon" style="background:#B52555"></span> 충북대도서관
                 </button>
                 <button type="button" class="engine-btn" data-engine="wikipedia">
                   <span class="engine-icon" style="background:#777"></span> 위키백과
@@ -483,7 +448,7 @@
 
         <div class="search-bar" role="search">
           <div class="input-shell">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
             <input id="q" type="search" placeholder="검색어를 입력하세요..." autocomplete="off" />
             <button id="searchBtn" class="search-btn" type="button">검색</button>
           </div>
@@ -495,13 +460,13 @@
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            Educational Volunteering
+            Volunteering
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
         <div class="details-inner">
-            <div class="link-grid grid-4">
+            <div class="link-grid">
               <a class="link" href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
                 <span>충북대 공지</span>
@@ -512,7 +477,7 @@
               </a>
               <a class="link" href="https://www.1365.go.kr/" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=1365.go.kr" alt="">
-                <span>자원봉사포털</span>
+                <span>1365</span>
               </a>
               <a class="link" href="https://edu.chungbuk.ac.kr/" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
@@ -527,13 +492,13 @@
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            Chungbuk National University
+            University
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
         <div class="details-inner">
-            <div class="link-grid grid-4">
+            <div class="link-grid">
               <a class="link" href="https://lms.chungbuk.ac.kr/" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
                 <span>eCampus</span>
@@ -565,7 +530,7 @@
       </summary>
       <div class="details-content-wrapper">
         <div class="details-inner">
-            <div class="link-grid grid-4">
+            <div class="link-grid">
               <a class="link" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=gemini.google.com" alt="">
                 <span>Gemini</span>
@@ -598,7 +563,6 @@
       <div class="details-content-wrapper">
         <div class="details-inner">
             <div class="stopwatch-wrap" id="stopwatchWrapper">
-              <div class="sw-main-panel">
                 <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
                 <div class="timer-controls">
                   <button id="btnMain" class="timer-btn btn-start">시작</button>
@@ -608,8 +572,7 @@
                     <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
                   </button>
                 </div>
-              </div>
-              <div class="lap-list-container" id="lapList"></div>
+                <div class="lap-list-container" id="lapList"></div>
             </div>
         </div>
       </div>
@@ -624,9 +587,30 @@
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
-        <div class="details-inner">
+        <div class="details-inner" style="padding:0;">
             <div class="music-card">
-              <iframe width="100%" height="80" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div class="title-group">
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          To-Do List
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="details-inner">
+            <div class="todo-wrap">
+                <div class="todo-input-row">
+                    <input type="text" id="todoInput" class="todo-input" placeholder="할 일을 입력하세요">
+                    <button id="todoAddBtn" class="todo-add-btn">+</button>
+                </div>
+                <ul id="todoList" class="todo-list"></ul>
             </div>
         </div>
       </div>
@@ -636,7 +620,7 @@
         <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            WebHub 5.5 업데이트 완료. DBpia 검색 복구 및 디자인 통합이 적용되었습니다.
+            WebHub 6.0 업데이트: 모바일 최적화, 스크롤 개선, 투두리스트 추가, 디자인 전면 개편.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -666,7 +650,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans">WebHub Ver. 5.5</span><br>
+    <span class="cal-sans">WebHub Ver. 6.0</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -675,25 +659,35 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      
+      // --- Header & Drawer ---
       const headerTitle = document.getElementById('headerTitle');
       const menuToggle  = document.querySelector('.menu-toggle');
       const drawerRoot  = document.getElementById('drawerRoot');
       const drawerNav   = document.getElementById('drawerNav');
       const overlay     = document.getElementById('drawerOverlay');
       const drawerCloseBtn = document.querySelector('.drawer-close-btn');
-      const currentDateEl = document.getElementById('currentDate');
-      const currentTimeEl = document.getElementById('currentTime');
-      const engineSeg  = document.getElementById('engineSeg');
-      const q          = document.getElementById('q');
-      const searchBtn  = document.getElementById('searchBtn');
-      const themeToggleBtn = document.getElementById('themeToggle');
-      const iconMoon = document.getElementById('iconMoon');
-      const iconSun  = document.getElementById('iconSun');
-      const THEME_KEY = 'theme';
-
+      
       headerTitle?.addEventListener('click', () => location.reload());
 
-      // --- Clock Logic ---
+      function setDrawer(open){
+        if (open){
+          drawerRoot.classList.add('active');
+          drawerRoot.setAttribute('aria-hidden','false');
+          document.body.classList.add('scroll-lock'); 
+        } else {
+          drawerRoot.classList.remove('active');
+          drawerRoot.setAttribute('aria-hidden','true');
+          document.body.classList.remove('scroll-lock');
+        }
+      }
+      menuToggle.addEventListener('click',()=> setDrawer(true));
+      overlay.addEventListener('click',()=> setDrawer(false));
+      drawerCloseBtn.addEventListener('click',()=> setDrawer(false));
+
+      // --- Clock ---
+      const currentDateEl = document.getElementById('currentDate');
+      const currentTimeEl = document.getElementById('currentTime');
       function updateDateTime(){
         const now=new Date();
         const y=now.getFullYear();
@@ -701,351 +695,251 @@
         const d=now.getDate();    
         const wd=['일','월','화','수','목','금','토'][now.getDay()];
         const h=now.getHours();
-        const ap=h>=12?'PM':'AM';
-        const hh=h%12||12;
         const mm=String(now.getMinutes()).padStart(2,'0'); 
         const ss=String(now.getSeconds()).padStart(2,'0'); 
         
-        // Date: Noto Sans KR
-        currentDateEl.textContent = `${y}년 ${m}월 ${d}일 ${wd}요일`;
-        // Time: Cal Sans
-        currentTimeEl.innerHTML = `${hh}:${mm}:${ss} <small style="font-size:0.5em">${ap}</small>`;
+        currentDateEl.textContent = `${y}.${m}.${d} (${wd})`;
+        currentTimeEl.textContent = `${String(h).padStart(2,'0')}:${mm}:${ss}`;
       }
       updateDateTime(); setInterval(updateDateTime, 1000);
 
-      // --- Drawer & Scroll Lock ---
-      let savedScrollPosition = 0;
-      function lockBody(){ 
-        savedScrollPosition = window.scrollY;
-        document.body.style.top = `-${savedScrollPosition}px`;
-        document.body.classList.add('scroll-lock'); 
-      }
-      function unlockBody(){ 
-        document.documentElement.style.scrollBehavior = 'auto';
-        document.body.classList.remove('scroll-lock'); 
-        document.body.style.top = '';
-        window.scrollTo(0, savedScrollPosition);
-        setTimeout(() => {
-            document.documentElement.style.scrollBehavior = '';
-        }, 50);
-      }
-
-      function setDrawer(open){
-        if (open){
-          drawerRoot.classList.add('active');
-          drawerRoot.setAttribute('aria-hidden','false');
-          menuToggle.setAttribute('aria-expanded','true');
-          lockBody();
-          drawerNav.querySelector('a, button')?.focus();
-        }else{
-          drawerRoot.classList.remove('active');
-          drawerRoot.setAttribute('aria-hidden','true');
-          menuToggle.setAttribute('aria-expanded','false');
-          unlockBody(); 
-          menuToggle.focus();
-        }
-      }
-      menuToggle.addEventListener('click',()=> setDrawer(!drawerRoot.classList.contains('active')));
-      overlay.addEventListener('click',()=> setDrawer(false));
-      drawerCloseBtn.addEventListener('click',()=> setDrawer(false));
+      // --- Search Engine ---
+      const engineSeg = document.getElementById('engineSeg');
+      const q = document.getElementById('q');
+      const searchBtn = document.getElementById('searchBtn');
+      let currentEngine = 'google';
       
-      document.addEventListener('keydown',e=>{ 
-          if(e.key==='Escape') {
-              if(drawerRoot.classList.contains('active')) {
-                  setDrawer(false);
-              } else if (stopwatchWrap.classList.contains('fullscreen-mode')) {
-                  toggleFullscreen();
-              } else if (q.value !== '') {
-                  q.value = ''; 
-              }
-          }
-      });
-      document.addEventListener('click',e=>{
-        if(!drawerRoot.classList.contains('active')) return;
-        const insidePanel = drawerNav.contains(e.target);
-        const onToggle = menuToggle.contains(e.target);
-        if(!insidePanel && !onToggle) setDrawer(false);
-      });
-
-      // --- Search Engine Logic ---
-      let currentEngine='google';
       const cmap={ 
         google:'#4285F4', naver:'#03cf5d', youtube:'#ff0000', namu:'#00a495', 
         cbnul:'#B52555', wikipedia:'#777', dbpia:'#cf393e', riss:'#F76323', everytime:'#f91f15'
       };
+
       function syncEngineUI(engine){
         currentEngine=engine;
         [...engineSeg.querySelectorAll('.engine-btn')].forEach(b=>{
           const active = b.dataset.engine===engine;
           b.dataset.active=String(active);
-          b.setAttribute('aria-pressed', String(active));
         });
-        // Update Search Button Color
         searchBtn.style.backgroundColor = cmap[engine] || 'var(--primary)';
       }
-      engineSeg.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          const btn = e.target.closest('.engine-btn'); if(btn) syncEngineUI(btn.dataset.engine);
-        }
+
+      engineSeg.addEventListener('click', (e) => {
+        const btn = e.target.closest('.engine-btn');
+        if(btn) syncEngineUI(btn.dataset.engine);
       });
-      
-      // Pointer events for dragging
-      let isPointerDown=false, isDragging=false, dragStartX=0, dragStartScroll=0, pointerDownTarget=null;
-      const dragThreshold = 4; 
-      engineSeg.addEventListener('pointerdown', (ev) => {
-        if (ev.pointerType === 'mouse' && ev.button !== 0) return;
-        isPointerDown = true; isDragging = false;
-        dragStartX = ev.clientX; dragStartScroll = engineSeg.scrollLeft;
-        pointerDownTarget = ev.target.closest('.engine-btn');
-        engineSeg.classList.add('dragging');
-        try { engineSeg.setPointerCapture(ev.pointerId); } catch(e){}
-      }, { passive: true });
-      engineSeg.addEventListener('pointermove', (ev) => {
-        if (!isPointerDown) return;
-        const dx = ev.clientX - dragStartX;
-        if (!isDragging && Math.abs(dx) > dragThreshold) isDragging = true;
-        if (isDragging) {
-          ev.preventDefault();
-          engineSeg.scrollLeft = dragStartScroll - dx;
-        }
-      });
-      function handlePointerEnd(ev){
-        if (!isPointerDown) return;
-        if (!isDragging) {
-          const btn = pointerDownTarget || ev.target.closest('.engine-btn');
-          if (btn) syncEngineUI(btn.dataset.engine);
-        }
-        isPointerDown = false; isDragging = false; pointerDownTarget = null;
-        engineSeg.classList.remove('dragging');
-        try { if(ev && ev.pointerId) engineSeg.releasePointerCapture(ev.pointerId); } catch(e){}
-      }
-      engineSeg.addEventListener('pointerup', handlePointerEnd);
-      engineSeg.addEventListener('pointercancel', handlePointerEnd);
-      engineSeg.addEventListener('mouseleave', (ev) => {
-        if (isPointerDown && ev.pointerType === 'mouse') handlePointerEnd(ev);
-      });
-      
-      syncEngineUI(currentEngine);
 
       function buildSearchURL(engineKey, term){
         const t=(term||'').trim(); if(!t) return null;
         try{
           switch(engineKey){
-            case 'google':   { const u=new URL('https://www.google.com/search'); u.search=new URLSearchParams({q:t}).toString(); return u.toString(); }
-            case 'naver':    { const u=new URL('https://search.naver.com/search.naver'); u.search=new URLSearchParams({query:t}).toString(); return u.toString(); }
-            case 'youtube':  { const u=new URL('https://www.youtube.com/results'); u.search=new URLSearchParams({search_query:t}).toString(); return u.toString(); }
-            case 'namu':     { const u=new URL('https://namu.wiki/w/'); u.pathname+=encodeURIComponent(t); return u.toString(); }
-            case 'cbnul':    { const u=new URL('https://cbnul.chungbuk.ac.kr/search/i-discovery'); u.search=new URLSearchParams({ALL:`k|a|${t}`}).toString(); return u.toString(); }
-            case 'wikipedia':{ const u=new URL('https://ko.wikipedia.org/w/index.php'); u.search=new URLSearchParams({search:t}).toString(); return u.toString(); }
-            case 'dbpia':    { const u=new URL('https://www.dbpia.co.kr/search/topSearch'); u.search=new URLSearchParams({query:t}).toString(); return u.toString(); }
-            case 'riss':     { const u=new URL('https://www.riss.kr/search/Search.do'); u.search=new URLSearchParams({
-                                colName:'all', isDetailSearch:'N', searchGubun:'true', oldQuery:'', sflag:1,
-                                fsearchMethod:'search', isFDetailSearch:'N', searchQuery:'', kbid:'', pageNumber:1, query:t
-                              }).toString(); return u.toString(); }
-            case 'everytime':{ return `https://everytime.kr/search/all/${encodeURIComponent(t)}`; }
+            case 'google': return `https://www.google.com/search?q=${t}`;
+            case 'naver': return `https://search.naver.com/search.naver?query=${t}`;
+            case 'youtube': return `https://www.youtube.com/results?search_query=${t}`;
+            case 'namu': return `https://namu.wiki/w/${encodeURIComponent(t)}`;
+            case 'cbnul': return `https://cbnul.chungbuk.ac.kr/search/i-discovery?ALL=k|a|${t}`;
+            case 'wikipedia': return `https://ko.wikipedia.org/w/index.php?search=${t}`;
+            case 'dbpia': return `https://www.dbpia.co.kr/search/topSearch?query=${t}`;
+            case 'riss': return `https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=&kbid=&pageNumber=1&query=${t}`;
+            case 'everytime': return `https://everytime.kr/search/all/${encodeURIComponent(t)}`;
             default: return null;
           }
-        }catch{ return null; }
+        } catch{ return null; }
       }
       function doSearch(){
-        const url = buildSearchURL(currentEngine, q.value); if(!url){ q.focus(); return; }
-        window.open(url,'_blank','noopener');
+        const url = buildSearchURL(currentEngine, q.value); 
+        if(url) window.open(url,'_blank','noopener');
       }
-      searchBtn.addEventListener('click',doSearch);
-      q.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); doSearch(); } else if(e.key==='Escape'){ q.value=''; } });
+      searchBtn.addEventListener('click', doSearch);
+      q.addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
 
-      // --- Scroll Buttons ---
-      const scrollBtnUp=document.querySelector('.scroll-btn.up');
-      const scrollBtnDown=document.querySelector('.scroll-btn.down');
-      function updateScrollButtons(){
-        const scrollY = window.scrollY || window.pageYOffset;
-        const atTop = scrollY <= 60;
-        const atBottom = (window.innerHeight + scrollY) >= (document.body.scrollHeight - 60);
-        if(atTop) scrollBtnUp.classList.add('hidden'); else scrollBtnUp.classList.remove('hidden');
-        if(atBottom) scrollBtnDown.classList.add('hidden'); else scrollBtnDown.classList.remove('hidden');
-      }
-      updateScrollButtons();
-      window.addEventListener('scroll', updateScrollButtons, { passive: true });
-      window.addEventListener('resize', updateScrollButtons);
-      scrollBtnUp?.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-      scrollBtnDown?.addEventListener('click',()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}));
-
-      // --- Notice Bar ---
-      document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.notice-close');
-        if (!btn) return;
-        btn.closest('#noticeBar')?.remove();
-      });
-
-      // --- Theme Manager ---
-      function detectInitialTheme(){
-        const saved = localStorage.getItem(THEME_KEY);
-        return (saved === 'light' || saved === 'dark') ? saved : 'dark';
-      }
+      // --- Theme ---
+      const themeToggleBtn = document.getElementById('themeToggle');
+      const THEME_KEY = 'theme';
       function applyTheme(theme){
-        const root = document.documentElement;
-        const themeMeta = document.querySelector('meta[name="theme-color"]');
-        if (theme === 'light'){
-          root.setAttribute('data-theme','light');
-          themeToggleBtn?.setAttribute('aria-pressed','true');
-          if(iconSun) iconSun.style.display='';
-          if(iconMoon) iconMoon.style.display='none';
-          themeMeta?.setAttribute('content','#ffffff');
-        }else{
-          root.removeAttribute('data-theme');
-          themeToggleBtn?.setAttribute('aria-pressed','false');
-          if(iconSun) iconSun.style.display='none';
-          if(iconMoon) iconMoon.style.display='';
-          themeMeta?.setAttribute('content','#0c0f14');
+        if(theme==='light'){
+            document.documentElement.setAttribute('data-theme','light');
+            document.getElementById('iconSun').style.display='';
+            document.getElementById('iconMoon').style.display='none';
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f2f4f7');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            document.getElementById('iconSun').style.display='none';
+            document.getElementById('iconMoon').style.display='';
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0c0f14');
         }
         localStorage.setItem(THEME_KEY, theme);
       }
-      const initialTheme = detectInitialTheme();
-      applyTheme(initialTheme);
-      themeToggleBtn?.addEventListener('click', () => {
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+      applyTheme(savedTheme);
+      themeToggleBtn.addEventListener('click', () => {
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         applyTheme(isLight ? 'dark' : 'light');
       });
 
-      // --- Stopwatch Logic ---
-      let swInterval = null;
-      let swStartTime = 0;
-      let swElapsedTime = 0;
-      const swDisplay = document.getElementById('stopwatchDisplay');
-      const btnMain = document.getElementById('btnMain'); 
-      const btnSub = document.getElementById('btnSub');   
-      const lapList = document.getElementById('lapList');
-      const stopwatchWrap = document.querySelector('.stopwatch-wrap');
-      const btnFullscreenControl = document.getElementById('btnFullscreenControl');
-      const iconExpand = document.getElementById('iconExpand');
-      const iconCompress = document.getElementById('iconCompress');
-      let lapCounter = 1;
-
-      function formatTime(ms) {
-        const date = new Date(ms);
-        const m = String(date.getUTCMinutes()).padStart(2, '0');
-        const s = String(date.getUTCSeconds()).padStart(2, '0');
-        const cs = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0');
-        return `${m}:${s}:${cs}`;
-      }
-      function updateControls(isRunning) {
-        if (isRunning) {
-            btnMain.textContent = "중지";
-            btnMain.classList.remove('btn-start');
-            btnMain.classList.add('btn-stop');
-            btnSub.textContent = "랩";
-        } else {
-            btnMain.textContent = "시작";
-            btnMain.classList.remove('btn-stop');
-            btnMain.classList.add('btn-start');
-            btnSub.textContent = "초기화";
-        }
-      }
-      function toggleLapContainer(show) {
-        if (show) {
-            lapList.classList.add('active');
-            stopwatchWrap.classList.add('has-laps');
-        } else {
-            lapList.classList.remove('active');
-            stopwatchWrap.classList.remove('has-laps');
-        }
-      }
-
-      function toggleFullscreen() {
-        const isFull = stopwatchWrap.classList.contains('fullscreen-mode');
-        if (!isFull) {
-            lockBody(); 
-            stopwatchWrap.classList.add('fullscreen-mode');
-            iconExpand.style.display = 'none';
-            iconCompress.style.display = 'block';
-            btnFullscreenControl.title = "원래대로";
-        } else {
-            // Remove class immediately then animate back is handled by CSS transition mostly, 
-            // but for safe removal we can just remove it. 
-            // For smoother exit we can use a timeout or animation class, 
-            // but simpler is better here to fix the "not working" bug.
-            stopwatchWrap.classList.remove('fullscreen-mode');
-            unlockBody();
-            iconExpand.style.display = 'block';
-            iconCompress.style.display = 'none';
-            btnFullscreenControl.title = "전체화면";
-        }
-      }
-      
-      btnFullscreenControl?.addEventListener('click', toggleFullscreen);
-
-      btnMain?.addEventListener('click', () => {
-        if (swInterval) {
-            clearInterval(swInterval);
-            swInterval = null;
-            updateControls(false);
-        } else {
-            swStartTime = Date.now() - swElapsedTime;
-            swInterval = setInterval(() => {
-                swElapsedTime = Date.now() - swStartTime;
-                swDisplay.textContent = formatTime(swElapsedTime);
-            }, 10);
-            updateControls(true);
-        }
-      });
-      
-      btnSub?.addEventListener('click', () => {
-        if (swInterval) {
-            if (!stopwatchWrap.classList.contains('has-laps')) {
-                toggleLapContainer(true);
-            }
-            const li = document.createElement('div');
-            li.className = 'lap-item';
-            li.innerHTML = `<span class="lap-index">랩 ${lapCounter}</span> <span>${formatTime(swElapsedTime)}</span>`;
-            lapList.prepend(li); 
-            lapCounter++;
-        } else {
-            swElapsedTime = 0;
-            swDisplay.textContent = "00:00:00";
-            lapCounter = 1;
-            lapList.innerHTML = '';
-            toggleLapContainer(false);
-        }
-      });
-
-      // --- Accordion Logic (Restored Animation) ---
+      // --- Accordion (Mobile Only) ---
       const allDetails = document.querySelectorAll('details');
       
-      // Restore state
-      allDetails.forEach((dt, index) => {
-          const savedState = localStorage.getItem(`details_state_${index}`);
-          if (savedState === 'open') dt.setAttribute('open', '');
-          else if (savedState === 'closed') dt.removeAttribute('open');
-      });
+      function checkLayout() {
+        // PC(>768)에서는 항상 펼침
+        if(window.innerWidth > 768) {
+            allDetails.forEach(dt => {
+                dt.setAttribute('open','');
+                dt.querySelector('summary').style.pointerEvents = 'none';
+            });
+        } else {
+            // Mobile에서는 토글 가능
+            allDetails.forEach(dt => {
+               dt.querySelector('summary').style.pointerEvents = 'auto';
+            });
+        }
+      }
+      window.addEventListener('resize', checkLayout);
+      checkLayout();
 
-      allDetails.forEach((detail, index) => {
-          const summary = detail.querySelector('summary');
-          summary.addEventListener('click', (e) => {
-              // PC check: if window width > 768, prevent toggle
-              if (window.innerWidth > 768) {
-                  e.preventDefault();
-                  return;
-              }
-
-              if (detail.hasAttribute('open')) {
+      // Mobile Toggle Logic
+      allDetails.forEach(detail => {
+          detail.querySelector('summary').addEventListener('click', (e) => {
+              if(window.innerWidth > 768) {
                   e.preventDefault(); 
-                  detail.classList.add('closing');
-                  setTimeout(() => {
-                      detail.removeAttribute('open');
-                      detail.classList.remove('closing');
-                      localStorage.setItem(`details_state_${index}`, 'closed');
-                  }, 300); 
-              } else {
-                  setTimeout(() => localStorage.setItem(`details_state_${index}`, 'open'), 0);
+                  return;
               }
           });
       });
 
-      // --- Keyboard Shortcuts ---
-      document.addEventListener('keydown', (e) => {
-          if (document.activeElement === q) return;
-          if (e.code === 'Space') { e.preventDefault(); btnMain.click(); }
-          if (e.code === 'KeyL') { btnSub.click(); }
+      // --- Stopwatch (True Fullscreen via DOM Move) ---
+      const stopwatchWrapper = document.getElementById('stopwatchWrapper');
+      const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+      const btnMain = document.getElementById('btnMain');
+      const btnSub = document.getElementById('btnSub');
+      const lapList = document.getElementById('lapList');
+      const fsBtn = document.getElementById('btnFullscreenControl');
+      const iconExpand = document.getElementById('iconExpand');
+      const iconCompress = document.getElementById('iconCompress');
+      let swInt, swStart=0, swElapsed=0, lapCount=1;
+
+      function formatTime(ms) {
+        const d = new Date(ms);
+        return `${String(d.getUTCMinutes()).padStart(2,'0')}:${String(d.getUTCSeconds()).padStart(2,'0')}:${String(Math.floor(d.getUTCMilliseconds()/10)).padStart(2,'0')}`;
+      }
+
+      btnMain.addEventListener('click', () => {
+        if(swInt) {
+            clearInterval(swInt); swInt=null;
+            btnMain.textContent="시작"; btnMain.classList.remove('btn-stop'); btnMain.classList.add('btn-start');
+            btnSub.textContent="초기화";
+        } else {
+            swStart = Date.now() - swElapsed;
+            swInt = setInterval(() => { swElapsed = Date.now() - swStart; stopwatchDisplay.textContent = formatTime(swElapsed); }, 10);
+            btnMain.textContent="중지"; btnMain.classList.remove('btn-start'); btnMain.classList.add('btn-stop');
+            btnSub.textContent="랩";
+        }
+      });
+
+      btnSub.addEventListener('click', () => {
+        if(swInt) {
+            lapList.classList.add('active');
+            const li = document.createElement('div');
+            li.className = 'lap-item';
+            li.innerHTML = `<span class="lap-index">#${lapCount++}</span> <span>${formatTime(swElapsed)}</span>`;
+            lapList.prepend(li);
+        } else {
+            swElapsed=0; stopwatchDisplay.textContent="00:00:00";
+            lapCount=1; lapList.innerHTML=''; lapList.classList.remove('active');
+        }
+      });
+
+      // Fullscreen Logic: Move DOM to body
+      const stopwatchPlaceholder = document.createElement('div'); // Placeholder to keep grid position
+      let isFs = false;
+
+      fsBtn.addEventListener('click', () => {
+        if(!isFs) {
+            // Enter Fullscreen
+            stopwatchWrapper.parentNode.insertBefore(stopwatchPlaceholder, stopwatchWrapper);
+            document.body.appendChild(stopwatchWrapper);
+            stopwatchWrapper.classList.add('fs-overlay');
+            document.body.classList.add('scroll-lock');
+            iconExpand.style.display='none'; iconCompress.style.display='block';
+            isFs = true;
+        } else {
+            // Exit Fullscreen
+            stopwatchPlaceholder.parentNode.insertBefore(stopwatchWrapper, stopwatchPlaceholder);
+            stopwatchPlaceholder.remove();
+            stopwatchWrapper.classList.remove('fs-overlay');
+            document.body.classList.remove('scroll-lock');
+            iconExpand.style.display='block'; iconCompress.style.display='none';
+            isFs = false;
+        }
+      });
+
+      // --- To-Do List ---
+      const todoInput = document.getElementById('todoInput');
+      const todoAddBtn = document.getElementById('todoAddBtn');
+      const todoList = document.getElementById('todoList');
+      
+      function loadTodos(){
+          const saved = JSON.parse(localStorage.getItem('todos') || '[]');
+          todoList.innerHTML = '';
+          saved.forEach(t => renderTodo(t.text, t.done));
+      }
+      function saveTodos(){
+          const items = [];
+          todoList.querySelectorAll('li').forEach(li => {
+              items.push({
+                  text: li.querySelector('span').textContent,
+                  done: li.classList.contains('done')
+              });
+          });
+          localStorage.setItem('todos', JSON.stringify(items));
+      }
+      function renderTodo(text, done=false){
+          const li = document.createElement('li');
+          li.className = `todo-item ${done?'done':''}`;
+          li.innerHTML = `
+            <div class="todo-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="display:${done?'block':'none'}"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <span style="flex:1">${text}</span>
+            <div class="todo-del">×</div>
+          `;
+          // Check Toggle
+          li.querySelector('.todo-check').addEventListener('click', () => {
+              li.classList.toggle('done');
+              const svg = li.querySelector('svg');
+              svg.style.display = li.classList.contains('done') ? 'block' : 'none';
+              saveTodos();
+          });
+          // Delete
+          li.querySelector('.todo-del').addEventListener('click', () => {
+              li.remove();
+              saveTodos();
+          });
+          todoList.appendChild(li);
+      }
+      
+      todoAddBtn.addEventListener('click', () => {
+          if(todoInput.value.trim()){
+              renderTodo(todoInput.value.trim());
+              todoInput.value='';
+              saveTodos();
+          }
+      });
+      todoInput.addEventListener('keypress', e => { if(e.key==='Enter') todoAddBtn.click(); });
+      
+      loadTodos();
+
+      // --- Scroll Buttons ---
+      const scrollUp = document.querySelector('.scroll-btn.up');
+      const scrollDown = document.querySelector('.scroll-btn.down');
+      window.addEventListener('scroll', () => {
+          const st = window.scrollY;
+          if(st > 100) scrollUp.classList.remove('hidden'); else scrollUp.classList.add('hidden');
+          if((window.innerHeight + st) >= document.body.offsetHeight - 50) scrollDown.classList.add('hidden'); else scrollDown.classList.remove('hidden');
+      });
+      scrollUp.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+      scrollDown.addEventListener('click', ()=> window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'}));
+      
+      // Notice Close
+      document.querySelector('.notice-close').addEventListener('click', function(){
+          this.parentElement.remove();
       });
 
     });
