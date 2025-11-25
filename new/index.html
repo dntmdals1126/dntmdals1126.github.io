@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>포커스 대시보드</title>
+  <title>WebHub</title>
   <meta name="theme-color" content="#0c0f14" />
   
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -11,8 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
+  
   <style>
-    /* --- 변수 설정 --- */
+    /* --- Focus Dashboard Design System --- */
     :root {
       --bg-0: #0c0f14;
       --bg-1: #10141b;
@@ -24,7 +26,6 @@
       --primary: #5b8cff;
       --primary-glow: rgba(91, 140, 255, 0.3);
       --accent: #facc15;
-      --danger: #ff5a5a;
       --border: rgba(255, 255, 255, 0.08);
       --radius: 16px;
       --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
@@ -48,9 +49,11 @@
       --border: rgba(0, 0, 0, 0.06);
     }
 
-    /* --- 기본 설정 --- */
-    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-    body {
+    /* --- Base --- */
+    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; scrollbar-width: none; }
+    ::-webkit-scrollbar { display: none; }
+    
+    html, body {
       margin: 0; padding: 0;
       font-family: var(--font-main);
       background: var(--bg-0);
@@ -60,191 +63,242 @@
       overflow-x: hidden;
       transition: background 0.3s, color 0.3s;
     }
+    body.scroll-lock { overflow: hidden; }
 
-    /* --- 배경 애니메이션 --- */
-    .bg-blobs {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
-    }
-    .blob {
-      position: absolute; border-radius: 50%;
-      filter: blur(80px); opacity: 0.4;
-      animation: float 20s infinite alternate;
-    }
+    .cal-sans-regular { font-family: var(--font-display); }
+
+    /* --- Background Animation --- */
+    .bg-blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: float 20s infinite alternate; }
     .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary); animation-delay: 0s; }
     .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: purple; animation-delay: -10s; }
     html[data-theme="light"] .blob-2 { background: #a5b4fc; }
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(30px, 50px) scale(1.1); }
-    }
-
-    /* --- 레이아웃 (반응형 그리드) --- */
+    /* --- Layout Container --- */
     .container {
-      max-width: 1200px; margin: 0 auto; padding: 20px;
+      max-width: 1000px; margin: 0 auto; padding: 20px;
       display: grid; gap: 20px;
-      /* PC: 3열 구조 */
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr); /* Desktop: 2 Columns */
     }
 
-    /* --- 헤더 --- */
+    /* --- Header --- */
     .header-bar {
-      grid-column: span 3;
+      grid-column: span 2;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0 20px;
+      padding: 10px 0 10px;
     }
     .brand {
       font-family: var(--font-display); font-size: 24px;
-      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
     }
-    .brand span { opacity: 0.6; font-size: 14px; font-family: var(--font-main); }
+    .brand-by { opacity: 0.6; font-size: 13px; font-family: var(--font-main); font-weight: 400; }
     
-    .nav-actions { display: flex; gap: 8px; }
+    .header-actions { display: flex; gap: 10px; }
     .icon-btn {
       background: var(--surface); border: 1px solid var(--border);
-      color: var(--ink-0); width: 36px; height: 36px; border-radius: 50%;
+      color: var(--ink-0); width: 40px; height: 40px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s; backdrop-filter: blur(10px);
     }
     .icon-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
 
-    /* --- 카드 공통 스타일 --- */
+    /* --- Card Style (Replaces .section) --- */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 20px;
       backdrop-filter: blur(12px);
       box-shadow: var(--shadow);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
-      display: flex; flex-direction: column;
-      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; overflow: hidden;
     }
     html[data-theme="light"] .card { background: rgba(255,255,255,0.6); }
-
-    .card-title {
-      font-size: 14px; color: var(--ink-1); font-weight: 700;
-      margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
-    }
-
-    /* --- 위젯별 크기 조정 (PC) --- */
-    .w-hero { grid-column: span 2; min-height: 180px; justify-content: space-between; }
-    .w-time { grid-column: span 1; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
-    .w-links { grid-column: span 1; }
-    .w-todo { grid-column: span 1; grid-row: span 2; min-height: 400px; }
-    .w-memo { grid-column: span 1; grid-row: span 2; }
-    .w-breath { grid-column: span 1; }
-    .w-quote { grid-column: span 3; text-align: center; padding: 24px; }
-
-    /* --- 위젯 내용 스타일 --- */
-    .greeting { font-size: 28px; font-weight: 900; line-height: 1.3; }
-    .greeting span { color: var(--primary); }
-    .date-display { font-size: 14px; color: var(--ink-1); margin-top: 8px; }
     
-    .live-clock { font-family: var(--font-mono); font-size: 48px; font-weight: 700; letter-spacing: -1px; }
-    .live-ampm { font-size: 16px; color: var(--ink-1); font-weight: 500; margin-top: -5px; }
+    /* --- Search Section (Hero) --- */
+    .w-search { grid-column: span 2; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+    
+    .time-header { 
+        display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;
+    }
+    .time-text { font-family: var(--font-mono); font-size: 14px; color: var(--ink-1); }
+    .t-time { font-size: 28px; font-weight: 700; color: var(--ink-0); display: block; line-height: 1.2; }
+    
+    /* Search Engine Buttons */
+    .engine-seg {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .engine-btn {
+      appearance: none; border: 1px solid var(--border); background: rgba(255,255,255,0.05);
+      color: var(--ink-1); padding: 8px 14px; border-radius: 20px;
+      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; transition: all 0.2s;
+    }
+    .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-1px); }
+    .engine-btn[data-active="true"] {
+      background: var(--primary-glow); border-color: var(--primary); color: var(--primary);
+    }
+    .engine-icon { width: 10px; height: 10px; border-radius: 50%; }
 
-    /* 메모장 */
-    .memo-area {
-      flex: 1; background: transparent; border: none; resize: none;
-      color: var(--ink-0); font-size: 15px; line-height: 1.6;
-      font-family: var(--font-main); padding: 0; width: 100%;
+    /* Search Bar */
+    .input-shell {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-0); border: 1px solid var(--border);
+      border-radius: 14px; padding: 6px 6px 6px 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .memo-area::placeholder { color: var(--ink-1); opacity: 0.5; }
-    .save-indicator { font-size: 11px; color: var(--primary); opacity: 0; transition: opacity 0.3s; }
-    .save-indicator.saved { opacity: 1; }
+    .input-shell:focus-within { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+    .input-shell input {
+      flex: 1; background: transparent; border: none; color: var(--ink-0);
+      font-size: 16px; height: 40px;
+    }
+    .search-btn {
+      background: var(--primary); color: white; border: none;
+      border-radius: 10px; padding: 0 20px; height: 40px;
+      font-weight: 700; cursor: pointer; transition: 0.2s;
+    }
+    .search-btn:hover { background: #4a7dff; transform: translateY(-1px); }
 
-    /* 할 일 목록 */
-    .todo-input-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
-    .todo-input {
-      flex: 1; background: rgba(0,0,0,0.1); border: 1px solid var(--border);
-      border-radius: 8px; padding: 10px 12px; color: var(--ink-0); font-size: 15px;
+    /* --- Link Cards (Accordions) --- */
+    details {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius); overflow: hidden;
+        transition: background 0.2s;
+        height: fit-content;
     }
-    html[data-theme="light"] .todo-input { background: rgba(255,255,255,0.5); }
-    .todo-btn {
-      background: var(--primary); color: white; border: none; border-radius: 8px;
-      width: 40px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center;
+    summary.section-title {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 16px 20px; cursor: pointer; list-style: none;
+        font-weight: 600; color: var(--ink-0);
+        transition: background 0.2s;
     }
-    .todo-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
-    .todo-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px 0;
-      border-bottom: 1px solid var(--border); font-size: 15px; animation: slideIn 0.2s ease;
+    summary:hover { background: var(--surface-hover); }
+    summary::-webkit-details-marker { display: none; }
+    
+    .details-content-wrapper {
+        border-top: 1px solid var(--border);
+        background: rgba(0,0,0,0.1);
+        padding: 20px;
     }
-    .todo-item:last-child { border-bottom: none; }
-    .todo-check {
-      width: 20px; height: 20px; border: 2px solid var(--ink-1); border-radius: 6px; cursor: pointer;
-      display: grid; place-items: center; transition: 0.2s; flex-shrink: 0;
-    }
-    .todo-item.completed .todo-check { background: var(--primary); border-color: var(--primary); }
-    .todo-item.completed span { text-decoration: line-through; color: var(--ink-1); }
-    .todo-delete { margin-left: auto; color: var(--ink-1); cursor: pointer; padding: 4px; }
-    .todo-delete:hover { color: var(--danger); }
+    html[data-theme="light"] .details-content-wrapper { background: rgba(255,255,255,0.3); }
 
-    /* 호흡 위젯 */
-    .breath-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
-    .breath-circle {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: conic-gradient(from 180deg at 50% 50%, var(--primary) 0deg, #a855f7 180deg, var(--primary) 360deg);
-      position: relative; margin: 15px 0;
-      box-shadow: 0 0 30px var(--primary-glow);
-      transition: transform 4s ease-in-out;
+    /* Link Grid inside Details */
+    .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .link {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 10px; padding: 16px; background: var(--surface);
+        border: 1px solid var(--border); border-radius: 12px;
+        color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
+        transition: 0.2s; text-align: center;
     }
-    .breath-circle::after {
-      content: ''; position: absolute; inset: 4px; background: var(--bg-1); border-radius: 50%; z-index: 1;
-    }
-    .w-breath.inhale .breath-circle { transform: scale(1.4); box-shadow: 0 0 50px var(--primary-glow); }
-    .breath-btn {
-      padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
-      background: transparent; color: var(--ink-0); cursor: pointer; font-size: 13px; margin-top: 10px;
-    }
-    .breath-btn:hover { background: var(--primary); color: white; border-color: transparent; }
+    .link:hover { transform: translateY(-3px); border-color: var(--primary); background: var(--surface-hover); }
+    .link img { width: 24px; height: 24px; opacity: 0.9; }
 
-    /* 바로가기 */
-    .quick-link-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; height: 100%; }
-    .q-link {
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-      background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px;
-      text-decoration: none; color: var(--ink-0); font-size: 13px; font-weight: 500;
-      transition: 0.2s; border: 1px solid transparent; text-align: center;
+    /* Icons */
+    .external-icon { width: 18px; height: 18px; margin-right: 8px; vertical-align: middle; color: var(--primary); opacity: 0.8; }
+    .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.2s; }
+    details[open] > summary .fold-icon { transform: rotate(180deg); }
+
+    /* --- Stopwatch --- */
+    .stopwatch-wrap { display: flex; flex-direction: column; align-items: center; }
+    .stopwatch-display {
+        font-family: var(--font-mono); font-size: 42px; font-weight: 700;
+        color: var(--ink-0); margin: 20px 0; letter-spacing: -1px;
     }
-    .q-link:hover { background: var(--surface-hover); border-color: var(--primary); color: var(--primary); }
-
-    /* 명언 */
-    .quote-text { font-family: var(--font-display); font-size: 18px; margin-bottom: 6px; background: linear-gradient(90deg, var(--ink-0), var(--ink-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .quote-author { font-size: 13px; color: var(--ink-1); font-style: italic; }
-
-    /* 설정 모달 */
-    .modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-        display: none; align-items: center; justify-content: center; z-index: 2000;
+    .timer-controls { display: flex; gap: 10px; margin-bottom: 20px; }
+    .timer-btn {
+        padding: 10px 24px; border-radius: 12px; font-size: 14px; font-weight: 600;
+        border: 1px solid var(--border); background: var(--surface); color: var(--ink-0);
+        cursor: pointer; transition: 0.2s;
     }
-    .modal-overlay.open { display: flex; }
-    .modal { background: var(--bg-1); border: 1px solid var(--border); padding: 24px; border-radius: 16px; width: 90%; max-width: 320px; box-shadow: var(--shadow); }
-    .modal h3 { margin: 0 0 16px; font-size: 18px; }
-    .modal-btn { display: block; width: 100%; padding: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--ink-0); border-radius: 8px; margin-bottom: 8px; cursor: pointer; text-align: center; font-size: 14px; }
-    .modal-btn:hover { background: var(--surface-hover); }
-    .modal-close { background: var(--primary); color: white; border: none; margin-top: 16px; font-weight: bold; }
+    .timer-btn:hover { background: var(--surface-hover); transform: translateY(-1px); }
+    .btn-start { color: var(--primary); border-color: var(--primary-glow); background: var(--primary-glow); }
+    .lap-list-container {
+        width: 100%; border-top: 1px solid var(--border); padding-top: 10px;
+        max-height: 150px; overflow-y: auto; display: none;
+    }
+    .lap-list-container.active { display: block; }
+    .lap-item {
+        display: flex; justify-content: space-between; padding: 8px 12px;
+        font-family: var(--font-mono); font-size: 13px; color: var(--ink-1);
+        border-bottom: 1px solid var(--border);
+    }
+    .lap-index { color: var(--primary); }
 
-    /* --- 모바일 최적화 (핵심 수정) --- */
+    /* --- Drawer --- */
+    .drawer-root { position: fixed; inset: 0; z-index: 1200; pointer-events: none; }
+    .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); opacity: 0; transition: 0.3s; }
+    .drawer-nav {
+        position: absolute; top: 0; right: 0; height: 100dvh; width: 280px;
+        background: var(--bg-1); border-left: 1px solid var(--border);
+        transform: translateX(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        padding: 24px; display: flex; flex-direction: column; gap: 20px;
+    }
+    .drawer-root.active { pointer-events: auto; }
+    .drawer-root.active .drawer-overlay { opacity: 1; }
+    .drawer-root.active .drawer-nav { transform: translateX(0); }
+    .drawer-nav h3 { margin: 0 0 10px; font-size: 12px; color: var(--ink-1); letter-spacing: 1px; }
+    .drawer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .drawer-nav a {
+        display: flex; align-items: center; padding: 12px; border-radius: 10px;
+        background: var(--surface); border: 1px solid var(--border);
+        color: var(--ink-0); text-decoration: none; font-size: 14px;
+        transition: 0.2s;
+    }
+    .drawer-nav a:hover { background: var(--surface-hover); border-color: var(--primary); }
+    .drawer-close-btn {
+        align-self: flex-end; background: none; border: none; color: var(--ink-0);
+        font-size: 24px; cursor: pointer; margin-bottom: 10px;
+    }
+
+    /* --- Notice Bar --- */
+    .notice-bar {
+        grid-column: span 2; background: var(--primary-glow); border: 1px solid var(--primary);
+        border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+        color: var(--ink-0); font-size: 13px;
+    }
+    .notice-label { font-weight: 800; color: var(--primary); }
+    .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; }
+    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 16px; }
+
+    /* --- Mobile & Responsive --- */
     @media (max-width: 768px) {
-      .container { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
-      .header-bar { grid-column: span 1; padding: 0 0 10px; }
-      
-      /* 모든 카드를 한 줄로 강제 정렬 */
-      .w-hero, .w-time, .w-links, .w-todo, .w-memo, .w-breath, .w-quote {
-        grid-column: span 1;
-        grid-row: auto;
-        min-height: auto;
-      }
-      
-      .w-hero { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .w-time { flex-direction: row; justify-content: space-between; padding: 16px 24px; }
-      .live-clock { font-size: 32px; }
-      .w-todo { min-height: 300px; }
-      .w-memo { min-height: 200px; }
+        .container { grid-template-columns: 1fr; padding: 16px; }
+        .header-bar { grid-column: span 1; }
+        .w-search { grid-column: span 1; padding: 20px; }
+        .t-time { font-size: 24px; }
+        .notice-bar { grid-column: span 1; }
+        
+        .link-grid { grid-template-columns: repeat(3, 1fr); }
+        .link { padding: 12px 8px; font-size: 12px; }
+        .link img { width: 20px; height: 20px; }
     }
+    
+    /* Footer */
+    footer {
+        grid-column: span 2; text-align: center; padding: 40px 0;
+        color: var(--ink-1); font-size: 12px; opacity: 0.7;
+    }
+    @media(max-width: 768px) { footer { grid-column: span 1; } }
+
+    /* Scroll Buttons */
+    .scroll-btn {
+      position: fixed; right: 20px; width: 44px; height: 44px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--ink-0); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 900; box-shadow: var(--shadow); transition: 0.2s;
+    }
+    .scroll-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
+    .scroll-btn.up { bottom: 80px; }
+    .scroll-btn.down { bottom: 20px; }
+    .scroll-btn.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
+
   </style>
 </head>
+
 <body>
 
   <div class="bg-blobs">
@@ -255,290 +309,612 @@
   <div class="container">
     
     <header class="header-bar">
-      <div class="brand" onclick="location.reload()">
-        Focus.<span id="themeBtn">Dashboard</span>
-      </div>
-      <div class="nav-actions">
-        <button class="icon-btn" id="settingsBtn" title="설정 및 데이터">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <h1 id="headerTitle" class="brand">
+        Focus.<span class="cal-sans-regular" style="opacity:1; font-weight:400;">WebHub</span>
+        <span class="brand-by">by Seungmin Woo</span>
+      </h1>
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-btn" aria-label="테마 전환">
+          <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/></svg>
+          <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </button>
-        <a href="/" class="icon-btn" title="메인 홈으로">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        </a>
+        <button class="icon-btn menu-toggle" aria-label="메뉴 열기">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
     </header>
 
-    <div class="card w-hero">
-      <div class="hero-content">
-        <div class="greeting">반가워요,<br><span>승민님.</span></div>
-        <div class="date-display" id="dateDisplay">날짜 로딩중...</div>
+    <section class="card w-search">
+      <div class="time-header">
+        <div class="time-text" id="currentDateTime">Loading...</div>
       </div>
-    </div>
 
-    <div class="card w-time">
-      <div class="live-clock" id="clockDisplay">00:00</div>
-      <div class="live-ampm" id="ampmDisplay">AM</div>
-    </div>
-
-    <div class="card w-links">
-        <div class="card-title">바로가기</div>
-        <div class="quick-link-list">
-            <a href="/admin/" target="_blank" class="q-link">Admin</a>
-            <a href="/testbridge/" target="_blank" class="q-link">Lab</a>
-            <a href="https://gemini.google.com" target="_blank" class="q-link">Gemini</a>
-            <a href="https://github.com" target="_blank" class="q-link">Github</a>
+      <div class="search-wrap">
+        <div class="engine-seg" id="engineSeg">
+            <button type="button" class="engine-btn" data-engine="google" data-active="true">
+              <span class="engine-icon" style="background:#4285F4"></span>Google
+            </button>
+            <button type="button" class="engine-btn" data-engine="naver">
+              <span class="engine-icon" style="background:#03cf5d"></span>NAVER
+            </button>
+            <button type="button" class="engine-btn" data-engine="youtube">
+              <span class="engine-icon" style="background:#ff0000"></span>YouTube
+            </button>
+            <button type="button" class="engine-btn" data-engine="namu">
+              <span class="engine-icon" style="background:#00a495"></span>Namu
+            </button>
+            <button type="button" class="engine-btn" data-engine="cbnul">
+              <span class="engine-icon" style="background:#B52555"></span>Library
+            </button>
+            <button type="button" class="engine-btn" data-engine="wikipedia">
+              <span class="engine-icon" style="background:#777"></span>Wiki
+            </button>
+            <button type="button" class="engine-btn" data-engine="riss">
+              <span class="engine-icon" style="background:#F76323"></span>RISS
+            </button>
+            <button type="button" class="engine-btn" data-engine="everytime">
+              <span class="engine-icon" style="background:#f91f15"></span>Everytime
+            </button>
         </div>
-    </div>
 
-    <div class="card w-todo">
-      <div class="card-title">
-        오늘 할 일
-        <span style="font-size:12px; opacity:0.6" id="todoCount">0개 남음</span>
+        <div class="search-bar" role="search">
+          <div class="input-shell">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input id="q" type="search" placeholder="검색어를 입력하세요..." autocomplete="off" />
+            <button id="searchBtn" class="search-btn" type="button">검색</button>
+          </div>
+        </div>
       </div>
-      <div class="todo-input-wrap">
-        <input type="text" class="todo-input" id="todoInput" placeholder="할 일을 입력하세요..." autocomplete="off">
-        <button class="todo-btn" id="addTodoBtn">+</button>
+    </section>
+
+    <details open>
+      <summary class="section-title">
+        <div>
+            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            Educational Volunteering
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="link-grid grid-4">
+          <a class="link" href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
+            <span>충북대 공지</span>
+          </a>
+          <a class="link" href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=knue.ac.kr" alt="">
+            <span>교원대 공지</span>
+          </a>
+          <a class="link" href="https://www.1365.go.kr/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=1365.go.kr" alt="">
+            <span>1365 포털</span>
+          </a>
+          <a class="link" href="https://edu.chungbuk.ac.kr/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
+            <span>교직부</span>
+          </a>
+        </div>
       </div>
-      <ul class="todo-list" id="todoList">
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div>
+            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            Chungbuk National University
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="link-grid grid-4">
+          <a class="link" href="https://lms.chungbuk.ac.kr/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
+            <span>eCampus</span>
+          </a>
+          <a class="link" href="https://eis.cbnu.ac.kr/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
+            <span>개신누리</span>
+          </a>
+          <a class="link" href="https://cieat.chungbuk.ac.kr/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=cieat.chungbuk.ac.kr" alt="">
+            <span>CIEAT</span>
+          </a>
+          <a class="link" href="https://eisa.cbnu.ac.kr/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
+            <span>수강신청</span>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div>
+            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Artificial Intelligence
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="link-grid grid-4">
+          <a class="link" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=gemini.google.com" alt="">
+            <span>Gemini</span>
+          </a>
+          <a class="link" href="http://chat.openai.com/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=chat.openai.com" alt="">
+            <span>ChatGPT</span>
+          </a>
+          <a class="link" href="http://www.claude.ai/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=claude.ai" alt="">
+            <span>Claude</span>
+          </a>
+          <a class="link" href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=perplexity.ai" alt="">
+            <span>Perplexity</span>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div>
+            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Stopwatch
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="stopwatch-wrap" id="stopwatchWrapper">
+          <div class="sw-main-panel">
+            <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
+            <div class="timer-controls">
+              <button id="btnMain" class="timer-btn btn-start">시작</button>
+              <button id="btnSub" class="timer-btn">초기화</button>
+              <button id="btnFullscreenControl" class="timer-btn" title="전체화면">
+                <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="lap-list-container" id="lapList"></div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div>
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          Music
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="music-card">
+          <iframe width="100%" height="80" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </details>
+
+    <section class="notice-bar" id="noticeBar">
+        <span class="notice-label">UPDATE</span>
+        <div class="notice-marquee">
+          <div class="notice-text">
+            WebHub 5.0 디자인 업데이트 완료. 검색 기능을 최상단에 배치하고 Focus 테마를 적용했습니다.
+          </div>
+        </div>
+        <button class="notice-close" aria-label="닫기">×</button>
+    </section>
+
+  </div>
+
+  <div class="drawer-root" id="drawerRoot" aria-hidden="true">
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <nav id="drawerNav" class="drawer-nav" role="navigation">
+      <button class="drawer-close-btn" aria-label="메뉴 닫기">×</button>
+      <div class="cal-sans-regular">
+        <h3>M E N U</h3>
+        <ul>
+          <li><a href="/" rel="noopener noreferrer">Home</a></li>
+          <li><a href="/admin/" target="_blank" rel="noopener noreferrer">Admin</a></li>
+          <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">Github</a></li>
+          <li><a href="/testbridge/" target="_blank" rel="noopener noreferrer">Laboratory</a></li>
         </ul>
-    </div>
-
-    <div class="card w-memo">
-      <div class="card-title">
-        메모장
-        <span class="save-indicator" id="saveIndicator">저장됨</span>
+        <br>
+        <h3>O T H E R S</h3>
+        <ul>
+          <li><a href="/jejubus/" target="_blank" rel="noopener noreferrer">Jeju Bus Timetable</a></li>
+        </ul>
       </div>
-      <textarea class="memo-area" id="quickMemo" placeholder="아이디어를 자유롭게 적어두세요. (자동 저장)"></textarea>
-    </div>
-
-    <div class="card w-breath" id="breathWidget">
-      <div class="card-title">호흡 운동</div>
-      <div class="breath-wrap">
-          <div class="breath-circle"></div>
-          <button class="breath-btn" id="toggleBreath">시작하기</button>
-      </div>
-    </div>
-
-    <div class="card w-quote">
-      <div class="quote-text">"위대한 성과는 소소한 일들이 모여 이루어진다."</div>
-      <div class="quote-author">- 빈센트 반 고흐</div>
-    </div>
-
+    </nav>
   </div>
 
-  <div class="modal-overlay" id="settingsModal">
-      <div class="modal">
-          <h3>데이터 관리</h3>
-          <p style="font-size:13px; color:var(--ink-1); margin-bottom:16px;">
-              이 페이지는 서버가 없어서 기기 간 자동 동기화가 안 됩니다. 다른 기기에서 사용하려면 데이터를 '내보내기' 후 '불러오기' 하세요.
-          </p>
-          <button class="modal-btn" id="exportBtn">📁 데이터 내보내기 (저장)</button>
-          <button class="modal-btn" onclick="document.getElementById('fileInput').click()">📂 데이터 불러오기</button>
-          <input type="file" id="fileInput" style="display:none" accept=".json">
-          <button class="modal-btn modal-close" id="closeModal">닫기</button>
-      </div>
-  </div>
+  <footer>
+    <span class="cal-sans-regular">WebHub Ver. 5.0</span><br>
+    <span>&copy; 2025 우승민. All rights reserved.</span>
+  </footer>
+
+  <button class="scroll-btn up hidden" aria-label="맨 위로">▲</button>
+  <button class="scroll-btn down hidden" aria-label="맨 아래로">▼</button>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      
-      // --- 1. 테마 설정 ---
-      const themeBtn = document.getElementById('themeBtn');
+      const headerTitle = document.getElementById('headerTitle');
+      const menuToggle  = document.querySelector('.menu-toggle');
+      const drawerRoot  = document.getElementById('drawerRoot');
+      const drawerNav   = document.getElementById('drawerNav');
+      const overlay     = document.getElementById('drawerOverlay');
+      const drawerCloseBtn = document.querySelector('.drawer-close-btn');
+      const currentDateTimeElement = document.getElementById('currentDateTime');
+      const engineSeg  = document.getElementById('engineSeg');
+      const q          = document.getElementById('q');
+      const searchBtn  = document.getElementById('searchBtn');
+      const themeToggleBtn = document.getElementById('themeToggle');
+      const iconMoon = document.getElementById('iconMoon');
+      const iconSun  = document.getElementById('iconSun');
       const THEME_KEY = 'theme';
+
+      headerTitle?.addEventListener('click', () => location.reload());
+
+      // --- Clock Logic (Updated for Focus Design) ---
+      function getCurrentDateTime(){
+        const now=new Date();
+        const y=now.getFullYear();
+        const m=now.getMonth()+1; 
+        const d=now.getDate();    
+        const wd=['일','월','화','수','목','금','토'][now.getDay()];
+        const h=now.getHours();
+        const ap=h>=12?'PM':'AM'; // Changed to English for tech feel
+        const hh=h%12||12;
+        const mm=String(now.getMinutes()).padStart(2,'0'); 
+        const ss=String(now.getSeconds()).padStart(2,'0'); 
+        
+        // Layout: Date on top (small), Time on bottom (Big)
+        return `
+            <span style="display:block; opacity:0.7;">${y}.${m}.${d} (${wd})</span>
+            <span class="t-time">${hh}:${mm}:${ss} <small style="font-size:0.5em">${ap}</small></span>
+        `;
+      }
+      function displayCurrentDateTime(){ currentDateTimeElement.innerHTML = getCurrentDateTime(); }
+      displayCurrentDateTime(); setInterval(displayCurrentDateTime, 1000);
+
+      // --- Drawer & Scroll Lock ---
+      let savedScrollPosition = 0;
+      function lockBody(){ 
+        savedScrollPosition = window.scrollY;
+        document.body.style.top = `-${savedScrollPosition}px`;
+        document.body.classList.add('scroll-lock'); 
+      }
+      function unlockBody(){ 
+        document.documentElement.style.scrollBehavior = 'auto';
+        document.body.classList.remove('scroll-lock'); 
+        document.body.style.top = '';
+        window.scrollTo(0, savedScrollPosition);
+        setTimeout(() => {
+            document.documentElement.style.scrollBehavior = '';
+        }, 50);
+      }
+
+      function setDrawer(open){
+        if (open){
+          drawerRoot.classList.add('active');
+          drawerRoot.setAttribute('aria-hidden','false');
+          menuToggle.setAttribute('aria-expanded','true');
+          lockBody();
+          drawerNav.querySelector('a, button')?.focus();
+        }else{
+          drawerRoot.classList.remove('active');
+          drawerRoot.setAttribute('aria-hidden','true');
+          menuToggle.setAttribute('aria-expanded','false');
+          unlockBody(); 
+          menuToggle.focus();
+        }
+      }
+      menuToggle.addEventListener('click',()=> setDrawer(!drawerRoot.classList.contains('active')));
+      overlay.addEventListener('click',()=> setDrawer(false));
+      drawerCloseBtn.addEventListener('click',()=> setDrawer(false));
       
-      function setTheme(theme) {
-        if (theme === 'light') {
-          document.documentElement.setAttribute('data-theme', 'light');
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f8fb');
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0c0f14');
+      document.addEventListener('keydown',e=>{ 
+          if(e.key==='Escape') {
+              if(drawerRoot.classList.contains('active')) {
+                  setDrawer(false);
+              } else if (stopwatchWrap.classList.contains('fullscreen-mode')) {
+                  toggleFullscreen();
+              } else if (q.value !== '') {
+                  q.value = ''; 
+              }
+          }
+      });
+      document.addEventListener('click',e=>{
+        if(!drawerRoot.classList.contains('active')) return;
+        const insidePanel = drawerNav.contains(e.target);
+        const onToggle = menuToggle.contains(e.target);
+        if(!insidePanel && !onToggle) setDrawer(false);
+      });
+
+      // --- Search Engine Logic (Preserved) ---
+      let currentEngine='google';
+      const cmap={ 
+        google:'#4285F4', naver:'#03cf5d', youtube:'#ff0000', namu:'#00a495', 
+        cbnul:'#B52555', wikipedia:'#777', dbpia:'#cf393e', riss:'#F76323', everytime:'#f91f15'
+      };
+      function syncEngineUI(engine){
+        currentEngine=engine;
+        [...engineSeg.querySelectorAll('.engine-btn')].forEach(b=>{
+          const active = b.dataset.engine===engine;
+          b.dataset.active=String(active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+        // Update Search Button Color
+        searchBtn.style.backgroundColor = cmap[engine] || 'var(--primary)';
+        searchBtn.style.boxShadow = `0 4px 12px ${cmap[engine]}40`; // Add glow
+      }
+      engineSeg.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const btn = e.target.closest('.engine-btn'); if(btn) syncEngineUI(btn.dataset.engine);
+        }
+      });
+      
+      // Pointer events for dragging the engine list
+      let isPointerDown=false, isDragging=false, dragStartX=0, dragStartScroll=0, pointerDownTarget=null;
+      const dragThreshold = 4; 
+      engineSeg.addEventListener('pointerdown', (ev) => {
+        if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+        isPointerDown = true; isDragging = false;
+        dragStartX = ev.clientX; dragStartScroll = engineSeg.scrollLeft;
+        pointerDownTarget = ev.target.closest('.engine-btn');
+        engineSeg.classList.add('dragging');
+        try { engineSeg.setPointerCapture(ev.pointerId); } catch(e){}
+      }, { passive: true });
+      engineSeg.addEventListener('pointermove', (ev) => {
+        if (!isPointerDown) return;
+        const dx = ev.clientX - dragStartX;
+        if (!isDragging && Math.abs(dx) > dragThreshold) isDragging = true;
+        if (isDragging) {
+          ev.preventDefault();
+          engineSeg.scrollLeft = dragStartScroll - dx;
+        }
+      });
+      function handlePointerEnd(ev){
+        if (!isPointerDown) return;
+        if (!isDragging) {
+          const btn = pointerDownTarget || ev.target.closest('.engine-btn');
+          if (btn) syncEngineUI(btn.dataset.engine);
+        }
+        isPointerDown = false; isDragging = false; pointerDownTarget = null;
+        engineSeg.classList.remove('dragging');
+        try { if(ev && ev.pointerId) engineSeg.releasePointerCapture(ev.pointerId); } catch(e){}
+      }
+      engineSeg.addEventListener('pointerup', handlePointerEnd);
+      engineSeg.addEventListener('pointercancel', handlePointerEnd);
+      engineSeg.addEventListener('mouseleave', (ev) => {
+        if (isPointerDown && ev.pointerType === 'mouse') handlePointerEnd(ev);
+      });
+      
+      syncEngineUI(currentEngine);
+
+      function buildSearchURL(engineKey, term){
+        const t=(term||'').trim(); if(!t) return null;
+        try{
+          switch(engineKey){
+            case 'google':   { const u=new URL('https://www.google.com/search'); u.search=new URLSearchParams({q:t}).toString(); return u.toString(); }
+            case 'naver':    { const u=new URL('https://search.naver.com/search.naver'); u.search=new URLSearchParams({query:t}).toString(); return u.toString(); }
+            case 'youtube':  { const u=new URL('https://www.youtube.com/results'); u.search=new URLSearchParams({search_query:t}).toString(); return u.toString(); }
+            case 'namu':     { const u=new URL('https://namu.wiki/w/'); u.pathname+=encodeURIComponent(t); return u.toString(); }
+            case 'cbnul':    { const u=new URL('https://cbnul.chungbuk.ac.kr/search/i-discovery'); u.search=new URLSearchParams({ALL:`k|a|${t}`}).toString(); return u.toString(); }
+            case 'wikipedia':{ const u=new URL('https://ko.wikipedia.org/w/index.php'); u.search=new URLSearchParams({search:t}).toString(); return u.toString(); }
+            case 'dbpia':    { const u=new URL('https://www.dbpia.co.kr/search/topSearch'); u.search=new URLSearchParams({query:t}).toString(); return u.toString(); }
+            case 'riss':     { const u=new URL('https://www.riss.kr/search/Search.do'); u.search=new URLSearchParams({
+                                colName:'all', isDetailSearch:'N', searchGubun:'true', oldQuery:'', sflag:1,
+                                fsearchMethod:'search', isFDetailSearch:'N', searchQuery:'', kbid:'', pageNumber:1, query:t
+                              }).toString(); return u.toString(); }
+            case 'everytime':{ return `https://everytime.kr/search/all/${encodeURIComponent(t)}`; }
+            default: return null;
+          }
+        }catch{ return null; }
+      }
+      function doSearch(){
+        const url = buildSearchURL(currentEngine, q.value); if(!url){ q.focus(); return; }
+        window.open(url,'_blank','noopener');
+      }
+      searchBtn.addEventListener('click',doSearch);
+      q.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); doSearch(); } else if(e.key==='Escape'){ q.value=''; } });
+
+      // --- Scroll Buttons ---
+      const scrollBtnUp=document.querySelector('.scroll-btn.up');
+      const scrollBtnDown=document.querySelector('.scroll-btn.down');
+      function updateScrollButtons(){
+        const scrollY = window.scrollY || window.pageYOffset;
+        const atTop = scrollY <= 60;
+        const atBottom = (window.innerHeight + scrollY) >= (document.body.scrollHeight - 60);
+        if(atTop) scrollBtnUp.classList.add('hidden'); else scrollBtnUp.classList.remove('hidden');
+        if(atBottom) scrollBtnDown.classList.add('hidden'); else scrollBtnDown.classList.remove('hidden');
+      }
+      updateScrollButtons();
+      window.addEventListener('scroll', updateScrollButtons, { passive: true });
+      window.addEventListener('resize', updateScrollButtons);
+      scrollBtnUp?.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+      scrollBtnDown?.addEventListener('click',()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}));
+
+      // --- Notice Bar ---
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.notice-close');
+        if (!btn) return;
+        btn.closest('#noticeBar')?.remove();
+      });
+
+      // --- Theme Manager ---
+      function detectInitialTheme(){
+        const saved = localStorage.getItem(THEME_KEY);
+        return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+      }
+      function applyTheme(theme){
+        const root = document.documentElement;
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (theme === 'light'){
+          root.setAttribute('data-theme','light');
+          themeToggleBtn?.setAttribute('aria-pressed','true');
+          if(iconSun) iconSun.style.display='';
+          if(iconMoon) iconMoon.style.display='none';
+          themeMeta?.setAttribute('content','#ffffff');
+        }else{
+          root.removeAttribute('data-theme');
+          themeToggleBtn?.setAttribute('aria-pressed','false');
+          if(iconSun) iconSun.style.display='none';
+          if(iconMoon) iconMoon.style.display='';
+          themeMeta?.setAttribute('content','#0c0f14');
         }
         localStorage.setItem(THEME_KEY, theme);
       }
-
-      const savedTheme = localStorage.getItem(THEME_KEY);
-      if (savedTheme) {
-        setTheme(savedTheme);
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        setTheme('light');
-      }
-
-      themeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+      const initialTheme = detectInitialTheme();
+      applyTheme(initialTheme);
+      themeToggleBtn?.addEventListener('click', () => {
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        setTheme(isLight ? 'dark' : 'light');
+        applyTheme(isLight ? 'dark' : 'light');
       });
 
-      // --- 2. 시계 및 날짜 (한글화) ---
-      function updateTime() {
-        const now = new Date();
-        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-        
-        // 시간
-        let h = now.getHours();
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        h = h % 12 || 12; // 12시간제 변환
-        
-        document.getElementById('clockDisplay').textContent = `${h}:${m}`;
-        document.getElementById('ampmDisplay').textContent = ampm;
-        
-        // 날짜
-        const month = now.getMonth() + 1;
-        const date = now.getDate();
-        const dayName = days[now.getDay()];
-        document.getElementById('dateDisplay').textContent = `${month}월 ${date}일 ${dayName}`;
+      // --- Stopwatch Logic (Preserved) ---
+      let swInterval = null;
+      let swStartTime = 0;
+      let swElapsedTime = 0;
+      const swDisplay = document.getElementById('stopwatchDisplay');
+      const btnMain = document.getElementById('btnMain'); 
+      const btnSub = document.getElementById('btnSub');   
+      const lapList = document.getElementById('lapList');
+      const stopwatchWrap = document.querySelector('.stopwatch-wrap');
+      const btnFullscreenControl = document.getElementById('btnFullscreenControl');
+      const iconExpand = document.getElementById('iconExpand');
+      const iconCompress = document.getElementById('iconCompress');
+      let lapCounter = 1;
 
-        // 인사말 (시간대별)
-        const hour = now.getHours();
-        let greet = '안녕하세요';
-        if (hour >= 5 && hour < 12) greet = '좋은 아침입니다';
-        else if (hour >= 12 && hour < 18) greet = '나른한 오후네요';
-        else if (hour >= 18 && hour < 22) greet = '수고했어요, 오늘 하루도';
-        else greet = '편안한 밤 되세요';
-        
-        document.querySelector('.greeting').firstChild.nodeValue = `${greet}, `;
+      function formatTime(ms) {
+        const date = new Date(ms);
+        const m = String(date.getUTCMinutes()).padStart(2, '0');
+        const s = String(date.getUTCSeconds()).padStart(2, '0');
+        const cs = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0');
+        return `${m}:${s}:${cs}`;
       }
-      setInterval(updateTime, 1000);
-      updateTime();
-
-      // --- 3. 메모장 (자동 저장) ---
-      const memoArea = document.getElementById('quickMemo');
-      const saveIndicator = document.getElementById('saveIndicator');
-      
-      memoArea.value = localStorage.getItem('focus_memo') || '';
-
-      let saveTimeout;
-      memoArea.addEventListener('input', () => {
-        saveIndicator.classList.remove('saved');
-        saveIndicator.textContent = "저장 중...";
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
-          localStorage.setItem('focus_memo', memoArea.value);
-          saveIndicator.classList.add('saved');
-          saveIndicator.textContent = "저장됨";
-        }, 800);
-      });
-
-      // --- 4. 할 일 목록 ---
-      const todoInput = document.getElementById('todoInput');
-      const addTodoBtn = document.getElementById('addTodoBtn');
-      const todoList = document.getElementById('todoList');
-      const todoCount = document.getElementById('todoCount');
-      
-      let todos = JSON.parse(localStorage.getItem('focus_todos')) || [];
-
-      function saveTodos() {
-        localStorage.setItem('focus_todos', JSON.stringify(todos));
-        renderTodos();
-      }
-
-      function renderTodos() {
-        todoList.innerHTML = '';
-        let left = 0;
-        todos.forEach((todo, index) => {
-          if(!todo.done) left++;
-          const li = document.createElement('li');
-          li.className = `todo-item ${todo.done ? 'completed' : ''}`;
-          li.innerHTML = `
-            <div class="todo-check" onclick="toggleTodo(${index})">
-              ${todo.done ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
-            </div>
-            <span>${todo.text}</span>
-            <div class="todo-delete" onclick="deleteTodo(${index})">×</div>
-          `;
-          todoList.appendChild(li);
-        });
-        todoCount.textContent = `${left}개 남음`;
-      }
-
-      window.toggleTodo = (index) => {
-        todos[index].done = !todos[index].done;
-        saveTodos();
-      };
-
-      window.deleteTodo = (index) => {
-        if(confirm('정말 삭제할까요?')) {
-            todos.splice(index, 1);
-            saveTodos();
-        }
-      };
-
-      function addTodo() {
-        const text = todoInput.value.trim();
-        if (text) {
-          todos.push({ text, done: false });
-          todoInput.value = '';
-          saveTodos();
-        }
-      }
-
-      addTodoBtn.addEventListener('click', addTodo);
-      todoInput.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') addTodo();
-      });
-
-      renderTodos();
-
-      // --- 5. 호흡 위젯 ---
-      const breathWidget = document.getElementById('breathWidget');
-      const toggleBreathBtn = document.getElementById('toggleBreath');
-      let breathInterval;
-      let isBreathing = false;
-
-      toggleBreathBtn.addEventListener('click', () => {
-        if (isBreathing) {
-          clearInterval(breathInterval);
-          breathWidget.classList.remove('inhale');
-          toggleBreathBtn.textContent = "시작하기";
-          isBreathing = false;
+      function updateControls(isRunning) {
+        if (isRunning) {
+            btnMain.textContent = "중지";
+            btnMain.classList.remove('btn-start');
+            btnMain.classList.add('btn-stop');
+            btnSub.textContent = "랩";
         } else {
-          isBreathing = true;
-          toggleBreathBtn.textContent = "중지";
-          breathWidget.classList.add('inhale');
-          breathInterval = setInterval(() => {
-            breathWidget.classList.toggle('inhale');
-          }, 4000);
+            btnMain.textContent = "시작";
+            btnMain.classList.remove('btn-stop');
+            btnMain.classList.add('btn-start');
+            btnSub.textContent = "초기화";
+        }
+      }
+      function toggleLapContainer(show) {
+        if (show) {
+            lapList.classList.add('active');
+            stopwatchWrap.classList.add('has-laps');
+        } else {
+            lapList.classList.remove('active');
+            stopwatchWrap.classList.remove('has-laps');
+        }
+      }
+
+      function toggleFullscreen() {
+        const isFull = stopwatchWrap.classList.contains('fullscreen-mode');
+        if (!isFull) {
+            lockBody(); 
+            stopwatchWrap.classList.add('fullscreen-mode');
+            iconExpand.style.display = 'none';
+            iconCompress.style.display = 'block';
+            btnFullscreenControl.title = "원래대로";
+        } else {
+            stopwatchWrap.classList.add('fullscreen-closing');
+            setTimeout(() => {
+                stopwatchWrap.classList.remove('fullscreen-mode');
+                stopwatchWrap.classList.remove('fullscreen-closing');
+                unlockBody();
+                iconExpand.style.display = 'block';
+                iconCompress.style.display = 'none';
+                btnFullscreenControl.title = "전체화면";
+            }, 300); 
+        }
+      }
+      
+      btnFullscreenControl?.addEventListener('click', toggleFullscreen);
+
+      btnMain?.addEventListener('click', () => {
+        if (swInterval) {
+            clearInterval(swInterval);
+            swInterval = null;
+            updateControls(false);
+        } else {
+            swStartTime = Date.now() - swElapsedTime;
+            swInterval = setInterval(() => {
+                swElapsedTime = Date.now() - swStartTime;
+                swDisplay.textContent = formatTime(swElapsedTime);
+            }, 10);
+            updateControls(true);
+        }
+      });
+      
+      btnSub?.addEventListener('click', () => {
+        if (swInterval) {
+            if (!stopwatchWrap.classList.contains('has-laps')) {
+                toggleLapContainer(true);
+            }
+            const li = document.createElement('div');
+            li.className = 'lap-item';
+            li.innerHTML = `<span class="lap-index">랩 ${lapCounter}</span> <span>${formatTime(swElapsedTime)}</span>`;
+            lapList.prepend(li); 
+            lapCounter++;
+        } else {
+            swElapsedTime = 0;
+            swDisplay.textContent = "00:00:00";
+            lapCounter = 1;
+            const items = lapList.querySelectorAll('.lap-item');
+            if (items.length > 0) {
+                items.forEach(item => item.classList.add('exiting'));
+                lapList.classList.add('closing');
+                setTimeout(() => {
+                    lapList.innerHTML = '';
+                    lapList.classList.remove('closing');
+                    toggleLapContainer(false); 
+                }, 400);
+            } else {
+                toggleLapContainer(false);
+            }
         }
       });
 
-      // --- 6. 데이터 백업/복구 (기기 연동 대안) ---
-      const settingsModal = document.getElementById('settingsModal');
-      document.getElementById('settingsBtn').addEventListener('click', () => settingsModal.classList.add('open'));
-      document.getElementById('closeModal').addEventListener('click', () => settingsModal.classList.remove('open'));
-
-      // 내보내기 (다운로드)
-      document.getElementById('exportBtn').addEventListener('click', () => {
-          const data = {
-              memo: localStorage.getItem('focus_memo') || '',
-              todos: JSON.parse(localStorage.getItem('focus_todos') || '[]')
-          };
-          const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `focus_data_${new Date().toISOString().slice(0,10)}.json`;
-          a.click();
+      // --- Accordion Logic ---
+      const allDetails = document.querySelectorAll('details');
+      allDetails.forEach((dt, index) => {
+          const savedState = localStorage.getItem(`details_state_${index}`);
+          if (savedState === 'open') dt.setAttribute('open', '');
+          else if (savedState === 'closed') dt.removeAttribute('open');
+      });
+      allDetails.forEach((detail, index) => {
+          const summary = detail.querySelector('summary');
+          summary.addEventListener('click', (e) => {
+              if (detail.hasAttribute('open')) {
+                  e.preventDefault(); 
+                  detail.classList.add('closing');
+                  setTimeout(() => {
+                      detail.removeAttribute('open');
+                      detail.classList.remove('closing');
+                      localStorage.setItem(`details_state_${index}`, 'closed');
+                  }, 200); // Faster animation for cards
+              } else {
+                  setTimeout(() => localStorage.setItem(`details_state_${index}`, 'open'), 0);
+              }
+          });
       });
 
-      // 불러오기 (업로드)
-      document.getElementById('fileInput').addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-              try {
-                  const data = JSON.parse(e.target.result);
-                  if (data.memo !== undefined) localStorage.setItem('focus_memo', data.memo);
-                  if (data.todos !== undefined) localStorage.setItem('focus_todos', JSON.stringify(data.todos));
-                  alert('데이터가 성공적으로 복구되었습니다! 새로고침합니다.');
-                  location.reload();
-              } catch (err) {
-                  alert('파일 형식이 올바르지 않습니다.');
-              }
-          };
-          reader.readAsText(file);
+      // --- Keyboard Shortcuts ---
+      document.addEventListener('keydown', (e) => {
+          if (document.activeElement === q) return;
+          if (e.code === 'Space') { e.preventDefault(); btnMain.click(); }
+          if (e.code === 'KeyL') { btnSub.click(); }
       });
 
     });
