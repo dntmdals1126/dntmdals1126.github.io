@@ -11,24 +11,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
+  
   <style>
-    /* --- Design System --- */
+    /* --- Design System (Glassmorphism Enhanced) --- */
     :root {
       --bg-0: #0c0f14;
-      --surface: #151920;
-      --surface-border: rgba(255, 255, 255, 0.08);
-      --surface-inner: rgba(0, 0, 0, 0.2);
+      --bg-gradient: radial-gradient(circle at 50% 0%, #1c2333 0%, #0c0f14 100%);
+      
+      /* Glass Surface */
+      --surface: rgba(30, 35, 45, 0.45); /* More transparency */
+      --surface-hover: rgba(255, 255, 255, 0.08);
+      --surface-border: rgba(255, 255, 255, 0.1);
+      --surface-inner: rgba(0, 0, 0, 0.25);
       
       --ink-0: #ffffff;
-      --ink-1: #9ca3af;
+      --ink-1: #aeb6c2;
       --ink-2: #6b7280;
       
       --primary: #5b8cff;
-      --primary-glow: rgba(91, 140, 255, 0.15);
+      --primary-glow: rgba(91, 140, 255, 0.2);
       --accent: #facc15;
       
-      --radius: 16px;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      --radius: 20px;
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); /* Softer, deeper shadow */
       
       --font-main: 'Noto Sans KR', sans-serif;
       --font-display: 'Cal Sans', sans-serif;
@@ -38,20 +44,23 @@
 
     /* Light Mode overrides */
     html[data-theme="light"] {
-      --bg-0: #f2f4f7;
-      --surface: #ffffff;
-      --surface-border: rgba(0, 0, 0, 0.08);
-      --surface-inner: #f8fafc;
+      --bg-0: #f0f4f8;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f0f4f8 100%);
+      
+      --surface: rgba(255, 255, 255, 0.6);
+      --surface-hover: rgba(255, 255, 255, 0.85);
+      --surface-border: rgba(255, 255, 255, 0.6);
+      --surface-inner: rgba(255, 255, 255, 0.5);
       
       --ink-0: #111827;
       --ink-1: #4b5563;
       --ink-2: #9ca3af;
       
       --primary: #3b82f6;
-      --primary-glow: rgba(59, 130, 246, 0.1);
+      --primary-glow: rgba(59, 130, 246, 0.15);
       --accent: #d97706;
       
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     }
 
     /* --- Reset & Base --- */
@@ -67,16 +76,26 @@
       margin: 0; padding: 0;
       font-family: var(--font-main);
       background-color: var(--bg-0);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed; /* 배경 고정 */
       color: var(--ink-0);
       min-height: 100%;
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: none; /* 바운스 효과 제거 */
+      overscroll-behavior-y: none; 
       transition: background 0.3s, color 0.3s;
     }
     body.scroll-lock { overflow: hidden !important; }
 
     .cal-sans-regular { font-family: var(--font-display); font-weight: 400; }
+
+    /* --- Background Animation --- */
+    .bg-blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.3; animation: float 20s infinite alternate; }
+    .blob-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: var(--primary); animation-delay: 0s; }
+    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: purple; animation-delay: -10s; }
+    html[data-theme="light"] .blob-2 { background: #a5b4fc; }
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
     /* --- Layout --- */
     .container {
@@ -85,49 +104,78 @@
       padding: 0 16px 40px;
       display: grid; 
       gap: 16px;
-      grid-template-columns: repeat(2, 1fr); /* 2 Columns Default */
-      align-items: start; /* 높이 자연스럽게 */
+      grid-template-columns: repeat(2, 1fr);
+      align-items: start;
     }
 
-    /* --- Card Components --- */
-    .card, details, .notice-bar {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: flex; flex-direction: column;
-      /* min-height를 주어 시각적 균형 맞춤 */
-      min-height: 160px; 
+    /* --- Header (Sticky) --- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px); /* Header blur */
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(12, 15, 20, 0.3); /* Very subtle tint */
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-    
-    /* Notice bar height exception */
-    .notice-bar { min-height: auto; height: 52px; }
+    html[data-theme="light"] header { background: rgba(255,255,255,0.3); border-bottom: 1px solid rgba(0,0,0,0.05); }
 
-    /* --- Header --- */
     .header-bar {
-      grid-column: span 2;
+      max-width: 1000px; margin: 0 auto; padding: 12px 16px;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 0;
     }
     h1 { font-size: 22px; margin: 0; cursor: pointer; user-select: none; }
     .brand-by { color: var(--ink-1); font-weight: 300; font-size: 13px; margin-left: 6px; }
     
     .header-actions { display: flex; gap: 8px; }
     .icon-btn {
-      background: transparent; border: 1px solid var(--surface-border);
+      background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border);
       color: var(--ink-0); width: 36px; height: 36px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s;
     }
-    .icon-btn:hover { background: var(--surface-inner); }
+    html[data-theme="light"] .icon-btn { background: rgba(255,255,255,0.5); }
+    .icon-btn:hover { background: var(--surface-hover); }
+
+    /* --- Card Components (Glassmorphism) --- */
+    .card, details, .notice-bar {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      min-height: 160px; 
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    
+    /* PC Hover Effects */
+    @media (min-width: 769px) {
+        .card:hover, details:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            background: var(--surface-hover);
+        }
+        /* Hovering block colors the icon */
+        details:hover summary .external-icon,
+        details:hover summary .cal-sans-regular {
+            color: var(--primary);
+            opacity: 1;
+            transition: color 0.3s;
+        }
+    }
+
+    .notice-bar { min-height: auto; height: 52px; }
 
     /* --- 1. Search Hero Section --- */
     .w-search { 
       grid-column: span 2; 
       padding: 24px; 
       display: flex; flex-direction: column; justify-content: center; gap: 20px;
-      min-height: auto; /* 내용물에 맞춤 */
+      min-height: auto;
     }
     
     /* Clock */
@@ -137,7 +185,7 @@
         flex-wrap: wrap; font-size: 16px; color: var(--ink-0);
     }
     .t-date { font-weight: 400; color: var(--primary); font-size: 14px; }
-    .t-time { font-family: var(--font-display); font-weight: 400; font-size: 28px; } /* 시계 크기 축소 */
+    .t-time { font-family: var(--font-display); font-weight: 400; font-size: 28px; }
     
     /* Search Engine Box */
     .engine-box {
@@ -161,6 +209,8 @@
       font-size: 13px; font-weight: 500; transition: all 0.2s;
       flex-shrink: 0;
     }
+    html[data-theme="light"] .engine-btn { background: rgba(255,255,255,0.7); }
+
     .engine-btn[data-active="true"] {
       background: var(--surface); 
       border-color: var(--primary); 
@@ -179,6 +229,8 @@
       transition: border-color 0.2s;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
+    html[data-theme="light"] .input-shell { background: rgba(255,255,255,0.5); }
+    
     .input-shell:focus-within { border-color: var(--primary); }
     .input-shell input {
       flex: 1; background: transparent; border: none; color: var(--ink-0);
@@ -197,15 +249,14 @@
         font-weight: 500; color: var(--ink-0);
         border-bottom: 1px solid transparent;
         transition: 0.2s;
-        background: var(--surface);
+        background: transparent; /* Card background handles it */
         min-height: 52px;
         flex-shrink: 0;
     }
     summary:hover { background: var(--surface-inner); }
     summary::-webkit-details-marker { display: none; }
     
-    /* Title Font Size & Type */
-    summary.section-title div span.cal-sans-regular { font-size: 17px; }
+    summary.section-title div span.cal-sans-regular { font-size: 17px; transition: color 0.3s; }
 
     .title-group { display: flex; align-items: center; gap: 10px; }
     .fold-icon { width: 18px; height: 18px; color: var(--ink-1); transition: transform 0.3s; }
@@ -218,13 +269,12 @@
         background: var(--surface-inner);
         display: flex; flex-direction: column;
     }
-    /* Ensure content expands */
     details[open] .details-content-wrapper { height: auto; }
 
-    /* Link Grid (Always 2 Columns) */
+    /* Link Grid */
     .link-grid { 
         display: grid; 
-        grid-template-columns: 1fr 1fr; /* 무조건 2열 */
+        grid-template-columns: 1fr 1fr;
         gap: 10px; padding: 16px;
     }
     .link {
@@ -236,7 +286,7 @@
     }
     .link:hover { border-color: var(--primary); transform: translateY(-2px); }
     .link img { width: 20px; height: 20px; object-fit: contain; }
-    .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; }
+    .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; transition: color 0.3s; }
 
     /* --- Stopwatch --- */
     .stopwatch-wrap { 
@@ -265,7 +315,7 @@
     .lap-list-container.active { display: block; }
     .lap-item { display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid var(--surface-border); color: var(--ink-1); }
 
-    /* --- Stopwatch Fullscreen (Fixed to Window) --- */
+    /* --- Stopwatch Fullscreen --- */
     .fs-overlay {
         position: fixed; inset: 0; z-index: 99999;
         background: var(--bg-0); 
@@ -279,13 +329,22 @@
     .fs-overlay .timer-btn { padding: 16px 32px; font-size: 18px; border-radius: 14px; width: auto; min-width: 120px; }
     .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; }
 
-    /* --- Music --- */
+    /* --- Music (Refined) --- */
+    .music-inner {
+        padding: 16px; 
+        height: 100%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+    }
     .music-card {
       width: 100%; 
-      height: 100px; /* 높이 고정 */
-      border-radius: 0;
-      border: none;
+      height: 100%; 
+      min-height: 100px; /* Minimum height for the box */
+      border-radius: 12px;
+      border: 1px solid var(--surface-border);
       background: #000;
+      overflow: hidden; /* Ensure iframe corners are clipped */
     }
     .music-card iframe { width: 100%; height: 100%; border: none; }
 
@@ -319,7 +378,7 @@
         grid-column: span 2; 
         padding: 0 16px; display: flex; align-items: center; gap: 12px;
         color: var(--ink-0); height: 52px;
-        flex-direction: row; /* 항상 가로 배치 */
+        flex-direction: row;
     }
     .notice-label { font-weight: 900; color: #0c0f14; font-size: 13px; padding: 4px 8px; background: #facc15; border-radius: 6px; white-space: nowrap; }
     html[data-theme="light"] .notice-label { color: white; background: #3b82f6; }
@@ -368,7 +427,7 @@
     /* --- PC Specific --- */
     @media (min-width: 769px) {
         details { height: 100%; }
-        summary { cursor: default; pointer-events: none; } /* Toggle Disable */
+        summary { cursor: default; pointer-events: none; }
         .fold-icon { display: none; }
         details[open]:not(.closing) .details-content-wrapper { grid-template-rows: 1fr !important; }
         .details-content-wrapper { height: 100%; }
@@ -377,14 +436,12 @@
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
         .container { 
-            grid-template-columns: 1fr; /* 1 Column */
+            grid-template-columns: 1fr;
             gap: 16px;
         }
-        .header-bar, .w-search, .notice-bar, footer { grid-column: span 1; }
-        
-        /* 카드 높이 리셋 */
+        .header-bar { grid-column: span 1; padding: 12px 16px; }
+        .w-search, .notice-bar, footer { grid-column: span 1; }
         .card, details { min-height: auto; }
-        
         .title-group span.cal-sans-regular { font-size: 16px !important; }
     }
   </style>
@@ -392,9 +449,8 @@
 
 <body>
 
-  <div class="container">
-    
-    <header class="header-bar">
+  <header>
+    <div class="header-bar">
       <h1 id="headerTitle" class="brand">
         <span class="cal-sans-regular">WebHub</span>
         <span class="brand-by">by Seungmin Woo</span>
@@ -408,8 +464,16 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </div>
-    </header>
+    </div>
+  </header>
 
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="container">
+    
     <section class="card w-search">
       <div class="time-header">
         <div class="time-text" id="currentDateTime"></div>
@@ -531,7 +595,7 @@
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
-        <div class="details-inner" style="padding:0;">
+        <div class="details-inner music-inner">
             <div class="music-card">
               <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
