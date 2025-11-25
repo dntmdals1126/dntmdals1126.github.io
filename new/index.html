@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Focus Dashboard</title>
+  <meta name="theme-color" content="#0c0f14" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- Variables (WebHub Design Language) --- */
+    :root {
+      --bg-0: #0c0f14;
+      --bg-1: #10141b;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #1c2333 0%, #0c0f14 100%);
+      --surface: rgba(31, 38, 48, 0.6);
+      --surface-hover: rgba(48, 56, 69, 0.8);
+      --ink-0: #e6eaf0;
+      --ink-1: #aeb6c2;
+      --primary: #5b8cff;
+      --primary-glow: rgba(91, 140, 255, 0.3);
+      --accent: #facc15;
+      --danger: #ff5a5a;
+      --border: rgba(255, 255, 255, 0.08);
+      --radius: 16px;
+      --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+      --font-main: 'Noto Sans KR', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Cal Sans', sans-serif;
+      color-scheme: dark light;
+    }
+
+    html[data-theme="light"] {
+      --bg-0: #f6f8fb;
+      --bg-1: #eef2f6;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f1f4f9 100%);
+      --surface: rgba(255, 255, 255, 0.7);
+      --surface-hover: rgba(255, 255, 255, 0.95);
+      --ink-0: #0f172a;
+      --ink-1: #4b5563;
+      --primary: #2f6bff;
+      --primary-glow: rgba(47, 107, 255, 0.2);
+      --accent: #d97706;
+      --border: rgba(0, 0, 0, 0.06);
+    }
+
+    /* --- Base --- */
+    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0; padding: 0;
+      font-family: var(--font-main);
+      background: var(--bg-0);
+      background-image: var(--bg-gradient);
+      color: var(--ink-0);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* --- Background Animation --- */
+    .bg-blobs {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+    }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.4;
+      animation: float 20s infinite alternate;
+    }
+    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary); animation-delay: 0s; }
+    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: purple; animation-delay: -10s; }
+    html[data-theme="light"] .blob-2 { background: #a5b4fc; }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 50px) scale(1.1); }
+    }
+
+    /* --- Layout --- */
+    .container {
+      max-width: 1200px; margin: 0 auto; padding: 20px;
+      display: grid; gap: 20px;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: minmax(100px, auto);
+    }
+
+    /* --- Header --- */
+    .header-bar {
+      grid-column: span 12;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0 20px;
+    }
+    .brand {
+      font-family: var(--font-display); font-size: 24px;
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+    }
+    .brand span { opacity: 0.6; font-size: 14px; font-family: var(--font-main); }
+    .nav-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--ink-0); padding: 8px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+      transition: all 0.2s; backdrop-filter: blur(10px);
+    }
+    .nav-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
+
+    /* --- Cards --- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+    html[data-theme="light"] .card { background: rgba(255,255,255,0.6); }
+
+    .card:hover { transform: translateY(-4px) scale(1.005); box-shadow: 0 15px 40px -10px rgba(0,0,0,0.4); z-index: 2; }
+    
+    .card-title {
+      font-size: 14px; color: var(--ink-1); font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* --- Widget: Greeting & Time (Span 8) --- */
+    .w-hero { grid-column: span 12; display: flex; justify-content: space-between; align-items: flex-end; min-height: 180px; }
+    @media (min-width: 768px) { .w-hero { grid-column: span 8; } }
+    
+    .greeting { font-size: clamp(24px, 4vw, 36px); font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
+    .greeting span { color: var(--primary); }
+    .live-clock { font-family: var(--font-mono); font-size: clamp(32px, 5vw, 48px); font-weight: 700; opacity: 0.8; }
+    .date-display { font-size: 14px; color: var(--ink-1); margin-top: 5px; }
+
+    /* --- Widget: Quick Memo (Span 4) --- */
+    .w-memo { grid-column: span 12; height: 100%; }
+    @media (min-width: 768px) { .w-memo { grid-column: span 4; grid-row: span 2; } }
+
+    .memo-area {
+      flex: 1; background: transparent; border: none; resize: none;
+      color: var(--ink-0); font-size: 15px; line-height: 1.6;
+      font-family: var(--font-main); padding: 0;
+    }
+    .memo-area::placeholder { color: var(--ink-1); opacity: 0.5; }
+    .save-indicator { font-size: 11px; color: var(--primary); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.saved { opacity: 1; }
+
+    /* --- Widget: Todo List (Span 4) --- */
+    .w-todo { grid-column: span 12; min-height: 300px; }
+    @media (min-width: 768px) { .w-todo { grid-column: span 4; } }
+
+    .todo-input-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
+    .todo-input {
+      flex: 1; background: rgba(0,0,0,0.1); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; color: var(--ink-0);
+    }
+    html[data-theme="light"] .todo-input { background: rgba(255,255,255,0.5); }
+    .todo-btn {
+      background: var(--primary); color: white; border: none; border-radius: 8px;
+      width: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;
+    }
+    .todo-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+    .todo-item {
+      display: flex; align-items: center; gap: 10px; padding: 8px 0;
+      border-bottom: 1px solid var(--border); font-size: 14px; animation: slideIn 0.2s ease;
+    }
+    .todo-item:last-child { border-bottom: none; }
+    .todo-check {
+      width: 18px; height: 18px; border: 2px solid var(--ink-1); border-radius: 4px; cursor: pointer;
+      display: grid; place-items: center; transition: 0.2s;
+    }
+    .todo-item.completed .todo-check { background: var(--primary); border-color: var(--primary); }
+    .todo-item.completed span { text-decoration: line-through; color: var(--ink-1); }
+    .todo-delete { margin-left: auto; color: var(--ink-1); cursor: pointer; opacity: 0; transition: 0.2s; }
+    .todo-item:hover .todo-delete { opacity: 1; }
+    .todo-delete:hover { color: var(--danger); }
+
+    @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- Widget: Breathing (Span 4) --- */
+    .w-breath { grid-column: span 12; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    @media (min-width: 768px) { .w-breath { grid-column: span 4; } }
+
+    .breath-circle {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: conic-gradient(from 180deg at 50% 50%, var(--primary) 0deg, #a855f7 180deg, var(--primary) 360deg);
+      position: relative; margin: 20px 0;
+      box-shadow: 0 0 30px var(--primary-glow);
+      transition: transform 4s ease-in-out;
+    }
+    .breath-circle::after {
+      content: ''; position: absolute; inset: 4px; background: var(--bg-1); border-radius: 50%; z-index: 1;
+    }
+    .breath-text { font-size: 12px; font-weight: 700; color: var(--ink-1); z-index: 2; position: absolute; }
+    
+    .w-breath.inhale .breath-circle { transform: scale(1.5); box-shadow: 0 0 50px var(--primary-glow); }
+    .w-breath.inhale .breath-text::before { content: '들이마시기'; }
+    .w-breath:not(.inhale) .breath-text::before { content: '내뱉기'; }
+    .w-breath .breath-text::before { content: '준비'; } /* 초기값 */
+    
+    .breath-btn {
+      padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+      background: transparent; color: var(--ink-0); cursor: pointer; font-size: 12px;
+    }
+    .breath-btn:hover { background: var(--primary); color: white; border-color: transparent; }
+
+    /* --- Widget: Links (Span 4) --- */
+    .w-links { grid-column: span 12; }
+    @media (min-width: 768px) { .w-links { grid-column: span 4; } }
+    .quick-link-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .q-link {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px;
+      text-decoration: none; color: var(--ink-0); font-size: 13px; font-weight: 500;
+      transition: 0.2s; border: 1px solid transparent;
+    }
+    .q-link:hover { background: var(--surface-hover); border-color: var(--primary); color: var(--primary); }
+
+    /* --- Quote Widget (Span 12) --- */
+    .w-quote { grid-column: span 12; text-align: center; padding: 30px; }
+    .quote-text { font-family: var(--font-display); font-size: 20px; margin-bottom: 8px; background: linear-gradient(90deg, var(--ink-0), var(--ink-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .quote-author { font-size: 13px; color: var(--ink-1); font-style: italic; }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+      .w-hero, .w-memo, .w-todo, .w-breath, .w-links { grid-column: span 1; }
+      .greeting { font-size: 28px; }
+      .live-clock { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="container">
+    
+    <header class="header-bar">
+      <div class="brand" onclick="location.reload()">
+        Focus.<span id="themeBtn">Dashboard</span>
+      </div>
+      <a href="/" class="nav-btn">← Back to Hub</a>
+    </header>
+
+    <div class="card w-hero">
+      <div class="hero-content">
+        <div class="greeting">Hello, <span id="userGreeting">Seungmin</span>.</div>
+        <div class="date-display" id="dateDisplay">Loading date...</div>
+      </div>
+      <div class="live-clock" id="clockDisplay">00:00</div>
+    </div>
+
+    <div class="card w-breath" id="breathWidget">
+      <div class="card-title">Mindfulness</div>
+      <div class="breath-circle">
+        <span class="breath-text"></span>
+      </div>
+      <button class="breath-btn" id="toggleBreath">시작하기</button>
+    </div>
+
+    <div class="card w-todo">
+      <div class="card-title">
+        Tasks
+        <span style="font-size:11px; opacity:0.6" id="todoCount">0 left</span>
+      </div>
+      <div class="todo-input-wrap">
+        <input type="text" class="todo-input" id="todoInput" placeholder="할 일을 입력하고 Enter..." autocomplete="off">
+        <button class="todo-btn" id="addTodoBtn">+</button>
+      </div>
+      <ul class="todo-list" id="todoList">
+        </ul>
+    </div>
+
+    <div class="card w-memo">
+      <div class="card-title">
+        Scratchpad
+        <span class="save-indicator" id="saveIndicator">Saved</span>
+      </div>
+      <textarea class="memo-area" id="quickMemo" placeholder="여기에 아이디어를 자유롭게 적으세요... (자동 저장됨)"></textarea>
+    </div>
+
+    <div class="card w-links">
+      <div class="card-title">Quick Access</div>
+      <div class="quick-link-grid">
+        <a href="/admin/" class="q-link" target="_blank">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Admin
+        </a>
+        <a href="/testbridge/" class="q-link" target="_blank">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Lab
+        </a>
+        <a href="https://gemini.google.com" target="_blank" class="q-link">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Gemini
+        </a>
+        <a href="https://github.com" target="_blank" class="q-link">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 15.13V19" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Github
+        </a>
+      </div>
+    </div>
+
+    <div class="card w-quote">
+      <div class="quote-text">"The only way to do great work is to love what you do."</div>
+      <div class="quote-author">- Steve Jobs</div>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // --- 1. Theme Logic (Auto & Toggle) ---
+      const themeBtn = document.getElementById('themeBtn');
+      const THEME_KEY = 'theme';
+      
+      function setTheme(theme) {
+        if (theme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f8fb');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0c0f14');
+        }
+        localStorage.setItem(THEME_KEY, theme);
+      }
+
+      // Initial Load
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      if (savedTheme) {
+        setTheme(savedTheme);
+      } else {
+        // Detect system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          setTheme('light');
+        }
+      }
+
+      // Toggle on Brand Click (Hidden Feature)
+      themeBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // prevent reload
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        setTheme(isLight ? 'dark' : 'light');
+      });
+
+      // --- 2. Clock & Date ---
+      function updateTime() {
+        const now = new Date();
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        // Time
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('clockDisplay').textContent = `${h}:${m}`;
+        
+        // Date
+        const dayName = days[now.getDay()];
+        const monthName = months[now.getMonth()];
+        const dateNum = now.getDate();
+        document.getElementById('dateDisplay').textContent = `${dayName}, ${monthName} ${dateNum}`;
+
+        // Dynamic Greeting based on time
+        const hour = now.getHours();
+        let greet = 'Hello';
+        if (hour < 12) greet = 'Good Morning';
+        else if (hour < 18) greet = 'Good Afternoon';
+        else greet = 'Good Evening';
+        document.querySelector('.greeting').childNodes[0].nodeValue = `${greet}, `;
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      // --- 3. Quick Memo (LocalStorage) ---
+      const memoArea = document.getElementById('quickMemo');
+      const saveIndicator = document.getElementById('saveIndicator');
+      
+      memoArea.value = localStorage.getItem('focus_memo') || '';
+
+      let saveTimeout;
+      memoArea.addEventListener('input', () => {
+        saveIndicator.classList.remove('saved');
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+          localStorage.setItem('focus_memo', memoArea.value);
+          saveIndicator.classList.add('saved');
+        }, 800);
+      });
+
+      // --- 4. Todo List (LocalStorage) ---
+      const todoInput = document.getElementById('todoInput');
+      const addTodoBtn = document.getElementById('addTodoBtn');
+      const todoList = document.getElementById('todoList');
+      const todoCount = document.getElementById('todoCount');
+      
+      let todos = JSON.parse(localStorage.getItem('focus_todos')) || [];
+
+      function saveTodos() {
+        localStorage.setItem('focus_todos', JSON.stringify(todos));
+        renderTodos();
+      }
+
+      function renderTodos() {
+        todoList.innerHTML = '';
+        let left = 0;
+        todos.forEach((todo, index) => {
+          if(!todo.done) left++;
+          const li = document.createElement('li');
+          li.className = `todo-item ${todo.done ? 'completed' : ''}`;
+          li.innerHTML = `
+            <div class="todo-check" onclick="toggleTodo(${index})">
+              ${todo.done ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+            </div>
+            <span>${todo.text}</span>
+            <div class="todo-delete" onclick="deleteTodo(${index})">×</div>
+          `;
+          todoList.appendChild(li);
+        });
+        todoCount.textContent = `${left} left`;
+      }
+
+      window.toggleTodo = (index) => {
+        todos[index].done = !todos[index].done;
+        saveTodos();
+      };
+
+      window.deleteTodo = (index) => {
+        todos.splice(index, 1);
+        saveTodos();
+      };
+
+      function addTodo() {
+        const text = todoInput.value.trim();
+        if (text) {
+          todos.push({ text, done: false });
+          todoInput.value = '';
+          saveTodos();
+        }
+      }
+
+      addTodoBtn.addEventListener('click', addTodo);
+      todoInput.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') addTodo();
+      });
+
+      renderTodos();
+
+      // --- 5. Breathing Exercise ---
+      const breathWidget = document.getElementById('breathWidget');
+      const toggleBreathBtn = document.getElementById('toggleBreath');
+      const breathText = breathWidget.querySelector('.breath-text');
+      let breathInterval;
+      let isBreathing = false;
+
+      toggleBreathBtn.addEventListener('click', () => {
+        if (isBreathing) {
+          // Stop
+          clearInterval(breathInterval);
+          breathWidget.classList.remove('inhale');
+          toggleBreathBtn.textContent = "시작하기";
+          breathText.style.display = 'none'; // reset text state via css
+          setTimeout(() => breathText.style.display = '', 100); 
+          isBreathing = false;
+        } else {
+          // Start
+          isBreathing = true;
+          toggleBreathBtn.textContent = "중지";
+          
+          // Initial Inhale
+          breathWidget.classList.add('inhale');
+          
+          breathInterval = setInterval(() => {
+            breathWidget.classList.toggle('inhale');
+          }, 4000); // 4 seconds interval
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
