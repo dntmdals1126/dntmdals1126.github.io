@@ -228,14 +228,16 @@
       const loader = document.getElementById('loader');
       const THEME_KEY = 'theme';
 
+      // 아니오 버튼: 메인 홈페이지로 이동
       btnNo.addEventListener('click', () => {
-        window.location.href = 'http://www.v1ctorym1n.kro.kr';
+        window.location.href = '/'; 
       });
 
+      // 예 버튼: 테스트 페이지(/test/)로 이동
       btnYes.addEventListener('click', () => {
         loader.classList.add('show');
         setTimeout(() => {
-          window.location.href = 'http://test.v1ctorym1n.kro.kr';
+          window.location.href = '/test/';
         }, 3000); 
       });
 
@@ -259,7 +261,7 @@
           root.setAttribute('data-theme', 'light');
           themeMeta?.setAttribute('content', '#ffffff');
         } else {
-          root.removeAttribute('data-T');
+          root.removeAttribute('data-theme');
           themeMeta?.setAttribute('content', '#0c0f14');
         }
       }
