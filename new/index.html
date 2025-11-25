@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Focus Dashboard</title>
+  <title>포커스 대시보드</title>
   <meta name="theme-color" content="#0c0f14" />
   
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   
   <style>
-    /* --- Variables (WebHub Design Language) --- */
+    /* --- 변수 설정 --- */
     :root {
       --bg-0: #0c0f14;
       --bg-1: #10141b;
@@ -48,7 +48,7 @@
       --border: rgba(0, 0, 0, 0.06);
     }
 
-    /* --- Base --- */
+    /* --- 기본 설정 --- */
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
     body {
       margin: 0; padding: 0;
@@ -61,7 +61,7 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* --- Background Animation --- */
+    /* --- 배경 애니메이션 --- */
     .bg-blobs {
       position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
     }
@@ -79,17 +79,17 @@
       100% { transform: translate(30px, 50px) scale(1.1); }
     }
 
-    /* --- Layout --- */
+    /* --- 레이아웃 (반응형 그리드) --- */
     .container {
       max-width: 1200px; margin: 0 auto; padding: 20px;
       display: grid; gap: 20px;
-      grid-template-columns: repeat(12, 1fr);
-      grid-auto-rows: minmax(100px, auto);
+      /* PC: 3열 구조 */
+      grid-template-columns: repeat(3, 1fr);
     }
 
-    /* --- Header --- */
+    /* --- 헤더 --- */
     .header-bar {
-      grid-column: span 12;
+      grid-column: span 3;
       display: flex; justify-content: space-between; align-items: center;
       padding: 10px 0 20px;
     }
@@ -98,15 +98,17 @@
       display: flex; align-items: center; gap: 10px; cursor: pointer;
     }
     .brand span { opacity: 0.6; font-size: 14px; font-family: var(--font-main); }
-    .nav-btn {
+    
+    .nav-actions { display: flex; gap: 8px; }
+    .icon-btn {
       background: var(--surface); border: 1px solid var(--border);
-      color: var(--ink-0); padding: 8px 16px; border-radius: 20px;
-      font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
-      transition: all 0.2s; backdrop-filter: blur(10px);
+      color: var(--ink-0); width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; backdrop-filter: blur(10px);
     }
-    .nav-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
+    .icon-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
 
-    /* --- Cards --- */
+    /* --- 카드 공통 스타일 --- */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -120,117 +122,126 @@
     }
     html[data-theme="light"] .card { background: rgba(255,255,255,0.6); }
 
-    .card:hover { transform: translateY(-4px) scale(1.005); box-shadow: 0 15px 40px -10px rgba(0,0,0,0.4); z-index: 2; }
-    
     .card-title {
-      font-size: 14px; color: var(--ink-1); font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; color: var(--ink-1); font-weight: 700;
+      margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
     }
 
-    /* --- Widget: Greeting & Time (Span 8) --- */
-    .w-hero { grid-column: span 12; display: flex; justify-content: space-between; align-items: flex-end; min-height: 180px; }
-    @media (min-width: 768px) { .w-hero { grid-column: span 8; } }
-    
-    .greeting { font-size: clamp(24px, 4vw, 36px); font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
+    /* --- 위젯별 크기 조정 (PC) --- */
+    .w-hero { grid-column: span 2; min-height: 180px; justify-content: space-between; }
+    .w-time { grid-column: span 1; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
+    .w-links { grid-column: span 1; }
+    .w-todo { grid-column: span 1; grid-row: span 2; min-height: 400px; }
+    .w-memo { grid-column: span 1; grid-row: span 2; }
+    .w-breath { grid-column: span 1; }
+    .w-quote { grid-column: span 3; text-align: center; padding: 24px; }
+
+    /* --- 위젯 내용 스타일 --- */
+    .greeting { font-size: 28px; font-weight: 900; line-height: 1.3; }
     .greeting span { color: var(--primary); }
-    .live-clock { font-family: var(--font-mono); font-size: clamp(32px, 5vw, 48px); font-weight: 700; opacity: 0.8; }
-    .date-display { font-size: 14px; color: var(--ink-1); margin-top: 5px; }
+    .date-display { font-size: 14px; color: var(--ink-1); margin-top: 8px; }
+    
+    .live-clock { font-family: var(--font-mono); font-size: 48px; font-weight: 700; letter-spacing: -1px; }
+    .live-ampm { font-size: 16px; color: var(--ink-1); font-weight: 500; margin-top: -5px; }
 
-    /* --- Widget: Quick Memo (Span 4) --- */
-    .w-memo { grid-column: span 12; height: 100%; }
-    @media (min-width: 768px) { .w-memo { grid-column: span 4; grid-row: span 2; } }
-
+    /* 메모장 */
     .memo-area {
       flex: 1; background: transparent; border: none; resize: none;
       color: var(--ink-0); font-size: 15px; line-height: 1.6;
-      font-family: var(--font-main); padding: 0;
+      font-family: var(--font-main); padding: 0; width: 100%;
     }
     .memo-area::placeholder { color: var(--ink-1); opacity: 0.5; }
     .save-indicator { font-size: 11px; color: var(--primary); opacity: 0; transition: opacity 0.3s; }
     .save-indicator.saved { opacity: 1; }
 
-    /* --- Widget: Todo List (Span 4) --- */
-    .w-todo { grid-column: span 12; min-height: 300px; }
-    @media (min-width: 768px) { .w-todo { grid-column: span 4; } }
-
+    /* 할 일 목록 */
     .todo-input-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
     .todo-input {
       flex: 1; background: rgba(0,0,0,0.1); border: 1px solid var(--border);
-      border-radius: 8px; padding: 8px 12px; color: var(--ink-0);
+      border-radius: 8px; padding: 10px 12px; color: var(--ink-0); font-size: 15px;
     }
     html[data-theme="light"] .todo-input { background: rgba(255,255,255,0.5); }
     .todo-btn {
       background: var(--primary); color: white; border: none; border-radius: 8px;
-      width: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;
+      width: 40px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center;
     }
     .todo-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
     .todo-item {
-      display: flex; align-items: center; gap: 10px; padding: 8px 0;
-      border-bottom: 1px solid var(--border); font-size: 14px; animation: slideIn 0.2s ease;
+      display: flex; align-items: center; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--border); font-size: 15px; animation: slideIn 0.2s ease;
     }
     .todo-item:last-child { border-bottom: none; }
     .todo-check {
-      width: 18px; height: 18px; border: 2px solid var(--ink-1); border-radius: 4px; cursor: pointer;
-      display: grid; place-items: center; transition: 0.2s;
+      width: 20px; height: 20px; border: 2px solid var(--ink-1); border-radius: 6px; cursor: pointer;
+      display: grid; place-items: center; transition: 0.2s; flex-shrink: 0;
     }
     .todo-item.completed .todo-check { background: var(--primary); border-color: var(--primary); }
     .todo-item.completed span { text-decoration: line-through; color: var(--ink-1); }
-    .todo-delete { margin-left: auto; color: var(--ink-1); cursor: pointer; opacity: 0; transition: 0.2s; }
-    .todo-item:hover .todo-delete { opacity: 1; }
+    .todo-delete { margin-left: auto; color: var(--ink-1); cursor: pointer; padding: 4px; }
     .todo-delete:hover { color: var(--danger); }
 
-    @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* --- Widget: Breathing (Span 4) --- */
-    .w-breath { grid-column: span 12; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    @media (min-width: 768px) { .w-breath { grid-column: span 4; } }
-
+    /* 호흡 위젯 */
+    .breath-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
     .breath-circle {
-      width: 100px; height: 100px; border-radius: 50%;
+      width: 80px; height: 80px; border-radius: 50%;
       background: conic-gradient(from 180deg at 50% 50%, var(--primary) 0deg, #a855f7 180deg, var(--primary) 360deg);
-      position: relative; margin: 20px 0;
+      position: relative; margin: 15px 0;
       box-shadow: 0 0 30px var(--primary-glow);
       transition: transform 4s ease-in-out;
     }
     .breath-circle::after {
       content: ''; position: absolute; inset: 4px; background: var(--bg-1); border-radius: 50%; z-index: 1;
     }
-    .breath-text { font-size: 12px; font-weight: 700; color: var(--ink-1); z-index: 2; position: absolute; }
-    
-    .w-breath.inhale .breath-circle { transform: scale(1.5); box-shadow: 0 0 50px var(--primary-glow); }
-    .w-breath.inhale .breath-text::before { content: '들이마시기'; }
-    .w-breath:not(.inhale) .breath-text::before { content: '내뱉기'; }
-    .w-breath .breath-text::before { content: '준비'; } /* 초기값 */
-    
+    .w-breath.inhale .breath-circle { transform: scale(1.4); box-shadow: 0 0 50px var(--primary-glow); }
     .breath-btn {
       padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
-      background: transparent; color: var(--ink-0); cursor: pointer; font-size: 12px;
+      background: transparent; color: var(--ink-0); cursor: pointer; font-size: 13px; margin-top: 10px;
     }
     .breath-btn:hover { background: var(--primary); color: white; border-color: transparent; }
 
-    /* --- Widget: Links (Span 4) --- */
-    .w-links { grid-column: span 12; }
-    @media (min-width: 768px) { .w-links { grid-column: span 4; } }
-    .quick-link-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    /* 바로가기 */
+    .quick-link-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; height: 100%; }
     .q-link {
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-      background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px;
+      background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px;
       text-decoration: none; color: var(--ink-0); font-size: 13px; font-weight: 500;
-      transition: 0.2s; border: 1px solid transparent;
+      transition: 0.2s; border: 1px solid transparent; text-align: center;
     }
     .q-link:hover { background: var(--surface-hover); border-color: var(--primary); color: var(--primary); }
 
-    /* --- Quote Widget (Span 12) --- */
-    .w-quote { grid-column: span 12; text-align: center; padding: 30px; }
-    .quote-text { font-family: var(--font-display); font-size: 20px; margin-bottom: 8px; background: linear-gradient(90deg, var(--ink-0), var(--ink-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    /* 명언 */
+    .quote-text { font-family: var(--font-display); font-size: 18px; margin-bottom: 6px; background: linear-gradient(90deg, var(--ink-0), var(--ink-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .quote-author { font-size: 13px; color: var(--ink-1); font-style: italic; }
 
-    /* Mobile Adjustments */
+    /* 설정 모달 */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        display: none; align-items: center; justify-content: center; z-index: 2000;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--bg-1); border: 1px solid var(--border); padding: 24px; border-radius: 16px; width: 90%; max-width: 320px; box-shadow: var(--shadow); }
+    .modal h3 { margin: 0 0 16px; font-size: 18px; }
+    .modal-btn { display: block; width: 100%; padding: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--ink-0); border-radius: 8px; margin-bottom: 8px; cursor: pointer; text-align: center; font-size: 14px; }
+    .modal-btn:hover { background: var(--surface-hover); }
+    .modal-close { background: var(--primary); color: white; border: none; margin-top: 16px; font-weight: bold; }
+
+    /* --- 모바일 최적화 (핵심 수정) --- */
     @media (max-width: 768px) {
-      .container { grid-template-columns: 1fr; }
-      .w-hero, .w-memo, .w-todo, .w-breath, .w-links { grid-column: span 1; }
-      .greeting { font-size: 28px; }
+      .container { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+      .header-bar { grid-column: span 1; padding: 0 0 10px; }
+      
+      /* 모든 카드를 한 줄로 강제 정렬 */
+      .w-hero, .w-time, .w-links, .w-todo, .w-memo, .w-breath, .w-quote {
+        grid-column: span 1;
+        grid-row: auto;
+        min-height: auto;
+      }
+      
+      .w-hero { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .w-time { flex-direction: row; justify-content: space-between; padding: 16px 24px; }
       .live-clock { font-size: 32px; }
+      .w-todo { min-height: 300px; }
+      .w-memo { min-height: 200px; }
     }
   </style>
 </head>
@@ -247,32 +258,45 @@
       <div class="brand" onclick="location.reload()">
         Focus.<span id="themeBtn">Dashboard</span>
       </div>
-      <a href="/" class="nav-btn">← Back to Hub</a>
+      <div class="nav-actions">
+        <button class="icon-btn" id="settingsBtn" title="설정 및 데이터">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+        <a href="/" class="icon-btn" title="메인 홈으로">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </a>
+      </div>
     </header>
 
     <div class="card w-hero">
       <div class="hero-content">
-        <div class="greeting">Hello, <span id="userGreeting">Seungmin</span>.</div>
-        <div class="date-display" id="dateDisplay">Loading date...</div>
+        <div class="greeting">반가워요,<br><span>승민님.</span></div>
+        <div class="date-display" id="dateDisplay">날짜 로딩중...</div>
       </div>
-      <div class="live-clock" id="clockDisplay">00:00</div>
     </div>
 
-    <div class="card w-breath" id="breathWidget">
-      <div class="card-title">Mindfulness</div>
-      <div class="breath-circle">
-        <span class="breath-text"></span>
-      </div>
-      <button class="breath-btn" id="toggleBreath">시작하기</button>
+    <div class="card w-time">
+      <div class="live-clock" id="clockDisplay">00:00</div>
+      <div class="live-ampm" id="ampmDisplay">AM</div>
+    </div>
+
+    <div class="card w-links">
+        <div class="card-title">바로가기</div>
+        <div class="quick-link-list">
+            <a href="/admin/" target="_blank" class="q-link">Admin</a>
+            <a href="/testbridge/" target="_blank" class="q-link">Lab</a>
+            <a href="https://gemini.google.com" target="_blank" class="q-link">Gemini</a>
+            <a href="https://github.com" target="_blank" class="q-link">Github</a>
+        </div>
     </div>
 
     <div class="card w-todo">
       <div class="card-title">
-        Tasks
-        <span style="font-size:11px; opacity:0.6" id="todoCount">0 left</span>
+        오늘 할 일
+        <span style="font-size:12px; opacity:0.6" id="todoCount">0개 남음</span>
       </div>
       <div class="todo-input-wrap">
-        <input type="text" class="todo-input" id="todoInput" placeholder="할 일을 입력하고 Enter..." autocomplete="off">
+        <input type="text" class="todo-input" id="todoInput" placeholder="할 일을 입력하세요..." autocomplete="off">
         <button class="todo-btn" id="addTodoBtn">+</button>
       </div>
       <ul class="todo-list" id="todoList">
@@ -281,45 +305,44 @@
 
     <div class="card w-memo">
       <div class="card-title">
-        Scratchpad
-        <span class="save-indicator" id="saveIndicator">Saved</span>
+        메모장
+        <span class="save-indicator" id="saveIndicator">저장됨</span>
       </div>
-      <textarea class="memo-area" id="quickMemo" placeholder="여기에 아이디어를 자유롭게 적으세요... (자동 저장됨)"></textarea>
+      <textarea class="memo-area" id="quickMemo" placeholder="아이디어를 자유롭게 적어두세요. (자동 저장)"></textarea>
     </div>
 
-    <div class="card w-links">
-      <div class="card-title">Quick Access</div>
-      <div class="quick-link-grid">
-        <a href="/admin/" class="q-link" target="_blank">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Admin
-        </a>
-        <a href="/testbridge/" class="q-link" target="_blank">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Lab
-        </a>
-        <a href="https://gemini.google.com" target="_blank" class="q-link">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Gemini
-        </a>
-        <a href="https://github.com" target="_blank" class="q-link">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 15.13V19" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Github
-        </a>
+    <div class="card w-breath" id="breathWidget">
+      <div class="card-title">호흡 운동</div>
+      <div class="breath-wrap">
+          <div class="breath-circle"></div>
+          <button class="breath-btn" id="toggleBreath">시작하기</button>
       </div>
     </div>
 
     <div class="card w-quote">
-      <div class="quote-text">"The only way to do great work is to love what you do."</div>
-      <div class="quote-author">- Steve Jobs</div>
+      <div class="quote-text">"위대한 성과는 소소한 일들이 모여 이루어진다."</div>
+      <div class="quote-author">- 빈센트 반 고흐</div>
     </div>
 
+  </div>
+
+  <div class="modal-overlay" id="settingsModal">
+      <div class="modal">
+          <h3>데이터 관리</h3>
+          <p style="font-size:13px; color:var(--ink-1); margin-bottom:16px;">
+              이 페이지는 서버가 없어서 기기 간 자동 동기화가 안 됩니다. 다른 기기에서 사용하려면 데이터를 '내보내기' 후 '불러오기' 하세요.
+          </p>
+          <button class="modal-btn" id="exportBtn">📁 데이터 내보내기 (저장)</button>
+          <button class="modal-btn" onclick="document.getElementById('fileInput').click()">📂 데이터 불러오기</button>
+          <input type="file" id="fileInput" style="display:none" accept=".json">
+          <button class="modal-btn modal-close" id="closeModal">닫기</button>
+      </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       
-      // --- 1. Theme Logic (Auto & Toggle) ---
+      // --- 1. 테마 설정 ---
       const themeBtn = document.getElementById('themeBtn');
       const THEME_KEY = 'theme';
       
@@ -334,53 +357,53 @@
         localStorage.setItem(THEME_KEY, theme);
       }
 
-      // Initial Load
       const savedTheme = localStorage.getItem(THEME_KEY);
       if (savedTheme) {
         setTheme(savedTheme);
-      } else {
-        // Detect system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-          setTheme('light');
-        }
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        setTheme('light');
       }
 
-      // Toggle on Brand Click (Hidden Feature)
       themeBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // prevent reload
+        e.stopPropagation();
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         setTheme(isLight ? 'dark' : 'light');
       });
 
-      // --- 2. Clock & Date ---
+      // --- 2. 시계 및 날짜 (한글화) ---
       function updateTime() {
         const now = new Date();
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
         
-        // Time
-        const h = String(now.getHours()).padStart(2, '0');
+        // 시간
+        let h = now.getHours();
         const m = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('clockDisplay').textContent = `${h}:${m}`;
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12; // 12시간제 변환
         
-        // Date
+        document.getElementById('clockDisplay').textContent = `${h}:${m}`;
+        document.getElementById('ampmDisplay').textContent = ampm;
+        
+        // 날짜
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
         const dayName = days[now.getDay()];
-        const monthName = months[now.getMonth()];
-        const dateNum = now.getDate();
-        document.getElementById('dateDisplay').textContent = `${dayName}, ${monthName} ${dateNum}`;
+        document.getElementById('dateDisplay').textContent = `${month}월 ${date}일 ${dayName}`;
 
-        // Dynamic Greeting based on time
+        // 인사말 (시간대별)
         const hour = now.getHours();
-        let greet = 'Hello';
-        if (hour < 12) greet = 'Good Morning';
-        else if (hour < 18) greet = 'Good Afternoon';
-        else greet = 'Good Evening';
-        document.querySelector('.greeting').childNodes[0].nodeValue = `${greet}, `;
+        let greet = '안녕하세요';
+        if (hour >= 5 && hour < 12) greet = '좋은 아침입니다';
+        else if (hour >= 12 && hour < 18) greet = '나른한 오후네요';
+        else if (hour >= 18 && hour < 22) greet = '수고했어요, 오늘 하루도';
+        else greet = '편안한 밤 되세요';
+        
+        document.querySelector('.greeting').firstChild.nodeValue = `${greet}, `;
       }
       setInterval(updateTime, 1000);
       updateTime();
 
-      // --- 3. Quick Memo (LocalStorage) ---
+      // --- 3. 메모장 (자동 저장) ---
       const memoArea = document.getElementById('quickMemo');
       const saveIndicator = document.getElementById('saveIndicator');
       
@@ -389,14 +412,16 @@
       let saveTimeout;
       memoArea.addEventListener('input', () => {
         saveIndicator.classList.remove('saved');
+        saveIndicator.textContent = "저장 중...";
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(() => {
           localStorage.setItem('focus_memo', memoArea.value);
           saveIndicator.classList.add('saved');
+          saveIndicator.textContent = "저장됨";
         }, 800);
       });
 
-      // --- 4. Todo List (LocalStorage) ---
+      // --- 4. 할 일 목록 ---
       const todoInput = document.getElementById('todoInput');
       const addTodoBtn = document.getElementById('addTodoBtn');
       const todoList = document.getElementById('todoList');
@@ -418,14 +443,14 @@
           li.className = `todo-item ${todo.done ? 'completed' : ''}`;
           li.innerHTML = `
             <div class="todo-check" onclick="toggleTodo(${index})">
-              ${todo.done ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+              ${todo.done ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
             </div>
             <span>${todo.text}</span>
             <div class="todo-delete" onclick="deleteTodo(${index})">×</div>
           `;
           todoList.appendChild(li);
         });
-        todoCount.textContent = `${left} left`;
+        todoCount.textContent = `${left}개 남음`;
       }
 
       window.toggleTodo = (index) => {
@@ -434,8 +459,10 @@
       };
 
       window.deleteTodo = (index) => {
-        todos.splice(index, 1);
-        saveTodos();
+        if(confirm('정말 삭제할까요?')) {
+            todos.splice(index, 1);
+            saveTodos();
+        }
       };
 
       function addTodo() {
@@ -454,34 +481,64 @@
 
       renderTodos();
 
-      // --- 5. Breathing Exercise ---
+      // --- 5. 호흡 위젯 ---
       const breathWidget = document.getElementById('breathWidget');
       const toggleBreathBtn = document.getElementById('toggleBreath');
-      const breathText = breathWidget.querySelector('.breath-text');
       let breathInterval;
       let isBreathing = false;
 
       toggleBreathBtn.addEventListener('click', () => {
         if (isBreathing) {
-          // Stop
           clearInterval(breathInterval);
           breathWidget.classList.remove('inhale');
           toggleBreathBtn.textContent = "시작하기";
-          breathText.style.display = 'none'; // reset text state via css
-          setTimeout(() => breathText.style.display = '', 100); 
           isBreathing = false;
         } else {
-          // Start
           isBreathing = true;
           toggleBreathBtn.textContent = "중지";
-          
-          // Initial Inhale
           breathWidget.classList.add('inhale');
-          
           breathInterval = setInterval(() => {
             breathWidget.classList.toggle('inhale');
-          }, 4000); // 4 seconds interval
+          }, 4000);
         }
+      });
+
+      // --- 6. 데이터 백업/복구 (기기 연동 대안) ---
+      const settingsModal = document.getElementById('settingsModal');
+      document.getElementById('settingsBtn').addEventListener('click', () => settingsModal.classList.add('open'));
+      document.getElementById('closeModal').addEventListener('click', () => settingsModal.classList.remove('open'));
+
+      // 내보내기 (다운로드)
+      document.getElementById('exportBtn').addEventListener('click', () => {
+          const data = {
+              memo: localStorage.getItem('focus_memo') || '',
+              todos: JSON.parse(localStorage.getItem('focus_todos') || '[]')
+          };
+          const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `focus_data_${new Date().toISOString().slice(0,10)}.json`;
+          a.click();
+      });
+
+      // 불러오기 (업로드)
+      document.getElementById('fileInput').addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+              try {
+                  const data = JSON.parse(e.target.result);
+                  if (data.memo !== undefined) localStorage.setItem('focus_memo', data.memo);
+                  if (data.todos !== undefined) localStorage.setItem('focus_todos', JSON.stringify(data.todos));
+                  alert('데이터가 성공적으로 복구되었습니다! 새로고침합니다.');
+                  location.reload();
+              } catch (err) {
+                  alert('파일 형식이 올바르지 않습니다.');
+              }
+          };
+          reader.readAsText(file);
       });
 
     });
