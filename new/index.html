@@ -139,14 +139,14 @@
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       overflow: hidden;
       display: flex; flex-direction: column;
-      min-height: 160px; /* Default Min Height */
+      min-height: 160px; 
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
     
     /* PC Hover Effects (Subtle) */
     @media (min-width: 769px) {
         .card:hover, details:hover {
-            transform: translateY(-2px); /* 약하게 수정 */
+            transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             background: var(--surface-hover);
         }
@@ -158,22 +158,21 @@
 
     .notice-bar { min-height: auto; height: 52px; }
 
-    /* --- 1. Clock Section (Separated) --- */
+    /* --- 1. Clock Section --- */
     .w-clock {
         grid-column: span 2; padding: 24px;
         align-items: center; justify-content: center;
-        min-height: auto; /* 높이 자동 */
+        min-height: auto; 
     }
     .clock-wrap { text-align: center; }
     .clock-time { font-family: var(--font-main); font-size: 36px; font-weight: 700; color: var(--ink-0); line-height: 1.2; }
     .clock-date { font-size: 14px; color: var(--primary); margin-bottom: 4px; font-weight: 500; }
-    .clock-greet { font-size: 13px; color: var(--ink-1); margin-top: 4px; opacity: 0.8; font-weight: 300; }
 
-    /* --- 2. Search Section (Separated) --- */
+    /* --- 2. Search Section --- */
     .w-search { 
       grid-column: span 2; 
       padding: 24px; 
-      display: flex; flex-direction: column; justify-content: center; gap: 24px; /* 간격 넓힘 */
+      display: flex; flex-direction: column; justify-content: center; gap: 24px; 
       min-height: auto;
     }
     
@@ -181,11 +180,10 @@
     .engine-box { width: 100%; }
     .engine-seg {
       display: flex; gap: 10px; overflow-x: auto; 
-      justify-content: flex-start; /* 왼쪽 정렬 */
+      justify-content: flex-start;
       scrollbar-width: none; 
       padding-bottom: 4px;
     }
-    /* Improved Design */
     .engine-btn {
       appearance: none; border: 1px solid var(--surface-border); 
       background: rgba(255,255,255,0.03);
@@ -250,18 +248,19 @@
     details[open] > summary .fold-icon { transform: rotate(180deg); }
     details[open] summary { border-bottom-color: var(--surface-border); }
 
+    /* Content Wrapper for Flex Growth */
     .details-content-wrapper {
         flex: 1; 
+        display: flex; flex-direction: column; /* Ensure children can grow */
         overflow: hidden;
         background: var(--surface-inner);
-        display: flex; flex-direction: column;
-        min-height: 0; /* Flexbox scroll fix */
+        min-height: 0;
     }
     
-    /* Internal Scrollable Areas */
     .details-inner { 
-        flex: 1; overflow-y: auto;
-        min-height: 0; /* Ensure list scrolls within card */
+        flex: 1; /* Takes up remaining space */
+        overflow-y: auto; /* Enables scroll */
+        min-height: 0; /* Fix for flexbox scroll */
     }
 
     /* Link Grid */
@@ -272,7 +271,7 @@
     }
     .link {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 8px; padding: 16px; background: var(--surface);
+        gap: 8px; padding: 14px; background: var(--surface);
         border: 1px solid var(--surface-border); border-radius: 12px;
         color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
         transition: 0.2s; text-align: center; height: 100%;
@@ -281,7 +280,7 @@
     .link img { width: 24px; height: 24px; object-fit: contain; }
     .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; transition: color 0.3s; }
 
-    /* --- Stopwatch (Fill Block) --- */
+    /* --- Stopwatch (Restored Animations & Fit) --- */
     .stopwatch-wrap { 
         display: flex; flex-direction: column; align-items: center; justify-content: space-between;
         padding: 20px; height: 100%; flex: 1;
@@ -294,26 +293,35 @@
         font-variant-numeric: tabular-nums;
         font-size: 42px; font-weight: 700; letter-spacing: 2px;
         color: var(--ink-0); margin-bottom: 16px;
-        font-family: var(--font-main); /* Noto Sans per request */
+        font-family: var(--font-main);
     }
     .timer-controls { display: flex; gap: 10px; justify-content: center; width: 100%; }
     .timer-btn {
         padding: 10px 20px; border-radius: 12px; font-size: 14px; font-weight: 600;
         border: 1px solid var(--surface-border); background: var(--surface); color: var(--ink-0);
-        cursor: pointer; transition: 0.2s; flex: 1; max-width: 100px;
+        cursor: pointer; transition: transform 0.1s, background 0.2s; 
+        flex: 1; max-width: 100px;
         display: flex; align-items: center; justify-content: center;
     }
+    .timer-btn:active { transform: scale(0.95); } /* Button Animation */
     .btn-start { color: var(--primary); background: rgba(91, 140, 255, 0.15); border-color: rgba(91, 140, 255, 0.4); }
     html[data-theme="light"] .btn-start { color: var(--primary-2); }
     .btn-stop { color: #ff5a5a; background: rgba(255, 90, 90, 0.1); border-color: rgba(255, 90, 90, 0.3); }
     
-    /* Lap List - Scroll inside block */
+    /* Lap List (Restricted & Animated) */
     .lap-list-container {
         width: 100%; border-top: 1px solid var(--surface-border); padding-top: 10px; margin-top: 10px;
-        flex: 1; overflow-y: auto; display: none; font-size: 13px; min-height: 50px;
+        flex: 1; overflow-y: auto; display: none; font-size: 13px;
+        max-height: 180px; /* Prevent endless growth */
     }
-    .lap-list-container.active { display: block; }
-    .lap-item { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--surface-border); color: var(--ink-1); }
+    .lap-list-container.active { display: block; animation: fadeInUp 0.3s ease; }
+    .lap-item { 
+        display: flex; justify-content: space-between; padding: 8px 12px; 
+        border-bottom: 1px solid var(--surface-border); color: var(--ink-1); 
+        animation: slideDown 0.3s ease; /* Item Animation */
+    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* --- Stopwatch Fullscreen --- */
     .fs-overlay {
@@ -329,28 +337,9 @@
     .fs-overlay .timer-btn { padding: 16px 32px; font-size: 18px; border-radius: 14px; width: auto; min-width: 120px; }
     .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; flex: 0 0 auto; }
 
-    /* --- Music (Rounded Box) --- */
-    .music-inner {
-        padding: 20px; 
-        height: 100%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-    }
-    .music-card {
-      width: 100%; 
-      height: 100%; 
-      border-radius: 16px; /* Rounded */
-      border: 1px solid var(--surface-border);
-      background: #000;
-      overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    }
-    .music-card iframe { width: 100%; height: 100%; border: none; }
-
-    /* --- To-Do List (Scroll inside) --- */
+    /* --- To-Do List (Fixed Layout) --- */
     .todo-wrap { display: flex; flex-direction: column; padding: 20px; height: 100%; }
-    .todo-input-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .todo-input-row { display: flex; gap: 10px; margin-bottom: 12px; flex-shrink: 0; }
     .todo-input { 
         flex: 1; background: var(--bg-0); border: 1px solid var(--surface-border);
         padding: 10px 14px; border-radius: 12px; color: var(--ink-0); font-size: 14px;
@@ -359,7 +348,12 @@
         background: var(--surface); border: 1px solid var(--surface-border); color: var(--primary);
         width: 44px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 20px;
     }
-    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; min-height: 50px; }
+    .todo-list { 
+        list-style: none; padding: 0; margin: 0; 
+        flex: 1; overflow-y: auto; 
+        max-height: 250px; /* Limit height */
+        min-height: 50px; 
+    }
     .todo-item { 
         display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--surface-border);
         font-size: 14px; animation: slideIn 0.2s ease;
@@ -373,12 +367,32 @@
     .todo-item.done span { text-decoration: line-through; color: var(--ink-2); }
     .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 18px; padding: 0 6px; }
 
+    /* --- Music (Rounded Box) --- */
+    .music-inner {
+        padding: 20px; 
+        height: 100%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+    }
+    .music-card {
+      width: 100%; 
+      height: 100%; 
+      border-radius: 16px; 
+      border: 1px solid var(--surface-border);
+      background: #000;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    .music-card iframe { width: 100%; height: 100%; border: none; }
+
     /* --- Notice Bar --- */
     .notice-bar {
         grid-column: span 2; 
         padding: 0 20px; display: flex; align-items: center; gap: 14px;
         color: var(--ink-0); height: 56px;
         flex-direction: row;
+        min-height: auto; /* Override default card */
     }
     .notice-label { font-weight: 900; color: #0c0f14; font-size: 12px; padding: 4px 8px; background: #facc15; border-radius: 6px; white-space: nowrap; }
     html[data-theme="light"] .notice-label { color: white; background: #3b82f6; }
@@ -478,7 +492,6 @@
       <div class="clock-wrap">
         <div class="clock-date" id="currentDate">Loading...</div>
         <div class="clock-time" id="currentTime">00:00:00</div>
-        <div class="clock-greet" id="greetingMsg">좋은 하루 되세요</div>
       </div>
     </section>
 
@@ -593,15 +606,26 @@
     <details>
       <summary class="section-title">
         <div class="title-group">
-          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-          <span class="cal-sans-regular">Music</span>
+            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span class="cal-sans-regular">Stopwatch</span>
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
-        <div class="details-inner music-inner">
-            <div class="music-card">
-              <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="details-inner">
+            <div class="stopwatch-wrap" id="stopwatchWrapper">
+                <div class="sw-main-panel">
+                    <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
+                    <div class="timer-controls">
+                      <button id="btnMain" class="timer-btn btn-start">시작</button>
+                      <button id="btnSub" class="timer-btn">초기화</button>
+                      <button id="btnFullscreenControl" class="timer-btn fs-btn-icon" title="전체화면" aria-label="전체화면">
+                        <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                        <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+                      </button>
+                    </div>
+                </div>
+                <div class="lap-list-container" id="lapList"></div>
             </div>
         </div>
       </div>
@@ -631,26 +655,15 @@
     <details>
       <summary class="section-title">
         <div class="title-group">
-            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span class="cal-sans-regular">Stopwatch</span>
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          <span class="cal-sans-regular">Music</span>
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
-        <div class="details-inner">
-            <div class="stopwatch-wrap" id="stopwatchWrapper">
-                <div class="sw-main-panel">
-                    <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
-                    <div class="timer-controls">
-                      <button id="btnMain" class="timer-btn btn-start">시작</button>
-                      <button id="btnSub" class="timer-btn">초기화</button>
-                      <button id="btnFullscreenControl" class="timer-btn fs-btn-icon" title="전체화면" aria-label="전체화면">
-                        <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                        <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-                      </button>
-                    </div>
-                </div>
-                <div class="lap-list-container" id="lapList"></div>
+        <div class="details-inner music-inner">
+            <div class="music-card">
+              <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
       </div>
@@ -692,7 +705,7 @@
         <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            버전 6.5 업데이트 완료. 스톱워치 리스트 넘침 수정, 시계 디자인 롤백, 검색창 분리 적용.
+            버전 7.0 업데이트 완료. 블록 순서 재배치 및 스크롤 최적화가 적용되었습니다.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -722,7 +735,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans-regular">WebHub  Ver. 6.5</span><br>
+    <span class="cal-sans-regular">WebHub  Ver. 7.0</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -757,10 +770,9 @@
       overlay.addEventListener('click',()=> setDrawer(false));
       drawerCloseBtn.addEventListener('click',()=> setDrawer(false));
 
-      // --- Clock & Greeting ---
+      // --- Clock ---
       const currentDateEl = document.getElementById('currentDate');
       const currentTimeEl = document.getElementById('currentTime');
-      const greetingMsgEl = document.getElementById('greetingMsg');
       
       function updateDateTime(){
         const now=new Date();
@@ -769,19 +781,13 @@
         const d=now.getDate();    
         const wd=['일','월','화','수','목','금','토'][now.getDay()];
         const h=now.getHours();
+        const ap=h>=12?'오후':'오전';
+        const hh=h%12||12;
         const mm=String(now.getMinutes()).padStart(2,'0'); 
         const ss=String(now.getSeconds()).padStart(2,'0'); 
         
         currentDateEl.textContent = `${y}년 ${m}월 ${d}일 ${wd}요일`;
-        currentTimeEl.textContent = `${String(h).padStart(2,'0')}:${mm}:${ss}`;
-        
-        // Greeting Logic
-        let greet = "좋은 하루 되세요";
-        if(h >= 5 && h < 12) greet = "좋은 아침입니다!";
-        else if(h >= 12 && h < 18) greet = "점심 맛있게 드셨나요?";
-        else if(h >= 18 && h < 22) greet = "오늘 하루도 고생 많으셨습니다.";
-        else greet = "편안한 밤 되세요.";
-        greetingMsgEl.textContent = `- ${greet}`;
+        currentTimeEl.textContent = `${ap} ${hh}:${mm}:${ss}`;
       }
       updateDateTime(); setInterval(updateDateTime, 1000);
 
