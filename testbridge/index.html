@@ -55,17 +55,15 @@
       color-scheme: light;
     }
 
-    /* ▼ 1. HTML 수정 ▼ */
     html {
       height: 100%;
       background-color: var(--bg-1);
       -webkit-tap-highlight-color: transparent;
-      overflow: hidden; /* 스크롤/바운스 방지 */
+      overflow: hidden;
     }
 
-    /* ▼ 2. BODY 수정 ▼ */
     body {
-      min-height: 100dvh; /* vh -> dvh (동적 뷰포트 높이) */
+      min-height: 100dvh;
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
@@ -75,7 +73,7 @@
       justify-content: center;
       padding: 20px;
       box-sizing: border-box;
-      overflow: hidden; /* 스크롤/바운스 방지 */
+      overflow: hidden;
     }
     
     .section {
@@ -198,6 +196,26 @@
     }
     
   </style>
+
+  <script>
+    (function() {
+      try {
+        const THEME_KEY = 'theme';
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        const root = document.documentElement;
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        
+        if (savedTheme === 'light') {
+          root.setAttribute('data-theme', 'light');
+          if(themeMeta) themeMeta.setAttribute('content', '#ffffff');
+        } else {
+          // dark or null (default)
+          root.removeAttribute('data-theme');
+          if(themeMeta) themeMeta.setAttribute('content', '#0c0f14');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>
@@ -226,47 +244,19 @@
       const btnYes = document.getElementById('btn-yes');
       const btnNo = document.getElementById('btn-no');
       const loader = document.getElementById('loader');
-      const THEME_KEY = 'theme';
 
-      // 아니오 버튼: 메인 홈페이지로 이동
+      // 아니오 버튼: 메인 홈페이지로 이동 (루트 경로)
       btnNo.addEventListener('click', () => {
         window.location.href = '/'; 
       });
 
-      // 예 버튼: 테스트 페이지(/test/)로 이동
+      // 예 버튼: 테스트 페이지 폴더(/test/)로 이동
       btnYes.addEventListener('click', () => {
         loader.classList.add('show');
         setTimeout(() => {
           window.location.href = '/test/';
         }, 3000); 
       });
-
-      function detectInitialTheme() {
-        try {
-          const savedTheme = localStorage.getItem(THEME_KEY);
-          if (savedTheme === 'light' || savedTheme === 'dark') {
-            return savedTheme;
-          }
-        } catch (e) {
-          //
-        }
-        return 'dark'; 
-      }
-
-      function applyTheme(theme) {
-        const root = document.documentElement;
-        const themeMeta = document.querySelector('meta[name="theme-color"]');
-        
-        if (theme === 'light') {
-          root.setAttribute('data-theme', 'light');
-          themeMeta?.setAttribute('content', '#ffffff');
-        } else {
-          root.removeAttribute('data-theme');
-          themeMeta?.setAttribute('content', '#0c0f14');
-        }
-      }
-
-      applyTheme(detectInitialTheme());
     });
   </script>
 </body>
