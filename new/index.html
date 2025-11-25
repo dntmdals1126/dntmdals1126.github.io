@@ -60,7 +60,7 @@
     
     html {
       height: 100%;
-      background-color: var(--bg-0); /* 그라데이션 제거, 단색 배경 */
+      background-color: var(--bg-0);
     }
     
     body {
@@ -69,7 +69,6 @@
       background-color: var(--bg-0);
       color: var(--ink-0);
       min-height: 100%;
-      /* 모바일 스크롤 개선 */
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: none; /* 바운스 효과 제거 */
@@ -77,18 +76,17 @@
     }
     body.scroll-lock { overflow: hidden !important; }
 
-    .cal-sans { font-family: var(--font-display); }
+    .cal-sans-regular { font-family: var(--font-display); font-weight: 400; }
 
     /* --- Layout --- */
     .container {
       max-width: 1000px; 
       margin: 0 auto; 
-      padding: 0 16px 40px; /* 모바일 패딩 */
+      padding: 0 16px 40px;
       display: grid; 
       gap: 16px;
-      /* PC: 2열, 높이 260px 고정 */
-      grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: 260px; 
+      grid-template-columns: repeat(2, 1fr); /* 2 Columns Default */
+      align-items: start; /* 높이 자연스럽게 */
     }
 
     /* --- Card Components --- */
@@ -99,22 +97,21 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       display: flex; flex-direction: column;
-      height: 100%; /* 높이 꽉 채우기 */
+      /* min-height를 주어 시각적 균형 맞춤 */
+      min-height: 160px; 
     }
+    
+    /* Notice bar height exception */
+    .notice-bar { min-height: auto; height: 52px; }
 
     /* --- Header --- */
     .header-bar {
       grid-column: span 2;
       display: flex; justify-content: space-between; align-items: center;
       padding: 16px 0;
-      height: auto !important; /* 헤더는 높이 제한 없음 */
-      min-height: auto !important;
     }
-    .brand {
-      font-family: var(--font-display); font-size: 20px; 
-      display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink-0);
-    }
-    .brand-by { opacity: 0.5; font-size: 12px; font-family: var(--font-main); font-weight: 400; }
+    h1 { font-size: 22px; margin: 0; cursor: pointer; user-select: none; }
+    .brand-by { color: var(--ink-1); font-weight: 300; font-size: 13px; margin-left: 6px; }
     
     .header-actions { display: flex; gap: 8px; }
     .icon-btn {
@@ -130,17 +127,17 @@
       grid-column: span 2; 
       padding: 24px; 
       display: flex; flex-direction: column; justify-content: center; gap: 20px;
-      height: auto !important; /* 검색창은 내용물에 맞게 */
-      min-height: 240px;
+      min-height: auto; /* 내용물에 맞춤 */
     }
     
     /* Clock */
     .time-header { text-align: center; margin-bottom: 4px; }
-    .time-date { font-size: 13px; color: var(--primary); font-weight: 500; margin-bottom: 2px; }
-    .time-clock { 
-        font-family: var(--font-display); font-size: 42px; color: var(--ink-0); /* 크기 줄임 */
-        line-height: 1; letter-spacing: 0.5px;
+    .time-text { 
+        display: flex; align-items: center; justify-content: center; gap: 8px; 
+        flex-wrap: wrap; font-size: 16px; color: var(--ink-0);
     }
+    .t-date { font-weight: 400; color: var(--primary); font-size: 14px; }
+    .t-time { font-family: var(--font-display); font-weight: 400; font-size: 28px; } /* 시계 크기 축소 */
     
     /* Search Engine Box */
     .engine-box {
@@ -152,7 +149,7 @@
     }
     .engine-seg {
       display: flex; gap: 8px; overflow-x: auto; 
-      justify-content: flex-start; /* 왼쪽 정렬 */
+      justify-content: flex-start;
       scrollbar-width: none; 
       padding-bottom: 2px;
     }
@@ -171,7 +168,7 @@
       font-weight: 700;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .engine-icon { width: 8px; height: 8px; border-radius: 50%; }
+    .engine-icon { width: 10px; height: 10px; border-radius: 3px; }
 
     /* Search Bar */
     .search-bar { width: 100%; }
@@ -196,163 +193,171 @@
     /* --- Accordions / Cards --- */
     summary.section-title {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 16px 20px; cursor: pointer; list-style: none;
+        padding: 14px 20px; cursor: pointer; list-style: none;
         font-weight: 500; color: var(--ink-0);
-        font-family: var(--font-display); font-size: 16px; /* 제목 크기 축소 */
         border-bottom: 1px solid transparent;
         transition: 0.2s;
         background: var(--surface);
-        height: 54px; /* 제목 영역 높이 고정 */
+        min-height: 52px;
         flex-shrink: 0;
     }
     summary:hover { background: var(--surface-inner); }
     summary::-webkit-details-marker { display: none; }
-    .title-group { display: flex; align-items: center; gap: 8px; }
+    
+    /* Title Font Size & Type */
+    summary.section-title div span.cal-sans-regular { font-size: 17px; }
+
+    .title-group { display: flex; align-items: center; gap: 10px; }
     .fold-icon { width: 18px; height: 18px; color: var(--ink-1); transition: transform 0.3s; }
     details[open] > summary .fold-icon { transform: rotate(180deg); }
     details[open] summary { border-bottom-color: var(--surface-border); }
 
     .details-content-wrapper {
-        flex: 1; /* 남은 공간 채우기 */
+        flex: 1; 
         overflow: hidden;
         background: var(--surface-inner);
         display: flex; flex-direction: column;
     }
-    .details-inner { 
-        padding: 16px; 
-        height: 100%; overflow-y: auto; 
-    }
+    /* Ensure content expands */
+    details[open] .details-content-wrapper { height: auto; }
 
     /* Link Grid (Always 2 Columns) */
     .link-grid { 
         display: grid; 
         grid-template-columns: 1fr 1fr; /* 무조건 2열 */
-        gap: 10px; 
+        gap: 10px; padding: 16px;
     }
     .link {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 8px; padding: 12px; background: var(--surface);
+        gap: 8px; padding: 14px; background: var(--surface);
         border: 1px solid var(--surface-border); border-radius: 12px;
-        color: var(--ink-0); text-decoration: none; font-size: 12px; font-weight: 500;
-        transition: 0.2s; text-align: center; height: 100%; min-height: 70px;
+        color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
+        transition: 0.2s; text-align: center; height: 100%;
     }
     .link:hover { border-color: var(--primary); transform: translateY(-2px); }
-    .link img { width: 24px; height: 24px; border-radius: 6px; }
-    .external-icon { width: 16px; height: 16px; color: var(--primary); }
+    .link img { width: 20px; height: 20px; object-fit: contain; }
+    .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; }
 
-    /* --- Stopwatch (Full Height) --- */
+    /* --- Stopwatch --- */
     .stopwatch-wrap { 
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        height: 100%; padding: 10px;
+        padding: 20px; height: 100%;
     }
     .stopwatch-display {
-        font-family: var(--font-display); font-size: 42px; font-weight: 400;
-        color: var(--ink-0); margin-bottom: 16px; font-variant-numeric: tabular-nums;
+        font-variant-numeric: tabular-nums;
+        font-size: 36px; font-weight: 700; letter-spacing: 2px;
+        color: var(--ink-0); margin-bottom: 16px;
     }
-    .timer-controls { display: flex; gap: 8px; }
+    .timer-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
     .timer-btn {
         padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
         border: 1px solid var(--surface-border); background: var(--surface); color: var(--ink-0);
-        cursor: pointer; transition: 0.2s; 
+        cursor: pointer; transition: 0.2s; min-width: 80px; display: flex; align-items: center; justify-content: center;
     }
-    .btn-start { color: #fff; background: var(--primary) !important; border-color: transparent; }
+    .btn-start { color: var(--primary); background: rgba(91, 140, 255, 0.15); border-color: rgba(91, 140, 255, 0.4); }
+    html[data-theme="light"] .btn-start { color: var(--primary-2); }
+    .btn-stop { color: #ff5a5a; background: rgba(255, 90, 90, 0.1); border-color: rgba(255, 90, 90, 0.3); }
     
     .lap-list-container {
         width: 100%; border-top: 1px solid var(--surface-border); padding-top: 8px; margin-top: 12px;
-        flex: 1; overflow-y: auto; display: none; font-size: 13px;
+        max-height: 120px; overflow-y: auto; display: none; font-size: 13px;
     }
     .lap-list-container.active { display: block; }
     .lap-item { display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid var(--surface-border); color: var(--ink-1); }
 
     /* --- Stopwatch Fullscreen (Fixed to Window) --- */
-    /* This styling applies when moved to document.body */
     .fs-overlay {
         position: fixed; inset: 0; z-index: 99999;
         background: var(--bg-0); 
         display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 20px;
         animation: fsFadeIn 0.3s ease;
     }
     @keyframes fsFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     
-    .fs-overlay .stopwatch-display { font-size: 18vw; margin-bottom: 40px; }
-    .fs-overlay .timer-btn { padding: 20px 40px; font-size: 20px; border-radius: 16px; }
+    .fs-overlay .stopwatch-display { font-size: clamp(50px, 15vw, 120px); margin-bottom: 40px; }
+    .fs-overlay .timer-btn { padding: 16px 32px; font-size: 18px; border-radius: 14px; width: auto; min-width: 120px; }
     .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; }
 
-    /* --- Music (Full Height) --- */
+    /* --- Music --- */
     .music-card {
-      width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
+      width: 100%; 
+      height: 100px; /* 높이 고정 */
+      border-radius: 0;
+      border: none;
       background: #000;
     }
     .music-card iframe { width: 100%; height: 100%; border: none; }
 
     /* --- To-Do List --- */
-    .todo-wrap { display: flex; flex-direction: column; height: 100%; }
+    .todo-wrap { display: flex; flex-direction: column; padding: 16px; min-height: 200px; }
     .todo-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .todo-input { 
         flex: 1; background: var(--bg-0); border: 1px solid var(--surface-border);
-        padding: 8px 12px; border-radius: 8px; color: var(--ink-0); font-size: 13px;
+        padding: 8px 12px; border-radius: 8px; color: var(--ink-0); font-size: 14px;
     }
     .todo-add-btn { 
         background: var(--surface); border: 1px solid var(--surface-border); color: var(--primary);
-        width: 32px; border-radius: 8px; cursor: pointer; font-weight: bold;
+        width: 40px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 18px;
     }
-    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
+    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; max-height: 200px; }
     .todo-item { 
-        display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--surface-border);
-        font-size: 13px; 
+        display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--surface-border);
+        font-size: 14px; animation: slideIn 0.2s ease;
     }
+    @keyframes slideIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
     .todo-check { 
-        width: 16px; height: 16px; border: 2px solid var(--ink-2); border-radius: 4px; 
+        width: 18px; height: 18px; border: 2px solid var(--ink-2); border-radius: 6px; 
         display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
     .todo-item.done .todo-check { background: var(--primary); border-color: var(--primary); }
     .todo-item.done span { text-decoration: line-through; color: var(--ink-2); }
-    .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 16px; }
+    .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 18px; padding: 0 4px; }
 
     /* --- Notice Bar --- */
     .notice-bar {
         grid-column: span 2; 
         padding: 0 16px; display: flex; align-items: center; gap: 12px;
-        color: var(--ink-0); height: 48px; /* 높이 고정 */
-        min-height: 48px; grid-row: auto;
+        color: var(--ink-0); height: 52px;
+        flex-direction: row; /* 항상 가로 배치 */
     }
-    .notice-label { font-weight: 700; color: var(--accent); font-size: 11px; padding: 2px 6px; background: rgba(250, 204, 21, 0.1); border-radius: 4px; white-space: nowrap; }
-    html[data-theme="light"] .notice-label { color: var(--primary); background: rgba(59, 130, 246, 0.1); }
-    .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 20px; }
+    .notice-label { font-weight: 900; color: #0c0f14; font-size: 13px; padding: 4px 8px; background: #facc15; border-radius: 6px; white-space: nowrap; }
+    html[data-theme="light"] .notice-label { color: white; background: #3b82f6; }
+    .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 24px; }
     .notice-text {
-      display: inline-block; animation: marquee 15s linear infinite; position: absolute; white-space: nowrap; font-size: 13px; top: 1px;
+      display: inline-block; animation: marquee 20s linear infinite; position: absolute; white-space: nowrap; font-size: 14px; font-weight: 500; top: 2px;
     }
     @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 18px; }
+    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 20px; padding: 0 4px; }
 
     /* --- Drawer --- */
     .drawer-root { position: fixed; inset: 0; z-index: 1200; pointer-events: none; }
     .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); opacity: 0; transition: 0.3s; }
     .drawer-nav {
-        position: absolute; top: 0; right: 0; height: 100dvh; width: 260px;
+        position: absolute; top: 0; right: 0; height: 100dvh; width: 280px;
         background: var(--bg-0); border-left: 1px solid var(--surface-border);
         transform: translateX(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         padding: 20px; display: flex; flex-direction: column; gap: 16px;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.3);
     }
     .drawer-root.active { pointer-events: auto; }
     .drawer-root.active .drawer-overlay { opacity: 1; }
     .drawer-root.active .drawer-nav { transform: translateX(0); }
-    .drawer-nav h3 { margin: 0 0 8px; font-size: 11px; color: var(--ink-2); letter-spacing: 1px; font-family: var(--font-display); }
+    .drawer-nav h3 { margin: 0 0 8px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
     .drawer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
     .drawer-nav a {
-        display: flex; align-items: center; padding: 10px; border-radius: 8px;
+        display: flex; align-items: center; padding: 12px; border-radius: 8px;
         background: var(--surface); border: 1px solid var(--surface-border);
-        color: var(--ink-0); text-decoration: none; font-size: 13px;
+        color: var(--ink-0); text-decoration: none; font-size: 14px;
     }
     .drawer-close-btn { align-self: flex-end; background: none; border: none; color: var(--ink-0); font-size: 24px; cursor: pointer; }
 
     /* --- Footer & Scroll --- */
-    footer { grid-column: span 2; text-align: center; padding: 20px 0; color: var(--ink-2); font-size: 11px; height: auto; min-height: auto; }
+    footer { grid-column: span 2; text-align: center; padding: 20px 0; color: var(--ink-2); font-size: 12px; }
     .scroll-btn {
-      position: fixed; right: 16px; width: 40px; height: 40px;
+      position: fixed; right: 16px; width: 42px; height: 42px;
       background: var(--surface); border: 1px solid var(--surface-border);
-      border-radius: 10px; color: var(--ink-0); cursor: pointer;
+      border-radius: 12px; color: var(--ink-0); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       z-index: 900; box-shadow: var(--shadow); transition: 0.2s;
     }
@@ -362,28 +367,25 @@
 
     /* --- PC Specific --- */
     @media (min-width: 769px) {
-        details { height: 100% !important; } /* PC: Force height */
-        summary { cursor: default; pointer-events: none; } /* Disable toggle */
+        details { height: 100%; }
+        summary { cursor: default; pointer-events: none; } /* Toggle Disable */
         .fold-icon { display: none; }
-        details[open] .details-content-wrapper { grid-template-rows: 1fr !important; }
+        details[open]:not(.closing) .details-content-wrapper { grid-template-rows: 1fr !important; }
+        .details-content-wrapper { height: 100%; }
     }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
         .container { 
             grid-template-columns: 1fr; /* 1 Column */
-            grid-auto-rows: auto; /* 높이 자동 (접기/펼치기 위해) */
-            padding-bottom: 80px;
+            gap: 16px;
         }
         .header-bar, .w-search, .notice-bar, footer { grid-column: span 1; }
         
-        /* 카드 높이 초기화 (내용물에 맞게) */
-        details { height: auto; } 
-        /* 펼쳐졌을 때만 높이 가짐 */
-        details[open] { min-height: 200px; } 
+        /* 카드 높이 리셋 */
+        .card, details { min-height: auto; }
         
-        /* 스톱워치, 뮤직, 투두는 항상 펼쳐져 있거나 특정 높이 가짐 */
-        .details-inner { min-height: 180px; }
+        .title-group span.cal-sans-regular { font-size: 16px !important; }
     }
   </style>
 </head>
@@ -394,14 +396,15 @@
     
     <header class="header-bar">
       <h1 id="headerTitle" class="brand">
-        WebHub <span class="brand-by">by Seungmin Woo</span>
+        <span class="cal-sans-regular">WebHub</span>
+        <span class="brand-by">by Seungmin Woo</span>
       </h1>
       <div class="header-actions">
         <button id="themeToggle" class="icon-btn" aria-label="테마 전환">
           <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/></svg>
           <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </button>
-        <button class="icon-btn menu-toggle" aria-label="메뉴 열기">
+        <button class="menu-toggle icon-btn" aria-label="메뉴 열기">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </div>
@@ -409,8 +412,7 @@
 
     <section class="card w-search">
       <div class="time-header">
-        <div class="time-date" id="currentDate">Loading...</div>
-        <div class="time-clock" id="currentTime">00:00</div>
+        <div class="time-text" id="currentDateTime"></div>
       </div>
 
       <div class="search-wrap">
@@ -429,7 +431,7 @@
                   <span class="engine-icon" style="background:#00a495"></span> 나무위키
                 </button>
                 <button type="button" class="engine-btn" data-engine="cbnul">
-                  <span class="engine-icon" style="background:#B52555"></span> 충북대도서관
+                  <span class="engine-icon" style="background:#B52555"></span> 충북대학교 도서관
                 </button>
                 <button type="button" class="engine-btn" data-engine="wikipedia">
                   <span class="engine-icon" style="background:#777"></span> 위키백과
@@ -449,7 +451,7 @@
         <div class="search-bar" role="search">
           <div class="input-shell">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input id="q" type="search" placeholder="검색어를 입력하세요..." autocomplete="off" />
+            <input id="q" type="search" placeholder="검색어를 입력하세요" aria-label="검색어 입력" autocomplete="off" />
             <button id="searchBtn" class="search-btn" type="button">검색</button>
           </div>
         </div>
@@ -460,7 +462,7 @@
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            Volunteering
+            <span class="cal-sans-regular">Educational Volunteering</span>
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
@@ -469,19 +471,19 @@
             <div class="link-grid">
               <a class="link" href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
-                <span>충북대 공지</span>
+                <span>충북대 공지사항</span>
               </a>
               <a class="link" href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=knue.ac.kr" alt="">
-                <span>교원대 공지</span>
+                <span>교원대 공지사항</span>
               </a>
-              <a class="link" href="https://www.1365.go.kr/" target="_blank" rel="noopener noreferrer">
+              <a class="link" href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=1365.go.kr" alt="">
-                <span>1365</span>
+                <span>자원봉사포털</span>
               </a>
-              <a class="link" href="https://edu.chungbuk.ac.kr/" target="_blank" rel="noopener noreferrer">
+              <a class="link" href="https://edu.chungbuk.ac.kr/teaching/selectBbsNttList.do?key=549&bbsNo=101" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
-                <span>교직부</span>
+                <span>교직부 공지사항</span>
               </a>
             </div>
         </div>
@@ -492,7 +494,7 @@
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            University
+            <span class="cal-sans-regular">Chungbuk National University</span>
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
@@ -503,7 +505,7 @@
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
                 <span>eCampus</span>
               </a>
-              <a class="link" href="https://eis.cbnu.ac.kr/" target="_blank" rel="noopener noreferrer">
+              <a class="link" href="https://eis.cbnu.ac.kr/cbnuLogin?1613652726" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
                 <span>개신누리</span>
               </a>
@@ -511,7 +513,7 @@
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=cieat.chungbuk.ac.kr" alt="">
                 <span>CIEAT</span>
               </a>
-              <a class="link" href="https://eisa.cbnu.ac.kr/" target="_blank" rel="noopener noreferrer">
+              <a class="link" href="https://eisa.cbnu.ac.kr/atlecLogin" target="_blank" rel="noopener noreferrer">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" alt="">
                 <span>수강신청</span>
               </a>
@@ -523,8 +525,72 @@
     <details>
       <summary class="section-title">
         <div class="title-group">
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          <span class="cal-sans-regular">Music</span>
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="details-inner" style="padding:0;">
+            <div class="music-card">
+              <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div class="title-group">
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          <span class="cal-sans-regular">To-Do List</span>
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="details-inner">
+            <div class="todo-wrap">
+                <div class="todo-input-row">
+                    <input type="text" id="todoInput" class="todo-input" placeholder="할 일을 입력하세요">
+                    <button id="todoAddBtn" class="todo-add-btn">+</button>
+                </div>
+                <ul id="todoList" class="todo-list"></ul>
+            </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div class="title-group">
+            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span class="cal-sans-regular">Stopwatch</span>
+        </div>
+        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="details-content-wrapper">
+        <div class="details-inner">
+            <div class="stopwatch-wrap" id="stopwatchWrapper">
+                <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
+                <div class="timer-controls">
+                  <button id="btnMain" class="timer-btn btn-start">시작</button>
+                  <button id="btnSub" class="timer-btn">초기화</button>
+                  <button id="btnFullscreenControl" class="timer-btn fs-btn-icon" title="전체화면" aria-label="전체화면">
+                    <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+                  </button>
+                </div>
+                <div class="lap-list-container" id="lapList"></div>
+            </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary class="section-title">
+        <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-            Artificial Intelligence
+            <span class="cal-sans-regular">Artificial Intelligence</span>
         </div>
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
@@ -552,75 +618,11 @@
       </div>
     </details>
 
-    <details>
-      <summary class="section-title">
-        <div class="title-group">
-            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            Stopwatch
-        </div>
-        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </summary>
-      <div class="details-content-wrapper">
-        <div class="details-inner">
-            <div class="stopwatch-wrap" id="stopwatchWrapper">
-                <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
-                <div class="timer-controls">
-                  <button id="btnMain" class="timer-btn btn-start">시작</button>
-                  <button id="btnSub" class="timer-btn">초기화</button>
-                  <button id="btnFullscreenControl" class="timer-btn" title="전체화면">
-                    <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                    <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-                  </button>
-                </div>
-                <div class="lap-list-container" id="lapList"></div>
-            </div>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary class="section-title">
-        <div class="title-group">
-          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-          Music
-        </div>
-        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </summary>
-      <div class="details-content-wrapper">
-        <div class="details-inner" style="padding:0;">
-            <div class="music-card">
-              <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2BegA7SRYIQ?controls=1&modestbranding=1" title="Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary class="section-title">
-        <div class="title-group">
-          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-          To-Do List
-        </div>
-        <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </summary>
-      <div class="details-content-wrapper">
-        <div class="details-inner">
-            <div class="todo-wrap">
-                <div class="todo-input-row">
-                    <input type="text" id="todoInput" class="todo-input" placeholder="할 일을 입력하세요">
-                    <button id="todoAddBtn" class="todo-add-btn">+</button>
-                </div>
-                <ul id="todoList" class="todo-list"></ul>
-            </div>
-        </div>
-      </div>
-    </details>
-
     <section class="notice-bar" id="noticeBar">
         <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            WebHub 6.0 업데이트: 모바일 최적화, 스크롤 개선, 투두리스트 추가, 디자인 전면 개편.
+            버전 4.5.5 업데이트 완료. 이제 스톱워치 기능이 추가되었으며, 단축키(Space, L, Esc)를 지원합니다.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -632,7 +634,7 @@
     <div class="drawer-overlay" id="drawerOverlay"></div>
     <nav id="drawerNav" class="drawer-nav" role="navigation">
       <button class="drawer-close-btn" aria-label="메뉴 닫기">×</button>
-      <div class="cal-sans">
+      <div class="cal-sans-regular">
         <h3>M E N U</h3>
         <ul>
           <li><a href="/" rel="noopener noreferrer">Home</a></li>
@@ -650,7 +652,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans">WebHub Ver. 6.0</span><br>
+    <span class="cal-sans-regular">WebHub  Ver. 4.5.5</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -686,8 +688,7 @@
       drawerCloseBtn.addEventListener('click',()=> setDrawer(false));
 
       // --- Clock ---
-      const currentDateEl = document.getElementById('currentDate');
-      const currentTimeEl = document.getElementById('currentTime');
+      const currentDateTimeEl = document.getElementById('currentDateTime');
       function updateDateTime(){
         const now=new Date();
         const y=now.getFullYear();
@@ -695,11 +696,15 @@
         const d=now.getDate();    
         const wd=['일','월','화','수','목','금','토'][now.getDay()];
         const h=now.getHours();
+        const ap=h>=12?'오후':'오전';
+        const hh=h%12||12;
         const mm=String(now.getMinutes()).padStart(2,'0'); 
         const ss=String(now.getSeconds()).padStart(2,'0'); 
         
-        currentDateEl.textContent = `${y}.${m}.${d} (${wd})`;
-        currentTimeEl.textContent = `${String(h).padStart(2,'0')}:${mm}:${ss}`;
+        currentDateTimeEl.innerHTML = `
+            <span class="t-date">${y}년 ${m}월 ${d}일 ${wd}요일</span>
+            <span class="t-time">${ap} ${hh}:${mm}:${ss}</span>
+        `;
       }
       updateDateTime(); setInterval(updateDateTime, 1000);
 
@@ -780,14 +785,12 @@
       const allDetails = document.querySelectorAll('details');
       
       function checkLayout() {
-        // PC(>768)에서는 항상 펼침
         if(window.innerWidth > 768) {
             allDetails.forEach(dt => {
                 dt.setAttribute('open','');
                 dt.querySelector('summary').style.pointerEvents = 'none';
             });
         } else {
-            // Mobile에서는 토글 가능
             allDetails.forEach(dt => {
                dt.querySelector('summary').style.pointerEvents = 'auto';
             });
@@ -796,12 +799,21 @@
       window.addEventListener('resize', checkLayout);
       checkLayout();
 
-      // Mobile Toggle Logic
       allDetails.forEach(detail => {
-          detail.querySelector('summary').addEventListener('click', (e) => {
+          const summary = detail.querySelector('summary');
+          summary.addEventListener('click', (e) => {
               if(window.innerWidth > 768) {
                   e.preventDefault(); 
                   return;
+              }
+              
+              if (detail.hasAttribute('open')) {
+                  e.preventDefault(); 
+                  detail.classList.add('closing');
+                  setTimeout(() => {
+                      detail.removeAttribute('open');
+                      detail.classList.remove('closing');
+                  }, 200);
               }
           });
       });
@@ -840,7 +852,7 @@
             lapList.classList.add('active');
             const li = document.createElement('div');
             li.className = 'lap-item';
-            li.innerHTML = `<span class="lap-index">#${lapCount++}</span> <span>${formatTime(swElapsed)}</span>`;
+            li.innerHTML = `<span class="lap-index">랩 ${lapCount++}</span> <span>${formatTime(swElapsed)}</span>`;
             lapList.prepend(li);
         } else {
             swElapsed=0; stopwatchDisplay.textContent="00:00:00";
@@ -849,12 +861,11 @@
       });
 
       // Fullscreen Logic: Move DOM to body
-      const stopwatchPlaceholder = document.createElement('div'); // Placeholder to keep grid position
+      const stopwatchPlaceholder = document.createElement('div');
       let isFs = false;
 
       fsBtn.addEventListener('click', () => {
         if(!isFs) {
-            // Enter Fullscreen
             stopwatchWrapper.parentNode.insertBefore(stopwatchPlaceholder, stopwatchWrapper);
             document.body.appendChild(stopwatchWrapper);
             stopwatchWrapper.classList.add('fs-overlay');
@@ -862,7 +873,6 @@
             iconExpand.style.display='none'; iconCompress.style.display='block';
             isFs = true;
         } else {
-            // Exit Fullscreen
             stopwatchPlaceholder.parentNode.insertBefore(stopwatchWrapper, stopwatchPlaceholder);
             stopwatchPlaceholder.remove();
             stopwatchWrapper.classList.remove('fs-overlay');
@@ -900,17 +910,17 @@
             <span style="flex:1">${text}</span>
             <div class="todo-del">×</div>
           `;
-          // Check Toggle
           li.querySelector('.todo-check').addEventListener('click', () => {
               li.classList.toggle('done');
               const svg = li.querySelector('svg');
               svg.style.display = li.classList.contains('done') ? 'block' : 'none';
               saveTodos();
           });
-          // Delete
           li.querySelector('.todo-del').addEventListener('click', () => {
-              li.remove();
-              saveTodos();
+              if(confirm('삭제하시겠습니까?')) {
+                  li.remove();
+                  saveTodos();
+              }
           });
           todoList.appendChild(li);
       }
@@ -940,6 +950,13 @@
       // Notice Close
       document.querySelector('.notice-close').addEventListener('click', function(){
           this.parentElement.remove();
+      });
+
+      // --- Shortcuts ---
+      document.addEventListener('keydown', (e) => {
+          if (document.activeElement === q || document.activeElement === todoInput) return;
+          if (e.code === 'Space') { e.preventDefault(); btnMain.click(); }
+          if (e.code === 'KeyL') { btnSub.click(); }
       });
 
     });
