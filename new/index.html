@@ -8,184 +8,232 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
-    /* --- Design System (Focus Theme + Original Structure) --- */
+    /* --- Premium Design System --- */
     :root {
-      --bg-0: #0c0f14;
-      --bg-1: #10141b;
-      --bg-gradient: radial-gradient(circle at 50% 0%, #1c2333 0%, #0c0f14 100%);
-      --surface: rgba(31, 38, 48, 0.6);
-      --surface-hover: rgba(48, 56, 69, 0.8);
-      --ink-0: #e6eaf0;
-      --ink-1: #aeb6c2;
+      --bg-0: #080a0e;
+      --bg-1: #0c0f14;
+      /* Deep, subtle gradient for background */
+      --bg-gradient: radial-gradient(circle at 50% -20%, #1a212e 0%, #080a0e 100%);
+      
+      /* Glassmorphism Surfaces */
+      --surface: rgba(30, 35, 45, 0.5);
+      --surface-hover: rgba(45, 50, 65, 0.7);
+      --surface-border: rgba(255, 255, 255, 0.08);
+      
+      --ink-0: #ffffff;
+      --ink-1: #9ca3af;
+      --ink-2: #6b7280;
+      
       --primary: #5b8cff;
-      --primary-glow: rgba(91, 140, 255, 0.3);
+      --primary-glow: rgba(91, 140, 255, 0.15);
       --accent: #facc15;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-strong: rgba(255, 255, 255, 0.15);
-      --radius: 16px;
-      --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+      
+      --radius: 20px;
+      --shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.4);
+      
       --font-main: 'Noto Sans KR', sans-serif;
       --font-display: 'Cal Sans', sans-serif;
+      
       color-scheme: dark light;
     }
 
     html[data-theme="light"] {
-      --bg-0: #f6f8fb;
-      --bg-1: #eef2f6;
-      --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f1f4f9 100%);
-      --surface: rgba(255, 255, 255, 0.7);
-      --surface-hover: rgba(255, 255, 255, 0.95);
-      --ink-0: #0f172a;
+      --bg-0: #f0f4f8;
+      --bg-1: #ffffff;
+      --bg-gradient: radial-gradient(circle at 50% -20%, #ffffff 0%, #f0f4f8 100%);
+      
+      --surface: rgba(255, 255, 255, 0.65);
+      --surface-hover: rgba(255, 255, 255, 0.9);
+      --surface-border: rgba(0, 0, 0, 0.05);
+      
+      --ink-0: #111827;
       --ink-1: #4b5563;
-      --primary: #2f6bff;
-      --primary-glow: rgba(47, 107, 255, 0.2);
+      --ink-2: #9ca3af;
+      
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.15);
       --accent: #d97706;
-      --border: rgba(0, 0, 0, 0.06);
-      --border-strong: rgba(0, 0, 0, 0.12);
+      
+      --shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08);
     }
 
     /* --- Reset & Base --- */
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
     
-    html, body {
+    html {
+      height: 100%;
+      /* Fix for mobile overscroll color */
+      background-color: var(--bg-0);
+      overscroll-behavior-y: none;
+    }
+    
+    body {
       margin: 0; padding: 0;
       font-family: var(--font-main);
       background: var(--bg-0);
       background-image: var(--bg-gradient);
+      background-attachment: fixed;
       color: var(--ink-0);
       min-height: 100vh;
       overflow-x: hidden;
       transition: background 0.3s, color 0.3s;
+      /* Prevent pull-to-refresh on mobile web apps if needed */
+      overscroll-behavior-y: none; 
     }
     body.scroll-lock { overflow: hidden; }
 
     .cal-sans { font-family: var(--font-display); }
 
-    /* --- Background Animation --- */
+    /* --- Background Animation (Subtle Blobs) --- */
     .bg-blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-    .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: float 20s infinite alternate; }
-    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary); animation-delay: 0s; }
-    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: purple; animation-delay: -10s; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.25; animation: float 25s infinite alternate ease-in-out; }
+    .blob-1 { top: -10%; left: 10%; width: 60vw; height: 60vw; background: var(--primary); animation-delay: 0s; }
+    .blob-2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: #8b5cf6; animation-delay: -8s; }
     html[data-theme="light"] .blob-2 { background: #a5b4fc; }
-    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 30px) scale(1.05); } }
 
-    /* --- Layout Grid --- */
+    /* --- Layout --- */
     .container {
-      max-width: 1000px; margin: 0 auto; padding: 20px;
+      max-width: 1000px; margin: 0 auto; padding: 0 20px 40px;
       display: grid; gap: 20px;
-      /* PC: 2열 구조 */
       grid-template-columns: repeat(2, 1fr);
     }
 
-    /* --- Common Card Styling (Unified) --- */
-    /* .card applies to Search, Details, Notice Bar */
+    /* --- Unified Card Style --- */
+    /* Applies to all main containers: Search, Details, Notice */
     .card, details, .notice-bar {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid var(--surface-border);
       border-radius: var(--radius);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       box-shadow: var(--shadow);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s, background-color 0.3s;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       overflow: hidden;
     }
-    html[data-theme="light"] .card, 
-    html[data-theme="light"] details, 
-    html[data-theme="light"] .notice-bar { background: rgba(255,255,255,0.6); }
+    /* Hover effect mainly for visual depth, disabled for static layouts if needed */
+    /* .card:hover, details:hover { transform: translateY(-2px); box-shadow: 0 12px 40px -10px rgba(0,0,0,0.3); } */
 
-    /* --- Header --- */
+    /* --- Header (Compact) --- */
     .header-bar {
       grid-column: span 2;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0;
+      padding: 16px 4px; /* Compact Padding */
     }
     .brand {
-      font-family: var(--font-display); font-size: 24px; font-weight: 400;
-      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      font-family: var(--font-display); font-size: 20px; font-weight: 400;
+      display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink-0);
     }
-    .brand-by { opacity: 0.6; font-size: 13px; font-family: var(--font-main); font-weight: 300; }
+    .brand-by { opacity: 0.5; font-size: 12px; font-family: var(--font-main); font-weight: 400; letter-spacing: 0.5px; }
     
-    .header-actions { display: flex; gap: 10px; }
+    .header-actions { display: flex; gap: 8px; }
     .icon-btn {
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--ink-0); width: 40px; height: 40px; border-radius: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border);
+      color: var(--ink-0); width: 36px; height: 36px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s; backdrop-filter: blur(10px);
     }
+    html[data-theme="light"] .icon-btn { background: rgba(255,255,255,0.5); }
     .icon-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
 
-    /* --- 1. Search Section (Hero) --- */
+    /* --- 1. Search Hero Section --- */
     .w-search { 
-      grid-column: span 2; padding: 28px; 
-      display: flex; flex-direction: column; gap: 20px; 
+      grid-column: span 2; padding: 36px; 
+      display: flex; flex-direction: column; gap: 24px; 
+      position: relative;
     }
     
+    /* Clock Typography */
     .time-header { 
-        display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 6px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; 
+        text-align: center; margin-bottom: 12px;
     }
-    /* 날짜: Noto Sans */
-    .time-date { font-family: var(--font-main); font-size: 15px; color: var(--ink-1); font-weight: 500; }
-    /* 시간: Cal Sans */
-    .time-clock { font-family: var(--font-display); font-size: 32px; color: var(--ink-0); line-height: 1.1; }
+    .time-date { font-family: var(--font-main); font-size: 15px; color: var(--primary); font-weight: 500; margin-bottom: 4px; letter-spacing: 0.5px; }
+    .time-clock { 
+        font-family: var(--font-display); font-size: 56px; color: var(--ink-0); 
+        line-height: 1; letter-spacing: -1px; text-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
     
-    /* Search Engine Buttons */
+    /* Search Engine Chips */
+    .engine-wrap { width: 100%; position: relative; }
     .engine-seg {
-      display: flex; gap: 8px; overflow-x: auto; 
-      padding: 6px 2px; /* 상하 패딩 추가하여 잘림 방지 */
+      display: flex; gap: 10px; overflow-x: auto; 
+      padding: 4px 4px 12px 4px; /* Padding bottom for shadow space */
       scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      justify-content: center; /* Center on PC */
     }
     .engine-btn {
-      appearance: none; border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-      color: var(--ink-1); padding: 8px 14px; border-radius: 20px;
+      appearance: none; border: 1px solid var(--surface-border); 
+      background: rgba(255,255,255,0.03);
+      color: var(--ink-1); padding: 8px 16px; border-radius: 14px;
       cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px;
-      font-size: 13px; font-weight: 500; transition: all 0.2s;
+      font-size: 14px; font-weight: 500; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
       font-family: var(--font-main);
+      flex-shrink: 0;
     }
     html[data-theme="light"] .engine-btn { background: rgba(255,255,255,0.5); }
+    
     .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-2px); }
+    
     .engine-btn[data-active="true"] {
-      background: var(--primary-glow); border-color: var(--primary); color: var(--primary);
+      background: var(--surface); 
+      border-color: var(--primary); 
+      color: var(--ink-0);
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
-    .engine-icon { width: 10px; height: 10px; border-radius: 50%; }
+    .engine-icon { width: 8px; height: 8px; border-radius: 50%; transition: 0.2s; opacity: 0.7; }
+    .engine-btn[data-active="true"] .engine-icon { opacity: 1; transform: scale(1.2); }
 
     /* Search Bar */
+    .search-bar { width: 100%; max-width: 600px; margin: 0 auto; }
     .input-shell {
       display: flex; align-items: center; gap: 12px;
-      background: var(--bg-0); border: 1px solid var(--border);
-      border-radius: 14px; padding: 6px 6px 6px 16px;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      background: rgba(0,0,0,0.2); border: 1px solid var(--surface-border);
+      border-radius: 18px; padding: 8px 8px 8px 20px;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
-    .input-shell:focus-within { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+    html[data-theme="light"] .input-shell { background: rgba(255,255,255,0.5); }
+    
+    .input-shell:focus-within { 
+        border-color: var(--primary); 
+        background: var(--bg-0);
+        box-shadow: 0 0 0 3px var(--primary-glow); 
+    }
     .input-shell input {
       flex: 1; background: transparent; border: none; color: var(--ink-0);
-      font-size: 16px; height: 40px; font-family: var(--font-main);
+      font-size: 16px; height: 44px; font-family: var(--font-main); font-weight: 500;
     }
+    .input-shell input::placeholder { color: var(--ink-2); }
     .search-btn {
       background: var(--primary); color: white; border: none;
-      border-radius: 10px; padding: 0 20px; height: 40px;
+      border-radius: 12px; padding: 0 24px; height: 44px;
       font-weight: 700; cursor: pointer; transition: 0.2s; font-family: var(--font-main);
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
-    .search-btn:hover { background: #4a7dff; transform: translateY(-1px); }
+    .search-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    /* --- 2. Details/Summary (Accordions) --- */
-    /* details 태그 자체에 .card 스타일 적용됨 */
+    /* --- 2. Details/Summary (Cards) --- */
     
     summary.section-title {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 18px 24px; cursor: pointer; list-style: none;
+        padding: 20px 24px; cursor: pointer; list-style: none;
         font-weight: 400; color: var(--ink-0);
+        font-family: var(--font-display); font-size: 18px; 
+        user-select: none;
         transition: background 0.2s;
-        font-family: var(--font-display); font-size: 18px; /* Title Font: Cal Sans */
     }
     summary:hover { background: var(--surface-hover); }
     summary::-webkit-details-marker { display: none; }
     
+    .title-group { display: flex; align-items: center; gap: 10px; }
     .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.3s ease; }
     details[open] > summary .fold-icon { transform: rotate(180deg); }
 
@@ -193,99 +241,126 @@
     .details-content-wrapper {
         display: grid;
         grid-template-rows: 0fr;
-        transition: grid-template-rows 0.3s ease-out;
+        transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border-top: 1px solid transparent;
     }
     details[open]:not(.closing) .details-content-wrapper {
         grid-template-rows: 1fr;
-        border-top-color: var(--border); 
+        border-top-color: var(--surface-border); 
     }
-    .details-inner { overflow: hidden; } /* Actual content container */
+    .details-inner { overflow: hidden; } 
 
     /* Link Grid */
     .link-grid { 
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; 
-        padding: 20px; background: rgba(0,0,0,0.1);
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; 
+        padding: 24px;
     }
-    html[data-theme="light"] .link-grid { background: rgba(255,255,255,0.3); }
 
     .link {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 10px; padding: 16px; background: var(--surface);
-        border: 1px solid var(--border); border-radius: 12px;
+        gap: 10px; padding: 16px; background: rgba(255,255,255,0.03);
+        border: 1px solid var(--surface-border); border-radius: 14px;
         color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
         transition: 0.2s; text-align: center;
     }
-    .link:hover { transform: translateY(-3px); border-color: var(--primary); background: var(--surface-hover); }
-    .link img { width: 24px; height: 24px; opacity: 0.9; }
+    html[data-theme="light"] .link { background: rgba(255,255,255,0.4); }
+    
+    .link:hover { 
+        transform: translateY(-3px); 
+        border-color: var(--primary); 
+        background: var(--surface-hover);
+        box-shadow: 0 4px 12px var(--primary-glow);
+    }
+    .link img { width: 28px; height: 28px; opacity: 1; border-radius: 6px; }
 
-    /* Icons */
-    .external-icon { width: 18px; height: 18px; margin-right: 8px; vertical-align: middle; color: var(--primary); opacity: 0.8; }
+    .external-icon { width: 20px; height: 20px; color: var(--primary); opacity: 0.9; }
 
     /* --- Stopwatch --- */
-    .stopwatch-wrap { display: flex; flex-direction: column; align-items: center; padding: 20px; background: rgba(0,0,0,0.1); }
-    html[data-theme="light"] .stopwatch-wrap { background: rgba(255,255,255,0.3); }
+    .stopwatch-wrap { 
+        display: flex; flex-direction: column; align-items: center; 
+        padding: 24px;
+    }
 
     .stopwatch-display {
-        font-family: var(--font-display); font-size: 48px; font-weight: 400;
-        color: var(--ink-0); margin: 10px 0 20px; letter-spacing: 1px;
+        font-family: var(--font-display); font-size: 52px; font-weight: 400;
+        color: var(--ink-0); margin: 10px 0 24px; letter-spacing: 1px;
+        font-variant-numeric: tabular-nums;
     }
-    .timer-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+    .timer-controls { display: flex; gap: 12px; margin-bottom: 10px; }
     .timer-btn {
-        padding: 10px 24px; border-radius: 12px; font-size: 14px; font-weight: 600;
-        border: 1px solid var(--border); background: var(--surface); color: var(--ink-0);
+        padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 600;
+        border: 1px solid var(--surface-border); background: rgba(255,255,255,0.03); color: var(--ink-0);
         cursor: pointer; transition: 0.2s; font-family: var(--font-main);
     }
-    .timer-btn:hover { background: var(--surface-hover); transform: translateY(-1px); }
-    .btn-start { color: var(--primary); border-color: var(--primary-glow); background: var(--primary-glow); }
+    html[data-theme="light"] .timer-btn { background: rgba(255,255,255,0.5); }
+    
+    .timer-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
+    .btn-start { 
+        color: #fff; border-color: transparent; 
+        background: var(--primary) !important; 
+        box-shadow: 0 4px 12px var(--primary-glow);
+    }
     
     .lap-list-container {
-        width: 100%; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px;
-        max-height: 150px; overflow-y: auto; display: none;
+        width: 100%; border-top: 1px solid var(--surface-border); padding-top: 10px; margin-top: 16px;
+        max-height: 160px; overflow-y: auto; display: none;
     }
     .lap-list-container.active { display: block; animation: fadeIn 0.3s; }
     .lap-item {
-        display: flex; justify-content: space-between; padding: 8px 12px;
-        font-family: var(--font-display); font-size: 14px; color: var(--ink-1);
-        border-bottom: 1px solid var(--border);
+        display: flex; justify-content: space-between; padding: 10px 12px;
+        font-family: var(--font-display); font-size: 15px; color: var(--ink-1);
+        border-bottom: 1px solid var(--surface-border);
     }
     .lap-index { color: var(--primary); font-weight: bold; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* --- Stopwatch Fullscreen Mode (Fixed) --- */
+    .stopwatch-wrap.fullscreen-mode {
+        position: fixed; inset: 0; z-index: 9999;
+        background: var(--bg-0); width: 100vw; height: 100vh;
+        justify-content: center; padding: 20px; margin: 0;
+        border-radius: 0;
+        animation: fsEnter 0.3s ease forwards;
+    }
+    @keyframes fsEnter { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    
+    .stopwatch-wrap.fullscreen-mode .stopwatch-display { font-size: 15vw; }
+    .stopwatch-wrap.fullscreen-mode .timer-btn { padding: 20px 40px; font-size: 18px; }
+
     /* --- Notice Bar --- */
     .notice-bar {
         grid-column: span 2; 
-        /* Apply card styles manually for specific layout */
-        padding: 12px 20px; display: flex; align-items: center; gap: 16px;
-        color: var(--ink-0); font-size: 14px;
+        padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+        color: var(--ink-0);
     }
-    .notice-label { font-weight: 900; color: var(--accent); font-family: var(--font-display); font-size: 12px; letter-spacing: 1px; }
-    html[data-theme="light"] .notice-label { color: var(--primary); }
+    .notice-label { font-weight: 700; color: var(--accent); font-family: var(--font-display); font-size: 12px; letter-spacing: 1px; padding: 4px 8px; background: rgba(250, 204, 21, 0.1); border-radius: 6px; }
+    html[data-theme="light"] .notice-label { color: var(--primary); background: rgba(59, 130, 246, 0.1); }
     .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 20px; }
     .notice-text {
-      display: inline-block; animation: marquee 15s linear infinite; position: absolute; white-space: nowrap;
+      display: inline-block; animation: marquee 20s linear infinite; position: absolute; white-space: nowrap; font-size: 14px; font-weight: 400;
     }
     @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 18px; font-weight: bold; }
+    .notice-close { background: none; border: none; color: var(--ink-1); cursor: pointer; font-size: 18px; font-weight: bold; transition: color 0.2s; }
+    .notice-close:hover { color: var(--ink-0); }
 
     /* --- Drawer --- */
     .drawer-root { position: fixed; inset: 0; z-index: 1200; pointer-events: none; }
-    .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); opacity: 0; transition: 0.3s; }
+    .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); opacity: 0; transition: 0.3s; }
     .drawer-nav {
         position: absolute; top: 0; right: 0; height: 100dvh; width: 280px;
-        background: var(--bg-1); border-left: 1px solid var(--border);
+        background: var(--bg-1); border-left: 1px solid var(--surface-border);
         transform: translateX(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        padding: 24px; display: flex; flex-direction: column; gap: 20px;
+        padding: 24px; display: flex; flex-direction: column; gap: 24px;
     }
     .drawer-root.active { pointer-events: auto; }
     .drawer-root.active .drawer-overlay { opacity: 1; }
     .drawer-root.active .drawer-nav { transform: translateX(0); }
-    .drawer-nav h3 { margin: 0 0 10px; font-size: 12px; color: var(--ink-1); letter-spacing: 1px; font-family: var(--font-display); }
-    .drawer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .drawer-nav h3 { margin: 0 0 12px; font-size: 12px; color: var(--ink-2); letter-spacing: 1px; font-family: var(--font-display); }
+    .drawer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
     .drawer-nav a {
-        display: flex; align-items: center; padding: 12px; border-radius: 10px;
-        background: var(--surface); border: 1px solid var(--border);
-        color: var(--ink-0); text-decoration: none; font-size: 14px;
+        display: flex; align-items: center; padding: 14px; border-radius: 12px;
+        background: var(--surface); border: 1px solid var(--surface-border);
+        color: var(--ink-0); text-decoration: none; font-size: 14px; font-weight: 500;
         transition: 0.2s;
     }
     .drawer-nav a:hover { background: var(--surface-hover); border-color: var(--primary); }
@@ -297,32 +372,48 @@
     /* --- Footer --- */
     footer {
         grid-column: span 2; text-align: center; padding: 40px 0;
-        color: var(--ink-1); font-size: 12px; opacity: 0.7;
+        color: var(--ink-2); font-size: 13px;
     }
     
     /* --- Scroll Buttons --- */
     .scroll-btn {
-      position: fixed; right: 20px; width: 44px; height: 44px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; color: var(--ink-0); cursor: pointer;
+      position: fixed; right: 20px; width: 48px; height: 48px;
+      background: var(--surface); border: 1px solid var(--surface-border);
+      border-radius: 14px; color: var(--ink-0); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       z-index: 900; box-shadow: var(--shadow); transition: 0.2s;
+      backdrop-filter: blur(10px);
     }
     .scroll-btn:hover { background: var(--surface-hover); transform: translateY(-2px); }
     .scroll-btn.up { bottom: 80px; }
     .scroll-btn.down { bottom: 20px; }
     .scroll-btn.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 
+    /* --- PC: Disable Accordion (Force Open) --- */
+    @media (min-width: 769px) {
+        details summary { pointer-events: none; cursor: default; }
+        details summary .fold-icon { display: none; } /* Hide arrow */
+        details[open]:not(.closing) .details-content-wrapper {
+            grid-template-rows: 1fr !important;
+            border-top-color: var(--surface-border) !important;
+        }
+        /* Ensure internal links still work */
+        .details-content-wrapper a { pointer-events: auto; }
+    }
+
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-        .container { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
-        .header-bar { grid-column: span 1; }
-        .w-search { grid-column: span 1; padding: 20px; }
+        .container { grid-template-columns: 1fr; padding: 0 16px 30px; gap: 16px; }
+        .header-bar { grid-column: span 1; padding: 12px 0; }
+        .w-search { grid-column: span 1; padding: 24px 20px; gap: 20px; }
+        .time-clock { font-size: 42px; }
+        .engine-seg { justify-content: flex-start; }
         .notice-bar { grid-column: span 1; }
-        .footer { grid-column: span 1; }
+        footer { grid-column: span 1; }
         
-        .link-grid { grid-template-columns: repeat(3, 1fr); }
+        .link-grid { grid-template-columns: repeat(3, 1fr); padding: 16px; gap: 8px; }
         .link { padding: 12px 8px; font-size: 12px; }
+        .link img { width: 24px; height: 24px; }
     }
   </style>
 </head>
@@ -358,34 +449,36 @@
       </div>
 
       <div class="search-wrap">
-        <div class="engine-seg" id="engineSeg">
-            <button type="button" class="engine-btn" data-engine="google" data-active="true">
-              <span class="engine-icon" style="background:#4285F4"></span> Google
-            </button>
-            <button type="button" class="engine-btn" data-engine="naver">
-              <span class="engine-icon" style="background:#03cf5d"></span> NAVER
-            </button>
-            <button type="button" class="engine-btn" data-engine="youtube">
-              <span class="engine-icon" style="background:#ff0000"></span> YouTube
-            </button>
-            <button type="button" class="engine-btn" data-engine="namu">
-              <span class="engine-icon" style="background:#00a495"></span> 나무위키
-            </button>
-            <button type="button" class="engine-btn" data-engine="cbnul">
-              <span class="engine-icon" style="background:#B52555"></span> 충북대학교 도서관
-            </button>
-            <button type="button" class="engine-btn" data-engine="wikipedia">
-              <span class="engine-icon" style="background:#777"></span> 위키백과
-            </button>
-            <button type="button" class="engine-btn" data-engine="dbpia">
-              <span class="engine-icon" style="background:#cf393e"></span> DBpia
-            </button>
-            <button type="button" class="engine-btn" data-engine="riss">
-              <span class="engine-icon" style="background:#F76323"></span> RISS
-            </button>
-            <button type="button" class="engine-btn" data-engine="everytime">
-              <span class="engine-icon" style="background:#f91f15"></span> 에브리타임
-            </button>
+        <div class="engine-wrap">
+            <div class="engine-seg" id="engineSeg">
+                <button type="button" class="engine-btn" data-engine="google" data-active="true">
+                  <span class="engine-icon" style="background:#4285F4"></span> Google
+                </button>
+                <button type="button" class="engine-btn" data-engine="naver">
+                  <span class="engine-icon" style="background:#03cf5d"></span> NAVER
+                </button>
+                <button type="button" class="engine-btn" data-engine="youtube">
+                  <span class="engine-icon" style="background:#ff0000"></span> YouTube
+                </button>
+                <button type="button" class="engine-btn" data-engine="namu">
+                  <span class="engine-icon" style="background:#00a495"></span> 나무위키
+                </button>
+                <button type="button" class="engine-btn" data-engine="cbnul">
+                  <span class="engine-icon" style="background:#B52555"></span> 충북대학교 도서관
+                </button>
+                <button type="button" class="engine-btn" data-engine="wikipedia">
+                  <span class="engine-icon" style="background:#777"></span> 위키백과
+                </button>
+                <button type="button" class="engine-btn" data-engine="dbpia">
+                  <span class="engine-icon" style="background:#cf393e"></span> DBpia
+                </button>
+                <button type="button" class="engine-btn" data-engine="riss">
+                  <span class="engine-icon" style="background:#F76323"></span> RISS
+                </button>
+                <button type="button" class="engine-btn" data-engine="everytime">
+                  <span class="engine-icon" style="background:#f91f15"></span> 에브리타임
+                </button>
+            </div>
         </div>
 
         <div class="search-bar" role="search">
@@ -400,7 +493,7 @@
 
     <details open>
       <summary class="section-title">
-        <div>
+        <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             Educational Volunteering
         </div>
@@ -432,7 +525,7 @@
 
     <details>
       <summary class="section-title">
-        <div>
+        <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             Chungbuk National University
         </div>
@@ -464,7 +557,7 @@
 
     <details>
       <summary class="section-title">
-        <div>
+        <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
             Artificial Intelligence
         </div>
@@ -496,7 +589,7 @@
 
     <details>
       <summary class="section-title">
-        <div>
+        <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             Stopwatch
         </div>
@@ -524,7 +617,7 @@
 
     <details>
       <summary class="section-title">
-        <div>
+        <div class="title-group">
           <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
           Music
         </div>
@@ -540,10 +633,10 @@
     </details>
 
     <section class="notice-bar" id="noticeBar">
-        <span class="notice-label">UPDATE</span>
+        <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            WebHub 5.0 업데이트 완료. DBpia 검색 기능 복구 및 디자인 통합이 적용되었습니다.
+            WebHub 5.5 업데이트 완료. DBpia 검색 복구 및 디자인 통합이 적용되었습니다.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -573,7 +666,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans">WebHub Ver. 5.0</span><br>
+    <span class="cal-sans">WebHub Ver. 5.5</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -867,15 +960,15 @@
             iconCompress.style.display = 'block';
             btnFullscreenControl.title = "원래대로";
         } else {
-            stopwatchWrap.classList.add('fullscreen-closing');
-            setTimeout(() => {
-                stopwatchWrap.classList.remove('fullscreen-mode');
-                stopwatchWrap.classList.remove('fullscreen-closing');
-                unlockBody();
-                iconExpand.style.display = 'block';
-                iconCompress.style.display = 'none';
-                btnFullscreenControl.title = "전체화면";
-            }, 300); 
+            // Remove class immediately then animate back is handled by CSS transition mostly, 
+            // but for safe removal we can just remove it. 
+            // For smoother exit we can use a timeout or animation class, 
+            // but simpler is better here to fix the "not working" bug.
+            stopwatchWrap.classList.remove('fullscreen-mode');
+            unlockBody();
+            iconExpand.style.display = 'block';
+            iconCompress.style.display = 'none';
+            btnFullscreenControl.title = "전체화면";
         }
       }
       
@@ -910,18 +1003,8 @@
             swElapsedTime = 0;
             swDisplay.textContent = "00:00:00";
             lapCounter = 1;
-            const items = lapList.querySelectorAll('.lap-item');
-            if (items.length > 0) {
-                items.forEach(item => item.classList.add('exiting'));
-                lapList.classList.add('closing');
-                setTimeout(() => {
-                    lapList.innerHTML = '';
-                    lapList.classList.remove('closing');
-                    toggleLapContainer(false); 
-                }, 400);
-            } else {
-                toggleLapContainer(false);
-            }
+            lapList.innerHTML = '';
+            toggleLapContainer(false);
         }
       });
 
@@ -938,6 +1021,12 @@
       allDetails.forEach((detail, index) => {
           const summary = detail.querySelector('summary');
           summary.addEventListener('click', (e) => {
+              // PC check: if window width > 768, prevent toggle
+              if (window.innerWidth > 768) {
+                  e.preventDefault();
+                  return;
+              }
+
               if (detail.hasAttribute('open')) {
                   e.preventDefault(); 
                   detail.classList.add('closing');
@@ -945,7 +1034,7 @@
                       detail.removeAttribute('open');
                       detail.classList.remove('closing');
                       localStorage.setItem(`details_state_${index}`, 'closed');
-                  }, 300); // Animation duration matches CSS
+                  }, 300); 
               } else {
                   setTimeout(() => localStorage.setItem(`details_state_${index}`, 'open'), 0);
               }
