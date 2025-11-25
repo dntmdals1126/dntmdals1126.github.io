@@ -8,20 +8,20 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
-    /* --- Design System (Glassmorphism Enhanced) --- */
+    /* --- Design System --- */
     :root {
       --bg-0: #0c0f14;
       --bg-gradient: radial-gradient(circle at 50% 0%, #1c2333 0%, #0c0f14 100%);
       
       /* Glass Surface */
-      --surface: rgba(30, 35, 45, 0.45); /* More transparency */
-      --surface-hover: rgba(255, 255, 255, 0.08);
+      --surface: rgba(30, 35, 45, 0.4);
+      --surface-hover: rgba(45, 55, 70, 0.6);
       --surface-border: rgba(255, 255, 255, 0.1);
       --surface-inner: rgba(0, 0, 0, 0.25);
       
@@ -34,7 +34,7 @@
       --accent: #facc15;
       
       --radius: 20px;
-      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); /* Softer, deeper shadow */
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
       
       --font-main: 'Noto Sans KR', sans-serif;
       --font-display: 'Cal Sans', sans-serif;
@@ -42,7 +42,6 @@
       color-scheme: dark;
     }
 
-    /* Light Mode overrides */
     html[data-theme="light"] {
       --bg-0: #f0f4f8;
       --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f0f4f8 100%);
@@ -67,17 +66,14 @@
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
     
-    html {
-      height: 100%;
-      background-color: var(--bg-0);
-    }
+    html { height: 100%; background-color: var(--bg-0); }
     
     body {
       margin: 0; padding: 0;
       font-family: var(--font-main);
       background-color: var(--bg-0);
       background-image: var(--bg-gradient);
-      background-attachment: fixed; /* 배경 고정 */
+      background-attachment: fixed;
       color: var(--ink-0);
       min-height: 100%;
       overflow-y: auto; 
@@ -110,14 +106,10 @@
 
     /* --- Header (Sticky) --- */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(12px); /* Header blur */
-      -webkit-backdrop-filter: blur(12px);
-      background: rgba(12, 15, 20, 0.3); /* Very subtle tint */
-      margin-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky; top: 0; z-index: 1000;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(12, 15, 20, 0.3);
+      margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     html[data-theme="light"] header { background: rgba(255,255,255,0.3); border-bottom: 1px solid rgba(0,0,0,0.05); }
 
@@ -144,113 +136,108 @@
       border: 1px solid var(--surface-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       overflow: hidden;
       display: flex; flex-direction: column;
-      min-height: 160px; 
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      min-height: 160px; /* Default Min Height */
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
     
-    /* PC Hover Effects */
+    /* PC Hover Effects (Subtle) */
     @media (min-width: 769px) {
         .card:hover, details:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px); /* 약하게 수정 */
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             background: var(--surface-hover);
         }
-        /* Hovering block colors the icon */
         details:hover summary .external-icon,
         details:hover summary .cal-sans-regular {
-            color: var(--primary);
-            opacity: 1;
-            transition: color 0.3s;
+            color: var(--primary); opacity: 1; transition: color 0.3s;
         }
     }
 
     .notice-bar { min-height: auto; height: 52px; }
 
-    /* --- 1. Search Hero Section --- */
+    /* --- 1. Clock Section (Separated) --- */
+    .w-clock {
+        grid-column: span 2; padding: 24px;
+        align-items: center; justify-content: center;
+        min-height: auto; /* 높이 자동 */
+    }
+    .clock-wrap { text-align: center; }
+    .clock-time { font-family: var(--font-main); font-size: 36px; font-weight: 700; color: var(--ink-0); line-height: 1.2; }
+    .clock-date { font-size: 14px; color: var(--primary); margin-bottom: 4px; font-weight: 500; }
+    .clock-greet { font-size: 13px; color: var(--ink-1); margin-top: 4px; opacity: 0.8; font-weight: 300; }
+
+    /* --- 2. Search Section (Separated) --- */
     .w-search { 
       grid-column: span 2; 
       padding: 24px; 
-      display: flex; flex-direction: column; justify-content: center; gap: 20px;
+      display: flex; flex-direction: column; justify-content: center; gap: 24px; /* 간격 넓힘 */
       min-height: auto;
     }
     
-    /* Clock */
-    .time-header { text-align: center; margin-bottom: 4px; }
-    .time-text { 
-        display: flex; align-items: center; justify-content: center; gap: 8px; 
-        flex-wrap: wrap; font-size: 16px; color: var(--ink-0);
-    }
-    .t-date { font-weight: 400; color: var(--primary); font-size: 14px; }
-    .t-time { font-family: var(--font-display); font-weight: 400; font-size: 28px; }
-    
     /* Search Engine Box */
-    .engine-box {
-        background: var(--surface-inner);
-        border: 1px solid var(--surface-border);
-        border-radius: 14px;
-        padding: 8px;
-        width: 100%;
-    }
+    .engine-box { width: 100%; }
     .engine-seg {
-      display: flex; gap: 8px; overflow-x: auto; 
-      justify-content: flex-start;
+      display: flex; gap: 10px; overflow-x: auto; 
+      justify-content: flex-start; /* 왼쪽 정렬 */
       scrollbar-width: none; 
-      padding-bottom: 2px;
+      padding-bottom: 4px;
     }
+    /* Improved Design */
     .engine-btn {
-      appearance: none; border: 1px solid transparent; 
-      background: var(--surface);
-      color: var(--ink-1); padding: 6px 12px; border-radius: 8px;
-      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+      appearance: none; border: 1px solid var(--surface-border); 
+      background: rgba(255,255,255,0.03);
+      color: var(--ink-1); padding: 8px 16px; border-radius: 20px;
+      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px;
       font-size: 13px; font-weight: 500; transition: all 0.2s;
       flex-shrink: 0;
     }
     html[data-theme="light"] .engine-btn { background: rgba(255,255,255,0.7); }
 
+    .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-1px); }
     .engine-btn[data-active="true"] {
       background: var(--surface); 
       border-color: var(--primary); 
       color: var(--primary);
       font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px var(--primary-glow);
     }
-    .engine-icon { width: 10px; height: 10px; border-radius: 3px; }
+    .engine-icon { width: 14px; height: 14px; border-radius: 50%; }
 
     /* Search Bar */
     .search-bar { width: 100%; }
     .input-shell {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 12px;
       background: var(--bg-0); border: 1px solid var(--surface-border);
-      border-radius: 14px; padding: 4px 4px 4px 16px;
+      border-radius: 16px; padding: 4px 4px 4px 20px;
       transition: border-color 0.2s;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
     }
     html[data-theme="light"] .input-shell { background: rgba(255,255,255,0.5); }
     
-    .input-shell:focus-within { border-color: var(--primary); }
+    .input-shell:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
     .input-shell input {
       flex: 1; background: transparent; border: none; color: var(--ink-0);
-      font-size: 15px; height: 42px; font-family: var(--font-main);
+      font-size: 16px; height: 46px; font-family: var(--font-main);
     }
     .search-btn {
       background: var(--primary); color: white; border: none;
-      border-radius: 10px; padding: 0 20px; height: 42px;
+      border-radius: 12px; padding: 0 24px; height: 46px;
       font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px;
     }
+    .search-btn:hover { filter: brightness(1.1); }
 
     /* --- Accordions / Cards --- */
     summary.section-title {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 14px 20px; cursor: pointer; list-style: none;
+        padding: 16px 24px; cursor: pointer; list-style: none;
         font-weight: 500; color: var(--ink-0);
         border-bottom: 1px solid transparent;
         transition: 0.2s;
-        background: transparent; /* Card background handles it */
-        min-height: 52px;
+        background: transparent;
+        min-height: 56px;
         flex-shrink: 0;
     }
     summary:hover { background: var(--surface-inner); }
@@ -259,7 +246,7 @@
     summary.section-title div span.cal-sans-regular { font-size: 17px; transition: color 0.3s; }
 
     .title-group { display: flex; align-items: center; gap: 10px; }
-    .fold-icon { width: 18px; height: 18px; color: var(--ink-1); transition: transform 0.3s; }
+    .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.3s; }
     details[open] > summary .fold-icon { transform: rotate(180deg); }
     details[open] summary { border-bottom-color: var(--surface-border); }
 
@@ -268,8 +255,14 @@
         overflow: hidden;
         background: var(--surface-inner);
         display: flex; flex-direction: column;
+        min-height: 0; /* Flexbox scroll fix */
     }
-    details[open] .details-content-wrapper { height: auto; }
+    
+    /* Internal Scrollable Areas */
+    .details-inner { 
+        flex: 1; overflow-y: auto;
+        min-height: 0; /* Ensure list scrolls within card */
+    }
 
     /* Link Grid */
     .link-grid { 
@@ -279,41 +272,48 @@
     }
     .link {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 8px; padding: 14px; background: var(--surface);
+        gap: 8px; padding: 16px; background: var(--surface);
         border: 1px solid var(--surface-border); border-radius: 12px;
         color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
         transition: 0.2s; text-align: center; height: 100%;
     }
     .link:hover { border-color: var(--primary); transform: translateY(-2px); }
-    .link img { width: 20px; height: 20px; object-fit: contain; }
+    .link img { width: 24px; height: 24px; object-fit: contain; }
     .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; transition: color 0.3s; }
 
-    /* --- Stopwatch --- */
+    /* --- Stopwatch (Fill Block) --- */
     .stopwatch-wrap { 
+        display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+        padding: 20px; height: 100%; flex: 1;
+    }
+    .sw-main-panel { 
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 20px; height: 100%;
+        flex: 0 0 auto; width: 100%;
     }
     .stopwatch-display {
         font-variant-numeric: tabular-nums;
-        font-size: 36px; font-weight: 700; letter-spacing: 2px;
+        font-size: 42px; font-weight: 700; letter-spacing: 2px;
         color: var(--ink-0); margin-bottom: 16px;
+        font-family: var(--font-main); /* Noto Sans per request */
     }
-    .timer-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .timer-controls { display: flex; gap: 10px; justify-content: center; width: 100%; }
     .timer-btn {
-        padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+        padding: 10px 20px; border-radius: 12px; font-size: 14px; font-weight: 600;
         border: 1px solid var(--surface-border); background: var(--surface); color: var(--ink-0);
-        cursor: pointer; transition: 0.2s; min-width: 80px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: 0.2s; flex: 1; max-width: 100px;
+        display: flex; align-items: center; justify-content: center;
     }
     .btn-start { color: var(--primary); background: rgba(91, 140, 255, 0.15); border-color: rgba(91, 140, 255, 0.4); }
     html[data-theme="light"] .btn-start { color: var(--primary-2); }
     .btn-stop { color: #ff5a5a; background: rgba(255, 90, 90, 0.1); border-color: rgba(255, 90, 90, 0.3); }
     
+    /* Lap List - Scroll inside block */
     .lap-list-container {
-        width: 100%; border-top: 1px solid var(--surface-border); padding-top: 8px; margin-top: 12px;
-        max-height: 120px; overflow-y: auto; display: none; font-size: 13px;
+        width: 100%; border-top: 1px solid var(--surface-border); padding-top: 10px; margin-top: 10px;
+        flex: 1; overflow-y: auto; display: none; font-size: 13px; min-height: 50px;
     }
     .lap-list-container.active { display: block; }
-    .lap-item { display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid var(--surface-border); color: var(--ink-1); }
+    .lap-item { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--surface-border); color: var(--ink-1); }
 
     /* --- Stopwatch Fullscreen --- */
     .fs-overlay {
@@ -327,11 +327,11 @@
     
     .fs-overlay .stopwatch-display { font-size: clamp(50px, 15vw, 120px); margin-bottom: 40px; }
     .fs-overlay .timer-btn { padding: 16px 32px; font-size: 18px; border-radius: 14px; width: auto; min-width: 120px; }
-    .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; }
+    .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; flex: 0 0 auto; }
 
-    /* --- Music (Refined) --- */
+    /* --- Music (Rounded Box) --- */
     .music-inner {
-        padding: 16px; 
+        padding: 20px; 
         height: 100%; 
         display: flex; 
         align-items: center; 
@@ -340,47 +340,47 @@
     .music-card {
       width: 100%; 
       height: 100%; 
-      min-height: 100px; /* Minimum height for the box */
-      border-radius: 12px;
+      border-radius: 16px; /* Rounded */
       border: 1px solid var(--surface-border);
       background: #000;
-      overflow: hidden; /* Ensure iframe corners are clipped */
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
     }
     .music-card iframe { width: 100%; height: 100%; border: none; }
 
-    /* --- To-Do List --- */
-    .todo-wrap { display: flex; flex-direction: column; padding: 16px; min-height: 200px; }
-    .todo-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    /* --- To-Do List (Scroll inside) --- */
+    .todo-wrap { display: flex; flex-direction: column; padding: 20px; height: 100%; }
+    .todo-input-row { display: flex; gap: 10px; margin-bottom: 12px; }
     .todo-input { 
         flex: 1; background: var(--bg-0); border: 1px solid var(--surface-border);
-        padding: 8px 12px; border-radius: 8px; color: var(--ink-0); font-size: 14px;
+        padding: 10px 14px; border-radius: 12px; color: var(--ink-0); font-size: 14px;
     }
     .todo-add-btn { 
         background: var(--surface); border: 1px solid var(--surface-border); color: var(--primary);
-        width: 40px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 18px;
+        width: 44px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 20px;
     }
-    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; max-height: 200px; }
+    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; min-height: 50px; }
     .todo-item { 
-        display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--surface-border);
+        display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--surface-border);
         font-size: 14px; animation: slideIn 0.2s ease;
     }
     @keyframes slideIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
     .todo-check { 
-        width: 18px; height: 18px; border: 2px solid var(--ink-2); border-radius: 6px; 
+        width: 20px; height: 20px; border: 2px solid var(--ink-2); border-radius: 6px; 
         display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
     .todo-item.done .todo-check { background: var(--primary); border-color: var(--primary); }
     .todo-item.done span { text-decoration: line-through; color: var(--ink-2); }
-    .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 18px; padding: 0 4px; }
+    .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 18px; padding: 0 6px; }
 
     /* --- Notice Bar --- */
     .notice-bar {
         grid-column: span 2; 
-        padding: 0 16px; display: flex; align-items: center; gap: 12px;
-        color: var(--ink-0); height: 52px;
+        padding: 0 20px; display: flex; align-items: center; gap: 14px;
+        color: var(--ink-0); height: 56px;
         flex-direction: row;
     }
-    .notice-label { font-weight: 900; color: #0c0f14; font-size: 13px; padding: 4px 8px; background: #facc15; border-radius: 6px; white-space: nowrap; }
+    .notice-label { font-weight: 900; color: #0c0f14; font-size: 12px; padding: 4px 8px; background: #facc15; border-radius: 6px; white-space: nowrap; }
     html[data-theme="light"] .notice-label { color: white; background: #3b82f6; }
     .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 24px; }
     .notice-text {
@@ -440,7 +440,7 @@
             gap: 16px;
         }
         .header-bar { grid-column: span 1; padding: 12px 16px; }
-        .w-search, .notice-bar, footer { grid-column: span 1; }
+        .w-clock, .w-search, .notice-bar, footer { grid-column: span 1; }
         .card, details { min-height: auto; }
         .title-group span.cal-sans-regular { font-size: 16px !important; }
     }
@@ -474,11 +474,15 @@
 
   <div class="container">
     
-    <section class="card w-search">
-      <div class="time-header">
-        <div class="time-text" id="currentDateTime"></div>
+    <section class="card w-clock">
+      <div class="clock-wrap">
+        <div class="clock-date" id="currentDate">Loading...</div>
+        <div class="clock-time" id="currentTime">00:00:00</div>
+        <div class="clock-greet" id="greetingMsg">좋은 하루 되세요</div>
       </div>
+    </section>
 
+    <section class="card w-search">
       <div class="search-wrap">
         <div class="engine-box">
             <div class="engine-seg" id="engineSeg">
@@ -635,14 +639,16 @@
       <div class="details-content-wrapper">
         <div class="details-inner">
             <div class="stopwatch-wrap" id="stopwatchWrapper">
-                <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
-                <div class="timer-controls">
-                  <button id="btnMain" class="timer-btn btn-start">시작</button>
-                  <button id="btnSub" class="timer-btn">초기화</button>
-                  <button id="btnFullscreenControl" class="timer-btn fs-btn-icon" title="전체화면" aria-label="전체화면">
-                    <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                    <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-                  </button>
+                <div class="sw-main-panel">
+                    <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
+                    <div class="timer-controls">
+                      <button id="btnMain" class="timer-btn btn-start">시작</button>
+                      <button id="btnSub" class="timer-btn">초기화</button>
+                      <button id="btnFullscreenControl" class="timer-btn fs-btn-icon" title="전체화면" aria-label="전체화면">
+                        <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                        <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+                      </button>
+                    </div>
                 </div>
                 <div class="lap-list-container" id="lapList"></div>
             </div>
@@ -686,7 +692,7 @@
         <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            버전 4.5.5 업데이트 완료. 이제 스톱워치 기능이 추가되었으며, 단축키(Space, L, Esc)를 지원합니다.
+            버전 6.5 업데이트 완료. 스톱워치 리스트 넘침 수정, 시계 디자인 롤백, 검색창 분리 적용.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -716,7 +722,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans-regular">WebHub  Ver. 4.5.5</span><br>
+    <span class="cal-sans-regular">WebHub  Ver. 6.5</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -751,8 +757,11 @@
       overlay.addEventListener('click',()=> setDrawer(false));
       drawerCloseBtn.addEventListener('click',()=> setDrawer(false));
 
-      // --- Clock ---
-      const currentDateTimeEl = document.getElementById('currentDateTime');
+      // --- Clock & Greeting ---
+      const currentDateEl = document.getElementById('currentDate');
+      const currentTimeEl = document.getElementById('currentTime');
+      const greetingMsgEl = document.getElementById('greetingMsg');
+      
       function updateDateTime(){
         const now=new Date();
         const y=now.getFullYear();
@@ -760,15 +769,19 @@
         const d=now.getDate();    
         const wd=['일','월','화','수','목','금','토'][now.getDay()];
         const h=now.getHours();
-        const ap=h>=12?'오후':'오전';
-        const hh=h%12||12;
         const mm=String(now.getMinutes()).padStart(2,'0'); 
         const ss=String(now.getSeconds()).padStart(2,'0'); 
         
-        currentDateTimeEl.innerHTML = `
-            <span class="t-date">${y}년 ${m}월 ${d}일 ${wd}요일</span>
-            <span class="t-time">${ap} ${hh}:${mm}:${ss}</span>
-        `;
+        currentDateEl.textContent = `${y}년 ${m}월 ${d}일 ${wd}요일`;
+        currentTimeEl.textContent = `${String(h).padStart(2,'0')}:${mm}:${ss}`;
+        
+        // Greeting Logic
+        let greet = "좋은 하루 되세요";
+        if(h >= 5 && h < 12) greet = "좋은 아침입니다!";
+        else if(h >= 12 && h < 18) greet = "점심 맛있게 드셨나요?";
+        else if(h >= 18 && h < 22) greet = "오늘 하루도 고생 많으셨습니다.";
+        else greet = "편안한 밤 되세요.";
+        greetingMsgEl.textContent = `- ${greet}`;
       }
       updateDateTime(); setInterval(updateDateTime, 1000);
 
@@ -882,7 +895,7 @@
           });
       });
 
-      // --- Stopwatch (True Fullscreen via DOM Move) ---
+      // --- Stopwatch ---
       const stopwatchWrapper = document.getElementById('stopwatchWrapper');
       const stopwatchDisplay = document.getElementById('stopwatchDisplay');
       const btnMain = document.getElementById('btnMain');
@@ -924,7 +937,7 @@
         }
       });
 
-      // Fullscreen Logic: Move DOM to body
+      // Fullscreen
       const stopwatchPlaceholder = document.createElement('div');
       let isFs = false;
 
