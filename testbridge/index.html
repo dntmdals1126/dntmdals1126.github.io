@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>WebHub - 경고</title>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
+  <meta name="theme-color" content="#0c0f14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --bg-0: #0c0f14;
+      --bg-1: #10141b;
+      --bg-2: #161b22;
+      --surface: #1f2630;
+      --ink-0: #e6eaf0;
+      --ink-1: #aeb6c2;
+      --primary: #5b8cff;
+      --primary-2: #2f6bff;
+      --danger: #e53e3e;
+      --danger-hover: #c53030;
+      --focus: #77b0ff;
+      --shadow: rgba(0, 0, 0, .28);
+      --border: rgba(255, 255, 255, .08);
+      --border-strong: rgba(255, 255, 255, .12);
+      --surface-hover: #232b36;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --maxw: 1000px;
+      --warning: #facc15;
+      color-scheme: dark light;
+    }
+
+    html[data-theme="light"] {
+      --bg-0: #f6f8fb;
+      --bg-1: #f1f4f9;
+      --bg-2: #e9eef6;
+      --surface: #ffffff;
+      --ink-0: #0f172a;
+      --ink-1: #4b5563;
+      --primary: #2f6bff;
+      --primary-2: #1f58f7;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --focus: #1d4ed8;
+      --shadow: rgba(0, 0, 0, .10);
+      --border: rgba(2, 6, 23, .10);
+      --border-strong: rgba(2, 6, 23, .16);
+      --surface-hover: #f5f7fb;
+      --warning: #3b82f6;
+      color-scheme: light;
+    }
+
+    /* ▼ 1. HTML 수정 ▼ */
+    html {
+      height: 100%;
+      background-color: var(--bg-1);
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden; /* 스크롤/바운스 방지 */
+    }
+
+    /* ▼ 2. BODY 수정 ▼ */
+    body {
+      min-height: 100dvh; /* vh -> dvh (동적 뷰포트 높이) */
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+      color: var(--ink-0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow: hidden; /* 스크롤/바운스 방지 */
+    }
+    
+    .section {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .02));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px var(--shadow);
+      overflow: hidden;
+      text-align: center;
+      width: 100%;
+    }
+
+    html[data-theme="light"] .section {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .94));
+      box-shadow: 0 8px 18px var(--shadow);
+    }
+
+    .section-body {
+      padding: 24px 28px;
+    }
+    
+    main {
+      max-width: 500px;
+      width: 100%;
+    }
+    
+    .warning-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--warning);
+      margin: 0 0 16px;
+    }
+
+    .warning-text {
+      font-size: 16px;
+      color: var(--ink-0);
+      line-height: 1.7;
+      margin: 0 0 28px;
+      font-weight: 500;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    
+    .btn {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .2s ease;
+      flex: 1;
+      max-width: 150px;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-2);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+    }
+    .btn-secondary:hover {
+      background: var(--danger-hover);
+      transform: translateY(-1px);
+    }
+
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none; 
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .loader-overlay.show {
+      display: flex;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @media (max-width: 720px) {
+      .section-body { padding: 20px; }
+      .warning-title { font-size: 24px; }
+      .warning-text { font-size: 15px; }
+      .button-group { flex-direction: column; }
+      .btn { max-width: 100%; }
+    }
+    
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <section class="section">
+      <div class="section-body">
+        <h2 class="warning-title">경고!</h2>
+        <p class="warning-text">코드 테스트용 페이지입니다.<br>기능이 정상적으로 작동하지 않거나<br>예상치 못한 오류가 발생할 수 있습니다.<br><br>그래도 접속하겠습니까?</p>
+        
+        <div class="button-group">
+          <button id="btn-yes" class="btn btn-primary">예</button>
+          <button id="btn-no" class="btn btn-secondary">아니오</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="loader" class="loader-overlay">
+    <div class="spinner"></div>
+    <p>테스트 페이지로 이동 중...</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnYes = document.getElementById('btn-yes');
+      const btnNo = document.getElementById('btn-no');
+      const loader = document.getElementById('loader');
+      const THEME_KEY = 'theme';
+
+      btnNo.addEventListener('click', () => {
+        window.location.href = 'http://www.v1ctorym1n.kro.kr';
+      });
+
+      btnYes.addEventListener('click', () => {
+        loader.classList.add('show');
+        setTimeout(() => {
+          window.location.href = 'http://test.v1ctorym1n.kro.kr';
+        }, 3000); 
+      });
+
+      function detectInitialTheme() {
+        try {
+          const savedTheme = localStorage.getItem(THEME_KEY);
+          if (savedTheme === 'light' || savedTheme === 'dark') {
+            return savedTheme;
+          }
+        } catch (e) {
+          //
+        }
+        return 'dark'; 
+      }
+
+      function applyTheme(theme) {
+        const root = document.documentElement;
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        
+        if (theme === 'light') {
+          root.setAttribute('data-theme', 'light');
+          themeMeta?.setAttribute('content', '#ffffff');
+        } else {
+          root.removeAttribute('data-T');
+          themeMeta?.setAttribute('content', '#0c0f14');
+        }
+      }
+
+      applyTheme(detectInitialTheme());
+    });
+  </script>
+</body>
+</html>
