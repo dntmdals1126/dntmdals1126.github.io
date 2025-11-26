@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>WebHub</title>
   <meta name="theme-color" content="#0c0f14" />
   
@@ -14,15 +14,15 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
-    /* --- Design System --- */
+    /* --- Design System V5 --- */
     :root {
       --bg-0: #0c0f14;
       --bg-gradient: radial-gradient(circle at 50% 0%, #1c2333 0%, #0c0f14 100%);
       
-      /* Glass Surface */
-      --surface: rgba(30, 35, 45, 0.4);
-      --surface-hover: rgba(45, 55, 70, 0.6);
-      --surface-border: rgba(255, 255, 255, 0.1);
+      /* Glass Surface (Dark) */
+      --surface: rgba(30, 35, 45, 0.5);
+      --surface-hover: rgba(255, 255, 255, 0.08);
+      --surface-border: rgba(255, 255, 255, 0.12);
       --surface-inner: rgba(0, 0, 0, 0.25);
       
       --ink-0: #ffffff;
@@ -30,11 +30,11 @@
       --ink-2: #6b7280;
       
       --primary: #5b8cff;
-      --primary-glow: rgba(91, 140, 255, 0.2);
+      --primary-glow: rgba(91, 140, 255, 0.25);
       --accent: #facc15;
       
       --radius: 20px;
-      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
       
       --font-main: 'Noto Sans KR', sans-serif;
       --font-display: 'Cal Sans', sans-serif;
@@ -42,24 +42,26 @@
       color-scheme: dark;
     }
 
+    /* Light Mode (High Contrast Fix) */
     html[data-theme="light"] {
-      --bg-0: #f0f4f8;
+      --bg-0: #f4f6f8;
       --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f0f4f8 100%);
       
-      --surface: rgba(255, 255, 255, 0.6);
-      --surface-hover: rgba(255, 255, 255, 0.85);
-      --surface-border: rgba(255, 255, 255, 0.6);
-      --surface-inner: rgba(255, 255, 255, 0.5);
+      /* Glass Surface (Light) - More Opaque for Contrast */
+      --surface: rgba(255, 255, 255, 0.85);
+      --surface-hover: #ffffff;
+      --surface-border: rgba(0, 0, 0, 0.1);
+      --surface-inner: rgba(0, 0, 0, 0.04); /* 밝은 회색 배경 */
       
-      --ink-0: #111827;
+      --ink-0: #1a1a1a; /* 진한 검정 */
       --ink-1: #4b5563;
       --ink-2: #9ca3af;
       
-      --primary: #3b82f6;
-      --primary-glow: rgba(59, 130, 246, 0.15);
+      --primary: #2563eb; /* 진한 파랑 */
+      --primary-glow: rgba(37, 99, 235, 0.15);
       --accent: #d97706;
       
-      --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
     }
 
     /* --- Reset & Base --- */
@@ -74,6 +76,7 @@
       background-color: var(--bg-0);
       background-image: var(--bg-gradient);
       background-attachment: fixed;
+      background-size: cover;
       color: var(--ink-0);
       min-height: 100%;
       overflow-y: auto; 
@@ -90,7 +93,8 @@
     .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.3; animation: float 20s infinite alternate; }
     .blob-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: var(--primary); animation-delay: 0s; }
     .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: purple; animation-delay: -10s; }
-    html[data-theme="light"] .blob-2 { background: #a5b4fc; }
+    html[data-theme="light"] .blob-1 { opacity: 0.15; }
+    html[data-theme="light"] .blob-2 { background: #a5b4fc; opacity: 0.15; }
     @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
     /* --- Layout --- */
@@ -109,15 +113,15 @@
       position: sticky; top: 0; z-index: 1000;
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       background: rgba(12, 15, 20, 0.3);
-      margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 16px; border-bottom: 1px solid var(--surface-border);
     }
-    html[data-theme="light"] header { background: rgba(255,255,255,0.3); border-bottom: 1px solid rgba(0,0,0,0.05); }
+    html[data-theme="light"] header { background: rgba(255,255,255,0.7); }
 
     .header-bar {
       max-width: 1000px; margin: 0 auto; padding: 12px 16px;
       display: flex; justify-content: space-between; align-items: center;
     }
-    h1 { font-size: 22px; margin: 0; cursor: pointer; user-select: none; }
+    h1 { font-size: 22px; margin: 0; cursor: pointer; user-select: none; color: var(--ink-0); }
     .brand-by { color: var(--ink-1); font-weight: 300; font-size: 13px; margin-left: 6px; }
     
     .header-actions { display: flex; gap: 8px; }
@@ -127,7 +131,7 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s;
     }
-    html[data-theme="light"] .icon-btn { background: rgba(255,255,255,0.5); }
+    html[data-theme="light"] .icon-btn { background: white; border-color: rgba(0,0,0,0.1); }
     .icon-btn:hover { background: var(--surface-hover); }
 
     /* --- Card Components (Glassmorphism) --- */
@@ -143,11 +147,11 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
     
-    /* PC Hover Effects (Subtle) */
+    /* Hover & Active Effects */
     @media (min-width: 769px) {
         .card:hover, details:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
             background: var(--surface-hover);
         }
         details:hover summary .external-icon,
@@ -155,74 +159,89 @@
             color: var(--primary); opacity: 1; transition: color 0.3s;
         }
     }
+    .card:active, details:active { transform: scale(0.99); transition: transform 0.1s; }
 
-    .notice-bar { min-height: auto; height: 52px; }
-
-    /* --- 1. Clock Section --- */
-    .w-clock {
-        grid-column: span 2; padding: 24px;
-        align-items: center; justify-content: center;
-        min-height: auto; 
-    }
-    .clock-wrap { text-align: center; }
-    .clock-time { font-family: var(--font-main); font-size: 36px; font-weight: 700; color: var(--ink-0); line-height: 1.2; }
-    .clock-date { font-size: 14px; color: var(--primary); margin-bottom: 4px; font-weight: 500; }
-
-    /* --- 2. Search Section --- */
-    .w-search { 
-      grid-column: span 2; 
-      padding: 24px; 
-      display: flex; flex-direction: column; justify-content: center; gap: 24px; 
-      min-height: auto;
+    /* --- 1. Top Section (Search + Time) --- */
+    .w-top-row {
+        grid-column: span 2;
+        flex-direction: row; /* PC: 가로 배치 */
+        align-items: stretch;
+        padding: 0; /* 내부 패딩 제거 후 자식에게 부여 */
+        min-height: auto;
     }
     
+    .search-part {
+        flex: 2; /* 2/3 비율 */
+        padding: 24px;
+        display: flex; flex-direction: column; justify-content: center; gap: 20px;
+        border-right: 1px solid var(--surface-border);
+    }
+    
+    .time-part {
+        flex: 1; /* 1/3 비율 */
+        padding: 24px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: var(--surface-inner); /* 구분감 */
+    }
+
+    /* Clock Style */
+    .clock-date { font-size: 14px; color: var(--primary); margin-bottom: 6px; font-weight: 500; }
+    .clock-time { font-family: var(--font-main); font-size: 32px; font-weight: 700; color: var(--ink-0); line-height: 1.1; white-space: nowrap; }
+
     /* Search Engine Box */
-    .engine-box { width: 100%; }
+    .engine-box { 
+        background: var(--surface-inner);
+        border: 1px solid var(--surface-border);
+        border-radius: 14px;
+        padding: 10px 8px; /* 내부 패딩 넉넉하게 */
+        width: 100%;
+        overflow: hidden;
+    }
     .engine-seg {
-      display: flex; gap: 10px; overflow-x: auto; 
+      display: flex; gap: 8px; overflow-x: auto; 
       justify-content: flex-start;
       scrollbar-width: none; 
-      padding-bottom: 4px;
+      padding: 4px 2px; /* 호버 잘림 방지 */
     }
     .engine-btn {
-      appearance: none; border: 1px solid var(--surface-border); 
-      background: rgba(255,255,255,0.03);
-      color: var(--ink-1); padding: 8px 16px; border-radius: 20px;
-      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+      appearance: none; border: 1px solid transparent; 
+      background: var(--surface);
+      color: var(--ink-1); padding: 8px 14px; border-radius: 10px;
+      cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;
       font-size: 13px; font-weight: 500; transition: all 0.2s;
-      flex-shrink: 0;
+      flex-shrink: 0; /* 찌그러짐 방지 */
     }
-    html[data-theme="light"] .engine-btn { background: rgba(255,255,255,0.7); }
+    html[data-theme="light"] .engine-btn { background: white; border: 1px solid rgba(0,0,0,0.05); }
 
-    .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-1px); }
+    .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-2px); }
     .engine-btn[data-active="true"] {
       background: var(--surface); 
       border-color: var(--primary); 
       color: var(--primary);
       font-weight: 700;
-      box-shadow: 0 2px 10px var(--primary-glow);
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
-    .engine-icon { width: 14px; height: 14px; border-radius: 50%; }
+    .engine-icon { width: 12px; height: 12px; border-radius: 50%; }
 
     /* Search Bar */
     .search-bar { width: 100%; }
     .input-shell {
       display: flex; align-items: center; gap: 12px;
       background: var(--bg-0); border: 1px solid var(--surface-border);
-      border-radius: 16px; padding: 4px 4px 4px 20px;
+      border-radius: 14px; padding: 6px 6px 6px 18px;
       transition: border-color 0.2s;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
-    html[data-theme="light"] .input-shell { background: rgba(255,255,255,0.5); }
+    html[data-theme="light"] .input-shell { background: white; }
     
-    .input-shell:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .input-shell:focus-within { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
     .input-shell input {
       flex: 1; background: transparent; border: none; color: var(--ink-0);
-      font-size: 16px; height: 46px; font-family: var(--font-main);
+      font-size: 16px; height: 42px; font-family: var(--font-main);
     }
     .search-btn {
       background: var(--primary); color: white; border: none;
-      border-radius: 12px; padding: 0 24px; height: 46px;
+      border-radius: 10px; padding: 0 24px; height: 42px;
       font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px;
     }
     .search-btn:hover { filter: brightness(1.1); }
@@ -244,24 +263,26 @@
     summary.section-title div span.cal-sans-regular { font-size: 17px; transition: color 0.3s; }
 
     .title-group { display: flex; align-items: center; gap: 10px; }
-    .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.3s; }
-    details[open] > summary .fold-icon { transform: rotate(180deg); }
-    details[open] summary { border-bottom-color: var(--surface-border); }
-
-    /* Content Wrapper for Flex Growth */
+    .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    
+    /* Accordion Animation Logic */
     .details-content-wrapper {
-        flex: 1; 
-        display: flex; flex-direction: column; /* Ensure children can grow */
-        overflow: hidden;
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-top: 1px solid transparent;
         background: var(--surface-inner);
-        min-height: 0;
     }
     
-    .details-inner { 
-        flex: 1; /* Takes up remaining space */
-        overflow-y: auto; /* Enables scroll */
-        min-height: 0; /* Fix for flexbox scroll */
+    /* Open State */
+    details[open] summary { border-bottom-color: var(--surface-border); }
+    details[open] summary .fold-icon { transform: rotate(180deg); }
+    details[open]:not(.closing) .details-content-wrapper {
+        grid-template-rows: 1fr;
+        border-top-color: var(--surface-border);
     }
+    
+    .details-inner { overflow: hidden; min-height: 0; }
 
     /* Link Grid */
     .link-grid { 
@@ -276,14 +297,15 @@
         color: var(--ink-0); text-decoration: none; font-size: 13px; font-weight: 500;
         transition: 0.2s; text-align: center; height: 100%;
     }
+    html[data-theme="light"] .link { background: white; }
     .link:hover { border-color: var(--primary); transform: translateY(-2px); }
     .link img { width: 24px; height: 24px; object-fit: contain; }
     .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; transition: color 0.3s; }
 
-    /* --- Stopwatch (Restored Animations & Fit) --- */
+    /* --- Stopwatch --- */
     .stopwatch-wrap { 
         display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-        padding: 20px; height: 100%; flex: 1;
+        padding: 20px; height: 100%; min-height: 200px;
     }
     .sw-main-panel { 
         display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -303,22 +325,23 @@
         flex: 1; max-width: 100px;
         display: flex; align-items: center; justify-content: center;
     }
-    .timer-btn:active { transform: scale(0.95); } /* Button Animation */
-    .btn-start { color: var(--primary); background: rgba(91, 140, 255, 0.15); border-color: rgba(91, 140, 255, 0.4); }
-    html[data-theme="light"] .btn-start { color: var(--primary-2); }
-    .btn-stop { color: #ff5a5a; background: rgba(255, 90, 90, 0.1); border-color: rgba(255, 90, 90, 0.3); }
+    html[data-theme="light"] .timer-btn { background: white; }
+    .timer-btn:active { transform: scale(0.95); } 
+    .btn-start { color: var(--primary); background: rgba(91, 140, 255, 0.15) !important; border-color: rgba(91, 140, 255, 0.4); }
+    html[data-theme="light"] .btn-start { color: var(--primary-2); background: rgba(37, 99, 235, 0.1) !important; }
+    .btn-stop { color: #ff5a5a; background: rgba(255, 90, 90, 0.1) !important; border-color: rgba(255, 90, 90, 0.3); }
     
-    /* Lap List (Restricted & Animated) */
+    /* Lap List - Fixed Height & Scroll */
     .lap-list-container {
         width: 100%; border-top: 1px solid var(--surface-border); padding-top: 10px; margin-top: 10px;
         flex: 1; overflow-y: auto; display: none; font-size: 13px;
-        max-height: 180px; /* Prevent endless growth */
+        max-height: 150px; /* Prevent block expansion */
     }
     .lap-list-container.active { display: block; animation: fadeInUp 0.3s ease; }
     .lap-item { 
         display: flex; justify-content: space-between; padding: 8px 12px; 
         border-bottom: 1px solid var(--surface-border); color: var(--ink-1); 
-        animation: slideDown 0.3s ease; /* Item Animation */
+        animation: slideDown 0.3s ease;
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -337,21 +360,39 @@
     .fs-overlay .timer-btn { padding: 16px 32px; font-size: 18px; border-radius: 14px; width: auto; min-width: 120px; }
     .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; flex: 0 0 auto; }
 
+    /* --- Music (Rounded Box) --- */
+    .music-inner {
+        padding: 20px; 
+        height: 100%; min-height: 140px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .music-card {
+      width: 100%; height: 100px; 
+      border-radius: 16px; 
+      border: 1px solid var(--surface-border);
+      background: #000; overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    .music-card iframe { width: 100%; height: 100%; border: none; }
+
     /* --- To-Do List (Fixed Layout) --- */
-    .todo-wrap { display: flex; flex-direction: column; padding: 20px; height: 100%; }
+    .todo-wrap { display: flex; flex-direction: column; padding: 20px; height: 100%; min-height: 200px; }
     .todo-input-row { display: flex; gap: 10px; margin-bottom: 12px; flex-shrink: 0; }
     .todo-input { 
         flex: 1; background: var(--bg-0); border: 1px solid var(--surface-border);
         padding: 10px 14px; border-radius: 12px; color: var(--ink-0); font-size: 14px;
     }
+    html[data-theme="light"] .todo-input { background: white; }
     .todo-add-btn { 
         background: var(--surface); border: 1px solid var(--surface-border); color: var(--primary);
         width: 44px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 20px;
     }
+    html[data-theme="light"] .todo-add-btn { background: white; }
+    
     .todo-list { 
         list-style: none; padding: 0; margin: 0; 
         flex: 1; overflow-y: auto; 
-        max-height: 250px; /* Limit height */
+        max-height: 200px; /* Limit height */
         min-height: 50px; 
     }
     .todo-item { 
@@ -367,32 +408,12 @@
     .todo-item.done span { text-decoration: line-through; color: var(--ink-2); }
     .todo-del { margin-left: auto; color: var(--ink-2); cursor: pointer; font-size: 18px; padding: 0 6px; }
 
-    /* --- Music (Rounded Box) --- */
-    .music-inner {
-        padding: 20px; 
-        height: 100%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-    }
-    .music-card {
-      width: 100%; 
-      height: 100%; 
-      border-radius: 16px; 
-      border: 1px solid var(--surface-border);
-      background: #000;
-      overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    }
-    .music-card iframe { width: 100%; height: 100%; border: none; }
-
     /* --- Notice Bar --- */
     .notice-bar {
         grid-column: span 2; 
         padding: 0 20px; display: flex; align-items: center; gap: 14px;
         color: var(--ink-0); height: 56px;
-        flex-direction: row;
-        min-height: auto; /* Override default card */
+        flex-direction: row; min-height: auto;
     }
     .notice-label { font-weight: 900; color: #0c0f14; font-size: 12px; padding: 4px 8px; background: #facc15; border-radius: 6px; white-space: nowrap; }
     html[data-theme="light"] .notice-label { color: white; background: #3b82f6; }
@@ -423,6 +444,7 @@
         background: var(--surface); border: 1px solid var(--surface-border);
         color: var(--ink-0); text-decoration: none; font-size: 14px;
     }
+    html[data-theme="light"] .drawer-nav a { background: white; }
     .drawer-close-btn { align-self: flex-end; background: none; border: none; color: var(--ink-0); font-size: 24px; cursor: pointer; }
 
     /* --- Footer & Scroll --- */
@@ -438,10 +460,10 @@
     .scroll-btn.down { bottom: 20px; }
     .scroll-btn.hidden { opacity: 0; pointer-events: none; }
 
-    /* --- PC Specific --- */
+    /* --- PC Specific (Force Open) --- */
     @media (min-width: 769px) {
         details { height: 100%; }
-        summary { cursor: default; pointer-events: none; }
+        summary { cursor: default; pointer-events: none; } 
         .fold-icon { display: none; }
         details[open]:not(.closing) .details-content-wrapper { grid-template-rows: 1fr !important; }
         .details-content-wrapper { height: 100%; }
@@ -454,8 +476,16 @@
             gap: 16px;
         }
         .header-bar { grid-column: span 1; padding: 12px 16px; }
-        .w-clock, .w-search, .notice-bar, footer { grid-column: span 1; }
+        .w-top-row {
+            flex-direction: column; /* 세로 배치 */
+        }
+        .search-part { border-right: none; border-bottom: 1px solid var(--surface-border); padding: 20px; }
+        .time-part { padding: 20px; }
+        .notice-bar, footer { grid-column: span 1; }
+        
+        /* 카드 높이 리셋 */
         .card, details { min-height: auto; }
+        
         .title-group span.cal-sans-regular { font-size: 16px !important; }
     }
   </style>
@@ -488,55 +518,54 @@
 
   <div class="container">
     
-    <section class="card w-clock">
-      <div class="clock-wrap">
-        <div class="clock-date" id="currentDate">Loading...</div>
-        <div class="clock-time" id="currentTime">00:00:00</div>
-      </div>
-    </section>
-
-    <section class="card w-search">
-      <div class="search-wrap">
-        <div class="engine-box">
-            <div class="engine-seg" id="engineSeg">
-                <button type="button" class="engine-btn" data-engine="google" data-active="true">
-                  <span class="engine-icon" style="background:#4285F4"></span> Google
-                </button>
-                <button type="button" class="engine-btn" data-engine="naver">
-                  <span class="engine-icon" style="background:#03cf5d"></span> NAVER
-                </button>
-                <button type="button" class="engine-btn" data-engine="youtube">
-                  <span class="engine-icon" style="background:#ff0000"></span> YouTube
-                </button>
-                <button type="button" class="engine-btn" data-engine="namu">
-                  <span class="engine-icon" style="background:#00a495"></span> 나무위키
-                </button>
-                <button type="button" class="engine-btn" data-engine="cbnul">
-                  <span class="engine-icon" style="background:#B52555"></span> 충북대학교 도서관
-                </button>
-                <button type="button" class="engine-btn" data-engine="wikipedia">
-                  <span class="engine-icon" style="background:#777"></span> 위키백과
-                </button>
-                <button type="button" class="engine-btn" data-engine="dbpia">
-                  <span class="engine-icon" style="background:#cf393e"></span> DBpia
-                </button>
-                <button type="button" class="engine-btn" data-engine="riss">
-                  <span class="engine-icon" style="background:#F76323"></span> RISS
-                </button>
-                <button type="button" class="engine-btn" data-engine="everytime">
-                  <span class="engine-icon" style="background:#f91f15"></span> 에브리타임
-                </button>
+    <section class="card w-top-row">
+        <div class="search-part">
+            <div class="search-wrap">
+                <div class="engine-box">
+                    <div class="engine-seg" id="engineSeg">
+                        <button type="button" class="engine-btn" data-engine="google" data-active="true">
+                          <span class="engine-icon" style="background:#4285F4"></span> Google
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="naver">
+                          <span class="engine-icon" style="background:#03cf5d"></span> NAVER
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="youtube">
+                          <span class="engine-icon" style="background:#ff0000"></span> YouTube
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="namu">
+                          <span class="engine-icon" style="background:#00a495"></span> 나무위키
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="cbnul">
+                          <span class="engine-icon" style="background:#B52555"></span> 충북대학교
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="wikipedia">
+                          <span class="engine-icon" style="background:#777"></span> 위키백과
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="dbpia">
+                          <span class="engine-icon" style="background:#cf393e"></span> DBpia
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="riss">
+                          <span class="engine-icon" style="background:#F76323"></span> RISS
+                        </button>
+                        <button type="button" class="engine-btn" data-engine="everytime">
+                          <span class="engine-icon" style="background:#f91f15"></span> 에브리타임
+                        </button>
+                    </div>
+                </div>
+                <div class="search-bar" role="search">
+                  <div class="input-shell">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input id="q" type="search" placeholder="검색어를 입력하세요" aria-label="검색어 입력" autocomplete="off" />
+                    <button id="searchBtn" class="search-btn" type="button">검색</button>
+                  </div>
+                </div>
             </div>
         </div>
-
-        <div class="search-bar" role="search">
-          <div class="input-shell">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input id="q" type="search" placeholder="검색어를 입력하세요" aria-label="검색어 입력" autocomplete="off" />
-            <button id="searchBtn" class="search-btn" type="button">검색</button>
-          </div>
+        
+        <div class="time-part">
+            <div class="clock-date" id="currentDate">Loading...</div>
+            <div class="clock-time" id="currentTime">00:00:00</div>
         </div>
-      </div>
     </section>
 
     <details open>
@@ -705,7 +734,7 @@
         <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            버전 7.0 업데이트 완료. 블록 순서 재배치 및 스크롤 최적화가 적용되었습니다.
+            WebHub 5.0.0 업데이트 완료. 레이아웃 통합 및 디자인 전면 개편.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -735,7 +764,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans-regular">WebHub  Ver. 7.0</span><br>
+    <span class="cal-sans-regular">WebHub Ver. 5.0.0</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -781,7 +810,7 @@
         const d=now.getDate();    
         const wd=['일','월','화','수','목','금','토'][now.getDay()];
         const h=now.getHours();
-        const ap=h>=12?'오후':'오전';
+        const ap=h>=12?'PM':'AM';
         const hh=h%12||12;
         const mm=String(now.getMinutes()).padStart(2,'0'); 
         const ss=String(now.getSeconds()).padStart(2,'0'); 
@@ -864,16 +893,18 @@
         applyTheme(isLight ? 'dark' : 'light');
       });
 
-      // --- Accordion (Mobile Only) ---
+      // --- Accordion (Mobile Toggle) ---
       const allDetails = document.querySelectorAll('details');
       
       function checkLayout() {
+        // PC(>768) -> Always Open & Locked
         if(window.innerWidth > 768) {
             allDetails.forEach(dt => {
                 dt.setAttribute('open','');
                 dt.querySelector('summary').style.pointerEvents = 'none';
             });
         } else {
+            // Mobile -> Toggleable
             allDetails.forEach(dt => {
                dt.querySelector('summary').style.pointerEvents = 'auto';
             });
