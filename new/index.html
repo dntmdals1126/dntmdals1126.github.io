@@ -14,7 +14,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
-    /* --- Design System --- */
+    /* --- Design System 5.0.0 --- */
     :root {
       --bg-0: #0c0f14;
       --bg-gradient: radial-gradient(circle at 50% 0%, #1c2333 0%, #0c0f14 100%);
@@ -61,12 +61,11 @@
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
-    /* --- Reset & Base --- */
+    /* --- Reset --- */
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
     
     html { height: 100%; background-color: var(--bg-0); }
-    
     body {
       margin: 0; padding: 0;
       font-family: var(--font-main);
@@ -75,13 +74,11 @@
       background-attachment: fixed;
       color: var(--ink-0);
       min-height: 100%;
-      overflow-y: auto; 
-      -webkit-overflow-scrolling: touch;
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: none; 
       transition: background 0.3s, color 0.3s;
     }
     body.scroll-lock { overflow: hidden !important; }
-
     .cal-sans-regular { font-family: var(--font-display); font-weight: 400; }
 
     /* --- Background Animation --- */
@@ -93,21 +90,19 @@
     html[data-theme="light"] .blob-2 { background: #a5b4fc; opacity: 0.15; }
     @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
-    /* --- Layout Container --- */
+    /* --- Layout --- */
     .container {
       max-width: 1000px; 
       margin: 0 auto; 
       padding: 0 16px 40px;
       display: grid; 
       gap: 16px;
-      /* PC Default: 2 Columns */
+      /* PC: 2 Columns */
       grid-template-columns: repeat(2, 1fr);
-      /* UNIFIED HEIGHT: 모든 섹션 높이 260px 고정 */
-      grid-auto-rows: 260px;
       align-items: start;
     }
 
-    /* --- Header (Sticky) --- */
+    /* --- Header --- */
     header {
       position: sticky; top: 0; z-index: 1000;
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -122,7 +117,6 @@
     }
     h1 { font-size: 22px; margin: 0; cursor: pointer; user-select: none; color: var(--ink-0); }
     .brand-by { color: var(--ink-1); font-weight: 300; font-size: 13px; margin-left: 6px; }
-    
     .header-actions { display: flex; gap: 8px; }
     .icon-btn {
       background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border);
@@ -133,7 +127,8 @@
     html[data-theme="light"] .icon-btn { background: white; border-color: rgba(0,0,0,0.1); }
     .icon-btn:hover { background: var(--surface-hover); }
 
-    /* --- Card Components (Glassmorphism) --- */
+    /* --- Card Styles --- */
+    /* Basic Card */
     .card, details, .notice-bar {
       background: var(--surface);
       border: 1px solid var(--surface-border);
@@ -142,99 +137,70 @@
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       overflow: hidden;
       display: flex; flex-direction: column;
-      height: 100%; /* Grid 높이(260px)를 꽉 채움 */
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
     
-    /* Hover & Active Effects */
+    /* Fixed Height for Content Cards (Stopwatch, Todo, Music, Links, AI) */
+    .fixed-card {
+        height: 280px; /* Unified Height */
+    }
+
+    /* Hover Effects (PC) */
     @media (min-width: 769px) {
         .card:hover, details:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
             background: var(--surface-hover);
         }
-        details:hover summary .external-icon,
-        details:hover summary .cal-sans-regular {
-            color: var(--primary); opacity: 1; transition: color 0.3s;
-        }
     }
     .card:active, details:active { transform: scale(0.99); transition: transform 0.1s; }
 
-    /* --- 1. Top Hero Section (PC: Combined / Mobile: Split) --- */
+    /* --- Top Section (Search & Clock) --- */
+    /* Not height constrained */
+    .w-search { grid-column: span 1; padding: 24px; gap: 20px; justify-content: center; }
+    .w-clock { grid-column: span 1; padding: 24px; align-items: center; justify-content: center; }
     
-    /* Mobile Clock (Hidden on PC) */
-    .w-mob-clock {
-        display: none; /* Default hidden */
-        grid-column: span 1;
-        align-items: center; justify-content: center;
-        padding: 16px;
-        min-height: 60px; /* Small height */
-        height: auto !important; /* Override fixed height */
-        background: var(--surface);
-        margin-bottom: 0;
+    /* Mobile Clock (Top Bar) */
+    .mob-top-bar {
+        grid-column: span 2; display: none;
+        justify-content: center; align-items: center; gap: 10px;
+        padding-bottom: 4px;
     }
-    .mob-clock-text { font-family: var(--font-display); font-size: 18px; color: var(--ink-0); }
-    .mob-date-text { font-size: 12px; color: var(--primary); margin-right: 8px; }
+    .mob-time-text { font-size: 14px; color: var(--ink-0); opacity: 0.9; }
 
-    /* PC Hero (Search + Clock) */
-    .w-hero {
-        grid-column: span 2;
-        display: flex; flex-direction: row;
-        padding: 0;
-    }
-    
-    /* Left: Search (2/3) */
-    .search-container {
-        flex: 2;
-        padding: 24px;
-        display: flex; flex-direction: column; justify-content: center; gap: 16px;
-        border-right: 1px solid var(--surface-border);
-    }
-    
-    /* Right: Clock (1/3) - PC Only */
-    .clock-container {
-        flex: 1;
-        padding: 24px;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        background: var(--surface-inner);
-    }
-    .clock-date { font-size: 14px; color: var(--primary); margin-bottom: 6px; font-weight: 500; }
-    .clock-time { font-family: var(--font-main); font-size: 32px; font-weight: 700; color: var(--ink-0); line-height: 1.1; white-space: nowrap; }
+    /* PC Clock */
+    .clock-wrap { text-align: center; }
+    .clock-time { font-family: var(--font-main); font-size: 32px; font-weight: 700; color: var(--ink-0); line-height: 1.2; }
+    .clock-date { font-size: 14px; color: var(--primary); margin-bottom: 4px; font-weight: 500; }
 
-    /* Search Engine Box (Restored Pill Design) */
+    /* Search Box */
     .engine-box { 
         background: var(--surface-inner);
         border: 1px solid var(--surface-border);
         border-radius: 14px;
-        padding: 10px;
-        width: 100%;
+        padding: 10px; width: 100%;
     }
     .engine-seg {
       display: flex; gap: 8px; overflow-x: auto; 
-      justify-content: flex-start;
-      scrollbar-width: none; 
+      justify-content: flex-start; scrollbar-width: none; 
     }
+    /* Pill Design */
     .engine-btn {
-      appearance: none; border: 1px solid var(--surface-border); 
-      background: rgba(255,255,255,0.03);
+      appearance: none; border: 1px solid transparent; 
+      background: var(--surface);
       color: var(--ink-1); padding: 6px 12px; border-radius: 20px;
       cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;
       font-size: 12px; font-weight: 500; transition: all 0.2s;
       flex-shrink: 0;
     }
-    html[data-theme="light"] .engine-btn { background: white; }
-
+    html[data-theme="light"] .engine-btn { background: white; border: 1px solid rgba(0,0,0,0.05); }
     .engine-btn:hover { background: var(--surface-hover); color: var(--ink-0); transform: translateY(-1px); }
     .engine-btn[data-active="true"] {
-      background: var(--surface); 
-      border-color: var(--primary); 
-      color: var(--primary);
-      font-weight: 700;
-      box-shadow: 0 2px 8px var(--primary-glow);
+      background: var(--surface); border-color: var(--primary); color: var(--primary);
+      font-weight: 700; box-shadow: 0 2px 8px var(--primary-glow);
     }
     .engine-icon { width: 10px; height: 10px; border-radius: 50%; }
 
-    /* Search Bar */
     .search-bar { width: 100%; }
     .input-shell {
       display: flex; align-items: center; gap: 12px;
@@ -244,7 +210,6 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
     html[data-theme="light"] .input-shell { background: white; }
-    
     .input-shell:focus-within { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
     .input-shell input {
       flex: 1; background: transparent; border: none; color: var(--ink-0);
@@ -255,9 +220,8 @@
       border-radius: 10px; padding: 0 24px; height: 42px;
       font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px;
     }
-    .search-btn:hover { filter: brightness(1.1); }
 
-    /* --- Accordions / Cards --- */
+    /* --- Accordions --- */
     summary.section-title {
         display: flex; justify-content: space-between; align-items: center;
         padding: 16px 20px; cursor: pointer; list-style: none;
@@ -265,42 +229,31 @@
         border-bottom: 1px solid transparent;
         transition: 0.2s;
         background: transparent;
-        height: 56px; /* Fixed Header Height */
-        flex-shrink: 0;
+        height: 56px; flex-shrink: 0;
     }
     summary:hover { background: var(--surface-inner); }
     summary::-webkit-details-marker { display: none; }
     
     summary.section-title div span.cal-sans-regular { font-size: 17px; transition: color 0.3s; }
-
     .title-group { display: flex; align-items: center; gap: 10px; }
     .fold-icon { width: 20px; height: 20px; color: var(--ink-1); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     
-    /* Content Wrapper */
     .details-content-wrapper {
         display: flex; flex-direction: column;
-        flex: 1; overflow: hidden; /* For internal scroll */
+        flex: 1; overflow: hidden;
         background: var(--surface-inner);
         border-top: 1px solid transparent;
         transition: opacity 0.3s;
+        min-height: 0;
     }
     details[open] summary { border-bottom-color: var(--surface-border); }
     details[open] summary .fold-icon { transform: rotate(180deg); }
-    details[open]:not(.closing) .details-content-wrapper {
-        border-top-color: var(--surface-border);
-    }
+    details[open]:not(.closing) .details-content-wrapper { border-top-color: var(--surface-border); }
     
-    .details-inner { 
-        flex: 1; overflow-y: auto; /* Internal Scroll Enabled */
-        min-height: 0;
-    }
+    .details-inner { flex: 1; overflow-y: auto; min-height: 0; }
 
     /* Link Grid */
-    .link-grid { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr;
-        gap: 10px; padding: 16px;
-    }
+    .link-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
     .link {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         gap: 8px; padding: 14px; background: var(--surface);
@@ -313,15 +266,22 @@
     .link img { width: 24px; height: 24px; object-fit: contain; }
     .external-icon { width: 18px; height: 18px; color: var(--ink-1); opacity: 0.8; transition: color 0.3s; }
 
-    /* --- Stopwatch (Fits in 260px) --- */
+    /* --- Stopwatch (Side-by-Side Logic) --- */
     .stopwatch-wrap { 
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 16px; height: 100%; 
+        display: flex; flex-direction: column; /* Default: Column */
+        align-items: center; justify-content: center;
+        padding: 20px; height: 100%; 
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
+    /* Active State (Split View) */
+    .stopwatch-wrap.has-laps { flex-direction: row; align-items: flex-start; justify-content: space-between; }
+    
     .sw-main-panel { 
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        flex-shrink: 0;
+        flex: 1; width: 100%; transition: all 0.4s;
     }
+    .stopwatch-wrap.has-laps .sw-main-panel { width: 50%; padding-right: 10px; border-right: 1px solid var(--surface-border); justify-content: center; height: 100%; }
+
     .stopwatch-display {
         font-variant-numeric: tabular-nums;
         font-size: 36px; font-weight: 700; letter-spacing: 2px;
@@ -333,8 +293,7 @@
         padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
         border: 1px solid var(--surface-border); background: var(--surface); color: var(--ink-0);
         cursor: pointer; transition: transform 0.1s, background 0.2s; 
-        flex: 1; max-width: 90px;
-        display: flex; align-items: center; justify-content: center;
+        flex: 1; max-width: 90px; display: flex; align-items: center; justify-content: center;
     }
     html[data-theme="light"] .timer-btn { background: white; }
     .timer-btn:active { transform: scale(0.95); } 
@@ -342,69 +301,63 @@
     html[data-theme="light"] .btn-start { color: var(--primary-2); background: rgba(37, 99, 235, 0.1) !important; }
     .btn-stop { color: #ff5a5a; background: rgba(255, 90, 90, 0.1) !important; border-color: rgba(255, 90, 90, 0.3); }
     
-    /* Lap List - Scroll inside block */
+    /* Lap List */
     .lap-list-container {
-        width: 100%; border-top: 1px solid var(--surface-border); padding-top: 8px; margin-top: 10px;
-        flex: 1; overflow-y: auto; display: none; font-size: 12px;
-        /* Fits remaining space */
+        display: none; width: 0; opacity: 0; overflow: hidden;
+        transition: all 0.4s ease;
     }
-    .lap-list-container.active { display: block; animation: fadeInUp 0.3s ease; }
+    .stopwatch-wrap.has-laps .lap-list-container {
+        display: block; width: 50%; opacity: 1; 
+        height: 100%; overflow-y: auto; padding-left: 10px;
+        border-top: none; margin-top: 0;
+    }
     .lap-item { 
         display: flex; justify-content: space-between; padding: 6px 8px; 
         border-bottom: 1px solid var(--surface-border); color: var(--ink-1); 
-        animation: slideDown 0.3s ease;
+        animation: slideDown 0.3s ease; font-size: 12px;
     }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- Stopwatch Fullscreen --- */
+    /* --- Stopwatch Fullscreen (Overlay) --- */
     .fs-overlay {
         position: fixed; inset: 0; z-index: 99999;
         background: var(--bg-0); 
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 20px;
-        animation: fsFadeIn 0.3s ease;
+        padding: 20px; animation: fsFadeIn 0.3s ease;
     }
-    @keyframes fsFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-    
     .fs-overlay .stopwatch-display { font-size: clamp(50px, 15vw, 120px); margin-bottom: 40px; }
     .fs-overlay .timer-btn { padding: 16px 32px; font-size: 18px; border-radius: 14px; width: auto; min-width: 120px; }
-    .fs-overlay .lap-list-container { max-width: 600px; max-height: 30vh; flex: 0 0 auto; }
+    /* Reset Layout for Fullscreen */
+    .fs-overlay.stopwatch-wrap { flex-direction: column !important; }
+    .fs-overlay .sw-main-panel { width: 100% !important; border-right: none !important; flex: 0 0 auto; height: auto; }
+    .fs-overlay .lap-list-container { width: 100% !important; max-width: 600px; height: 40vh !important; padding: 0; border-top: 1px solid var(--surface-border); margin-top: 20px; }
+    @keyframes fsFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-    /* --- Music (Rounded Box) --- */
-    .music-inner {
-        padding: 20px; 
-        height: 100%; 
-        display: flex; align-items: center; justify-content: center;
-    }
+    /* --- Music --- */
+    .music-inner { padding: 20px; height: 100%; display: flex; align-items: center; justify-content: center; }
     .music-card {
-      width: 100%; height: 100%; 
-      border-radius: 16px; 
-      border: 1px solid var(--surface-border);
-      background: #000;
-      overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+      width: 100%; height: 100%; border-radius: 16px; 
+      border: 1px solid var(--surface-border); background: #000;
+      overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
     }
     .music-card iframe { width: 100%; height: 100%; border: none; }
 
-    /* --- To-Do List (Fits in 260px) --- */
+    /* --- To-Do List --- */
     .todo-wrap { display: flex; flex-direction: column; padding: 16px; height: 100%; }
     .todo-input-row { display: flex; gap: 8px; margin-bottom: 10px; flex-shrink: 0; }
     .todo-input { 
         flex: 1; background: var(--bg-0); border: 1px solid var(--surface-border);
-        padding: 8px 12px; border-radius: 12px; color: var(--ink-0); font-size: 13px;
+        padding: 10px 12px; border-radius: 12px; color: var(--ink-0); font-size: 13px;
     }
     html[data-theme="light"] .todo-input { background: white; }
-    .todo-add-btn { 
+    .todo-btn { 
         background: var(--surface); border: 1px solid var(--surface-border); color: var(--primary);
-        width: 36px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px;
+        width: 36px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;
     }
-    html[data-theme="light"] .todo-add-btn { background: white; }
+    .btn-clear { color: #ff5a5a; }
+    html[data-theme="light"] .todo-btn { background: white; }
     
-    .todo-list { 
-        list-style: none; padding: 0; margin: 0; 
-        flex: 1; overflow-y: auto; /* Scroll enabled */
-    }
+    .todo-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
     .todo-item { 
         display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--surface-border);
         font-size: 13px; animation: slideIn 0.2s ease;
@@ -479,32 +432,23 @@
         .details-content-wrapper { height: 100%; }
     }
 
-    /* --- Mobile Responsive (Critical Fixes) --- */
+    /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
         .container { 
             grid-template-columns: 1fr; /* 1 Column */
-            grid-auto-rows: auto; /* Auto height for toggle */
             gap: 16px;
         }
-        .header-bar { grid-column: span 1; padding: 12px 16px; }
+        .header-bar, .w-search, .w-clock, .notice-bar, footer { grid-column: span 1; }
         
-        /* Split Top Row for Mobile */
-        .w-hero { display: none; } /* Hide PC Combined Row */
-        .w-mob-clock { display: flex; } /* Show Mobile Clock */
-        .w-search-mob { display: flex; } /* Show Mobile Search */
+        /* Mobile Clock & Search Fix */
+        .w-clock { display: none; } /* Hide PC Clock */
+        .mob-top-bar { display: flex; } /* Show Mobile Top Bar */
         
-        .notice-bar, footer { grid-column: span 1; }
-        
-        /* Reset heights */
-        .card, details { min-height: auto; height: auto; }
+        /* Heights */
+        .fixed-card, details { min-height: auto; height: auto; }
         details[open] { min-height: 200px; }
         
         .title-group span.cal-sans-regular { font-size: 16px !important; }
-    }
-    
-    /* Extra PC Utility to hide mobile elements */
-    @media (min-width: 769px) {
-        .w-search-mob { display: none; } /* Hide separate search on PC */
     }
   </style>
 </head>
@@ -536,78 +480,64 @@
 
   <div class="container">
     
-    <section class="card w-mob-clock">
-        <div class="time-text">
-            <span class="mob-date-text" id="mobDate">Loading...</span>
-            <span class="mob-clock-text" id="mobTime">00:00</span>
-        </div>
-    </section>
+    <div class="mob-top-bar">
+        <span class="mob-time-text" id="mobDateTime">Loading...</span>
+    </div>
 
-    <section class="card w-search w-search-mob">
-        <div class="search-wrap">
-            <div class="engine-box">
-                <div class="engine-seg" id="engineSegMob">
-                    </div>
-            </div>
-            <div class="search-bar" role="search">
-              <div class="input-shell">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                <input id="qMob" type="search" placeholder="검색어를 입력하세요" aria-label="검색어 입력" autocomplete="off" />
-                <button id="searchBtnMob" class="search-btn" type="button">검색</button>
-              </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="card w-hero">
-        <div class="search-container">
-            <div class="engine-box">
-                <div class="engine-seg" id="engineSeg">
-                    <button type="button" class="engine-btn" data-engine="google" data-active="true">
-                      <span class="engine-icon" style="background:#4285F4"></span> Google
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="naver">
-                      <span class="engine-icon" style="background:#03cf5d"></span> NAVER
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="youtube">
-                      <span class="engine-icon" style="background:#ff0000"></span> YouTube
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="namu">
-                      <span class="engine-icon" style="background:#00a495"></span> 나무위키
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="cbnul">
-                      <span class="engine-icon" style="background:#B52555"></span> 충북대
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="wikipedia">
-                      <span class="engine-icon" style="background:#777"></span> 위키백과
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="dbpia">
-                      <span class="engine-icon" style="background:#cf393e"></span> DBpia
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="riss">
-                      <span class="engine-icon" style="background:#F76323"></span> RISS
-                    </button>
-                    <button type="button" class="engine-btn" data-engine="everytime">
-                      <span class="engine-icon" style="background:#f91f15"></span> 에브리타임
-                    </button>
-                </div>
-            </div>
-            <div class="search-bar" role="search">
-              <div class="input-shell">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                <input id="q" type="search" placeholder="검색어를 입력하세요" aria-label="검색어 입력" autocomplete="off" />
-                <button id="searchBtn" class="search-btn" type="button">검색</button>
-              </div>
+    <section class="card w-search">
+      <div class="search-wrap" style="width:100%">
+        <div class="engine-box">
+            <div class="engine-seg" id="engineSeg">
+                <button type="button" class="engine-btn" data-engine="google" data-active="true">
+                  <span class="engine-icon" style="background:#4285F4"></span> Google
+                </button>
+                <button type="button" class="engine-btn" data-engine="naver">
+                  <span class="engine-icon" style="background:#03cf5d"></span> NAVER
+                </button>
+                <button type="button" class="engine-btn" data-engine="youtube">
+                  <span class="engine-icon" style="background:#ff0000"></span> YouTube
+                </button>
+                <button type="button" class="engine-btn" data-engine="namu">
+                  <span class="engine-icon" style="background:#00a495"></span> 나무위키
+                </button>
+                <button type="button" class="engine-btn" data-engine="cbnul">
+                  <span class="engine-icon" style="background:#B52555"></span> 충북대
+                </button>
+                <button type="button" class="engine-btn" data-engine="wikipedia">
+                  <span class="engine-icon" style="background:#777"></span> 위키백과
+                </button>
+                <button type="button" class="engine-btn" data-engine="dbpia">
+                  <span class="engine-icon" style="background:#cf393e"></span> DBpia
+                </button>
+                <button type="button" class="engine-btn" data-engine="riss">
+                  <span class="engine-icon" style="background:#F76323"></span> RISS
+                </button>
+                <button type="button" class="engine-btn" data-engine="everytime">
+                  <span class="engine-icon" style="background:#f91f15"></span> 에브리타임
+                </button>
             </div>
         </div>
         
-        <div class="clock-container">
-            <div class="clock-date" id="currentDate">Loading...</div>
-            <div class="clock-time" id="currentTime">00:00:00</div>
+        <div style="height: 20px;"></div>
+
+        <div class="search-bar" role="search">
+          <div class="input-shell">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input id="q" type="search" placeholder="검색어를 입력하세요" aria-label="검색어 입력" autocomplete="off" />
+            <button id="searchBtn" class="search-btn" type="button">검색</button>
+          </div>
         </div>
+      </div>
     </section>
 
-    <details open>
+    <section class="card w-clock">
+      <div class="clock-wrap">
+        <div class="clock-date" id="currentDate">Loading...</div>
+        <div class="clock-time" id="currentTime">00:00:00</div>
+      </div>
+    </section>
+
+    <details open class="fixed-card">
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
@@ -639,7 +569,7 @@
       </div>
     </details>
 
-    <details>
+    <details class="fixed-card">
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
@@ -671,7 +601,7 @@
       </div>
     </details>
 
-    <details>
+    <details class="fixed-card">
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -680,16 +610,16 @@
         <svg class="fold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
       <div class="details-content-wrapper">
-        <div class="details-inner">
+        <div class="details-inner" style="overflow:hidden;">
             <div class="stopwatch-wrap" id="stopwatchWrapper">
                 <div class="sw-main-panel">
                     <div id="stopwatchDisplay" class="stopwatch-display">00:00:00</div>
                     <div class="timer-controls">
                       <button id="btnMain" class="timer-btn btn-start">시작</button>
                       <button id="btnSub" class="timer-btn">초기화</button>
-                      <button id="btnFullscreenControl" class="timer-btn fs-btn-icon" title="전체화면" aria-label="전체화면">
-                        <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                        <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+                      <button id="btnFullscreenControl" class="timer-btn icon-btn" title="전체화면" style="width:40px; flex:none;">
+                        <svg id="iconExpand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                        <svg id="iconCompress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
                       </button>
                     </div>
                 </div>
@@ -699,7 +629,7 @@
       </div>
     </details>
 
-    <details>
+    <details class="fixed-card">
       <summary class="section-title">
         <div class="title-group">
           <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
@@ -711,8 +641,9 @@
         <div class="details-inner">
             <div class="todo-wrap">
                 <div class="todo-input-row">
-                    <input type="text" id="todoInput" class="todo-input" placeholder="할 일을 입력하세요">
-                    <button id="todoAddBtn" class="todo-add-btn">+</button>
+                    <input type="text" id="todoInput" class="todo-input" placeholder="할 일 입력">
+                    <button id="todoAddBtn" class="todo-btn">+</button>
+                    <button id="todoClearBtn" class="todo-btn btn-clear" title="전체 삭제">🗑️</button>
                 </div>
                 <ul id="todoList" class="todo-list"></ul>
             </div>
@@ -720,7 +651,7 @@
       </div>
     </details>
 
-    <details>
+    <details class="fixed-card">
       <summary class="section-title">
         <div class="title-group">
           <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
@@ -737,7 +668,7 @@
       </div>
     </details>
 
-    <details>
+    <details class="fixed-card">
       <summary class="section-title">
         <div class="title-group">
             <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
@@ -773,7 +704,7 @@
         <span class="notice-label">NOTICE</span>
         <div class="notice-marquee">
           <div class="notice-text">
-            버전 5.5.0 업데이트 완료. 레이아웃 분리형(PC/Mobile) 및 스크롤 최적화 적용.
+            버전 5.0.0 (Final Fix) 업데이트 완료. 모든 요청사항이 반영되었습니다.
           </div>
         </div>
         <button class="notice-close" aria-label="닫기">×</button>
@@ -803,7 +734,7 @@
   </div>
 
   <footer>
-    <span class="cal-sans-regular">WebHub Ver. 5.5.0</span><br>
+    <span class="cal-sans-regular">WebHub Ver. 5.0.0</span><br>
     <span>&copy; 2025 우승민. All rights reserved.</span>
   </footer>
 
@@ -841,9 +772,7 @@
       // --- Clock ---
       const currentDateEl = document.getElementById('currentDate');
       const currentTimeEl = document.getElementById('currentTime');
-      // For Mobile
-      const mobDateEl = document.getElementById('mobDate');
-      const mobTimeEl = document.getElementById('mobTime');
+      const mobDateTimeEl = document.getElementById('mobDateTime');
       
       function updateDateTime(){
         const now=new Date();
@@ -861,89 +790,59 @@
         currentDateEl.textContent = `${y}년 ${m}월 ${d}일 ${wd}요일`;
         currentTimeEl.textContent = `${ap} ${hh}:${mm}:${ss}`;
         
-        // Mobile
-        mobDateEl.textContent = `${m}.${d} (${wd})`;
-        mobTimeEl.textContent = `${hh}:${mm}`;
+        // Mobile Top Bar
+        mobDateTimeEl.textContent = `${y}.${m}.${d} (${wd}) ${hh}:${mm}`;
       }
       updateDateTime(); setInterval(updateDateTime, 1000);
 
       // --- Search Engine ---
-      // Logic needs to apply to both PC and Mobile if duplicated elements
-      // But we are using same logic, just moving elements or injecting.
-      // Better to have single source of truth.
-      // Since we separated Mobile/PC structures for layout ease, we need to sync them or init both.
-      // In this code, we duplicated the HTML structure for Mobile search. We need JS to handle both.
+      const engineSeg = document.getElementById('engineSeg');
+      const q = document.getElementById('q');
+      const searchBtn = document.getElementById('searchBtn');
+      let currentEngine = 'google';
       
-      function initSearch(engineSegId, qId, btnId) {
-          const engineSeg = document.getElementById(engineSegId);
-          const q = document.getElementById(qId);
-          const searchBtn = document.getElementById(btnId);
-          if(!engineSeg) return; // Element might be hidden/not exist
+      const cmap={ 
+        google:'#4285F4', naver:'#03cf5d', youtube:'#ff0000', namu:'#00a495', 
+        cbnul:'#B52555', wikipedia:'#777', dbpia:'#cf393e', riss:'#F76323', everytime:'#f91f15'
+      };
 
-          // Inject Buttons
-          const engines = [
-            {id:'google', name:'Google', color:'#4285F4'},
-            {id:'naver', name:'NAVER', color:'#03cf5d'},
-            {id:'youtube', name:'YouTube', color:'#ff0000'},
-            {id:'namu', name:'나무위키', color:'#00a495'},
-            {id:'cbnul', name:'충북대', color:'#B52555'},
-            {id:'wikipedia', name:'위키백과', color:'#777'},
-            {id:'dbpia', name:'DBpia', color:'#cf393e'},
-            {id:'riss', name:'RISS', color:'#F76323'},
-            {id:'everytime', name:'에브리타임', color:'#f91f15'}
-          ];
-          
-          engineSeg.innerHTML = engines.map(e => `
-            <button type="button" class="engine-btn" data-engine="${e.id}" ${e.id==='google'?'data-active="true"':''}>
-              <span class="engine-icon" style="background:${e.color}"></span> ${e.name}
-            </button>
-          `).join('');
-
-          let currentEngine = 'google';
-          
-          const syncEngineUI = (engine) => {
-            currentEngine = engine;
-            [...engineSeg.querySelectorAll('.engine-btn')].forEach(b=>{
-              const active = b.dataset.engine===engine;
-              b.dataset.active=String(active);
-            });
-            searchBtn.style.backgroundColor = engines.find(e=>e.id===engine).color;
-          };
-
-          engineSeg.addEventListener('click', (e) => {
-            const btn = e.target.closest('.engine-btn');
-            if(btn) syncEngineUI(btn.dataset.engine);
-          });
-
-          const doSearch = () => {
-            const t = q.value.trim(); if(!t) return;
-            let url = '';
-            switch(currentEngine){
-                case 'google': url=`https://www.google.com/search?q=${t}`; break;
-                case 'naver': url=`https://search.naver.com/search.naver?query=${t}`; break;
-                case 'youtube': url=`https://www.youtube.com/results?search_query=${t}`; break;
-                case 'namu': url=`https://namu.wiki/w/${encodeURIComponent(t)}`; break;
-                case 'cbnul': url=`https://cbnul.chungbuk.ac.kr/search/i-discovery?ALL=k|a|${t}`; break;
-                case 'wikipedia': url=`https://ko.wikipedia.org/w/index.php?search=${t}`; break;
-                case 'dbpia': url=`https://www.dbpia.co.kr/search/topSearch?query=${t}`; break;
-                case 'riss': url=`https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=&kbid=&pageNumber=1&query=${t}`; break;
-                case 'everytime': url=`https://everytime.kr/search/all/${encodeURIComponent(t)}`; break;
-            }
-            if(url) window.open(url,'_blank','noopener');
-          };
-
-          searchBtn.addEventListener('click', doSearch);
-          q.addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
-          
-          // Initial UI Sync
-          syncEngineUI('google');
+      function syncEngineUI(engine){
+        currentEngine=engine;
+        [...engineSeg.querySelectorAll('.engine-btn')].forEach(b=>{
+          const active = b.dataset.engine===engine;
+          b.dataset.active=String(active);
+        });
+        searchBtn.style.backgroundColor = cmap[engine] || 'var(--primary)';
       }
 
-      // Init PC Search
-      initSearch('engineSeg', 'q', 'searchBtn');
-      // Init Mobile Search
-      initSearch('engineSegMob', 'qMob', 'searchBtnMob');
+      engineSeg.addEventListener('click', (e) => {
+        const btn = e.target.closest('.engine-btn');
+        if(btn) syncEngineUI(btn.dataset.engine);
+      });
 
+      function buildSearchURL(engineKey, term){
+        const t=(term||'').trim(); if(!t) return null;
+        try{
+          switch(engineKey){
+            case 'google': return `https://www.google.com/search?q=${t}`;
+            case 'naver': return `https://search.naver.com/search.naver?query=${t}`;
+            case 'youtube': return `https://www.youtube.com/results?search_query=${t}`;
+            case 'namu': return `https://namu.wiki/w/${encodeURIComponent(t)}`;
+            case 'cbnul': return `https://cbnul.chungbuk.ac.kr/search/i-discovery?ALL=k|a|${t}`;
+            case 'wikipedia': return `https://ko.wikipedia.org/w/index.php?search=${t}`;
+            case 'dbpia': return `https://www.dbpia.co.kr/search/topSearch?query=${t}`;
+            case 'riss': return `https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=&kbid=&pageNumber=1&query=${t}`;
+            case 'everytime': return `https://everytime.kr/search/all/${encodeURIComponent(t)}`;
+            default: return null;
+          }
+        } catch{ return null; }
+      }
+      function doSearch(){
+        const url = buildSearchURL(currentEngine, q.value); 
+        if(url) window.open(url,'_blank','noopener');
+      }
+      searchBtn.addEventListener('click', doSearch);
+      q.addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
 
       // --- Theme ---
       const themeToggleBtn = document.getElementById('themeToggle');
@@ -969,7 +868,7 @@
         applyTheme(isLight ? 'dark' : 'light');
       });
 
-      // --- Accordion (Mobile Only) ---
+      // --- Accordion (Mobile Toggle) ---
       const allDetails = document.querySelectorAll('details');
       
       function checkLayout() {
@@ -994,7 +893,6 @@
                   e.preventDefault(); 
                   return;
               }
-              
               if (detail.hasAttribute('open')) {
                   e.preventDefault(); 
                   detail.classList.add('closing');
@@ -1006,8 +904,8 @@
           });
       });
 
-      // --- Stopwatch ---
-      const stopwatchWrapper = document.getElementById('stopwatchWrapper');
+      // --- Stopwatch Logic (Fixed Layout) ---
+      const stopwatchWrap = document.getElementById('stopwatchWrapper');
       const stopwatchDisplay = document.getElementById('stopwatchDisplay');
       const btnMain = document.getElementById('btnMain');
       const btnSub = document.getElementById('btnSub');
@@ -1037,33 +935,34 @@
 
       btnSub.addEventListener('click', () => {
         if(swInt) {
-            lapList.classList.add('active');
+            stopwatchWrap.classList.add('has-laps'); // Trigger layout change
             const li = document.createElement('div');
             li.className = 'lap-item';
             li.innerHTML = `<span class="lap-index">랩 ${lapCount++}</span> <span>${formatTime(swElapsed)}</span>`;
             lapList.prepend(li);
         } else {
             swElapsed=0; stopwatchDisplay.textContent="00:00:00";
-            lapCount=1; lapList.innerHTML=''; lapList.classList.remove('active');
+            lapCount=1; lapList.innerHTML=''; 
+            stopwatchWrap.classList.remove('has-laps'); // Reset layout
         }
       });
 
-      // Fullscreen
+      // Fullscreen Logic
       const stopwatchPlaceholder = document.createElement('div');
       let isFs = false;
 
       fsBtn.addEventListener('click', () => {
         if(!isFs) {
-            stopwatchWrapper.parentNode.insertBefore(stopwatchPlaceholder, stopwatchWrapper);
-            document.body.appendChild(stopwatchWrapper);
-            stopwatchWrapper.classList.add('fs-overlay');
+            stopwatchWrap.parentNode.insertBefore(stopwatchPlaceholder, stopwatchWrap);
+            document.body.appendChild(stopwatchWrap);
+            stopwatchWrap.classList.add('fs-overlay');
             document.body.classList.add('scroll-lock');
             iconExpand.style.display='none'; iconCompress.style.display='block';
             isFs = true;
         } else {
-            stopwatchPlaceholder.parentNode.insertBefore(stopwatchWrapper, stopwatchPlaceholder);
+            stopwatchPlaceholder.parentNode.insertBefore(stopwatchWrap, stopwatchPlaceholder);
             stopwatchPlaceholder.remove();
-            stopwatchWrapper.classList.remove('fs-overlay');
+            stopwatchWrap.classList.remove('fs-overlay');
             document.body.classList.remove('scroll-lock');
             iconExpand.style.display='block'; iconCompress.style.display='none';
             isFs = false;
@@ -1073,6 +972,7 @@
       // --- To-Do List ---
       const todoInput = document.getElementById('todoInput');
       const todoAddBtn = document.getElementById('todoAddBtn');
+      const todoClearBtn = document.getElementById('todoClearBtn');
       const todoList = document.getElementById('todoList');
       
       function loadTodos(){
@@ -1105,10 +1005,8 @@
               saveTodos();
           });
           li.querySelector('.todo-del').addEventListener('click', () => {
-              if(confirm('삭제하시겠습니까?')) {
-                  li.remove();
-                  saveTodos();
-              }
+              li.remove();
+              saveTodos();
           });
           todoList.appendChild(li);
       }
@@ -1120,6 +1018,15 @@
               saveTodos();
           }
       });
+      
+      // Delete All Feature
+      todoClearBtn.addEventListener('click', () => {
+          if(confirm('모든 할 일을 삭제하시겠습니까?')) {
+              todoList.innerHTML = '';
+              saveTodos();
+          }
+      });
+
       todoInput.addEventListener('keypress', e => { if(e.key==='Enter') todoAddBtn.click(); });
       
       loadTodos();
@@ -1142,11 +1049,7 @@
 
       // --- Shortcuts ---
       document.addEventListener('keydown', (e) => {
-          // Check focused element safely
-          const active = document.activeElement;
-          const isInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
-          if (isInput) return;
-
+          if (document.activeElement === q || document.activeElement === todoInput) return;
           if (e.code === 'Space') { e.preventDefault(); btnMain.click(); }
           if (e.code === 'KeyL') { btnSub.click(); }
       });
