@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어과 평가법 마스터 가이드</title>
+    <!-- 폰트 및 아이콘 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;       /* Indigo 600 */
+            --primary-dark: #4338ca;  /* Indigo 700 */
+            --bg-body: #f3f4f6;       /* Gray 100 */
+            --bg-card: #ffffff;
+            --text-main: #111827;     /* Gray 900 */
+            --text-sub: #6b7280;      /* Gray 500 */
+            --accent-eng: #3b82f6;    /* Blue 500 */
+            --accent-kor: #10b981;    /* Emerald 500 */
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding-top: 130px; /* 헤더 높이만큼 여백 */
+            line-height: 1.6;
+        }
+
+        /* --- 상단 고정 헤더 & 내비게이션 --- */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .header-top {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* 글로벌 컨트롤 버튼 (펼치기/접기) */
+        .global-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-body);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* 가로 스크롤 내비게이션 */
+        .nav-container {
+            width: 100%;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        .nav-scroller {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px;
+            overflow-x: auto;
+            max-width: 1000px;
+            margin: 0 auto;
+            scrollbar-width: none; /* Firefox */
+        }
+        .nav-scroller::-webkit-scrollbar { display: none; } /* Chrome */
+
+        .nav-btn {
+            flex: 0 0 auto;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            background: var(--bg-body);
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: #e0e7ff;
+            color: var(--primary);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        /* --- 메인 콘텐츠 --- */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .chapter-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            scroll-margin-top: 140px; /* 스크롤 위치 보정 */
+        }
+
+        .chapter-header {
+            padding: 20px 25px;
+            background: linear-gradient(to right, #ffffff, #f9fafb);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chapter-header:hover {
+            background: #f3f4f6;
+        }
+
+        .chapter-title-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .chapter-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .toggle-icon {
+            color: var(--text-sub);
+            transition: transform 0.3s ease;
+        }
+
+        .chapter-card.active .toggle-icon {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        /* 키워드 리스트 */
+        .keyword-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none; /* 기본적으로 숨김 */
+        }
+
+        .chapter-card.active .keyword-list {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .keyword-item {
+            border-bottom: 1px solid var(--border);
+        }
+        .keyword-item:last-child { border-bottom: none; }
+
+        .keyword-trigger {
+            width: 100%;
+            text-align: left;
+            padding: 18px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .keyword-trigger:hover {
+            background-color: #f9fafb;
+        }
+
+        .keyword-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+        }
+
+        .keyword-text::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-right: 10px;
+            opacity: 0.6;
+        }
+
+        .plus-icon {
+            width: 24px;
+            height: 24px;
+            background: #eef2ff;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .keyword-item.open .plus-icon {
+            background: var(--primary);
+            color: white;
+            transform: rotate(45deg);
+        }
+
+        /* 상세 내용 */
+        .keyword-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background-color: #ffffff;
+        }
+
+        .keyword-item.open .keyword-detail {
+            max-height: 1000px; /* 충분히 큰 값 */
+        }
+
+        .detail-inner {
+            padding: 20px 30px 30px 30px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .content-box {
+            margin-bottom: 15px;
+        }
+
+        .lang-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .badge-eng { background: #eff6ff; color: var(--accent-eng); }
+        .badge-kor { background: #ecfdf5; color: var(--accent-kor); }
+
+        .text-eng { font-size: 1rem; color: #374151; margin-bottom: 12px; line-height: 1.6; }
+        .text-kor { font-size: 0.95rem; color: #4b5563; line-height: 1.6; }
+
+        /* Note Box */
+        .note-box {
+            margin-top: 15px;
+            padding: 12px 16px;
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #92400e;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        /* Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 900;
+        }
+
+        .scroll-top.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 640px) {
+            .container { padding: 15px; }
+            .header-top { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .global-controls { width: 100%; justify-content: flex-start; }
+            .keyword-trigger { padding: 15px 20px; }
+            .detail-inner { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 고정 헤더 -->
+    <div class="fixed-header">
+        <div class="header-top">
+            <h1><i class="fas fa-book-open"></i> 영어과 평가법 마스터</h1>
+            <div class="global-controls">
+                <button class="control-btn" onclick="app.expandAll()">
+                    <i class="fas fa-plus-circle"></i> 펼치기
+                </button>
+                <button class="control-btn" onclick="app.collapseAll()">
+                    <i class="fas fa-minus-circle"></i> 접기
+                </button>
+            </div>
+        </div>
+        <!-- 챕터 내비게이션 -->
+        <div class="nav-container">
+            <div class="nav-scroller" id="nav-scroller">
+                <!-- JS로 버튼 생성됨 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="main-container">
+        <!-- 콘텐츠가 여기에 생성됨 -->
+    </div>
+
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+<script>
+    // 1. 데이터 정의 (교재 및 요약본 내용 통합)
+    const examData = [
+        {
+            id: "ch1",
+            title: "Assessment Concepts",
+            items: [
+                {
+                    key: "Assessment vs. Testing",
+                    eng: "<b>Assessment:</b> An ongoing pedagogical process. Encompasses a wide range of methodological techniques (incidental comments, observations). Focuses on the <i>process</i> of learning.<br><b>Testing:</b> A subset of assessment. A method of measuring ability at a specific point in time. An identifiable administrative procedure focusing on the <i>product</i>.",
+                    kor: "<b>평가(Assessment):</b> 광범위한 기법을 포함하는 지속적인 교육적 과정입니다. 우발적 코멘트, 관찰 등을 포함하며 학습의 '과정'에 초점을 맞춥니다.<br><b>시험(Testing):</b> 평가의 하위 집합. 특정 시점에 능력을 측정하는 식별 가능한 행정적 절차로 '결과'에 초점.",
+                    note: "모든 Test는 Assessment에 포함되지만, 모든 Assessment가 Test는 아닙니다."
+                },
+                {
+                    key: "Measurement vs. Evaluation",
+                    eng: "<b>Measurement:</b> The process of quantifying observed performance (assigning numbers, e.g., 85/100). It does not necessarily imply value judgments.<br><b>Evaluation:</b> Interpreting information to make decisions about quality (e.g., grading, passing/failing).",
+                    kor: "<b>측정(Measurement):</b> 수행을 수량화하는 과정(점수 부여). 가치 판단을 포함하지 않습니다.<br><b>평가/판단(Evaluation):</b> 정보를 해석하여 가치 판단을 내리는 것(성적 산출, 통과/탈락)."
+                },
+                {
+                    key: "Formative vs. Summative",
+                    eng: "<b>Formative:</b> Evaluating students <i>during</i> the process of learning to aid growth. Provides feedback.<br><b>Summative:</b> Measuring attainment <i>at the end</i> of a course. Summarizes learning for grading.",
+                    kor: "<b>형성평가:</b> 학습 '과정 중'에 성장을 돕기 위해 평가(피드백).<br><b>총괄평가:</b> 코스 '종료 시' 성취도 측정(성적 산출)."
+                },
+                {
+                    key: "NRT vs. CRT",
+                    eng: "<b>Norm-Referenced (NRT):</b> Interpretation relative to other students (Ranking, Curve).<br><b>Criterion-Referenced (CRT):</b> Interpretation against absolute objectives (Mastery).",
+                    kor: "<b>규준지향(상대평가):</b> 다른 학생과 비교하여 해석(석차, 상대평가).<br><b>준거지향(절대평가):</b> 절대적 목표 달성 여부 확인(숙달도)."
+                }
+            ]
+        },
+        {
+            id: "ch2",
+            title: "Principles of Assessment",
+            items: [
+                {
+                    key: "1. Practicality (실용성)",
+                    eng: "An effective test is practical if it is not excessively expensive, stays within time constraints, is easy to administer, and has a specific/time-efficient scoring procedure.",
+                    kor: "비용이 적절하고, 시간 제약 내에 있으며, 시행이 쉽고, 채점이 효율적이어야 합니다.",
+                    note: "예산, 시간, 행정적 편의성 고려."
+                },
+                {
+                    key: "2. Reliability (신뢰도)",
+                    eng: "Consistency of results.<br>- <b>Student-Related:</b> Illness, anxiety.<br>- <b>Rater:</b> Inter-rater (between scorers) & Intra-rater (same scorer consistency).<br>- <b>Test Admin:</b> Environment conditions.<br>- <b>Test:</b> Ambiguous items.",
+                    kor: "결과의 일관성.<br>- <b>학생 관련:</b> 컨디션, 불안.<br>- <b>채점자:</b> 채점자 간/내 일관성.<br>- <b>운영:</b> 소음, 조명.<br>- <b>문항:</b> 모호성."
+                },
+                {
+                    key: "3. Validity (타당도)",
+                    eng: "Extent to which inferences are appropriate.<br>- <b>Content:</b> Samples subject matter.<br>- <b>Criterion:</b> Concurrent & Predictive.<br>- <b>Construct:</b> Measures theoretical trait.<br>- <b>Consequential:</b> Impact on learner/society.<br>- <b>Face:</b> Looks valid to test-taker.",
+                    kor: "측정하려는 것을 제대로 측정하는가.<br>- <b>내용:</b> 내용 표집 적절성.<br>- <b>준거:</b> 공인/예측 타당도.<br>- <b>구인:</b> 이론적 개념 측정.<br>- <b>결과:</b> 영향력.<br>- <b>안면:</b> 수험자의 인식."
+                },
+                {
+                    key: "4. Authenticity (진정성)",
+                    eng: "Correspondence to target language tasks. Features: natural language, contextualized items, meaningful topics.",
+                    kor: "실제 언어 사용과의 일치도. 자연스러운 언어, 맥락화된 문항."
+                },
+                {
+                    key: "5. Washback (환류 효과)",
+                    eng: "Effect of testing on teaching/learning. Beneficial washback provides useful feedback.",
+                    kor: "시험이 교수-학습에 미치는 영향. 긍정적 환류 효과는 학습을 촉진함."
+                }
+            ]
+        },
+        {
+            id: "ch3",
+            title: "Designing Classroom Tests",
+            items: [
+                {
+                    key: "Steps to Design",
+                    eng: "1. Purpose (Why?)<br>2. Objectives (Constructs)<br>3. Specifications (Blueprint)<br>4. Devise Items<br>5. Administer<br>6. Feedback",
+                    kor: "1. 목적 결정<br>2. 목표 정의<br>3. 사양서 작성<br>4. 문항 고안<br>5. 시행<br>6. 피드백"
+                },
+                {
+                    key: "Multiple-Choice Weaknesses",
+                    eng: "1. Tests recognition only, not production.<br>2. Guessing factor.<br>3. Hard to design valid items.<br>4. Harmful washback.",
+                    kor: "1. 산출이 아닌 인식만 평가.<br>2. 추측 요인.<br>3. 타당한 문항 제작 어려움.<br>4. 부정적 환류 효과."
+                },
+                {
+                    key: "Item Analysis",
+                    eng: "<b>Item Facility (IF):</b> Easiness (%).<br><b>Item Discrimination (ID):</b> Differentiates high vs. low ability.<br><b>Distractor Efficiency:</b> Are distractors attractive?",
+                    kor: "<b>문항 난이도(IF):</b> 정답률.<br><b>문항 변별도(ID):</b> 상/하위권 구별.<br><b>오답지 효율성:</b> 오답의 매력도."
+                }
+            ]
+        },
+        {
+            id: "ch4",
+            title: "Standards-Based Assessment",
+            items: [
+                {
+                    key: "Standards (Benchmarks)",
+                    eng: "Specific criteria students are expected to meet. Anchors for accountability. (e.g., CASAS, CEFR, ACTFL).",
+                    kor: "학생이 도달해야 할 구체적 기준. 책무성의 근거. (예: CASAS, CEFR, ACTFL)."
+                },
+                {
+                    key: "Critical Language Testing",
+                    eng: "Tests are not neutral; embedded in social/political agendas. Can be tools of power. Advocates exposing Test Bias.",
+                    kor: "시험은 중립적이지 않고 권력의 도구가 될 수 있음. 시험 편향(Bias) 경계."
+                }
+            ]
+        },
+        {
+            id: "ch5",
+            title: "Standardized Testing",
+            items: [
+                {
+                    key: "Characteristics",
+                    eng: "Standards-based, Systematic, Norm-referenced, Empirical.",
+                    kor: "표준 기반, 체계적 절차, 규준 지향, 경험적(연구 기반)."
+                },
+                {
+                    key: "Proficiency Testing",
+                    eng: "<b>Direct:</b> Performing actual task (e.g., Essay).<br><b>Indirect:</b> Related task (e.g., Grammar ID). Relies on correlation.",
+                    kor: "<b>직접 평가:</b> 실제 과업 수행(에세이).<br><b>간접 평가:</b> 관련 과업 수행(문법 오류 찾기)."
+                }
+            ]
+        },
+        {
+            id: "ch6",
+            title: "Assessing Listening",
+            items: [
+                {
+                    key: "Nature of Listening",
+                    eng: "Receptive & Invisible. Assessment relies on <b>Inference</b> from output.",
+                    kor: "수용적이며 보이지 않음. 산출물을 통한 <b>추론</b>에 의존."
+                },
+                {
+                    key: "4 Types of Listening",
+                    eng: "1. <b>Intensive:</b> Components (Phonemes).<br>2. <b>Responsive:</b> Short immediate response.<br>3. <b>Selective:</b> Scanning specific info (Cloze).<br>4. <b>Extensive:</b> Gist, main idea (Dictation).",
+                    kor: "1. <b>집중적:</b> 구성요소 식별.<br>2. <b>반응적:</b> 짧은 응답.<br>3. <b>선택적:</b> 정보 탐색(빈칸 채우기).<br>4. <b>확장적:</b> 전체적 이해(받아쓰기)."
+                }
+            ]
+        },
+        {
+            id: "ch7",
+            title: "Assessing Speaking",
+            items: [
+                {
+                    key: "5 Types of Speaking",
+                    eng: "1. <b>Imitative:</b> Repetition.<br>2. <b>Intensive:</b> Directed Response.<br>3. <b>Responsive:</b> Short Q&A.<br>4. <b>Interactive:</b> Role Play, Interview.<br>5. <b>Extensive:</b> Monologue (Speech).",
+                    kor: "1. <b>모방적:</b> 따라 말하기.<br>2. <b>집중적:</b> 지시된 응답.<br>3. <b>반응적:</b> 질의응답.<br>4. <b>상호작용적:</b> 역할극, 인터뷰.<br>5. <b>확장적:</b> 독백(연설)."
+                },
+                {
+                    key: "Information Gap",
+                    eng: "A task where students must share missing information to complete a task.",
+                    kor: "정보의 격차를 메우기 위해 의사소통이 요구되는 활동."
+                }
+            ]
+        },
+        {
+            id: "ch8",
+            title: "Assessing Reading",
+            items: [
+                {
+                    key: "4 Types of Reading",
+                    eng: "1. <b>Perceptive:</b> Letters/Words.<br>2. <b>Selective:</b> Lexical/Grammar features.<br>3. <b>Interactive:</b> Negotiating meaning (Cloze).<br>4. <b>Extensive:</b> Global understanding.",
+                    kor: "1. <b>지각적:</b> 문자 인식.<br>2. <b>선택적:</b> 어휘/문법.<br>3. <b>상호작용적:</b> 의미 협상(클로즈).<br>4. <b>확장적:</b> 긴 글 이해."
+                }
+            ]
+        },
+        {
+            id: "ch9",
+            title: "Assessing Writing",
+            items: [
+                {
+                    key: "4 Types of Writing",
+                    eng: "1. <b>Imitative:</b> Spelling.<br>2. <b>Intensive:</b> Grammar focus (Dicto-comp).<br>3. <b>Responsive:</b> Paragraphs.<br>4. <b>Extensive:</b> Essays.",
+                    kor: "1. <b>모방적:</b> 철자.<br>2. <b>집중적:</b> 문법 초점(딕토콤프).<br>3. <b>반응적:</b> 단락 연결.<br>4. <b>확장적:</b> 에세이."
+                },
+                {
+                    key: "Dicto-comp",
+                    eng: "Learners listen to a text and rewrite it from memory using keywords.",
+                    kor: "텍스트를 들은 후 기억과 키워드를 활용해 다시 작성하는 과업."
+                },
+                {
+                    key: "Scoring Methods",
+                    eng: "<b>Holistic:</b> Single score (Fast).<br><b>Analytic:</b> Sub-scores (Detailed feedback).<br><b>Primary-Trait:</b> Function focus.",
+                    kor: "<b>총체적:</b> 단일 점수.<br><b>분석적:</b> 요소별 점수.<br><b>주요 특성:</b> 목적 달성 여부."
+                }
+            ]
+        },
+        {
+            id: "ch10",
+            title: "Grammar & Vocabulary",
+            items: [
+                {
+                    key: "Assessing Grammar",
+                    eng: "Knowledge of Form, Meaning, and Use. Tasks: Gap-filling, Multiple-choice.",
+                    kor: "형태, 의미, 화용에 대한 지식 평가. 과업: 빈칸 채우기, 선다형."
+                },
+                {
+                    key: "Assessing Vocabulary",
+                    eng: "Receptive vs. Productive knowledge. Context is crucial.",
+                    kor: "수용적 vs 산출적 지식. 문맥(Context)이 중요함."
+                }
+            ]
+        },
+        {
+            id: "ch11",
+            title: "Grading",
+            items: [
+                {
+                    key: "Grading Philosophy",
+                    eng: "Grades should primarily reflect <b>Achievement</b>.",
+                    kor: "성적은 주로 <b>성취도</b>를 반영해야 함."
+                },
+                {
+                    key: "Calculating Grades",
+                    eng: "<b>Absolute:</b> Criterion-referenced (Standards).<br><b>Relative:</b> Norm-referenced (Curve).",
+                    kor: "<b>절대평가:</b> 기준 점수 도달 여부.<br><b>상대평가:</b> 석차 기준(곡선 등급)."
+                }
+            ]
+        },
+        {
+            id: "ch12",
+            title: "Beyond Letter Grading",
+            items: [
+                {
+                    key: "Alternatives",
+                    eng: "Self & Peer Assessment, Portfolios, Narrative Evaluations.",
+                    kor: "자기/동료 평가, 포트폴리오, 서술형 평가."
+                },
+                {
+                    key: "Portfolios (CRADLE)",
+                    eng: "Collecting, Reflecting, Assessing, Documenting, Linking, Evaluating.",
+                    kor: "수집, 성찰, 평가, 문서화, 연결, 평가."
+                }
+            ]
+        }
+    ];
+
+    // 2. 앱 로직
+    const app = {
+        init: function() {
+            this.renderNav();
+            this.renderContent();
+            this.addScrollListener();
+        },
+
+        renderNav: function() {
+            const nav = document.getElementById('nav-scroller');
+            examData.forEach(ch => {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.textContent = ch.id.toUpperCase().replace('CH', 'Ch ');
+                btn.onclick = () => this.scrollTo(ch.id, btn);
+                nav.appendChild(btn);
+            });
+        },
+
+        renderContent: function() {
+            const container = document.getElementById('main-container');
+            
+            examData.forEach(ch => {
+                // 카드 생성
+                const card = document.createElement('div');
+                card.className = 'chapter-card';
+                card.id = ch.id;
+
+                // 헤더 생성
+                card.innerHTML = `
+                    <div class="chapter-header" onclick="app.toggleChapter('${ch.id}')">
+                        <div class="chapter-title-group">
+                            <span class="chapter-label">${ch.id.replace('ch', 'Chapter ')}</span>
+                            <span class="chapter-name">${ch.title}</span>
+                        </div>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="chapter-content">
+                        <ul class="keyword-list">
+                            ${ch.items.map(item => `
+                                <li class="keyword-item">
+                                    <button class="keyword-trigger" onclick="app.toggleKeyword(this)">
+                                        <span class="keyword-text">${item.key}</span>
+                                        <div class="plus-icon"><i class="fas fa-plus"></i></div>
+                                    </button>
+                                    <div class="keyword-detail">
+                                        <div class="detail-inner">
+                                            <div class="content-box">
+                                                <span class="lang-badge badge-eng">English</span>
+                                                <div class="text-eng">${item.eng}</div>
+                                            </div>
+                                            <div class="content-box">
+                                                <span class="lang-badge badge-kor">Korean</span>
+                                                <div class="text-kor">${item.kor}</div>
+                                            </div>
+                                            ${item.note ? `
+                                            <div class="note-box">
+                                                <i class="fas fa-lightbulb"></i>
+                                                <div>${item.note}</div>
+                                            </div>` : ''}
+                                        </div>
+                                    </div>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        },
+
+        toggleChapter: function(id) {
+            const card = document.getElementById(id);
+            card.classList.toggle('active');
+            
+            // 챕터가 열릴 때 키워드 리스트 보이기
+            const list = card.querySelector('.keyword-list');
+            const content = card.querySelector('.chapter-content');
+            
+            if (card.classList.contains('active')) {
+                content.style.maxHeight = "5000px"; // 충분한 높이
+            } else {
+                content.style.maxHeight = "0";
+            }
+        },
+
+        toggleKeyword: function(btn) {
+            const item = btn.parentElement;
+            item.classList.toggle('open');
+        },
+
+        expandAll: function() {
+            document.querySelectorAll('.chapter-card').forEach(c => {
+                c.classList.add('active');
+                c.querySelector('.chapter-content').style.maxHeight = "5000px";
+            });
+            document.querySelectorAll('.keyword-item').forEach(k => k.classList.add('open'));
+        },
+
+        collapseAll: function() {
+            document.querySelectorAll('.chapter-card').forEach(c => {
+                c.classList.remove('active');
+                c.querySelector('.chapter-content').style.maxHeight = "0";
+            });
+            document.querySelectorAll('.keyword-item').forEach(k => k.classList.remove('open'));
+        },
+
+        scrollTo: function(id, btn) {
+            const el = document.getElementById(id);
+            if (!el.classList.contains('active')) {
+                this.toggleChapter(id);
+            }
+            
+            // 스크롤 이동
+            const offset = 180;
+            const pos = el.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top: pos, behavior: 'smooth' });
+
+            // 버튼 활성화 표시
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        },
+
+        addScrollListener: function() {
+            const btn = document.getElementById('scrollTop');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) btn.classList.add('visible');
+                else btn.classList.remove('visible');
+            });
+        }
+    };
+
+    // 앱 실행 (DOM 로드 후 안전하게 실행)
+    document.addEventListener('DOMContentLoaded', () => {
+        app.init();
+        // 첫 번째 챕터 열기
+        setTimeout(() => app.toggleChapter('ch1'), 100);
+    });
+
+</script>
+</body>
+</html>
