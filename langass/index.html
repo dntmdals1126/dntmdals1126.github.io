@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영어과평가법</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 640 512%22><path fill=%22%232563eb%22 d=%22M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C-3.7 446.6 8.3 464 24 464h112c6 0 11.1-4 12.9-9.7c8.3-25.7 28.1-49.8 54.1-66.2 3.4-2.1 6.3-5.2 7.7-8.9l32.3-84.1c16.4 5.9 33.7 9.9 51.6 11.8l-5.6 19.5c-4.9 16.9 7.4 34.3 25 34.3h128c17.6 0 29.9-17.4 25-34.3L443 273.9c73.9-7.9 129-68.9 133-141.9l48.3-17.4c9.5-3.5 15.8-12.6 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM80 160c0-12 9.3-21.9 21.2-22.6l210.3-12.4c12.2-.7 23.3 5.3 29.3 15.8l61 106.7c-5.8 2.6-11.8 4.9-18 6.9l-61.9-108.3c-2.3-4-6.5-6.3-11.1-6.1L101.5 152.4c-6.4.4-12.1 3.2-16.1 7.9-4 4.7-5.4 11-3.9 17l36.9 147.5c2.1 8.5-4.3 16.8-13 16.8-6.1 0-11.6-4.1-13.3-10l-37.5-150c-.8-3.1-1.2-6.3-1.2-9.6z%22/></svg>">
+    <!-- 파비콘 설정 (1:1 비율로 수정하여 찌그러짐 방지) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%232563eb' d='M496 128v16a8 8 0 0 1-8 8h-24v12c0 66.27-53.73 120-120 120H168c-66.27 0-120-53.73-120-120v-12H24a8 8 0 0 1-8-8v-16a8 8 0 0 1 4.94-7.4l229.1-88a8 8 0 0 1 5.92 0l229.1 88a8 8 0 0 1 4.94 7.4zM32 160h12v96c0 17.67 14.33 32 32 32s32-14.33 32-32v-96h328v96c0 17.67 14.33 32 32 32s32-14.33 32-32v-96h12a8 8 0 0 0 0-16H32a8 8 0 0 0 0 16z'/%3E%3Cpath fill='%232563eb' d='M160 384h192v32H160z'/%3E%3Cpath fill='%232563eb' d='M256 96l-192 74v8c0 52.94 43.06 96 96 96h192c52.94 0 96-43.06 96-96v-8L256 96z' opacity='0.2'/%3E%3C/svg%3E">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -39,11 +40,10 @@
             --radius: 12px;
         }
 
-        /* Dark Mode Variables (Improved for Comfort) */
+        /* Dark Mode Variables */
         body.dark-mode {
-            /* Softer Blue for Primary */
             --primary: #60a5fa;       
-            --primary-light: #1e293b; /* Darker background for boxes */
+            --primary-light: #1e293b; 
             --primary-border: #3b82f6;
             --primary-hover: #93c5fd;
 
@@ -55,13 +55,12 @@
             --accent-light: #451a03;
             --accent-border: #78350f;
 
-            /* Neutral Grays for Backgrounds (Less Blue) */
-            --text-main: #e2e8f0;     /* Light Gray */
-            --text-sub: #94a3b8;      /* Muted Gray */
-            --bg-body: #121212;       /* Neutral Dark */
-            --bg-card: #1e1e1e;       /* Dark Gray Card */
+            --text-main: #e2e8f0;    
+            --text-sub: #94a3b8;     
+            --bg-body: #121212;      
+            --bg-card: #1e1e1e;      
             --bg-header: rgba(18, 18, 18, 0.95);
-            --border: #2d2d2d;        /* Dark Border */
+            --border: #2d2d2d;       
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5);
         }
@@ -73,14 +72,14 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             margin: 0;
-            /* Remove padding-top from body to prevent layout issues with flex column */
-            /* Instead, apply margin/padding to main container */
             line-height: 1.6;
             word-break: keep-all;
             transition: background-color 0.3s, color 0.3s;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            /* 기본 폰트 사이즈 설정 (PC 기준) */
+            font-size: 16px; 
         }
 
         /* --- Fixed Header --- */
@@ -95,7 +94,7 @@
             border-bottom: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
             transition: background-color 0.3s, border-color 0.3s;
-            height: calc(var(--header-height) + var(--nav-height)); /* Explicit height */
+            height: calc(var(--header-height) + var(--nav-height));
         }
 
         .main-header {
@@ -209,9 +208,10 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 0 20px;
-            flex: 1; /* Pushes footer down */
+            flex: 1; 
             width: 100%;
-            margin-top: calc(var(--header-height) + var(--nav-height) + 30px); /* Adjust top margin for fixed header */
+            /* Fixed Header 높이만큼 마진 추가 */
+            margin-top: calc(var(--header-height) + var(--nav-height) + 30px); 
         }
 
         /* Chapter Cards */
@@ -222,7 +222,7 @@
             margin-bottom: 24px;
             border: 1px solid var(--border);
             overflow: hidden;
-            scroll-margin-top: 140px; /* Adjusted scroll offset */
+            scroll-margin-top: 140px; 
             transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s;
         }
 
@@ -251,12 +251,12 @@
         }
 
         .chapter-badge {
-            font-size: 0.7rem; /* Reduced size */
+            font-size: 0.7rem; 
             font-weight: 800;
             text-transform: uppercase;
             color: var(--primary);
             background: var(--primary-light);
-            padding: 3px 8px; /* Reduced padding */
+            padding: 3px 8px; 
             border-radius: 6px;
             align-self: flex-start;
             letter-spacing: 0.5px;
@@ -271,7 +271,7 @@
         }
 
         .chapter-title-eng {
-            font-size: 1.35rem; /* Reduced size */
+            font-size: 1.35rem; 
             font-weight: 800;
             color: var(--text-main);
             margin: 0;
@@ -439,7 +439,6 @@
 
         .text-content b {
             font-weight: 800;
-            /* 배경색 제거하여 깔끔하게 */
         }
         
         /* Lists */
@@ -463,7 +462,7 @@
             background-color: var(--accent-light);
             border: 1px solid var(--accent-border);
             border-radius: 8px;
-            color: #92400e; /* Dark amber text */
+            color: #92400e; 
             font-size: 0.95rem;
             display: flex;
             gap: 10px;
@@ -485,8 +484,8 @@
             padding: 30px 0;
             color: var(--text-sub);
             font-size: 0.85rem;
-            margin-top: auto; /* Push to bottom */
-            border-top: none; /* 구분선 제거 */
+            margin-top: auto; 
+            border-top: none; 
         }
 
         /* Scroll Top Button */
@@ -515,13 +514,22 @@
         .scroll-top.visible { opacity: 1; transform: translateY(0); }
         .scroll-top:hover { background: var(--primary); color: white; transform: translateY(-3px); }
 
+        /* Mobile Optimization */
         @media (max-width: 640px) {
+            body { font-size: 14px; } /* 기본 폰트 사이즈 축소 */
+
             .chapter-title-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .chapter-title-eng { font-size: 1.2rem; }
+            .chapter-title-kor { font-size: 1rem; margin-bottom: 5px; }
             .chapter-title-kor::before { display: none; }
+            
+            .keyword-text { font-size: 0.95rem; }
+            .text-content { font-size: 0.9rem; }
+            
             .container { padding: 0 16px; margin-top: calc(var(--header-height) + var(--nav-height) + 20px); }
             .keyword-trigger { padding: 16px; }
             .detail-inner { padding: 16px; }
-            .header-controls span { display: none; }
+            .header-controls span { display: none; } /* 버튼 텍스트 숨김 */
         }
     </style>
 </head>
@@ -559,7 +567,7 @@
         <!-- JS Injected -->
     </div>
 
-    <!-- Footer moved outside main container but logically below it -->
+    <!-- Footer -->
     <footer>
         2025 ⓒ Seungmin Woo
     </footer>
@@ -576,7 +584,7 @@
     const examData = [
         {
             id: "ch1",
-            title: "Assessment Concepts & Issues",
+            title: "Assessment Concepts",
             subtitle: "평가의 핵심 개념 및 이슈",
             items: [
                 {
@@ -805,8 +813,8 @@
             items: [
                 {
                     key: "Assessing Grammar",
-                    eng: "Grammatical knowledge consists of:<br><ul><li><b>Form</b> (accuracy)</li><li><b>Meaning</b> (meaningfulness)</li><li><b>Use</b> (pragmatic appropriateness)</li></ul>Tasks: Multiple-choice, Gap-filling, Information Gap, Role-Play.",
-                    kor: "문법 지식의 구성 요소:<br><ul><li><b>형태</b> (정확성)</li><li><b>의미</b> (의미성)</li><li><b>사용</b> (화용적 적절성)</li></ul>과업: 선다형, 빈칸 채우기, 정보 공백, 역할극."
+                    eng: "Grammatical knowledge consists of:<br><ul><li><b>Form</b> (morphology, syntax)</li><li><b>Meaning</b> (literal/intended)</li><li><b>Use</b> (pragmatic appropriateness)</li></ul>Tasks: Multiple-choice, Gap-filling, Information Gap, Role-Play.",
+                    kor: "문법 지식의 구성 요소:<br><ul><li><b>형태</b> (형태론, 통사론)</li><li><b>의미</b> (문자적/의도된 의미)</li><li><b>사용</b> (화용적 적절성)</li></ul>과업: 선다형, 빈칸 채우기, 정보 공백, 역할극."
                 },
                 {
                     key: "Assessing Vocabulary",
