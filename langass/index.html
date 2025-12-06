@@ -3,39 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Language Assessment Master</title>
-    <!-- 프리텐다드 폰트 & FontAwesome -->
+    <title>영어과평가법</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 640 512%22><path fill=%22%232563eb%22 d=%22M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C-3.7 446.6 8.3 464 24 464h112c6 0 11.1-4 12.9-9.7c8.3-25.7 28.1-49.8 54.1-66.2 3.4-2.1 6.3-5.2 7.7-8.9l32.3-84.1c16.4 5.9 33.7 9.9 51.6 11.8l-5.6 19.5c-4.9 16.9 7.4 34.3 25 34.3h128c17.6 0 29.9-17.4 25-34.3L443 273.9c73.9-7.9 129-68.9 133-141.9l48.3-17.4c9.5-3.5 15.8-12.6 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM80 160c0-12 9.3-21.9 21.2-22.6l210.3-12.4c12.2-.7 23.3 5.3 29.3 15.8l61 106.7c-5.8 2.6-11.8 4.9-18 6.9l-61.9-108.3c-2.3-4-6.5-6.3-11.1-6.1L101.5 152.4c-6.4.4-12.1 3.2-16.1 7.9-4 4.7-5.4 11-3.9 17l36.9 147.5c2.1 8.5-4.3 16.8-13 16.8-6.1 0-11.6-4.1-13.3-10l-37.5-150c-.8-3.1-1.2-6.3-1.2-9.6z%22/></svg>">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            /* Color Palette */
-            --primary: #2563eb;       /* Royal Blue */
-            --primary-light: #eff6ff; /* Light Blue Background */
+            /* Light Mode Variables */
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
             --primary-border: #bfdbfe;
+            --primary-hover: #1d4ed8;
             
-            --success: #059669;       /* Emerald */
-            --success-light: #ecfdf5; /* Light Green Background */
+            --success: #059669;
+            --success-light: #ecfdf5;
             --success-border: #a7f3d0;
             
-            --accent: #d97706;        /* Amber */
+            --accent: #d97706;
             --accent-light: #fffbeb;
-            --accent-border: #fde68a;
+            --accent-border: #fcd34d;
 
-            --text-main: #1e293b;     /* Slate 900 */
-            --text-sub: #475569;      /* Slate 600 */
-            --bg-body: #f8fafc;       /* Slate 50 */
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --bg-body: #f8fafc;
             --bg-card: #ffffff;
+            --bg-header: rgba(255, 255, 255, 0.95);
             --border: #e2e8f0;
-            
-            /* Layout */
-            --header-height: 70px;
-            --nav-height: 60px;
-            --radius: 16px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            
+            --header-height: 65px;
+            --nav-height: 55px;
+            --radius: 12px;
+        }
+
+        /* Dark Mode Variables (Improved for Comfort) */
+        body.dark-mode {
+            /* Softer Blue for Primary */
+            --primary: #60a5fa;       
+            --primary-light: #1e293b; /* Darker background for boxes */
+            --primary-border: #3b82f6;
+            --primary-hover: #93c5fd;
+
+            --success: #34d399;
+            --success-light: #064e3b;
+            --success-border: #065f46;
+
+            --accent: #fbbf24;
+            --accent-light: #451a03;
+            --accent-border: #78350f;
+
+            /* Neutral Grays for Backgrounds (Less Blue) */
+            --text-main: #e2e8f0;     /* Light Gray */
+            --text-sub: #94a3b8;      /* Muted Gray */
+            --bg-body: #121212;       /* Neutral Dark */
+            --bg-card: #1e1e1e;       /* Dark Gray Card */
+            --bg-header: rgba(18, 18, 18, 0.95);
+            --border: #2d2d2d;        /* Dark Border */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5);
         }
 
         * { box-sizing: border-box; }
@@ -45,8 +73,14 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             margin: 0;
-            padding-top: calc(var(--header-height) + var(--nav-height) + 30px);
+            /* Remove padding-top from body to prevent layout issues with flex column */
+            /* Instead, apply margin/padding to main container */
             line-height: 1.6;
+            word-break: keep-all;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* --- Fixed Header --- */
@@ -56,10 +90,12 @@
             left: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg-header);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
+            transition: background-color 0.3s, border-color 0.3s;
+            height: calc(var(--header-height) + var(--nav-height)); /* Explicit height */
         }
 
         .main-header {
@@ -73,29 +109,33 @@
         }
 
         .logo {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            cursor: pointer;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
             text-decoration: none;
             letter-spacing: -0.5px;
+            transition: color 0.3s;
         }
 
-        .logo i { color: var(--primary); -webkit-text-fill-color: initial; }
+        .logo i { 
+            color: #2563eb; 
+            font-size: 1.3rem;
+        }
+        
+        body.dark-mode .logo i { color: #60a5fa; } 
 
-        .header-controls { display: flex; gap: 10px; }
+        .header-controls { display: flex; gap: 8px; align-items: center; }
 
         .ctrl-btn {
-            background: white;
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-sub);
             cursor: pointer;
@@ -106,16 +146,21 @@
         }
 
         .ctrl-btn:hover {
-            background: var(--bg-body);
-            color: var(--primary);
             border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            font-size: 1.1rem;
+            padding: 6px 10px;
         }
 
         /* --- Navigation --- */
         .nav-wrapper {
             border-top: 1px solid var(--border);
-            background: #ffffff;
+            background: var(--bg-header);
             height: var(--nav-height);
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .nav-scroller {
@@ -133,11 +178,11 @@
 
         .nav-btn {
             flex: 0 0 auto;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
             background: transparent;
             color: var(--text-sub);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             border: 1px solid transparent;
@@ -147,19 +192,26 @@
         .nav-btn:hover {
             background: var(--primary-light);
             color: var(--primary);
+            border-color: var(--primary-border);
         }
 
         .nav-btn.active {
             background: var(--primary);
-            color: white;
+            color: white !important;
             box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            border-color: transparent;
         }
+        
+        body.dark-mode .nav-btn.active { color: #1e293b !important; }
 
         /* --- Main Content --- */
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 0 20px 80px;
+            padding: 0 20px;
+            flex: 1; /* Pushes footer down */
+            width: 100%;
+            margin-top: calc(var(--header-height) + var(--nav-height) + 30px); /* Adjust top margin for fixed header */
         }
 
         /* Chapter Cards */
@@ -167,29 +219,30 @@
             background: var(--bg-card);
             border-radius: var(--radius);
             box-shadow: var(--shadow-md);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             border: 1px solid var(--border);
             overflow: hidden;
-            scroll-margin-top: 160px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            scroll-margin-top: 140px; /* Adjusted scroll offset */
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s;
         }
 
         .chapter-card:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
         .chapter-header {
-            padding: 24px 30px;
-            background: linear-gradient(to right, #ffffff, #f8fafc);
+            padding: 20px 25px;
+            background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
 
-        .chapter-header:hover { background-color: #f1f5f9; }
+        .chapter-header:hover { background-color: var(--bg-body); }
 
         .chapter-info {
             display: flex;
@@ -198,26 +251,27 @@
         }
 
         .chapter-badge {
-            font-size: 0.8rem;
+            font-size: 0.7rem; /* Reduced size */
             font-weight: 800;
             text-transform: uppercase;
             color: var(--primary);
             background: var(--primary-light);
-            padding: 4px 10px;
+            padding: 3px 8px; /* Reduced padding */
             border-radius: 6px;
             align-self: flex-start;
             letter-spacing: 0.5px;
+            border: 1px solid var(--primary-border);
         }
 
         .chapter-title-row {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .chapter-title-eng {
-            font-size: 1.5rem;
+            font-size: 1.35rem; /* Reduced size */
             font-weight: 800;
             color: var(--text-main);
             margin: 0;
@@ -225,24 +279,22 @@
         }
 
         .chapter-title-kor {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text-sub);
             font-weight: 600;
         }
         
         .chapter-title-kor::before {
-            content: '';
+            content: '|';
             display: inline-block;
-            width: 1px;
-            height: 16px;
-            background: #cbd5e1;
-            margin-right: 12px;
-            vertical-align: middle;
+            margin-right: 10px;
+            color: var(--border);
+            font-weight: 300;
         }
 
         .toggle-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: var(--bg-body);
             border-radius: 50%;
             display: flex;
@@ -256,10 +308,10 @@
         .chapter-card.active .toggle-icon {
             transform: rotate(180deg);
             background: var(--text-main);
-            color: white;
+            color: var(--bg-card);
         }
 
-        /* Keyword List (Accordion) */
+        /* Keyword List */
         .keyword-list {
             list-style: none;
             padding: 0;
@@ -272,7 +324,7 @@
             animation: fadeIn 0.3s ease-out;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .keyword-item { border-bottom: 1px solid var(--border); }
         .keyword-item:last-child { border-bottom: none; }
@@ -280,7 +332,7 @@
         .keyword-trigger {
             width: 100%;
             text-align: left;
-            padding: 20px 30px;
+            padding: 16px 25px;
             background: none;
             border: none;
             cursor: pointer;
@@ -290,10 +342,10 @@
             transition: background 0.2s;
         }
 
-        .keyword-trigger:hover { background-color: #f8fafc; }
+        .keyword-trigger:hover { background-color: var(--bg-body); }
 
         .keyword-text {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text-main);
             display: flex;
@@ -302,15 +354,15 @@
         }
 
         .keyword-bullet {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 2px;
             background-color: var(--primary);
             transform: rotate(45deg);
         }
 
         .plus-icon {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--text-sub);
             transition: transform 0.3s;
         }
@@ -325,24 +377,23 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease;
-            background-color: #ffffff;
+            background-color: var(--bg-card);
         }
 
         .keyword-item.open .keyword-detail {
-            max-height: 5000px; /* Allow large content */
-            box-shadow: inset 0 4px 6px -4px rgba(0,0,0,0.05);
+            max-height: 5000px;
         }
 
         .detail-inner {
-            padding: 20px 30px 30px;
+            padding: 15px 25px 25px;
             border-top: 1px dashed var(--border);
         }
 
-        /* --- Language Boxes (Core Design) --- */
+        /* Language Boxes */
         .lang-box {
-            margin-bottom: 20px;
-            padding: 24px;
-            border-radius: 12px;
+            margin-bottom: 12px;
+            padding: 18px;
+            border-radius: 8px;
             border: 1px solid transparent;
             position: relative;
         }
@@ -351,26 +402,26 @@
         .eng-box {
             background-color: var(--primary-light);
             border-color: var(--primary-border);
-            border-left: 6px solid var(--primary);
+            border-left: 5px solid var(--primary);
         }
 
         /* Korean Box */
         .kor-box {
             background-color: var(--success-light);
             border-color: var(--success-border);
-            border-left: 6px solid var(--success);
+            border-left: 5px solid var(--success);
         }
 
         .lang-label {
             display: inline-block;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: white;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--bg-card);
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         
@@ -378,73 +429,78 @@
         .kor-box .lang-label { color: var(--success); border: 1px solid var(--success-border); }
 
         .text-content {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--text-main);
-            line-height: 1.8;
-        }
-
-        .kor-box .text-content {
-            font-size: 1rem; /* 한국어는 조금 더 작게 */
-            color: var(--text-sub);
-        }
-
-        .text-content b {
-            font-weight: 700;
-            color: #000;
-            background: rgba(255,255,255,0.6);
-            padding: 0 4px;
-            border-radius: 4px;
+            line-height: 1.6;
         }
         
-        /* Lists inside content */
+        body.dark-mode .text-content { color: #e2e8f0; }
+        body.dark-mode .kor-box .text-content { color: #cbd5e1; }
+
+        .text-content b {
+            font-weight: 800;
+            /* 배경색 제거하여 깔끔하게 */
+        }
+        
+        /* Lists */
         .text-content ul, .text-content ol {
-            margin: 12px 0 0 0;
-            padding-left: 24px;
+            margin: 6px 0 0 0;
+            padding-left: 20px;
         }
         
         .text-content li {
-            margin-bottom: 8px;
-            padding-left: 4px;
+            margin-bottom: 4px;
+            padding-left: 2px;
         }
         
-        /* Bullet Point Style */
         .text-content ul { list-style-type: disc; }
         .text-content ol { list-style-type: decimal; }
 
-
         /* Note Box */
         .note-box {
-            margin-top: 20px;
-            padding: 18px 24px;
+            margin-top: 15px;
+            padding: 15px 20px;
             background-color: var(--accent-light);
             border: 1px solid var(--accent-border);
-            border-radius: 12px;
-            color: #92400e;
-            font-size: 1rem;
+            border-radius: 8px;
+            color: #92400e; /* Dark amber text */
+            font-size: 0.95rem;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: flex-start;
-            line-height: 1.6;
+            line-height: 1.5;
         }
+
+        body.dark-mode .note-box { color: #fcd34d; }
 
         .note-icon {
             color: var(--accent);
-            margin-top: 4px;
-            font-size: 1.2rem;
+            margin-top: 3px;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            margin-top: auto; /* Push to bottom */
+            border-top: none; /* 구분선 제거 */
         }
 
         /* Scroll Top Button */
         .scroll-top {
             position: fixed;
-            bottom: 40px;
-            right: 40px;
+            bottom: 30px;
+            right: 30px;
             width: 50px;
             height: 50px;
             background: var(--text-main);
-            color: white;
+            color: var(--bg-card);
             border-radius: 50%;
             border: none;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             cursor: pointer;
             opacity: 0;
             transform: translateY(20px);
@@ -457,49 +513,56 @@
         }
 
         .scroll-top.visible { opacity: 1; transform: translateY(0); }
-        .scroll-top:hover { background: var(--primary); transform: translateY(-5px); }
+        .scroll-top:hover { background: var(--primary); color: white; transform: translateY(-3px); }
 
         @media (max-width: 640px) {
             .chapter-title-row { flex-direction: column; align-items: flex-start; gap: 4px; }
             .chapter-title-kor::before { display: none; }
-            .container { padding: 0 16px 40px; }
+            .container { padding: 0 16px; margin-top: calc(var(--header-height) + var(--nav-height) + 20px); }
             .keyword-trigger { padding: 16px; }
             .detail-inner { padding: 16px; }
-            .logo span { display: none; }
-            .header-controls .ctrl-btn span { display: none; }
+            .header-controls span { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Area -->
+    <!-- Header -->
     <div class="fixed-header-wrapper">
         <div class="main-header">
-            <div class="logo" onclick="location.reload()">
-                <i class="fas fa-graduation-cap"></i> <span>Language Assessment Master</span>
-            </div>
+            <a href="javascript:location.reload()" class="logo">
+                <i class="fas fa-graduation-cap"></i> <span>영어과평가법</span>
+            </a>
             <div class="header-controls">
+                <button class="ctrl-btn theme-toggle" onclick="app.toggleTheme()" title="다크 모드 전환">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <button class="ctrl-btn" onclick="app.expandAll()">
-                    <i class="fas fa-folder-open"></i> <span>모두 펼치기</span>
+                    <i class="fas fa-folder-open"></i> <span>펼치기</span>
                 </button>
                 <button class="ctrl-btn" onclick="app.collapseAll()">
-                    <i class="fas fa-folder"></i> <span>모두 접기</span>
+                    <i class="fas fa-folder"></i> <span>접기</span>
                 </button>
             </div>
         </div>
         
-        <!-- Navigation Scroll -->
+        <!-- Navigation -->
         <div class="nav-wrapper">
             <div class="nav-scroller" id="nav-scroller">
-                <!-- JS Generated Items -->
+                <!-- JS Injected -->
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="container" id="main-container">
-        <!-- Cards injected here -->
+        <!-- JS Injected -->
     </div>
+
+    <!-- Footer moved outside main container but logically below it -->
+    <footer>
+        2025 ⓒ Seungmin Woo
+    </footer>
 
     <!-- Scroll Top -->
     <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
@@ -508,71 +571,71 @@
 
 <script>
     // ==========================================
-    // CONTENT DATA (ENRICHED & FORMATTED)
+    // CONTENT DATA
     // ==========================================
     const examData = [
         {
             id: "ch1",
-            title: "Assessment Concepts and Issues",
+            title: "Assessment Concepts",
             subtitle: "평가의 핵심 개념 및 이슈",
             items: [
                 {
                     key: "Assessment vs. Testing",
                     eng: "<ul><li><b>Assessment:</b> An ongoing pedagogical process that encompasses a wide range of methodological techniques.<br>- Includes incidental comments, observations, and student responses during class.<br>- Focuses on the <b>process</b> of learning.</li><li><b>Testing:</b> A subset of assessment.<br>- A method of measuring a person's ability, knowledge, or performance in a given domain at a specific point in time.<br>- An identifiable administrative procedure focusing on the <b>product</b> (result).</li></ul>",
-                    kor: "<ul><li><b>평가(Assessment):</b> 광범위한 방법론적 기법을 포함하는 진행 중인 교육적 과정임.<br>- 수업 중의 우발적 코멘트, 관찰, 학생 반응 등을 포함하며 학습의 <b>과정</b>에 초점을 맞춤.</li><li><b>시험(Testing):</b> 평가의 하위 집합임.<br>- 특정 시점에 특정 영역에서 개인의 능력이나 지식을 측정하는 방법임.<br>- 식별 가능한 행정적 절차로, 학습의 <b>결과(Product)</b>에 초점을 둠.</li></ul>",
-                    note: "모든 시험은 평가에 포함되지만, 모든 평가가 시험은 아님 (Tests are a subset of assessment)."
+                    kor: "<ul><li><b>평가(Assessment):</b> 광범위한 방법론적 기법을 포함하는 진행 중인 교육적 과정임.<br>- 수업 중 우발적 코멘트, 관찰, 학생 반응 등을 포함하며 학습의 <b>과정(Process)</b>에 초점을 맞춤.</li><li><b>시험(Testing):</b> 평가의 하위 집합임.<br>- 특정 시점에 특정 영역에서 개인의 능력이나 지식을 측정하는 방법임.<br>- 식별 가능한 행정적 절차로, 학습의 <b>결과(Product)</b>에 초점을 둠.</li></ul>",
+                    note: "모든 시험은 평가에 포함되지만, 모든 평가가 시험은 아님."
                 },
                 {
                     key: "Measurement vs. Evaluation",
                     eng: "<ul><li><b>Measurement:</b> The process of quantifying observed performance.<br>- Assigning numbers, rankings, or scores (e.g., 85/100).<br>- Does <b>not</b> necessarily imply value judgments.</li><li><b>Evaluation:</b> The interpretation of information (including measurements) to make decisions.<br>- Involves value judgments about the worth or quality of performance (e.g., grading, passing/failing).</li></ul>",
-                    kor: "<ul><li><b>측정(Measurement):</b> 관찰된 수행을 수량화하는 과정임.<br>- 숫자, 석차, 점수 등을 부여함 (예: 100점 만점에 85점).<br>- 반드시 가치 판단을 내포하지는 않음.</li><li><b>평가/판단(Evaluation):</b> 정보를 해석하여 학습자 수행의 가치나 질에 대한 의사결정을 내리는 것임.<br>- 가치 판단이 개입됨 (예: 성적 부여, 통과/탈락 결정).</li></ul>"
+                    kor: "<ul><li><b>측정(Measurement):</b> 관찰된 수행을 수량화하는 과정임.<br>- 숫자, 석차, 점수 부여 (예: 100점 만점에 85점).<br>- 가치 판단을 포함하지 않음.</li><li><b>평가/판단(Evaluation):</b> 의사결정을 내리기 위해 정보를 해석하는 것임.<br>- 수행의 가치나 질에 대한 판단을 포함함 (예: 성적 부여, 통과/탈락).</li></ul>"
                 },
                 {
                     key: "Assessment Types (Formal/Informal)",
-                    eng: "<ul><li><b>Informal Assessment:</b> Incidental, unplanned feedback (e.g., 'Good job!').<br>- Purpose is coaching and eliciting performance without recording fixed results.<br>- Generally induces less anxiety.</li><li><b>Formal Assessment:</b> Systematic, planned exercises.<br>- Constructed to give an appraisal of achievement (e.g., unit tests, quizzes, journals, portfolios).<br>- Records results for evaluation.</li></ul>",
-                    kor: "<ul><li><b>비공식적 평가:</b> 우발적이고 계획되지 않은 피드백임 (예: '잘했어!').<br>- 목적은 코칭이며, 고정된 결과를 기록하지 않고 수행을 이끌어냄.<br>- 일반적으로 불안감을 덜 유발함.</li><li><b>공식적 평가:</b> 성취도를 평가하기 위해 체계적으로 계획된 연습임.<br>- 단원 평가, 퀴즈, 저널, 포트폴리오 등이 포함됨.<br>- 평가를 위해 결과를 기록함.</li></ul>"
+                    eng: "<ul><li><b>Informal Assessment:</b> Incidental, unplanned feedback (e.g., 'Good job!').<br>- Purpose is coaching and eliciting performance without recording fixed results.<br>- Generally induces less anxiety.</li><li><b>Formal Assessment:</b> Systematic, planned exercises.<br>- Constructed to give an appraisal of achievement (e.g., unit tests, quizzes, portfolios).<br>- Records results for evaluation.</li></ul>",
+                    kor: "<ul><li><b>비공식적 평가:</b> 우발적이고 계획되지 않은 피드백임 (예: '잘했어!').<br>- 코칭 목적이며, 결과를 기록하지 않아 불안감을 낮춤.</li><li><b>공식적 평가:</b> 성취도 평가를 위해 체계적으로 계획된 연습임.<br>- 단원 평가, 퀴즈 등이 해당되며 결과를 기록함.</li></ul>"
                 },
                 {
                     key: "Formative vs. Summative Assessment",
                     eng: "<ul><li><b>Formative Assessment:</b> Evaluating students <i>during</i> the process of learning to aid growth.<br>- Provides feedback for improvement and shapes future learning.</li><li><b>Summative Assessment:</b> Measuring attainment <i>at the end</i> of a course or unit.<br>- Aims to summarize learning for grading purposes (e.g., Final exams).</li></ul>",
-                    kor: "<ul><li><b>형성평가:</b> 학습 <i>과정 중</i>에 학생을 평가하여 성장을 도움.<br>- 개선을 위한 피드백을 제공하여 미래의 학습을 형성함.</li><li><b>총괄평가:</b> 코스나 단원의 <i>마지막</i>에 성취도를 측정함.<br>- 성적 부여를 위해 학습 내용을 요약하는 것이 목적임 (예: 기말고사).</li></ul>"
+                    kor: "<ul><li><b>형성평가:</b> 학습 <i>과정 중</i>에 학생을 평가하여 성장을 도움.<br>- 개선을 위한 피드백을 제공하여 미래 학습을 형성함.</li><li><b>총괄평가:</b> 코스 <i>종료 시</i>에 성취도를 측정함.<br>- 성적 부여를 위해 학습 내용을 요약하는 것이 목적임.</li></ul>"
                 },
                 {
                     key: "NRT vs. CRT",
                     eng: "<ul><li><b>Norm-Referenced Tests (NRT):</b> Scores are interpreted in relation to other students' scores (Mean, Percentile).<br>- Purpose is to rank students across a continuum.</li><li><b>Criterion-Referenced Tests (CRT):</b> Scores are interpreted against absolute criteria or objectives.<br>- Purpose is to measure mastery of specific course material.</li></ul>",
-                    kor: "<ul><li><b>규준 지향 평가(NRT/상대평가):</b> 점수를 다른 학생들과 비교하여 해석함 (평균, 백분위).<br>- 학생들을 서열화하는 것이 목적임.</li><li><b>준거 지향 평가(CRT/절대평가):</b> 점수를 절대적인 기준이나 목표에 비추어 해석함.<br>- 특정 학습 자료의 숙달 여부를 측정하는 것이 목적임.</li></ul>"
+                    kor: "<ul><li><b>규준 지향 평가(NRT/상대평가):</b> 점수를 다른 학생들과 비교하여 해석함 (평균, 백분위).<br>- 학생들을 서열화하는 것이 목적임.</li><li><b>준거 지향 평가(CRT/절대평가):</b> 점수를 절대적인 기준이나 목표에 비추어 해석함.<br>- 특정 학습 자료의 숙달 여부 측정이 목적임.</li></ul>"
                 },
                 {
-                    key: "Historical Trends in Testing",
-                    eng: "<ul><li><b>Discrete-point Testing:</b> Assumes language can be broken down into component parts (grammar, vocab) and tested in isolation (e.g., multiple choice grammar).</li><li><b>Integrative Testing:</b> Treats language competence as a unified set of interacting abilities (e.g., Cloze tests, Dictation).</li><li><b>Communicative Language Testing:</b> Emphasizes authentic tasks and real-world language use.</li></ul>",
-                    kor: "<ul><li><b>이산적 평가:</b> 언어가 구성 요소(문법, 어휘)로 나뉠 수 있다고 보고 이를 분리하여 평가함 (예: 선다형 문법 문제).</li><li><b>통합적 평가:</b> 언어 능력을 상호작용하는 능력들의 통합체로 봄 (예: 빈칸 채우기, 받아쓰기).</li><li><b>의사소통적 언어 평가:</b> 실제적 과업(Authentic tasks)과 실제 세계의 언어 사용을 강조함.</li></ul>"
+                    key: "Historical Trends",
+                    eng: "<ul><li><b>Discrete-point Testing:</b> Assumes language can be broken down into component parts (grammar, vocab) and tested in isolation.</li><li><b>Integrative Testing:</b> Treats language competence as a unified set of interacting abilities (e.g., Cloze tests, Dictation).</li><li><b>Communicative Language Testing:</b> Emphasizes authentic tasks and real-world language use.</li></ul>",
+                    kor: "<ul><li><b>이산적 평가:</b> 언어를 구성 요소(문법, 어휘)로 분리하여 평가함.</li><li><b>통합적 평가:</b> 언어 능력을 상호작용하는 능력들의 통합체로 봄 (예: 빈칸 채우기, 받아쓰기).</li><li><b>의사소통적 평가:</b> 실제적 과업(Authentic tasks)과 실제 언어 사용을 강조함.</li></ul>"
                 }
             ]
         },
         {
             id: "ch2",
-            title: "Principles of Language Assessment",
+            title: "Principles of Assessment",
             subtitle: "언어 평가의 5대 원칙",
             items: [
                 {
                     key: "1. Practicality (실용성)",
-                    eng: "An effective test is practical if it meets these criteria:<br><ul><li>Is not excessively expensive (financial limitations).</li><li>Stays within appropriate time constraints (for administration and scoring).</li><li>Is easy to administer.</li><li>Has a specific and time-efficient scoring procedure.</li></ul>",
-                    kor: "효과적인 시험은 다음 조건에서 실용적임:<br><ul><li>비용이 과하지 않음 (재정적 제약).</li><li>적절한 시간 내에 시행 및 채점 가능함.</li><li>시행이 용이함.</li><li>채점 절차가 구체적이고 시간 효율적임.</li></ul>"
+                    eng: "An effective test is practical if it meets these criteria:<br><ul><li>Is not excessively expensive (financial limitations).</li><li>Stays within appropriate time constraints.</li><li>Is easy to administer.</li><li>Has a specific and time-efficient scoring procedure.</li></ul>",
+                    kor: "효과적인 시험은 다음 조건에서 실용적임:<br><ul><li>비용이 과하지 않음 (재정적 제약).</li><li>적절한 시간 내에 시행 및 채점 가능함.</li><li>시행이 용이함.</li><li>채점 절차가 구체적이고 효율적임.</li></ul>"
                 },
                 {
                     key: "2. Reliability (신뢰도)",
-                    eng: "Consistency and dependability of results. Major types:<br><ul><li><b>Student-Related:</b> Factors inside learner (illness, fatigue, anxiety, test-wiseness).</li><li><b>Rater Reliability:</b><br>- <i>Inter-rater:</i> Consistency between two or more scorers.<br>- <i>Intra-rater:</i> Consistency of the same scorer over time.</li><li><b>Test Administration:</b> Conditions like noise, lighting, equipment, photocopying quality.</li><li><b>Test Reliability:</b> Nature of the test itself (ambiguous items, test too long/short).</li></ul>",
-                    kor: "결과의 일관성과 믿음직함임.<br><ul><li><b>학생 관련 신뢰도:</b> 질병, 피로, 불안, 시험 요령 등 학습자 내부 요인.</li><li><b>채점자 신뢰도:</b><br>- <i>채점자 간:</i> 두 명 이상의 채점자 간 일관성.<br>- <i>채점자 내:</i> 동일 채점자의 시간적 일관성.</li><li><b>시험 운영 신뢰도:</b> 소음, 조명, 장비, 복사 상태 등 환경 조건.</li><li><b>검사 신뢰도:</b> 문항의 모호성, 너무 길거나 짧은 시험 길이 등.</li></ul>"
+                    eng: "Consistency and dependability of results. Major types:<br><ul><li><b>Student-Related:</b> Factors inside learner (illness, fatigue, anxiety).</li><li><b>Rater Reliability:</b><br>- <i>Inter-rater:</i> Consistency between two or more scorers.<br>- <i>Intra-rater:</i> Consistency of the same scorer over time.</li><li><b>Test Administration:</b> Conditions like noise, lighting, equipment.</li><li><b>Test Reliability:</b> Nature of the test itself (ambiguous items, length).</li></ul>",
+                    kor: "결과의 일관성과 믿음직함임.<br><ul><li><b>학생 관련 신뢰도:</b> 질병, 피로, 불안 등 내부 요인.</li><li><b>채점자 신뢰도:</b><br>- <i>채점자 간:</i> 두 명 이상의 채점자 간 일관성.<br>- <i>채점자 내:</i> 동일 채점자의 시간적 일관성.</li><li><b>시험 운영 신뢰도:</b> 소음, 조명 등 환경 조건.</li><li><b>검사 자체:</b> 문항의 모호성, 너무 길거나 짧은 길이.</li></ul>"
                 },
                 {
                     key: "3. Validity (타당도)",
-                    eng: "The extent to which inferences made from assessment results are appropriate, meaningful, and useful.<br><ul><li><b>Content-Related:</b> Does it sample the subject matter/skills appropriately?</li><li><b>Criterion-Related:</b><br>- <i>Concurrent:</i> Supported by other simultaneous measures.<br>- <i>Predictive:</i> Predicts future success.</li><li><b>Construct:</b> Does it measure the theoretical trait (e.g., proficiency, self-esteem)?</li><li><b>Consequential (Impact):</b> Consequences on learner and society.</li><li><b>Face:</b> Does it look valid to the test-taker? (Subjective but important).</li></ul>",
-                    kor: "평가 결과로부터 도출된 추론이 적절하고, 의미 있고, 유용한 정도임.<br><ul><li><b>내용 타당도:</b> 주제와 기술을 적절히 표집했는가?</li><li><b>준거 타당도:</b><br>- <i>공인 타당도:</i> 다른 동시 측정치에 의해 지지됨.<br>- <i>예측 타당도:</i> 미래의 성공을 예측함.</li><li><b>구인 타당도:</b> 이론적 특성(숙달도, 자존감 등)을 측정하는가?</li><li><b>결과 타당도:</b> 학습자와 사회에 미치는 영향.</li><li><b>안면 타당도:</b> 수험자 입장에서 타당해 보이는가? (주관적이지만 중요함).</li></ul>"
+                    eng: "The extent to which inferences made from assessment results are appropriate, meaningful, and useful.<br><ul><li><b>Content-Related:</b> Does it sample the subject matter/skills appropriately?</li><li><b>Criterion-Related:</b><br>- <i>Concurrent:</i> Supported by other simultaneous measures.<br>- <i>Predictive:</i> Predicts future success.</li><li><b>Construct:</b> Does it measure the theoretical trait (e.g., proficiency, self-esteem)?</li><li><b>Consequential (Impact):</b> Consequences on learner and society.</li><li><b>Face:</b> Does it look valid to the test-taker?</li></ul>",
+                    kor: "평가 결과로부터 도출된 추론이 적절하고, 의미 있고, 유용한 정도임.<br><ul><li><b>내용 타당도:</b> 주제와 기술을 적절히 표집했는가?</li><li><b>준거 타당도:</b><br>- <i>공인 타당도:</i> 다른 동시 측정치와 일치함.<br>- <i>예측 타당도:</i> 미래의 성공을 예측함.</li><li><b>구인 타당도:</b> 이론적 특성(숙달도 등)을 측정하는가?</li><li><b>결과 타당도:</b> 학습자와 사회에 미치는 영향.</li><li><b>안면 타당도:</b> 수험자 입장에서 타당해 보이는가?</li></ul>"
                 },
                 {
                     key: "4. Authenticity (진정성)",
                     eng: "The degree of correspondence of the characteristics of a given language test task to the features of a target language task. Features:<br><ul><li>Natural language.</li><li>Contextualized items.</li><li>Meaningful topics.</li><li>Tasks replicating real-world use.</li></ul>",
-                    kor: "시험 과업의 특징이 목표 언어 과업(실생활)의 특징과 일치하는 정도임. 특징:<br><ul><li>자연스러운 언어 사용.</li><li>맥락화된 문항.</li><li>유의미한 주제.</li><li>실제 세계 과업의 복제.</li></ul>"
+                    kor: "시험 과업의 특징이 목표 언어 과업(실생활)의 특징과 일치하는 정도임.<br>특징:<br><ul><li>자연스러운 언어 사용.</li><li>맥락화된 문항.</li><li>유의미한 주제.</li><li>실제 세계 과업의 복제.</li></ul>"
                 },
                 {
                     key: "5. Washback (환류 효과)",
@@ -588,18 +651,18 @@
             items: [
                 {
                     key: "Steps to Designing a Test",
-                    eng: "<ol><li><b>Determine Purpose:</b> Why give this test? (grading, placement, diagnostic, achievement).</li><li><b>Define Objectives:</b> What specifically is being tested? (Constructs, abilities).</li><li><b>Draw up Specifications:</b> Blueprint (content, item types, tasks, skills, weight).</li><li><b>Devise Items:</b> Draft, revise, and refine questions (Drafting).</li><li><b>Administer:</b> Plan environment and timing details.</li><li><b>Score/Grade/Feedback:</b> Plan feedback mechanism and scoring criteria.</li></ol>",
-                    kor: "<ol><li><b>목적 결정:</b> 왜 시험을 보는가? (성적, 배치, 진단, 성취도 확인).</li><li><b>목표 정의:</b> 구체적으로 무엇을(어떤 구인/능력을) 테스트하는가?</li><li><b>사양서(청사진) 작성:</b> 내용, 문항 유형, 과업, 기술, 가중치 등 계획.</li><li><b>문항 고안:</b> 질문 초안 작성, 수정 및 정제.</li><li><b>시행:</b> 환경 및 시간 세부 사항 계획.</li><li><b>채점 및 피드백:</b> 피드백 메커니즘 및 채점 기준 계획.</li></ol>"
+                    eng: "<ol><li><b>Determine Purpose:</b> Why give this test? (grading, placement, diagnostic).</li><li><b>Define Objectives:</b> What specifically is being tested? (Constructs).</li><li><b>Draw up Specifications:</b> Blueprint (content, item types, tasks, skills).</li><li><b>Devise Items:</b> Draft, revise, and refine questions.</li><li><b>Administer:</b> Plan environment and timing details.</li><li><b>Score/Grade/Feedback:</b> Plan feedback mechanism.</li></ol>",
+                    kor: "<ol><li><b>목적 결정:</b> 왜 시험을 보는가? (성적, 배치, 진단).</li><li><b>목표 정의:</b> 구체적으로 무엇을(어떤 구인을) 테스트하는가?</li><li><b>사양서 작성:</b> 내용, 문항 유형, 과업, 기술 등 청사진 계획.</li><li><b>문항 고안:</b> 질문 초안 작성 및 수정.</li><li><b>시행:</b> 환경 및 시간 세부 사항 계획.</li><li><b>채점 및 피드백:</b> 피드백 메커니즘 계획.</li></ol>"
                 },
                 {
                     key: "Multiple-Choice Items Analysis",
                     eng: "<b>Weaknesses:</b><br><ul><li>Tests only recognition knowledge, not production.</li><li>Guessing factor may inflate scores.</li><li>Severely restricts what can be tested (no creativity).</li><li>Very difficult to write successful/valid items.</li><li>Beneficial washback may be minimal.</li><li>Cheating may be facilitated.</li></ul>",
-                    kor: "<b>선다형 문항의 약점:</b><br><ul><li>산출 능력이 아닌 인식 지식만 평가함.</li><li>추측 요인이 점수를 부풀릴 수 있음.</li><li>평가할 수 있는 내용이 제한적임 (창의성 없음).</li><li>타당한 문항을 제작하기가 매우 어려움.</li><li>긍정적 환류 효과가 미미할 수 있음.</li><li>부정행위가 용이할 수 있음.</li></ul>"
+                    kor: "<b>선다형 문항의 약점:</b><br><ul><li>산출 능력이 아닌 인식 지식만 평가함.</li><li>추측 요인이 점수를 부풀릴 수 있음.</li><li>평가 내용이 제한적임 (창의성 없음).</li><li>타당한 문항을 제작하기가 매우 어려움.</li><li>긍정적 환류 효과가 미미할 수 있음.</li><li>부정행위가 용이할 수 있음.</li></ul>"
                 },
                 {
                     key: "Item Analysis Statistics",
-                    eng: "<ul><li><b>Item Facility (IF):</b> How easy is the item? (Percentage of students answering correctly).<br>- Ideal is around .50 to .70.</li><li><b>Item Discrimination (ID):</b> Extent to which an item differentiates between high- and low-ability students.<br>- (High group correct - Low group correct).</li><li><b>Distractor Efficiency:</b> Are distractors attracting lower-ability students as intended? (Distribution of wrong answers).</li></ul>",
-                    kor: "<ul><li><b>문항 난이도(IF):</b> 문항이 얼마나 쉬운가? (정답률).<br>- 이상적인 값은 .50 ~ .70임.</li><li><b>문항 변별도(ID):</b> 문항이 상위권과 하위권 학생을 얼마나 잘 구별하는가.<br>- (상위권 정답자 수 - 하위권 정답자 수).</li><li><b>오답지 효율성:</b> 오답지가 의도한 대로 하위권 학생들을 유인하고 있는가? (오답 분포).</li></ul>"
+                    eng: "<ul><li><b>Item Facility (IF):</b> How easy is the item? (% correct).<br>- Ideal is around .50 to .70.</li><li><b>Item Discrimination (ID):</b> Extent to which an item differentiates between high- and low-ability students.<br>- (High group correct - Low group correct).</li><li><b>Distractor Efficiency:</b> Are distractors attracting lower-ability students as intended?</li></ul>",
+                    kor: "<ul><li><b>문항 난이도(IF):</b> 문항이 얼마나 쉬운가? (정답률).<br>- 이상적인 값은 .50 ~ .70임.</li><li><b>문항 변별도(ID):</b> 상위권과 하위권을 얼마나 잘 구별하는가.</li><li><b>오답지 효율성:</b> 오답지가 의도대로 하위권 학생을 유인하는가?</li></ul>"
                 }
             ]
         },
@@ -610,18 +673,18 @@
             items: [
                 {
                     key: "The Role of Standards",
-                    eng: "<b>Standards (Benchmarks):</b> Specific criteria or competencies that students are expected to meet. They serve as anchors for curriculum, instruction, and assessment ensure accountability.<br><b>Examples:</b><br><ul><li>CASAS (Comprehensive Adult Student Assessment System): Life skills.</li><li>SCANS (Secretary's Commission on Achieving Necessary Skills): Workplace.</li><li>CEFR (Common European Framework of Reference): Global proficiency.</li><li>ACTFL Guidelines: Speaking, writing, listening, reading proficiency.</li></ul>",
-                    kor: "<b>표준(벤치마크):</b> 학생들이 충족해야 할 구체적 기준이나 역량임. 커리큘럼, 수업, 평가의 기준점 역할을 하며 책무성을 보장함.<br><b>예시:</b><br><ul><li>CASAS: 성인 생활 기술.</li><li>SCANS: 직장 내 필수 기술.</li><li>CEFR: 유럽 공통 참조 기준 (국제적 숙달도).</li><li>ACTFL 가이드라인: 말하기, 쓰기, 듣기, 읽기 숙달도.</li></ul>"
+                    eng: "<b>Standards (Benchmarks):</b> Specific criteria or competencies that students are expected to meet. They serve as anchors for curriculum, instruction, and assessment.<br><b>Examples:</b><br><ul><li>CASAS (Life skills for adults).</li><li>SCANS (Workplace competencies).</li><li>CEFR (Global proficiency levels).</li><li>ACTFL Guidelines (Speaking/Writing/Listening/Reading).</li></ul>",
+                    kor: "<b>표준(벤치마크):</b> 학생들이 충족해야 할 구체적 기준이나 역량임. 커리큘럼, 수업, 평가의 기준점 역할을 함.<br><b>예시:</b><br><ul><li>CASAS: 성인 생활 기술.</li><li>SCANS: 직장 내 필수 기술.</li><li>CEFR: 유럽 공통 참조 기준.</li><li>ACTFL 가이드라인: 영역별 숙달도.</li></ul>"
                 },
                 {
                     key: "Consequences of Standards",
                     eng: "<ul><li><b>Accountability:</b> Schools and teachers are held responsible for student performance.</li><li><b>High-Stakes Testing:</b> Tests act as gate-keepers for graduation, admission, or employment.</li><li><b>Test-Driven Learning:</b> Instruction focuses primarily on test content ('teaching to the test'), often narrowing the curriculum.</li></ul>",
-                    kor: "<ul><li><b>책무성:</b> 학교와 교사가 학생의 성과에 대해 책임을 짐.</li><li><b>고부담 시험:</b> 시험이 졸업, 입학, 취업의 문지기 역할을 함.</li><li><b>시험 주도 학습:</b> 수업이 주로 시험 내용에 집중되어('시험을 위한 교육') 커리큘럼이 축소될 수 있음.</li></ul>"
+                    kor: "<ul><li><b>책무성:</b> 학교와 교사가 성과에 대해 책임을 짐.</li><li><b>고부담 시험:</b> 시험이 졸업/입학의 문지기 역할을 함.</li><li><b>시험 주도 학습:</b> 수업이 시험 내용에 집중되어 커리큘럼이 축소될 수 있음.</li></ul>"
                 },
                 {
                     key: "Critical Language Testing",
-                    eng: "A movement arguing that tests are not neutral tools but are embedded in social, political, and ideological agendas. It argues that tests can be tools of power and control (e.g., for immigration or citizenship) and advocates for exposing unfair practices (Test Bias).",
-                    kor: "<b>비판적 언어 평가:</b> 시험이 중립적 도구가 아니라 사회, 정치, 이념적 의제에 내재되어 있다고 주장하는 운동임. 시험이 권력과 통제의 도구가 될 수 있음을 경고하며(예: 이민, 시민권), 시험 편향(Bias)과 불공정한 관행을 폭로할 것을 옹호함."
+                    eng: "A movement arguing that tests are not neutral tools but are embedded in social, political, and ideological agendas. It argues that tests can be tools of power and control (e.g., for immigration) and advocates for exposing unfair practices (Test Bias).",
+                    kor: "<b>비판적 언어 평가:</b> 시험이 중립적 도구가 아니라 사회, 정치, 이념적 의제에 내재되어 있다고 주장하는 운동임. 시험이 권력과 통제의 도구가 될 수 있음을 경고하며(예: 이민), 시험 편향(Bias)을 폭로할 것을 옹호함."
                 }
             ]
         },
@@ -632,7 +695,7 @@
             items: [
                 {
                     key: "Characteristics",
-                    eng: "<ul><li><b>Standards-based:</b> Based on fixed objectives/criteria.</li><li><b>Systematic:</b> Uniform procedures for administration and scoring.</li><li><b>Norm-Referenced:</b> Usually designed to compare and rank students across a large population.</li><li><b>Empirical:</b> Product of research and development, often undergoing construct validation.</li></ul>",
+                    eng: "<ul><li><b>Standards-based:</b> Based on fixed objectives/criteria.</li><li><b>Systematic:</b> Uniform procedures for administration and scoring.</li><li><b>Norm-Referenced:</b> Usually designed to compare and rank students across a large population.</li><li><b>Empirical:</b> Product of research/development and construct validation.</li></ul>",
                     kor: "<ul><li><b>표준 기반:</b> 고정된 목표와 기준에 근거함.</li><li><b>체계적:</b> 시행 및 채점 절차가 통일됨.</li><li><b>규준 지향:</b> 대규모 집단 내에서 학생들을 비교하고 서열화함.</li><li><b>경험적:</b> 연구 개발의 산물이며, 구인 타당도 검증을 거침.</li></ul>"
                 },
                 {
@@ -642,8 +705,8 @@
                 },
                 {
                     key: "Proficiency Testing: Direct vs. Indirect",
-                    eng: "<b>Direct Testing:</b> The test-taker performs the actual target task (e.g., Speaking in an interview, Writing an essay). Ideally has higher content validity.<br><b>Indirect Testing:</b> Measuring an ability through a related task (e.g., Identifying grammar errors to assess writing). Relies on correlation assumptions but may lack construct validity.",
-                    kor: "<b>직접 평가:</b> 수험자가 실제 목표 과업을 수행함 (예: 인터뷰, 에세이 쓰기). 이상적으로 높은 내용 타당도를 가짐.<br><b>간접 평가:</b> 관련 과업을 통해 능력을 측정함 (예: 쓰기 평가를 위한 문법 오류 식별). 상관관계 가정에 의존하지만 구인 타당도가 부족할 수 있음."
+                    eng: "<b>Direct Testing:</b> The test-taker performs the actual target task (e.g., Speaking in an interview). Ideally has higher content validity.<br><b>Indirect Testing:</b> Measuring an ability through a related task (e.g., Identifying grammar errors). Relies on correlation assumptions but may lack construct validity.",
+                    kor: "<b>직접 평가:</b> 실제 목표 과업을 수행함 (예: 인터뷰). 높은 내용 타당도를 가짐.<br><b>간접 평가:</b> 관련 과업을 통해 능력을 측정함 (예: 문법 오류 식별). 상관관계 가정에 의존하지만 구인 타당도가 부족할 수 있음."
                 }
             ]
         },
@@ -654,11 +717,11 @@
             items: [
                 {
                     key: "Nature of Listening Assessment",
-                    eng: "<ul><li><b>Receptive & Invisible:</b> Listening is receptive; process and product are invisible.</li><li><b>Inference:</b> Assessment relies on observing the response (output) to infer comprehension (competence).</li><li><b>Integration:</b> Listening is rarely isolated in real world; integrates with speaking, reading, writing.</li></ul>",
-                    kor: "<ul><li><b>수용적 & 보이지 않음:</b> 듣기는 수용적이며, 과정과 결과물이 보이지 않음.</li><li><b>추론:</b> 평가는 관찰된 반응(산출)을 통해 이해력(능력)을 추론하는 것에 의존함.</li><li><b>통합:</b> 현실에서 듣기는 거의 고립되지 않고 말하기, 읽기, 쓰기와 통합됨.</li></ul>"
+                    eng: "<ul><li><b>Receptive & Invisible:</b> Listening is receptive; process and product are invisible.</li><li><b>Inference:</b> Assessment relies on observing the response (output) to infer comprehension (competence).</li><li><b>Integration:</b> Listening is rarely isolated; integrates with speaking, reading, writing.</li></ul>",
+                    kor: "<ul><li><b>수용적 & 보이지 않음:</b> 듣기는 수용적이며, 과정과 결과물이 보이지 않음.</li><li><b>추론:</b> 평가는 관찰된 반응(산출)을 통해 이해력을 추론해야 함.</li><li><b>통합:</b> 현실에서 듣기는 다른 기술들과 통합됨.</li></ul>"
                 },
                 {
-                    key: "Difficulty Factors (8 Factors)",
+                    key: "Difficulty Factors",
                     eng: "<ol><li><b>Clustering:</b> Breaking speech into chunks.</li><li><b>Redundancy:</b> Repetitions, rephrasing.</li><li><b>Reduced Forms:</b> Contractions, elisions.</li><li><b>Performance Variables:</b> Hesitations, pauses.</li><li><b>Colloquial Language:</b> Idioms, slang.</li><li><b>Rate of Delivery:</b> Speed.</li><li><b>Stress, Rhythm, Intonation:</b> Prosodic features.</li><li><b>Interaction:</b> Turn-taking, negotiation.</li></ol>",
                     kor: "<ol><li><b>군집화:</b> 말을 덩어리로 나눔.</li><li><b>잉여성:</b> 반복, 재진술.</li><li><b>축약형:</b> 축약과 생략.</li><li><b>수행 변인:</b> 주저함, 멈춤.</li><li><b>구어체:</b> 관용구, 속어.</li><li><b>전달 속도:</b> 말하기 속도.</li><li><b>강세, 리듬, 억양:</b> 운율적 특징.</li><li><b>상호작용:</b> 턴테이킹, 협상.</li></ol>"
                 },
@@ -675,14 +738,14 @@
             subtitle: "말하기 평가 (Productive)",
             items: [
                 {
-                    key: "5 Types of Speaking",
-                    eng: "<ul><li><b>Imitative:</b> Parrot back (Pronunciation focus).</li><li><b>Intensive:</b> Short stretches (Grammar/Phonology focus).</li><li><b>Responsive:</b> Short conversations, small talk.</li><li><b>Interactive:</b> Multiple exchanges (Transactional/Interpersonal).</li><li><b>Extensive:</b> Monologue (Speeches, Presentations).</li></ul>",
+                    key: "Types of Speaking",
+                    eng: "<ul><li><b>Imitative:</b> Repetition (Focus on Pronunciation).</li><li><b>Intensive:</b> Short stretches (Grammar/Phonology focus).</li><li><b>Responsive:</b> Short conversations, small talk.</li><li><b>Interactive:</b> Multiple exchanges (Transactional/Interpersonal).</li><li><b>Extensive:</b> Monologue (Speeches, Presentations).</li></ul>",
                     kor: "<ul><li><b>모방적:</b> 앵무새처럼 따라 말하기 (발음 초점).</li><li><b>집중적:</b> 짧은 발화 (문법/음운 초점).</li><li><b>반응적:</b> 짧은 대화, 한담.</li><li><b>상호작용적:</b> 다중 교환 (정보적/대인적).</li><li><b>확장적:</b> 독백 (연설, 발표).</li></ul>"
                 },
                 {
                     key: "Assessment Tasks",
-                    eng: "<b>Imitative:</b> Word/Sentence Repetition.<br><b>Intensive:</b> Directed Response, Read-Aloud, Picture-Cued.<br><b>Responsive:</b> Q&A, Giving Instructions, Paraphrasing.<br><b>Interactive:</b> Oral Interview (OPI), Role Play, Discussions.<br><b>Extensive:</b> Oral Presentations, Storytelling, Retelling.",
-                    kor: "<b>모방적:</b> 단어/문장 따라 말하기.<br><b>집중적:</b> 지시된 응답, 소리내어 읽기, 그림 묘사.<br><b>반응적:</b> 질의응답, 지시하기, 의역.<br><b>상호작용적:</b> 구술 면접(OPI), 역할극, 토론.<br><b>확장적:</b> 구두 발표, 스토리텔링, 다시 말하기."
+                    eng: "<b>Imitative:</b> Word/Sentence Repetition.<br><b>Intensive:</b> Directed Response, Read-Aloud, Picture-Cued.<br><b>Responsive:</b> Q&A, Giving Instructions, Paraphrasing.<br><b>Interactive:</b> Interview (OPI), Role Play, Discussions.<br><b>Extensive:</b> Oral Presentations, Storytelling, Retelling.",
+                    kor: "<b>모방적:</b> 단어/문장 따라 말하기.<br><b>집중적:</b> 지시된 응답, 소리내어 읽기, 그림 묘사.<br><b>반응적:</b> 질의응답, 지시하기, 의역.<br><b>상호작용적:</b> 인터뷰(OPI), 역할극, 토론.<br><b>확장적:</b> 구두 발표, 스토리텔링, 다시 말하기."
                 },
                 {
                     key: "Key Term: Information Gap",
@@ -698,8 +761,8 @@
             items: [
                 {
                     key: "Micro- vs. Macroskills",
-                    eng: "<b>Microskills:</b> Bottom-up processing (discriminating graphemes, word order, retaining chunks).<br><b>Macroskills:</b> Top-down processing (recognizing rhetorical forms, communicative functions, inferring context/meaning, scanning/skimming).",
-                    kor: "<b>미시 기술:</b> 상향식 처리 (자소, 어순, 덩어리 인식).<br><b>거시 기술:</b> 하향식 처리 (수사적 형식 인식, 의사소통 기능, 맥락/의미 추론, 스캐닝/스키밍)."
+                    eng: "<ul><li><b>Microskills:</b> Bottom-up processing (discriminating graphemes, word order, retaining chunks).</li><li><b>Macroskills:</b> Top-down processing (recognizing rhetorical forms, inferring context/meaning, scanning/skimming).</li></ul>",
+                    kor: "<ul><li><b>미시 기술:</b> 상향식 처리 (자소, 어순, 덩어리 인식).</li><li><b>거시 기술:</b> 하향식 처리 (수사적 형식 인식, 의사소통 기능, 맥락/의미 추론, 스캐닝/스키밍).</li></ul>"
                 },
                 {
                     key: "4 Types of Reading & Tasks",
@@ -742,8 +805,8 @@
             items: [
                 {
                     key: "Assessing Grammar",
-                    eng: "Grammatical knowledge consists of:<br><ul><li><b>Form</b> (morphology, syntax)</li><li><b>Meaning</b> (literal/intended)</li><li><b>Use</b> (pragmatic appropriateness)</li></ul>Tasks: Multiple-choice, Gap-filling, Information Gap, Role-Play.",
-                    kor: "문법 지식의 구성 요소:<br><ul><li><b>형태</b> (형태론, 통사론)</li><li><b>의미</b> (문자적/의도된 의미)</li><li><b>사용</b> (화용적 적절성)</li></ul>과업: 선다형, 빈칸 채우기, 정보 공백, 역할극."
+                    eng: "Grammatical knowledge consists of:<br><ul><li><b>Form</b> (accuracy)</li><li><b>Meaning</b> (meaningfulness)</li><li><b>Use</b> (pragmatic appropriateness)</li></ul>Tasks: Multiple-choice, Gap-filling, Information Gap, Role-Play.",
+                    kor: "문법 지식의 구성 요소:<br><ul><li><b>형태</b> (정확성)</li><li><b>의미</b> (의미성)</li><li><b>사용</b> (화용적 적절성)</li></ul>과업: 선다형, 빈칸 채우기, 정보 공백, 역할극."
                 },
                 {
                     key: "Assessing Vocabulary",
@@ -782,7 +845,7 @@
                 {
                     key: "Alternatives to Grading",
                     eng: "Letter grades mask detail. Alternatives offer formative, detailed, motivating feedback.<br>Includes: Self & Peer Assessment, Portfolios, Narrative Evaluations, Conferences.",
-                    kor: "문자 등급은 세부사항을 가립니다. 대안은 형성적이고 상세하며 동기를 부여하는 피드백을 제공합니다.<br>포함: 자기/동료 평가, 포트폴리오, 서술형 평가, 면담."
+                    kor: "문자 등급은 세부사항을 가립니다. 대안은 형성적이고 상세하며 동기를 부여하는 피드백을 제공함.<br>포함: 자기/동료 평가, 포트폴리오, 서술형 평가, 면담."
                 },
                 {
                     key: "Self & Peer Assessment",
@@ -808,6 +871,7 @@
             this.renderNav();
             this.renderContent();
             this.setupScrollEvents();
+            this.loadTheme();
         },
 
         renderNav: function() {
@@ -913,6 +977,27 @@
                 if (window.scrollY > 300) btn.classList.add('visible');
                 else btn.classList.remove('visible');
             });
+        },
+
+        // Dark Mode Logic
+        toggleTheme: function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.querySelector('.theme-toggle i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        },
+
+        loadTheme: function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
+            }
         }
     };
 
