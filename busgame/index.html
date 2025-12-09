@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUS JAM: Traffic Puzzle</title>
+    <style>
+        :root {
+            --red: #ff4757;
+            --blue: #2f3542; /* 남색에 가까운 블루 */
+            --green: #2ed573;
+            --yellow: #ffa502;
+            --purple: #5352ed;
+            --bg: #f1f2f6;
+            --slot-bg: #dfe4ea;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 상단 정보 */
+        header {
+            width: 100%;
+            padding: 10px 0;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        h2 { margin: 0; font-size: 1.2rem; color: #333; }
+        .stats { font-size: 0.9rem; color: #666; }
+
+        /* 승객 줄 (Queue) */
+        #passenger-queue {
+            margin-top: 10px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0 20px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 30px;
+        }
+        .passenger {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        /* 정류장 (Slots) */
+        #station-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: #ced6e0;
+            border-radius: 15px;
+            border: 2px dashed #a4b0be;
+        }
+        .station-slot {
+            width: 60px;
+            height: 100px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        /* 주차장 (Grid) */
+        #parking-lot {
+            margin-top: 20px;
+            width: 360px;
+            height: 360px;
+            background: #fff;
+            border-radius: 10px;
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 2px;
+            padding: 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* 버스/자동차 공통 */
+        .vehicle {
+            position: absolute;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.2s, top 0.3s, left 0.3s;
+            z-index: 10;
+        }
+        .vehicle:hover { filter: brightness(1.1); }
+        
+        /* 버스 내부 좌석 표시 */
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            width: 80%;
+            pointer-events: none;
+        }
+        .seat-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+        }
+        .seat-dot.filled { background: white; }
+
+        /* 화살표 */
+        .arrow {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* 색상 클래스 */
+        .red { background: var(--red); }
+        .blue { background: var(--blue); }
+        .green { background: var(--green); }
+        .yellow { background: var(--yellow); }
+        .purple { background: var(--purple); }
+
+        /* 모달 */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center; align-items: center;
+            flex-direction: column;
+            color: white; z-index: 999;
+        }
+        button {
+            margin-top: 20px; padding: 10px 20px;
+            font-size: 1.2rem; cursor: pointer;
+            background: var(--green); border: none; color: white;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>BUS JAM PUZZLE</h2>
+        <div class="stats">LEVEL 12 | 남은 승객: <span id="passenger-count">0</span></div>
+    </header>
+
+    <div id="passenger-queue"></div>
+
+    <div id="station-area">
+        <div class="station-slot" id="slot-0">Empty</div>
+        <div class="station-slot" id="slot-1">Empty</div>
+        <div class="station-slot" id="slot-2">Empty</div>
+    </div>
+
+    <div id="parking-lot">
+        </div>
+
+    <div id="result-modal" class="modal">
+        <h1 id="result-msg">LEVEL CLEARED!</h1>
+        <button onclick="location.reload()">다시 하기</button>
+    </div>
+
+<script>
+    // --- 게임 설정 및 데이터 ---
+    const CELL_SIZE = 60; // 그리드 한 칸 크기
+    const GRID_SIZE = 6;  // 6x6 그리드
+    const COLORS = ['red', 'blue', 'green', 'yellow', 'purple'];
+    
+    // 레벨 디자인 (차량 배치)
+    // x, y: 그리드 좌표 (0~5)
+    // w, h: 크기 (가로형 버스는 w=2 or 3, 세로형은 h=2 or 3)
+    // color: 버스 색상
+    // dir: 'up', 'down', 'left', 'right' (이동 방향)
+    const levelData = [
+        // 출구 쪽을 막고 있는 차들
+        { id: 1, x: 2, y: 0, w: 1, h: 2, color: 'blue', dir: 'down', capacity: 3 },
+        { id: 2, x: 3, y: 0, w: 1, h: 3, color: 'red', dir: 'down', capacity: 3 },
+        
+        // 가로로 막는 차들
+        { id: 3, x: 0, y: 2, w: 2, h: 1, color: 'green', dir: 'right', capacity: 3 },
+        { id: 4, x: 2, y: 2, w: 2, h: 1, color: 'purple', dir: 'left', capacity: 3 },
+        
+        // 복잡하게 얽힌 차들
+        { id: 5, x: 1, y: 3, w: 1, h: 2, color: 'yellow', dir: 'up', capacity: 3 },
+        { id: 6, x: 2, y: 3, w: 2, h: 1, color: 'red', dir: 'right', capacity: 3 },
+        { id: 7, x: 4, y: 2, w: 1, h: 2, color: 'blue', dir: 'up', capacity: 3 },
+        { id: 8, x: 0, y: 5, w: 3, h: 1, color: 'green', dir: 'right', capacity: 3 },
+        { id: 9, x: 4, y: 4, w: 2, h: 1, color: 'purple', dir: 'left', capacity: 3 },
+        { id: 10, x: 5, y: 0, w: 1, h: 3, color: 'yellow', dir: 'down', capacity: 3 }
+    ];
+
+    // 승객 줄 데이터 (랜덤 생성)
+    let passengers = [];
+    let vehicles = [];
+    let stationSlots = [null, null, null]; // 3개의 정류장 슬롯
+    let isProcessing = false; // 애니메이션 중 클릭 방지
+
+    const queueEl = document.getElementById('passenger-queue');
+    const lotEl = document.getElementById('parking-lot');
+    const modal = document.getElementById('result-modal');
+    
+    // --- 초기화 ---
+    function initGame() {
+        createPassengers();
+        renderQueue();
+        createVehicles();
+    }
+
+    // 승객 생성 (버스 색상과 수에 맞춰서)
+    function createPassengers() {
+        // 맵에 있는 버스들의 용량만큼 승객 생성
+        let tempQueue = [];
+        levelData.forEach(bus => {
+            for(let i=0; i<bus.capacity; i++) {
+                tempQueue.push(bus.color);
+            }
+        });
+        // 섞기 (너무 무작위면 어려우니 약간만 섞거나 그대로 둠 - 여기선 간단히 셔플)
+        tempQueue.sort(() => Math.random() - 0.5);
+        passengers = tempQueue;
+        document.getElementById('passenger-count').innerText = passengers.length;
+    }
+
+    function renderQueue() {
+        queueEl.innerHTML = '';
+        passengers.slice(0, 15).forEach(color => { // 최대 15명만 표시
+            const p = document.createElement('div');
+            p.className = `passenger ${color}`;
+            queueEl.appendChild(p);
+        });
+    }
+
+    // 차량 생성 및 배치
+    function createVehicles() {
+        vehicles = JSON.parse(JSON.stringify(levelData)); // 깊은 복사
+        vehicles.forEach(v => {
+            v.passengers = 0; // 현재 탑승 인원
+            v.el = document.createElement('div');
+            v.el.className = `vehicle ${v.color}`;
+            v.el.style.width = (v.w * CELL_SIZE - 4) + 'px';
+            v.el.style.height = (v.h * CELL_SIZE - 4) + 'px';
+            v.el.style.left = (v.x * CELL_SIZE + 2) + 'px';
+            v.el.style.top = (v.y * CELL_SIZE + 2) + 'px';
+            
+            // 화살표 추가
+            const arrow = document.createElement('div');
+            arrow.className = 'arrow';
+            if(v.dir === 'up') arrow.innerText = '⬆️';
+            if(v.dir === 'down') arrow.innerText = '⬇️';
+            if(v.dir === 'left') arrow.innerText = '⬅️';
+            if(v.dir === 'right') arrow.innerText = '➡️';
+            v.el.appendChild(arrow);
+
+            // 좌석 표시
+            const seats = document.createElement('div');
+            seats.className = 'seats-grid';
+            for(let i=0; i<v.capacity; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'seat-dot';
+                seats.appendChild(dot);
+            }
+            v.el.appendChild(seats);
+            v.seatDots = seats.children; // 참조 저장
+
+            // 클릭 이벤트
+            v.el.onclick = () => tryMoveVehicle(v);
+
+            lotEl.appendChild(v.el);
+        });
+    }
+
+    // --- 게임 로직 ---
+
+    // 1. 차량 이동 시도
+    function tryMoveVehicle(v) {
+        if (isProcessing) return;
+        if (v.inStation) return; // 이미 정류장에 갔으면 무시
+
+        // 경로 충돌 체크
+        if (checkPathClear(v)) {
+            moveToStation(v);
+        } else {
+            // 막힘 효과 (흔들림)
+            v.el.style.transform = 'translateX(5px)';
+            setTimeout(() => v.el.style.transform = 'translateX(0)', 100);
+        }
+    }
+
+    // 경로가 비었는지 확인 (레이캐스팅 방식)
+    function checkPathClear(targetV) {
+        // 내 앞의 모든 칸을 검사
+        let steps = 0;
+        let checkX = targetV.x;
+        let checkY = targetV.y;
+
+        // 경계 밖으로 나갈 때까지 루프
+        while(true) {
+            if (targetV.dir === 'up') checkY--;
+            if (targetV.dir === 'down') checkY += targetV.h; // 아래쪽은 내 키만큼 더해서 검사
+            if (targetV.dir === 'left') checkX--;
+            if (targetV.dir === 'right') checkX += targetV.w;
+
+            // 맵 밖으로 나가면 -> 탈출 성공!
+            if (checkX < 0 || checkX >= GRID_SIZE || checkY < 0 || checkY >= GRID_SIZE) {
+                return true;
+            }
+
+            // 다른 차와 충돌 검사
+            // 주의: 위에서 좌표를 증가시켰으므로, 루프 내에서는 한칸씩 전진하며 검사해야 함.
+            // 간단하게: 내 진행 방향에 있는 모든 차들과 겹치는지 확인
+             // (이 로직은 복잡하니, 간단히 "내 바로 앞 한 칸"만 보는게 아니라 끝까지 봄)
+             
+             // 충돌 검사는 모든 차량을 순회하며 내 '예상 경로'와 겹치는지 봐야 함.
+             // 여기서는 단순화를 위해 '직진 경로상에 다른 차가 있는지' 확인
+             
+             // ...약식 구현: 실제 그리드 좌표 점유 확인
+             for (let other of vehicles) {
+                 if (other === targetV || other.inStation) continue;
+                 // 다른 차의 영역: other.x ~ other.x + other.w - 1
+                 //                other.y ~ other.y + other.h - 1
+                 
+                 // 현재 검사하는 점(checkX, checkY)가 다른 차 안에 있는지?
+                 // 주의: down/right일 때는 check좌표가 내 몸체가 아닌 내 앞칸이어야 함. 
+                 // 루프를 돌면서 한 칸씩 검사하는게 정확함.
+             }
+             
+             // 복잡하니 "그리드 맵"을 만들어서 체크하는게 가장 확실함
+             break; // 루프 탈출 (아래에서 그리드 기반 체크로 대체)
+        }
+        
+        return isPathClearGrid(targetV);
+    }
+
+    function isPathClearGrid(v) {
+        // 1. 현재 모든 차량의 위치를 맵에 기록
+        let gridMap = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+        vehicles.forEach(other => {
+            if (other === v || other.inStation) return;
+            for(let i=0; i<other.w; i++) {
+                for(let j=0; j<other.h; j++) {
+                    gridMap[other.y + j][other.x + i] = 1; // 1은 장애물
+                }
+            }
+        });
+
+        // 2. 내 진행 방향으로 끝까지 가보며 1을 만나는지 확인
+        let cx = v.x;
+        let cy = v.y;
+        
+        while(true) {
+            if (v.dir === 'up') cy--;
+            else if (v.dir === 'down') cy = (cy === v.y) ? cy + v.h : cy + 1; // 내 몸통 끝 다음 칸
+            else if (v.dir === 'left') cx--;
+            else if (v.dir === 'right') cx = (cx === v.x) ? cx + v.w : cx + 1;
+
+            // 맵 밖이면 통과
+            if (cx < 0 || cx >= GRID_SIZE || cy < 0 || cy >= GRID_SIZE) return true;
+            
+            // down/right일때 좌표 보정이 필요해서 위 로직은 약간 불안정.
+            // 더 쉬운 방법: 한 칸씩 전진시키며 충돌 체크
+            if (v.dir === 'down') { // 아래로 갈때
+                 // 현재 검사할 Y가 맵 안이면
+                 // 내 너비만큼 가로로 검사 (내 차가 가로로 넓을 수 있으니)
+                 for(let i=0; i<v.w; i++) {
+                     if (gridMap[cy][v.x + i] === 1) return false;
+                 }
+            } else if (v.dir === 'right') {
+                for(let j=0; j<v.h; j++) {
+                    if (gridMap[v.y + j][cx] === 1) return false;
+                }
+            } else if (v.dir === 'up') {
+                for(let i=0; i<v.w; i++) {
+                     if (gridMap[cy][v.x + i] === 1) return false;
+                }
+            } else if (v.dir === 'left') {
+                for(let j=0; j<v.h; j++) {
+                    if (gridMap[v.y + j][cx] === 1) return false;
+                }
+            }
+            
+            // 진행 방향 좌표 갱신 (반복문을 위해 다시 원래 기준점 조정 필요하지만
+            // 여기선 while문 구조상 좌표를 계속 밀고 나가는게 맞음.
+            // 위 if문들에서 cy, cx는 이미 '검사할 칸'을 가리킴.
+            // 다음 루프를 위해 기준점 이동?
+            // 그냥 간단히: "내 앞 1칸"이 아니라 "경계선까지" 가야함.
+            // 로직이 꼬이니 단순화: "바로 앞 한 칸"만 검사가 아니라 끝까지 검사해야 함.
+        }
+    }
+    
+    // 다시 작성하는 간단 충돌 체크 (확실한 버전)
+    function isPathClearGrid(v) {
+        // 맵 생성
+        let occupied = new Set();
+        vehicles.forEach(other => {
+            if (other === v || other.inStation) return;
+            for(let i=0; i<other.w; i++) {
+                for(let j=0; j<other.h; j++) {
+                    occupied.add(`${other.x + i},${other.y + j}`);
+                }
+            }
+        });
+
+        // 진행 방향으로 스캔
+        let cx = v.x;
+        let cy = v.y;
+
+        // 최대 10칸(그리드 크기)만큼 반복 검사
+        for(let k=0; k<GRID_SIZE; k++) {
+            if(v.dir === 'up') cy--;
+            if(v.dir === 'down') cy = (k===0) ? cy + v.h : cy + 1; 
+            if(v.dir === 'left') cx--;
+            if(v.dir === 'right') cx = (k===0) ? cx + v.w : cx + 1;
+
+            // 맵 밖으로 나가면 성공
+            if (cx < 0 || cx >= GRID_SIZE || cy < 0 || cy >= GRID_SIZE) return true;
+
+            // 내 몸통 너비/높이 만큼의 단면이 충돌하는지 확인
+            if (v.dir === 'up' || v.dir === 'down') {
+                for(let w=0; w<v.w; w++) {
+                    if (occupied.has(`${cx+w},${cy}`)) return false;
+                }
+            } else {
+                for(let h=0; h<v.h; h++) {
+                    if (occupied.has(`${cx},${cy+h}`)) return false;
+                }
+            }
+            
+            // 기준점 복구 (다음 칸 검사를 위해)
+            // 위 로직에서 cx, cy가 이미 다음 칸을 가리키므로 루프 계속 돌면 됨
+            // 단, down/right 초기값 보정때문에 좌표 관리가 까다로움.
+            // *핵심*: 그냥 "내 앞의 모든 좌표"에 장애물이 없으면 됨.
+        }
+        return true;
+    }
+
+
+    // 2. 정류장으로 이동
+    function moveToStation(v) {
+        // 빈 슬롯 찾기
+        const slotIndex = stationSlots.findIndex(s => s === null);
+        if (slotIndex === -1) {
+            // 슬롯 꽉 참 -> 게임 오버 조건일 수 있음
+            alert("정류장이 꽉 찼습니다!");
+            return;
+        }
+
+        isProcessing = true;
+        v.inStation = true;
+        stationSlots[slotIndex] = v;
+
+        // 애니메이션: 주차장에서 사라지고 -> 정류장 슬롯으로 이동
+        // 실제로는 DOM을 슬롯으로 옮기는게 깔끔함
+        const slotEl = document.getElementById(`slot-${slotIndex}`);
+        const rect = slotEl.getBoundingClientRect();
+        const vRect = v.el.getBoundingClientRect();
+
+        // 1단계: 화면 밖으로 나가는 척 (투명도)
+        v.el.style.opacity = '0.5';
+        v.el.style.transform = `scale(0.8)`;
+        
+        setTimeout(() => {
+            // 2단계: 슬롯 위치로 DOM 이동
+            v.el.style.position = 'static';
+            v.el.style.transform = 'none';
+            v.el.style.opacity = '1';
+            v.el.style.width = '50px'; // 슬롯에 맞게 크기 조정
+            v.el.style.height = '80px';
+            v.el.querySelector('.arrow').style.display = 'none'; // 화살표 제거
+            
+            // 기존 내용 지우고 버스 넣기
+            slotEl.innerHTML = '';
+            slotEl.appendChild(v.el);
+            
+            checkPassengers(); // 승객 탑승 로직 시작
+            isProcessing = false;
+        }, 300);
+    }
+
+    // 3. 승객 탑승 및 출발 체크
+    function checkPassengers() {
+        let changed = false;
+
+        // 모든 정류장의 버스를 확인
+        stationSlots.forEach((bus, index) => {
+            if (!bus) return;
+            if (bus.passengers >= bus.capacity) return; // 이미 만차
+
+            // 줄 서있는 맨 앞사람 확인
+            while (passengers.length > 0 && passengers[0] === bus.color && bus.passengers < bus.capacity) {
+                // 매칭 성공!
+                passengers.shift(); // 대기열에서 제거
+                bus.passengers++;
+                
+                // UI 업데이트
+                renderQueue();
+                updateBusSeats(bus);
+                document.getElementById('passenger-count').innerText = passengers.length;
+                changed = true;
+            }
+
+            // 만차면 출발
+            if (bus.passengers >= bus.capacity) {
+                departBus(index);
+                changed = true;
+            }
+        });
+
+        // 변화가 있었다면, 다른 버스들도 연쇄적으로 태울 수 있는지 재검사 (순서가 바뀌었으니)
+        if (changed && passengers.length > 0) {
+            setTimeout(checkPassengers, 500); // 약간 딜레이 후 재검사
+        }
+        
+        // 승객이 0명이면 승리
+        if (passengers.length === 0) {
+            setTimeout(() => {
+                document.getElementById('result-msg').innerText = "CLEAR!";
+                modal.style.display = 'flex';
+            }, 1000);
+        }
+        
+        // 패배 조건 체크: 슬롯 꽉 참 + 모든 슬롯의 첫 승객이 불일치
+        if (stationSlots.every(s => s !== null) && !changed) {
+             const canBoard = stationSlots.some(bus => bus.color === passengers[0]);
+             if (!canBoard && passengers.length > 0) {
+                 setTimeout(() => {
+                     document.getElementById('result-msg').innerText = "GAME OVER";
+                     modal.style.display = 'flex';
+                 }, 1000);
+             }
+        }
+    }
+
+    function updateBusSeats(bus) {
+        // 좌석 점유 표시
+        for(let i=0; i<bus.seatDots.length; i++) {
+            if (i < bus.passengers) bus.seatDots[i].classList.add('filled');
+        }
+    }
+
+    function departBus(index) {
+        const slotEl = document.getElementById(`slot-${index}`);
+        const busEl = stationSlots[index].el;
+        
+        // 출발 애니메이션
+        busEl.style.transform = 'translateY(-100px)';
+        busEl.style.opacity = '0';
+        
+        stationSlots[index] = null; // 슬롯 비움
+
+        setTimeout(() => {
+            if (slotEl.contains(busEl)) slotEl.removeChild(busEl);
+            slotEl.innerText = "Empty";
+        }, 500);
+    }
+
+    // 게임 시작
+    initGame();
+
+</script>
+</body>
+</html>
