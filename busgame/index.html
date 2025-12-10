@@ -3,60 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Glass City Bus Jam</title>
+    <title>BUS JAM!</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚌</text></svg>">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
 
     <style>
         :root {
-            /* --- Aurora Masterpiece Theme --- */
-            --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,90%,1) 0, transparent 50%), 
-                           radial-gradient(at 50% 0%, hsla(225,39%,90%,1) 0, transparent 50%), 
-                           radial-gradient(at 100% 0%, hsla(339,49%,90%,1) 0, transparent 50%);
-            --bg-color: #e0e5ec;
+            /* --- Theme Variables --- */
+            --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,95%,1) 0, transparent 50%), 
+                           radial-gradient(at 50% 0%, hsla(225,39%,95%,1) 0, transparent 50%), 
+                           radial-gradient(at 100% 0%, hsla(339,49%,95%,1) 0, transparent 50%);
+            --bg-color: #f0f2f5;
             
-            /* High-End Glass */
-            --glass-surface: rgba(255, 255, 255, 0.65);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.8);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --glass-surface: rgba(255, 255, 255, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
             --glass-blur: blur(20px);
             
-            --text-main: #2d3436;
-            --text-sub: #636e72;
+            --text-main: #1c1c1e;
+            --text-sub: #8e8e93;
             
-            --primary: #0984e3;
-            --danger: #d63031;
-            --warning-bg: rgba(255, 118, 117, 0.3);
+            --primary: #007aff;
+            --danger: #ff3b30;
+            --warning-bg: rgba(255, 59, 48, 0.1);
 
-            /* Bus Colors (Jelly Glossy) */
-            --c-red-bg: linear-gradient(135deg, #ff7675, #d63031);
-            --c-blue-bg: linear-gradient(135deg, #74b9ff, #0984e3);
-            --c-green-bg: linear-gradient(135deg, #55efc4, #00b894);
-            --c-yellow-bg: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-            --c-purple-bg: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            /* Vivid Bus Colors */
+            --c-red-bg: linear-gradient(135deg, #ff6b6b, #ee5253);
+            --c-blue-bg: linear-gradient(135deg, #48dbfb, #0abde3);
+            --c-green-bg: linear-gradient(135deg, #1dd1a1, #10ac84);
+            --c-yellow-bg: linear-gradient(135deg, #feca57, #ff9f43);
+            --c-purple-bg: linear-gradient(135deg, #a29bfe, #5f27cd);
+            
+            /* Rock */
+            --c-rock-bg: linear-gradient(135deg, #95a5a6, #7f8c8d);
         }
 
         body.dark-mode {
-            /* --- Deep Space Theme --- */
-            --bg-gradient: radial-gradient(circle at 50% 50%, #1e272e, #000000);
-            --bg-color: #2d3436;
-            --glass-surface: rgba(30, 30, 35, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            --text-main: #dfe6e9;
-            --text-sub: #b2bec3;
-            --primary: #74b9ff;
-            --warning-bg: rgba(214, 48, 49, 0.4);
+            --bg-gradient: radial-gradient(circle at 50% 50%, #2c3e50, #000000);
+            --bg-color: #1c1c1e;
+            --glass-surface: rgba(44, 44, 46, 0.75);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            --text-main: #ffffff;
+            --text-sub: #aeaeb2;
+            --primary: #0a84ff;
+            --warning-bg: rgba(255, 69, 58, 0.2);
+            --c-rock-bg: linear-gradient(135deg, #7f8c8d, #2c3e50);
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: "Pretendard Variable", sans-serif;
+            font-family: "Pretendard Variable", -apple-system, sans-serif;
             background: var(--bg-gradient);
             background-color: var(--bg-color);
             background-attachment: fixed;
             margin: 0;
+            width: 100vw;
             height: 100vh;
             height: 100dvh; 
-            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -65,33 +70,24 @@
             touch-action: none;
             user-select: none;
             color: var(--text-main);
-            transition: all 0.5s ease;
+            transition: color 0.3s, background 0.3s;
         }
 
-        /* --- Flexible Layout System --- */
+        /* --- Flexible Main Container (Spaced Out) --- */
         .app-container {
             width: 100%;
             height: 100%;
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            gap: 1.5vh; 
+            /* 중요: 요소들을 화면 전체에 균등 분배 */
+            justify-content: space-evenly; 
             padding: 16px;
-            box-sizing: border-box;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            gap: 1vh; /* 최소 간격 */
             position: relative;
             z-index: 10;
-        }
-
-        /* Mobile Optimization */
-        @media (max-height: 800px), (max-width: 480px) {
-            .app-container { gap: 8px; padding: 10px; }
-            .header { padding: 12px 16px 16px !important; gap: 8px !important; }
-            .queue-box { height: 56px !important; }
-            .station-area { height: 80px !important; }
-            .passenger { width: 28px !important; height: 28px !important; }
-            .passenger.first { width: 36px !important; height: 36px !important; }
-            .logo-text { font-size: 1rem !important; }
-            .score-item .value { font-size: 1.2rem !important; }
         }
 
         /* --- Header --- */
@@ -100,64 +96,53 @@
             background: var(--glass-surface);
             border: var(--glass-border);
             border-radius: 24px;
-            padding: 16px 20px 20px;
+            padding: 14px 20px 18px;
             box-shadow: var(--glass-shadow);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             position: relative;
             overflow: hidden;
-            transition: background-color 0.5s ease;
-            box-sizing: border-box;
+            transition: background-color 0.3s;
         }
-
-        .header.critical { animation: breatheRed 1s infinite alternate; }
-        @keyframes breatheRed { from { background-color: var(--glass-surface); } to { background-color: var(--warning-bg); } }
+        .header.critical { animation: pulseRed 1s infinite alternate; }
+        @keyframes pulseRed { from { background-color: var(--glass-surface); } to { background-color: var(--warning-bg); } }
 
         .header-top { display: flex; justify-content: space-between; align-items: center; }
-        .logo-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-        .logo-text { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.5px; }
-        .wave-badge { 
-            font-size: 0.8rem; font-weight: 700; color: var(--text-sub); 
-            background: rgba(128,128,128,0.1); padding: 4px 8px; border-radius: 6px;
-            white-space: nowrap;
+        
+        .logo-wrap { display: flex; align-items: center; gap: 8px; }
+        .logo-text { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+        .wave-tag { 
+            font-size: 0.75rem; font-weight: 700; color: var(--text-sub); 
+            background: rgba(128,128,128,0.15); padding: 3px 8px; border-radius: 6px;
         }
 
-        .controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-
-        /* Minimal Icons (SVG) */
+        .controls { display: flex; gap: 8px; }
         .icon-btn {
-            width: 36px; height: 36px;
-            border-radius: 10px;
-            background: rgba(128,128,128,0.1);
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.1);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            border: 1px solid rgba(128,128,128,0.1);
-            color: var(--text-main);
-            transition: 0.2s;
-            padding: 0; /* 패딩 제거 */
+            cursor: pointer; color: var(--text-main); transition: 0.2s;
         }
-        .icon-btn:active { transform: scale(0.9); }
-        .icon-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .icon-btn:active { transform: scale(0.92); }
+        .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* Score */
-        .score-board { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2px; gap: 20px; }
-        .score-item { flex: 1; overflow: hidden; }
-        .score-item .label { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
-        .score-item .value { font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: 800; line-height: 1; font-feature-settings: "tnum"; white-space: nowrap; }
+        .score-board { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
+        .score-item .label { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); margin-bottom: 2px; text-transform: uppercase; }
+        .score-item .value { font-size: 1.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
         .score-item.right { text-align: right; }
         .highlight { color: var(--primary); }
 
-        /* Timer */
         .timer-track { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(128,128,128,0.1); }
-        .timer-bar { height: 100%; background: var(--primary); width: 100%; transition: width 1s linear; }
+        .timer-bar { height: 100%; width: 100%; background: var(--primary); transition: width 1s linear; }
         .timer-bar.danger { background: var(--danger); }
 
         /* --- Queue --- */
         .queue-box {
-            width: 100%; height: 70px; flex-shrink: 0;
+            flex-shrink: 0;
+            height: 64px;
             background: var(--glass-surface);
             border: var(--glass-border);
             border-radius: 18px;
@@ -165,47 +150,51 @@
             box-shadow: var(--glass-shadow);
             display: flex; align-items: center; padding: 0 16px;
             overflow: hidden;
-            box-sizing: border-box;
         }
 
         .passenger {
-            width: 32px; height: 32px; border-radius: 50%;
-            border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
             flex-shrink: 0; margin-right: -8px; position: relative; z-index: 1;
             transition: all 0.3s;
         }
         .passenger.first {
             width: 40px; height: 40px; margin-right: 12px; z-index: 10;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-width: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-width: 3px;
         }
         body.dark-mode .passenger { border-color: #444; }
 
         /* --- Station --- */
         .station-area {
-            width: 100%; height: 90px; flex-shrink: 0;
-            display: flex; justify-content: center; gap: 2vmin;
+            flex-shrink: 0;
+            height: 85px;
+            display: flex; justify-content: center; gap: 8px;
+            width: 100%;
         }
 
         .slot {
             flex: 1; max-width: 70px; height: 100%;
-            background: rgba(128,128,128,0.05);
+            background: rgba(128,128,128,0.08);
             border: 2px dashed var(--text-sub);
             border-radius: 16px;
             display: flex; justify-content: center; align-items: center;
-            position: relative; opacity: 0.7;
+            position: relative; opacity: 0.8;
         }
-        .slot::after { content: 'P'; font-size: 1.2rem; font-weight: 800; color: var(--text-sub); opacity: 0.3; }
+        .slot::after { content: 'P'; font-size: 1.2rem; font-weight: 900; color: var(--text-sub); opacity: 0.3; }
 
-        /* --- Grid (Fixed Visible) --- */
+        /* --- Grid Wrapper (Safe Zone) --- */
         .grid-wrapper {
-            flex: 1; width: 100%; min-height: 0;
+            flex-grow: 1; /* 남은 공간 모두 차지 */
+            width: 100%;
+            min-height: 0; 
             display: flex; justify-content: center; align-items: center;
             position: relative;
+            /* 여백 최소화 */
+            margin: 0 auto; 
         }
 
         #game-grid {
-            /* JS sets exact pixels */
-            width: 300px; height: 300px;
+            /* JS sets exact size */
             background: var(--glass-surface);
             border: var(--glass-border);
             border-radius: 24px;
@@ -213,13 +202,25 @@
             box-shadow: var(--glass-shadow);
             position: relative;
             background-image: radial-gradient(var(--text-sub) 1px, transparent 1px);
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
-        /* --- Bus Layout Adjustment --- */
+        /* --- Mobile Tweaks --- */
+        @media (max-height: 750px) {
+            .app-container { padding: 10px; justify-content: space-between; }
+            .header { padding: 10px 16px 14px; gap: 4px; }
+            .queue-box { height: 50px; }
+            .station-area { height: 70px; }
+            .passenger { width: 26px; height: 26px; }
+            .passenger.first { width: 34px; height: 34px; }
+            .logo-text { font-size: 1rem; }
+            .score-item .value { font-size: 1.2rem; }
+        }
+
+        /* --- Bus Elements --- */
         .bus {
             position: absolute; cursor: pointer;
-            box-sizing: border-box; padding: 4px;
+            box-sizing: border-box; padding: 3px;
             transition: transform 0.2s cubic-bezier(0.3, 1.5, 0.6, 1);
             z-index: 10;
         }
@@ -227,60 +228,47 @@
         .bus.shake { animation: shake 0.4s ease-in-out; }
 
         .bus-body {
-            width: 100%; height: 100%; border-radius: 10px;
-            display: flex; 
-            /* 가로/세로 방향에 따라 내부 정렬 변경 */
-            flex-direction: column; 
+            width: 100%; height: 100%; border-radius: 8px;
+            display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             position: relative; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
             border: 1px solid rgba(0,0,0,0.05);
-            /* Gap control for tight layout */
-            gap: 2px;
         }
+        .bus.horizontal .bus-body { flex-direction: row; }
 
-        .bus.horizontal .bus-body {
-            flex-direction: row; /* 가로 버스는 내부도 가로로 */
-            gap: 4px; /* 가로일 때 간격 */
-        }
-
-        /* Force Colors */
-        .bus.c-red .bus-body { background: var(--c-red-bg) !important; }
-        .bus.c-blue .bus-body { background: var(--c-blue-bg) !important; }
-        .bus.c-green .bus-body { background: var(--c-green-bg) !important; }
-        .bus.c-yellow .bus-body { background: var(--c-yellow-bg) !important; }
-        .bus.c-purple .bus-body { background: var(--c-purple-bg) !important; }
+        /* Colors */
+        .bus.c-red .bus-body { background: var(--c-red-bg); }
+        .bus.c-blue .bus-body { background: var(--c-blue-bg); }
+        .bus.c-green .bus-body { background: var(--c-green-bg); }
+        .bus.c-yellow .bus-body { background: var(--c-yellow-bg); }
+        .bus.c-purple .bus-body { background: var(--c-purple-bg); }
         
-        .p-red { background: #ff7675; }
-        .p-blue { background: #74b9ff; }
-        .p-green { background: #55efc4; }
-        .p-yellow { background: #ffeaa7; }
+        .p-red { background: #ff6b6b; }
+        .p-blue { background: #48dbfb; }
+        .p-green { background: #1dd1a1; }
+        .p-yellow { background: #feca57; }
         .p-purple { background: #a29bfe; }
 
-        /* Seat Layout */
-        .seats { 
-            display: flex; gap: 3px; flex-wrap: wrap; 
-            justify-content: center; align-items: center;
+        /* Obstacle */
+        .bus.obstacle { cursor: not-allowed; }
+        .bus.obstacle .bus-body {
+            background: var(--c-rock-bg);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
         }
-        /* Remove margin in general, handled by parent gap */
-        .bus.horizontal .seats {
-            flex-direction: column; /* 가로 버스에서는 좌석을 세로(2줄)로 쌓거나 함 */
-            flex-wrap: wrap; 
-            width: auto;
-            max-height: 100%;
-        }
-        
-        /* Seat dots */
-        .seat { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.2); }
+        .rock-emoji { font-size: 1.5rem; filter: grayscale(0.5); }
+
+        .seats { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; align-items: center; }
+        .bus.horizontal .seats { flex-direction: column; }
+        .seat { width: 5px; height: 5px; border-radius: 50%; background: rgba(0,0,0,0.25); }
         .seat.filled { background: #fff; box-shadow: 0 0 4px #fff; }
-        
-        .arrow { font-size: 0.9rem; color: #fff; opacity: 0.9; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
+        .arrow { font-size: 0.8rem; color: #fff; opacity: 0.9; }
 
         /* --- Modals --- */
         .modal-wrap {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(12px);
             display: flex; justify-content: center; align-items: center;
             z-index: 5000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
@@ -288,41 +276,40 @@
 
         .modal-box {
             background: var(--glass-surface); border: var(--glass-border);
-            padding: 40px 30px; border-radius: 28px; text-align: center;
-            width: 85%; max-width: 320px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            padding: 30px; border-radius: 28px; text-align: center;
+            width: 80%; max-width: 300px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             transform: scale(0.9); transition: transform 0.3s;
         }
         .modal-wrap.show .modal-box { transform: scale(1); }
 
-        .modal-icon { font-size: 4rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); }
-        .modal-title { font-size: 2rem; font-weight: 900; margin-bottom: 10px; color: var(--text-main); }
-        .modal-desc { color: var(--text-sub); margin-bottom: 30px; font-weight: 500; }
+        .modal-emoji { font-size: 3.5rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        .modal-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: var(--text-main); }
+        .modal-desc { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
 
         .btn-main {
-            width: 100%; padding: 16px; border: none; border-radius: 14px;
-            font-size: 1.1rem; font-weight: 700; cursor: pointer;
-            background: var(--primary); color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            width: 100%; padding: 14px; border: none; border-radius: 14px;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            background: var(--primary); color: #fff;
             transition: transform 0.1s;
         }
         .btn-main:active { transform: scale(0.97); }
         .btn-sub {
             background: transparent; color: var(--text-sub); border: 2px solid var(--glass-border);
-            margin-top: 10px; padding: 12px; width: 100%; border-radius: 14px; font-weight: 600; cursor: pointer;
+            margin-top: 8px; padding: 10px; width: 100%; border-radius: 14px; font-weight: 600; cursor: pointer;
         }
 
+        .hidden { display: none !important; }
+        
         .combo-text {
             position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 3rem; font-weight: 900; color: var(--text-main);
-            text-shadow: 0 4px 20px rgba(255,255,255,0.5); pointer-events: none; z-index: 9999;
+            font-size: 2.5rem; font-weight: 900; color: var(--text-main);
+            text-shadow: 0 4px 20px rgba(255,255,255,0.8); pointer-events: none; z-index: 9999;
             animation: floatUp 0.8s forwards; white-space: nowrap;
         }
-
+        
         @keyframes floatUp { 0%{opacity:0;transform:translate(-50%,20px)} 20%{opacity:1;transform:translate(-50%,0)} 100%{opacity:0;transform:translate(-50%,-80px)} }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
-        
-        .hidden { display: none !important; }
-        #final-score { font-weight: 900; font-size: 3.5rem; color: var(--text-main); letter-spacing: -2px; }
 
     </style>
 </head>
@@ -331,8 +318,8 @@
     <!-- Start -->
     <div class="modal-wrap show" id="start-modal">
         <div class="modal-box">
-            <span class="modal-icon">🚌</span>
-            <div class="modal-title">BUS JAM</div>
+            <span class="modal-emoji">🚌</span>
+            <div class="modal-title">BUS JAM!</div>
             <div class="modal-desc">전략 퍼즐의 완성</div>
             <button class="btn-main" onclick="game.start()">시작하기</button>
         </div>
@@ -341,9 +328,9 @@
     <!-- Pause -->
     <div class="modal-wrap" id="pause-modal">
         <div class="modal-box">
-            <span class="modal-icon">⏸️</span>
+            <span class="modal-emoji">⏸️</span>
             <h2 class="modal-title">일시정지</h2>
-            <p class="modal-desc">잠시 휴식 중입니다</p>
+            <p class="modal-desc">잠시 쉬어가는 중입니다</p>
             <button class="btn-main" onclick="game.resume()">계속하기</button>
             <button class="btn-sub" onclick="location.reload()">처음으로</button>
         </div>
@@ -352,12 +339,12 @@
     <!-- Game Over -->
     <div class="modal-wrap" id="gameover-modal">
         <div class="modal-box">
-            <span class="modal-icon">🚨</span>
+            <span class="modal-emoji">🚨</span>
             <h2 class="modal-title" style="color:var(--danger)">게임 오버</h2>
             <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다</p>
-            <div style="margin-bottom:25px;">
-                <div class="label">최종 점수</div>
-                <div class="value" id="final-score">0</div>
+            <div style="margin-bottom:20px;">
+                <div style="font-size:0.8rem; color:var(--text-sub);">최종 점수</div>
+                <div style="font-size:2rem; font-weight:900;" id="final-score">0</div>
             </div>
             <button class="btn-main" onclick="game.restart()">다시 도전</button>
             <button class="btn-sub" onclick="location.reload()">게임 종료</button>
@@ -368,19 +355,18 @@
     <div class="app-container">
         <header class="header" id="header-box">
             <div class="header-top">
-                <div class="logo-area">
-                    <span class="logo-text">BUS JAM</span>
-                    <span class="wave-badge" id="wave-txt">WAVE 1</span>
+                <div class="logo-wrap">
+                    <span class="logo-text">BUS JAM!</span>
+                    <span class="wave-tag" id="wave-txt">WAVE 1</span>
                 </div>
                 <div class="controls">
-                    <!-- SVG Toggle -->
                     <button class="icon-btn" onclick="ui.toggleTheme()" id="theme-btn">
-                        <!-- Sun Icon (Default) -->
+                        <!-- Sun Icon -->
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                     </button>
-                    <!-- SVG Pause -->
                     <button class="icon-btn" onclick="game.pause()">
-                        <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                        <!-- Pause Icon -->
+                        <svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
                     </button>
                 </div>
             </div>
@@ -410,8 +396,8 @@
 <script>
     /* SVGs Strings */
     const ICONS = {
-        sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',
-        moon: '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+        sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+        moon: '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     };
 
     const COLORS = ['red', 'blue', 'green', 'yellow', 'purple'];
@@ -456,13 +442,15 @@
             setTimeout(() => el.remove(), 800);
         },
 
-        // JS Driven Grid Sizing
+        // JS Driven Grid Sizing (Restored)
         fitGrid: () => {
             if (!ui.wrapper) return;
             const w = ui.wrapper.clientWidth;
             const h = ui.wrapper.clientHeight;
-            // leave a bit of padding
-            const size = Math.min(w, h) - 4; 
+            // Use Math.min to ensure square fits in container
+            const size = Math.min(w, h); 
+            
+            // Apply calculated pixel size
             ui.grid.style.width = size + 'px';
             ui.grid.style.height = size + 'px';
             
@@ -493,7 +481,7 @@
         start: () => {
             ui.modals.start.classList.remove('show');
             game.resetGlobal();
-            ui.fitGrid();
+            ui.fitGrid(); // Initial fit
             game.startWave();
         },
 
@@ -527,8 +515,8 @@
             game.isBusy = false;
             game.isTransitioning = false;
             
-            if(game.wave >= 6) { game.gridSize = 7; game.slotCount = 4; }
-            else if(game.wave >= 3) { game.gridSize = 6; game.slotCount = 3; } 
+            if(game.wave >= 7) { game.gridSize = 7; game.slotCount = 4; }
+            else if(game.wave >= 4) { game.gridSize = 6; game.slotCount = 3; } 
             else { game.gridSize = 6; game.slotCount = 3; }
 
             game.setupGrid();
@@ -538,9 +526,16 @@
             game.passengers = [];
             game.station = Array(game.slotCount).fill(null);
             
-            const baseCount = (game.gridSize===7)? 14 : 9;
-            const extra = Math.min(Math.floor(game.wave/2), 6);
-            game.placeBuses(baseCount + extra);
+            let base = (game.gridSize===7)? 14 : 9;
+            if(game.wave >= 4) base += 2;
+            const extra = Math.min(Math.floor(game.wave/1.5), 8);
+            
+            let obsCount = 0;
+            if(game.wave >= 4) obsCount = 1;
+            if(game.wave >= 7) obsCount = 2;
+            if(game.wave >= 10) obsCount = 3;
+
+            game.placeBuses(base + extra, obsCount);
             game.generateQueue();
             
             game.renderBuses();
@@ -549,15 +544,16 @@
             ui.wave.innerText = `WAVE ${game.wave}`;
             ui.showFloat(`WAVE ${game.wave}`);
 
-            const tBase = Math.max(30, 60 - (game.wave*2));
-            game.maxTime = (game.gridSize===7) ? tBase+15 : tBase;
+            let tBase = Math.max(25, 55 - (game.wave * 3));
+            if(game.gridSize===7) tBase += 15;
+            game.maxTime = tBase;
             game.time = game.maxTime;
             game.runTimer();
         },
 
         setupGrid: () => {
             ui.grid.innerHTML = '';
-            ui.fitGrid(); // Ensure size
+            ui.fitGrid();
             const pct = 100 / game.gridSize;
             ui.grid.style.backgroundSize = `${pct}% ${pct}%`;
         },
@@ -571,12 +567,20 @@
             }
         },
 
-        placeBuses: (count) => {
+        placeBuses: (count, obstacles) => {
             let attempts = 0;
-            while(game.buses.length < count && attempts < 5000){
+            let obsPlaced = 0;
+            
+            while((game.buses.length < count + obsPlaced) && attempts < 5000){
                 attempts++;
+                let isObs = false;
+                if(obsPlaced < obstacles && Math.random() < 0.3) isObs = true;
+                if(game.buses.length >= count && obsPlaced < obstacles) isObs = true;
+                
                 const isVert = Math.random() > 0.5;
-                const len = Math.random() > 0.7 ? 3 : 2;
+                let len = Math.random() > 0.7 ? 3 : 2;
+                if(isObs) len = 1;
+
                 const w = isVert ? 1 : len;
                 const h = isVert ? len : 1;
                 const x = Math.floor(Math.random() * (game.gridSize - w + 1));
@@ -588,12 +592,20 @@
                     if(isVert) d = Math.random()>0.5 ? 0 : 2;
                     else d = Math.random()>0.5 ? 1 : 3;
                     
-                    game.buses.push({
-                        id: Math.random(),
-                        x, y, w, h, d,
-                        c: COLORS[Math.floor(Math.random()*COLORS.length)],
-                        max: cap, load: 0, state: 'parked', el: null
-                    });
+                    if(isObs) {
+                        game.buses.push({
+                            id: Math.random(), x, y, w, h, d: 0,
+                            type: 'obstacle', max: 0, load: 0, state: 'parked'
+                        });
+                        obsPlaced++;
+                    } else {
+                        game.buses.push({
+                            id: Math.random(), x, y, w, h, d,
+                            type: 'bus',
+                            c: COLORS[Math.floor(Math.random()*COLORS.length)],
+                            max: cap, load: 0, state: 'parked', el: null
+                        });
+                    }
                 }
             }
         },
@@ -609,21 +621,39 @@
         generateQueue: () => {
             let sim = game.buses.map(b=>({...b}));
             let order = [];
-            while(sim.length > 0){
-                let exits = sim.filter(b => game.canExit(b, sim));
+            let solvable = true;
+            
+            while(true){
+                let parkedBuses = sim.filter(b => b.type === 'bus');
+                if(parkedBuses.length === 0) break;
+
+                let exits = parkedBuses.filter(b => game.canExit(b, sim));
+                
                 if(exits.length === 0){
-                    game.buses = []; game.placeBuses(10); 
-                    sim = game.buses.map(b=>({...b})); order=[];
-                    continue;
+                    solvable = false;
+                    break;
                 }
                 const next = exits[Math.floor(Math.random()*exits.length)];
                 order.push(next);
-                sim = sim.filter(b=>b.id !== next.id);
+                sim = sim.filter(b => b.id !== next.id);
             }
+
+            if(!solvable) {
+                game.buses = [];
+                let base = (game.gridSize===7)? 14 : 9;
+                if(game.wave >= 4) base += 2;
+                const extra = Math.min(Math.floor(game.wave/1.5), 8);
+                let obsCount = (game.wave>=10)?3:(game.wave>=7)?2:(game.wave>=4)?1:0;
+                game.placeBuses(base + extra, obsCount);
+                game.generateQueue();
+                return;
+            }
+
             let flat = [];
             order.forEach(b => {
                 for(let i=0; i<b.max; i++) flat.push(b.c);
             });
+            
             const win = Math.floor(game.slotCount * 1.5);
             for(let i=0; i<flat.length; i++){
                 if(Math.random()<0.6){
@@ -640,13 +670,11 @@
                 if(b.id === bus.id) return;
                 for(let i=0;i<b.w;i++) for(let j=0;j<b.h;j++) occ.add(`${b.x+i},${b.y+j}`);
             });
-            
             let cx=bus.x, cy=bus.y, s=0;
             while(s < game.gridSize*2){
                 if(bus.d===0) cy--; else if(bus.d===1) cx++;
                 else if(bus.d===2) cy++; else if(bus.d===3) cx--;
                 s++;
-                
                 let out=true, hit=false;
                 for(let w=0; w<bus.w; w++){
                     for(let h=0; h<bus.h; h++){
@@ -664,7 +692,7 @@
         },
 
         renderBuses: () => {
-            // Need actual pixel size of grid now
+            // Pixel-based sizing from JS
             const pixelW = ui.grid.clientWidth;
             const unit = pixelW / game.gridSize;
             
@@ -673,42 +701,47 @@
                 let el = b.el;
                 if(!el) {
                     el = document.createElement('div');
-                    el.className = `bus c-${b.c}`;
-                    const horiz = b.w > b.h;
-                    el.classList.add(horiz ? 'horizontal' : 'vertical');
-                    el.style.flexDirection = horiz ? 'row' : 'column';
-                    
-                    const inner = document.createElement('div');
-                    inner.className = 'bus-body';
-                    const seats = document.createElement('div');
-                    seats.className = 'seats';
-                    for(let i=0; i<b.max; i++){
-                        const d = document.createElement('div');
-                        d.className = 'seat';
-                        seats.appendChild(d);
+                    if(b.type === 'obstacle') {
+                        el.className = 'bus obstacle';
+                        el.innerHTML = '<div class="bus-body"><span class="rock-emoji">🪨</span></div>';
+                    } else {
+                        el.className = `bus c-${b.c}`;
+                        const horiz = b.w > b.h;
+                        el.classList.add(horiz ? 'horizontal' : 'vertical');
+                        el.style.flexDirection = horiz ? 'row' : 'column';
+                        
+                        const inner = document.createElement('div');
+                        inner.className = 'bus-body';
+                        const seats = document.createElement('div');
+                        seats.className = 'seats';
+                        for(let i=0; i<b.max; i++){
+                            const d = document.createElement('div');
+                            d.className = 'seat';
+                            seats.appendChild(d);
+                        }
+                        const arrow = document.createElement('div');
+                        arrow.className = 'arrow';
+                        arrow.innerText = ['⬆','➡','⬇','⬅'][b.d];
+                        inner.append(seats, arrow);
+                        el.appendChild(inner);
+                        el.onclick = () => game.clickBus(b);
                     }
-                    const arrow = document.createElement('div');
-                    arrow.className = 'arrow';
-                    arrow.innerText = ['⬆','➡','⬇','⬅'][b.d];
-                    inner.append(seats, arrow);
-                    el.appendChild(inner);
-                    el.onclick = () => game.clickBus(b);
                     b.el = el;
                     ui.grid.appendChild(el);
                 }
                 
-                // Update Pos & Size
                 el.style.width = (b.w * unit) + 'px';
                 el.style.height = (b.h * unit) + 'px';
                 el.style.left = (b.x * unit) + 'px';
                 el.style.top = (b.y * unit) + 'px';
                 
-                // Update seats
-                const seatDots = el.querySelectorAll('.seat');
-                seatDots.forEach((s, idx) => {
-                    if(idx < b.load) s.classList.add('filled');
-                    else s.classList.remove('filled');
-                });
+                if(b.type === 'bus') {
+                    const seatDots = el.querySelectorAll('.seat');
+                    seatDots.forEach((s, idx) => {
+                        if(idx < b.load) s.classList.add('filled');
+                        else s.classList.remove('filled');
+                    });
+                }
             });
         },
 
@@ -722,7 +755,7 @@
         },
 
         clickBus: (bus) => {
-            if(game.state!=='playing' || game.isBusy || bus.state!=='parked') return;
+            if(game.state!=='playing' || game.isBusy || bus.state!=='parked' || bus.type==='obstacle') return;
             const parked = game.buses.filter(b=>b.state==='parked');
             if(game.canExit(bus, parked)){
                 game.moveToStation(bus);
@@ -759,14 +792,10 @@
                 bus.el.style.width = (sRect.width - 10) + 'px';
                 bus.el.style.height = (sRect.height - 10) + 'px';
                 
-                // Vertical transform for station
                 bus.el.style.flexDirection = 'column';
                 bus.el.classList.remove('horizontal');
                 bus.el.classList.add('vertical');
-                // Re-layout seats for vertical
-                const seats = bus.el.querySelector('.seats');
-                seats.style.flexDirection = 'row'; 
-                
+                bus.el.querySelector('.seats').style.flexDirection = 'row';
                 bus.el.querySelector('.arrow').style.display = 'none';
             });
             
@@ -794,6 +823,7 @@
                     game.passengers.shift();
                     bus.load++;
                     game.combo++;
+                    // Score: Lower points
                     game.score += (5 + game.combo * 2);
                     if(game.combo > 2) ui.showFloat(`${game.combo} 콤보!`);
                     
@@ -845,7 +875,8 @@
 
         checkWin: () => {
             if(game.state !== 'playing' || game.isTransitioning) return;
-            const gEmp = game.buses.every(b => b.state !== 'parked');
+            // Check only buses (ignore obstacles)
+            const gEmp = game.buses.filter(b=>b.type==='bus').every(b => b.state !== 'parked');
             const sEmp = game.station.every(s => s === null);
             
             if(gEmp && sEmp && game.passengers.length === 0){
