@@ -110,22 +110,13 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; }
         
         .logo-wrap { display: flex; align-items: center; gap: 8px; }
-        
-        /* Updated Logo Font Style */
         .logo-text { 
-            font-size: 1.3rem; 
-            font-weight: 900; 
-            letter-spacing: -0.5px;
+            font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px;
             background: linear-gradient(135deg, var(--primary) 0%, #8e44ad 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            /* Fallback shadow if gradient fails or for depth */
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
-        body.dark-mode .logo-text {
-            background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
-            -webkit-background-clip: text;
-        }
+        body.dark-mode .logo-text { background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%); -webkit-background-clip: text; }
 
         .wave-tag { 
             font-size: 0.75rem; font-weight: 700; color: var(--text-sub); 
@@ -152,7 +143,7 @@
         .timer-bar { height: 100%; width: 100%; background: var(--primary); transition: width 1s linear; }
         .timer-bar.danger { background: var(--danger); }
 
-        /* --- Queue --- */
+        /* --- Queue (Wrapper for Fade) --- */
         .queue-box {
             flex-shrink: 0;
             height: 64px;
@@ -161,8 +152,20 @@
             border-radius: 18px;
             backdrop-filter: var(--glass-blur);
             box-shadow: var(--glass-shadow);
-            display: flex; align-items: center; padding: 0 16px;
+            padding: 0 16px;
+            overflow: hidden; /* Keep box containment */
+            position: relative;
+            display: flex; align-items: center;
+        }
+
+        /* Inner Track for Masking */
+        .queue-track {
+            width: 100%; height: 100%;
+            display: flex; align-items: center;
             overflow: hidden;
+            /* Gradient Fade Out Mask applied ONLY to content */
+            -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+            mask-image: linear-gradient(to right, black 85%, transparent 100%);
         }
 
         .passenger {
@@ -245,7 +248,6 @@
             position: relative; overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
             border: 1px solid rgba(0,0,0,0.05);
-            /* Increased Gap for better visual separation */
             gap: 5px; 
         }
         .bus.horizontal .bus-body { flex-direction: row; }
@@ -271,8 +273,21 @@
         }
         .rock-emoji { font-size: 1.5rem; filter: grayscale(0.5); }
 
-        .seats { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; align-items: center; }
-        .bus.horizontal .seats { flex-direction: column; }
+        /* Seat Layout Fixed */
+        .seats { 
+            display: flex; gap: 3px; flex-wrap: wrap; 
+            justify-content: center; align-items: center; 
+        }
+        /* Ensure horizontal buses show seats horizontally */
+        .bus.horizontal .seats { 
+            flex-direction: row; 
+        }
+        /* Ensure vertical buses show seats vertically/grid */
+        .bus.vertical .seats {
+            flex-direction: row; /* Default wrap works for grid */
+            width: 100%; /* Ensure wrapping */
+        }
+        
         .seat { width: 5px; height: 5px; border-radius: 50%; background: rgba(0,0,0,0.25); }
         .seat.filled { background: #fff; box-shadow: 0 0 4px #fff; }
         .arrow { font-size: 0.8rem; color: #fff; opacity: 0.9; }
@@ -297,14 +312,7 @@
         .modal-wrap.show .modal-box { transform: scale(1); }
 
         .modal-emoji { font-size: 3.5rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
-        
-        /* Prettier Modal Title */
-        .modal-title { 
-            font-size: 2rem; font-weight: 900; margin-bottom: 8px; 
-            color: var(--text-main); 
-            letter-spacing: -1px;
-        }
-        
+        .modal-title { font-size: 2rem; font-weight: 900; margin-bottom: 8px; color: var(--text-main); letter-spacing: -1px; }
         .modal-desc { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
 
         .btn-main {
@@ -340,7 +348,6 @@
         <div class="modal-box">
             <span class="modal-emoji">🚌</span>
             <div class="modal-title" style="background: linear-gradient(135deg, var(--primary), #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BUS JAM!</div>
-            <div class="modal-desc"></div> <!-- Empty as requested -->
             <button class="btn-main" onclick="game.start()">시작하기</button>
         </div>
     </div>
@@ -350,7 +357,7 @@
         <div class="modal-box">
             <span class="modal-emoji">⏸️</span>
             <h2 class="modal-title">일시정지</h2>
-            <p class="modal-desc">잠시 쉬어가는 중입니다</p>
+            <p class="modal-desc">잠시 휴식 중입니다.</p>
             <button class="btn-main" onclick="game.resume()">계속하기</button>
             <button class="btn-sub" onclick="location.reload()">처음으로</button>
         </div>
@@ -361,7 +368,7 @@
         <div class="modal-box">
             <span class="modal-emoji">🚨</span>
             <h2 class="modal-title" style="color:var(--danger)">게임 오버</h2>
-            <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다</p>
+            <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다.</p>
             <div style="margin-bottom:20px;">
                 <div style="font-size:0.8rem; color:var(--text-sub);">최종 점수</div>
                 <div style="font-size:2rem; font-weight:900;" id="final-score">0</div>
@@ -405,7 +412,11 @@
             <div class="timer-track"><div class="timer-bar" id="time-bar"></div></div>
         </header>
 
-        <div class="queue-box" id="queue-box"></div>
+        <div class="queue-box" id="queue-box">
+            <!-- Inner wrapper for masking -->
+            <div class="queue-track" id="queue-track"></div>
+        </div>
+        
         <div class="station-area" id="station-box"></div>
         
         <div class="grid-wrapper" id="grid-wrapper">
@@ -425,7 +436,7 @@
     const ui = {
         wrapper: document.getElementById('grid-wrapper'),
         grid: document.getElementById('game-grid'),
-        queue: document.getElementById('queue-box'),
+        queueTrack: document.getElementById('queue-track'),
         station: document.getElementById('station-box'),
         score: document.getElementById('curr-score'),
         best: document.getElementById('best-score'),
@@ -462,19 +473,15 @@
             setTimeout(() => el.remove(), 800);
         },
 
-        // JS Driven Grid Sizing (Restored)
+        // JS Driven Grid Sizing
         fitGrid: () => {
             if (!ui.wrapper) return;
             const w = ui.wrapper.clientWidth;
             const h = ui.wrapper.clientHeight;
-            // Use Math.min to ensure square fits in container
-            const size = Math.min(w, h); 
-            
-            // Apply calculated pixel size
+            const size = Math.min(w, h) - 4; 
             ui.grid.style.width = size + 'px';
             ui.grid.style.height = size + 'px';
             
-            // Re-render buses if game is active to update positions
             if(game.state === 'playing') game.renderBuses();
         }
     };
@@ -767,11 +774,11 @@
         },
 
         renderQueue: () => {
-            ui.queue.innerHTML = '';
-            game.passengers.slice(0, 15).forEach((c, i) => {
+            ui.queueTrack.innerHTML = '';
+            game.passengers.slice(0, 25).forEach((c, i) => {
                 const p = document.createElement('div');
                 p.className = `passenger p-${c} ${i===0?'first':''}`;
-                ui.queue.appendChild(p);
+                ui.queueTrack.appendChild(p);
             });
         },
 
@@ -813,10 +820,14 @@
                 bus.el.style.width = (sRect.width - 10) + 'px';
                 bus.el.style.height = (sRect.height - 10) + 'px';
                 
+                // Vertical transform for station
                 bus.el.style.flexDirection = 'column';
                 bus.el.classList.remove('horizontal');
                 bus.el.classList.add('vertical');
-                bus.el.querySelector('.seats').style.flexDirection = 'row';
+                // Re-layout seats for vertical
+                const seats = bus.el.querySelector('.seats');
+                seats.style.flexDirection = 'row'; 
+                
                 bus.el.querySelector('.arrow').style.display = 'none';
             });
             
@@ -844,6 +855,7 @@
                     game.passengers.shift();
                     bus.load++;
                     game.combo++;
+                    // Score Adjustment: Lower points
                     game.score += (5 + game.combo * 2);
                     if(game.combo > 2) ui.showFloat(`${game.combo} 콤보!`);
                     
@@ -855,7 +867,7 @@
                     setTimeout(() => bus.el.style.transform='scale(1)', 100);
                     
                     if(bus.load >= bus.max) {
-                        bus.isDeparting = true; // Mark as departing to prevent game over
+                        bus.isDeparting = true;
                         setTimeout(() => game.departBus(i), 250);
                     }
                 }
@@ -878,11 +890,6 @@
             bus.el.style.transition = 'all 0.4s ease-in';
             bus.el.style.transform = 'translateY(-150px) scale(0.9)';
             bus.el.style.opacity = '0';
-            
-            // Do NOT nullify station immediately to keep visual context until anim done
-            // But logic needs to know it's gone for win check?
-            // Actually, for win check, we just check station emptiness. 
-            // We set slot to null after animation
             
             setTimeout(() => {
                 if(bus.el) bus.el.remove();
@@ -965,11 +972,9 @@
     };
 
     ui.initTheme();
-    // Watch for resize
     window.addEventListener('resize', () => {
         ui.fitGrid();
     });
-    // Init Grid size immediately
     ui.fitGrid();
 
 </script>
