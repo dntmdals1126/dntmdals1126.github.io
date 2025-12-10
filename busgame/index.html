@@ -27,14 +27,12 @@
             --danger: #ff3b30;
             --warning-bg: rgba(255, 59, 48, 0.1);
 
-            /* Vivid Bus Colors */
+            /* Bus Colors */
             --c-red-bg: linear-gradient(135deg, #ff6b6b, #ee5253);
             --c-blue-bg: linear-gradient(135deg, #48dbfb, #0abde3);
             --c-green-bg: linear-gradient(135deg, #1dd1a1, #10ac84);
             --c-yellow-bg: linear-gradient(135deg, #feca57, #ff9f43);
             --c-purple-bg: linear-gradient(135deg, #a29bfe, #5f27cd);
-            
-            /* Rock */
             --c-rock-bg: linear-gradient(135deg, #95a5a6, #7f8c8d);
         }
 
@@ -73,19 +71,18 @@
             transition: color 0.3s, background 0.3s;
         }
 
-        /* --- Flexible Main Container (Spaced Out) --- */
+        /* --- Flexible Main Container --- */
         .app-container {
             width: 100%;
             height: 100%;
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            /* 중요: 요소들을 화면 전체에 균등 분배 */
             justify-content: space-evenly; 
             padding: 16px;
             padding-top: max(16px, env(safe-area-inset-top));
             padding-bottom: max(20px, env(safe-area-inset-bottom));
-            gap: 1vh; /* 최소 간격 */
+            gap: 1vh; 
             position: relative;
             z-index: 10;
         }
@@ -113,7 +110,23 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; }
         
         .logo-wrap { display: flex; align-items: center; gap: 8px; }
-        .logo-text { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+        
+        /* Updated Logo Font Style */
+        .logo-text { 
+            font-size: 1.3rem; 
+            font-weight: 900; 
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary) 0%, #8e44ad 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* Fallback shadow if gradient fails or for depth */
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        body.dark-mode .logo-text {
+            background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
+            -webkit-background-clip: text;
+        }
+
         .wave-tag { 
             font-size: 0.75rem; font-weight: 700; color: var(--text-sub); 
             background: rgba(128,128,128,0.15); padding: 3px 8px; border-radius: 6px;
@@ -182,19 +195,17 @@
         }
         .slot::after { content: 'P'; font-size: 1.2rem; font-weight: 900; color: var(--text-sub); opacity: 0.3; }
 
-        /* --- Grid Wrapper (Safe Zone) --- */
+        /* --- Grid Wrapper --- */
         .grid-wrapper {
-            flex-grow: 1; /* 남은 공간 모두 차지 */
+            flex-grow: 1; 
             width: 100%;
             min-height: 0; 
             display: flex; justify-content: center; align-items: center;
             position: relative;
-            /* 여백 최소화 */
             margin: 0 auto; 
         }
 
         #game-grid {
-            /* JS sets exact size */
             background: var(--glass-surface);
             border: var(--glass-border);
             border-radius: 24px;
@@ -234,6 +245,8 @@
             position: relative; overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
             border: 1px solid rgba(0,0,0,0.05);
+            /* Increased Gap for better visual separation */
+            gap: 5px; 
         }
         .bus.horizontal .bus-body { flex-direction: row; }
 
@@ -284,7 +297,14 @@
         .modal-wrap.show .modal-box { transform: scale(1); }
 
         .modal-emoji { font-size: 3.5rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
-        .modal-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: var(--text-main); }
+        
+        /* Prettier Modal Title */
+        .modal-title { 
+            font-size: 2rem; font-weight: 900; margin-bottom: 8px; 
+            color: var(--text-main); 
+            letter-spacing: -1px;
+        }
+        
         .modal-desc { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
 
         .btn-main {
@@ -319,8 +339,8 @@
     <div class="modal-wrap show" id="start-modal">
         <div class="modal-box">
             <span class="modal-emoji">🚌</span>
-            <div class="modal-title">BUS JAM!</div>
-            <div class="modal-desc">전략 퍼즐의 완성</div>
+            <div class="modal-title" style="background: linear-gradient(135deg, var(--primary), #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BUS JAM!</div>
+            <div class="modal-desc"></div> <!-- Empty as requested -->
             <button class="btn-main" onclick="game.start()">시작하기</button>
         </div>
     </div>
@@ -603,7 +623,8 @@
                             id: Math.random(), x, y, w, h, d,
                             type: 'bus',
                             c: COLORS[Math.floor(Math.random()*COLORS.length)],
-                            max: cap, load: 0, state: 'parked', el: null
+                            max: cap, load: 0, state: 'parked', el: null,
+                            isDeparting: false // Add flag for safe check
                         });
                     }
                 }
@@ -823,7 +844,6 @@
                     game.passengers.shift();
                     bus.load++;
                     game.combo++;
-                    // Score: Lower points
                     game.score += (5 + game.combo * 2);
                     if(game.combo > 2) ui.showFloat(`${game.combo} 콤보!`);
                     
@@ -834,7 +854,10 @@
                     bus.el.style.transform = 'scale(1.05)';
                     setTimeout(() => bus.el.style.transform='scale(1)', 100);
                     
-                    if(bus.load >= bus.max) setTimeout(() => game.departBus(i), 250);
+                    if(bus.load >= bus.max) {
+                        bus.isDeparting = true; // Mark as departing to prevent game over
+                        setTimeout(() => game.departBus(i), 250);
+                    }
                 }
             });
             
@@ -855,9 +878,15 @@
             bus.el.style.transition = 'all 0.4s ease-in';
             bus.el.style.transform = 'translateY(-150px) scale(0.9)';
             bus.el.style.opacity = '0';
-            game.station[i] = null;
+            
+            // Do NOT nullify station immediately to keep visual context until anim done
+            // But logic needs to know it's gone for win check?
+            // Actually, for win check, we just check station emptiness. 
+            // We set slot to null after animation
+            
             setTimeout(() => {
                 if(bus.el) bus.el.remove();
+                game.station[i] = null;
                 game.checkBoarding(); 
                 game.checkWin();
             }, 400);
@@ -865,8 +894,12 @@
 
         checkFail: () => {
             if(game.state !== 'playing') return;
+            // Check station fullness
             const isFull = game.station.every(s => s !== null);
-            if(isFull && game.passengers.length > 0){
+            // Critical Fix: If any bus in station is departing, do NOT fail yet
+            const isAnyDeparting = game.station.some(b => b && b.isDeparting);
+            
+            if(isFull && !isAnyDeparting && game.passengers.length > 0){
                 const next = game.passengers[0];
                 const can = game.station.some(b => b.c === next && b.load < b.max);
                 if(!can) game.gameOver("정류장이 가득 찼습니다.");
