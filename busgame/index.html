@@ -9,43 +9,45 @@
 
     <style>
         :root {
-            /* --- Theme Variables --- */
-            --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,95%,1) 0, transparent 50%), 
-                           radial-gradient(at 50% 0%, hsla(225,39%,95%,1) 0, transparent 50%), 
-                           radial-gradient(at 100% 0%, hsla(339,49%,95%,1) 0, transparent 50%);
-            --bg-color: #f0f2f5;
+            /* --- Aurora Masterpiece Theme (Restored) --- */
+            --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,90%,1) 0, transparent 50%), 
+                           radial-gradient(at 50% 0%, hsla(225,39%,90%,1) 0, transparent 50%), 
+                           radial-gradient(at 100% 0%, hsla(339,49%,90%,1) 0, transparent 50%);
+            --bg-color: #e0e5ec;
             
-            --glass-surface: rgba(255, 255, 255, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.9);
-            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            /* High-End Glass */
+            --glass-surface: rgba(255, 255, 255, 0.65);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
             --glass-blur: blur(20px);
             
-            --text-main: #1c1c1e;
-            --text-sub: #8e8e93;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
             
-            --primary: #007aff;
-            --danger: #ff3b30;
-            --warning-bg: rgba(255, 59, 48, 0.1);
+            --primary: #0984e3;
+            --danger: #d63031;
+            --warning-bg: rgba(255, 118, 117, 0.3);
 
-            /* Bus Colors */
-            --c-red-bg: linear-gradient(135deg, #ff6b6b, #ee5253);
-            --c-blue-bg: linear-gradient(135deg, #48dbfb, #0abde3);
-            --c-green-bg: linear-gradient(135deg, #1dd1a1, #10ac84);
-            --c-yellow-bg: linear-gradient(135deg, #feca57, #ff9f43);
-            --c-purple-bg: linear-gradient(135deg, #a29bfe, #5f27cd);
+            /* Bus Colors (Jelly Glossy) */
+            --c-red-bg: linear-gradient(135deg, #ff7675, #d63031);
+            --c-blue-bg: linear-gradient(135deg, #74b9ff, #0984e3);
+            --c-green-bg: linear-gradient(135deg, #55efc4, #00b894);
+            --c-yellow-bg: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            --c-purple-bg: linear-gradient(135deg, #a29bfe, #6c5ce7);
             --c-rock-bg: linear-gradient(135deg, #95a5a6, #7f8c8d);
         }
 
         body.dark-mode {
-            --bg-gradient: radial-gradient(circle at 50% 50%, #2c3e50, #000000);
-            --bg-color: #1c1c1e;
-            --glass-surface: rgba(44, 44, 46, 0.75);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.15);
-            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            --text-main: #ffffff;
-            --text-sub: #aeaeb2;
-            --primary: #0a84ff;
-            --warning-bg: rgba(255, 69, 58, 0.2);
+            /* --- Deep Space Theme --- */
+            --bg-gradient: radial-gradient(circle at 50% 50%, #1e272e, #000000);
+            --bg-color: #2d3436;
+            --glass-surface: rgba(30, 30, 35, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --text-main: #dfe6e9;
+            --text-sub: #b2bec3;
+            --primary: #74b9ff;
+            --warning-bg: rgba(214, 48, 49, 0.4);
             --c-rock-bg: linear-gradient(135deg, #7f8c8d, #2c3e50);
         }
 
@@ -71,7 +73,6 @@
             transition: color 0.3s, background 0.3s;
         }
 
-        /* --- Flexible Main Container --- */
         .app-container {
             width: 100%;
             height: 100%;
@@ -110,6 +111,7 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; }
         
         .logo-wrap { display: flex; align-items: center; gap: 8px; }
+        
         .logo-text { 
             font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px;
             background: linear-gradient(135deg, var(--primary) 0%, #8e44ad 100%);
@@ -143,7 +145,7 @@
         .timer-bar { height: 100%; width: 100%; background: var(--primary); transition: width 1s linear; }
         .timer-bar.danger { background: var(--danger); }
 
-        /* --- Queue (Wrapper for Fade) --- */
+        /* --- Queue --- */
         .queue-box {
             flex-shrink: 0;
             height: 64px;
@@ -153,17 +155,15 @@
             backdrop-filter: var(--glass-blur);
             box-shadow: var(--glass-shadow);
             padding: 0 16px;
-            overflow: hidden; /* Keep box containment */
+            overflow: hidden;
             position: relative;
             display: flex; align-items: center;
         }
 
-        /* Inner Track for Masking */
         .queue-track {
             width: 100%; height: 100%;
             display: flex; align-items: center;
             overflow: hidden;
-            /* Gradient Fade Out Mask applied ONLY to content */
             -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
             mask-image: linear-gradient(to right, black 85%, transparent 100%);
         }
@@ -278,15 +278,8 @@
             display: flex; gap: 3px; flex-wrap: wrap; 
             justify-content: center; align-items: center; 
         }
-        /* Ensure horizontal buses show seats horizontally */
-        .bus.horizontal .seats { 
-            flex-direction: row; 
-        }
-        /* Ensure vertical buses show seats vertically/grid */
-        .bus.vertical .seats {
-            flex-direction: row; /* Default wrap works for grid */
-            width: 100%; /* Ensure wrapping */
-        }
+        .bus.horizontal .seats { flex-direction: row; }
+        .bus.vertical .seats { flex-direction: row; width: 100%; }
         
         .seat { width: 5px; height: 5px; border-radius: 50%; background: rgba(0,0,0,0.25); }
         .seat.filled { background: #fff; box-shadow: 0 0 4px #fff; }
@@ -302,29 +295,46 @@
         }
         .modal-wrap.show { opacity: 1; pointer-events: auto; }
 
+        /* Clean Start Screen */
         .modal-box {
             background: var(--glass-surface); border: var(--glass-border);
-            padding: 30px; border-radius: 28px; text-align: center;
-            width: 80%; max-width: 300px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            padding: 40px; border-radius: 32px; text-align: center;
+            width: 85%; max-width: 360px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
             transform: scale(0.9); transition: transform 0.3s;
+            display: flex; flex-direction: column; align-items: center;
         }
         .modal-wrap.show .modal-box { transform: scale(1); }
 
-        .modal-emoji { font-size: 3.5rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
-        .modal-title { font-size: 2rem; font-weight: 900; margin-bottom: 8px; color: var(--text-main); letter-spacing: -1px; }
+        /* Minimal Start Elements */
+        .start-icon {
+            font-size: 3.5rem; margin-bottom: 20px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+        }
+
+        .start-title {
+            font-size: 2.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--text-main) 20%, var(--primary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -1.5px;
+        }
+        body.dark-mode .start-title { background: linear-gradient(135deg, #fff 20%, #aaa 100%); -webkit-background-clip: text; }
+
+        .modal-title { font-size: 2rem; font-weight: 900; margin-bottom: 10px; color: var(--text-main); }
         .modal-desc { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
 
         .btn-main {
-            width: 100%; padding: 14px; border: none; border-radius: 14px;
-            font-size: 1rem; font-weight: 700; cursor: pointer;
+            width: 100%; padding: 18px; border: none; border-radius: 16px;
+            font-size: 1.1rem; font-weight: 800; cursor: pointer;
             background: var(--primary); color: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             transition: transform 0.1s;
         }
         .btn-main:active { transform: scale(0.97); }
+
         .btn-sub {
             background: transparent; color: var(--text-sub); border: 2px solid var(--glass-border);
-            margin-top: 8px; padding: 10px; width: 100%; border-radius: 14px; font-weight: 600; cursor: pointer;
+            margin-top: 8px; padding: 12px; width: 100%; border-radius: 14px; font-weight: 600; cursor: pointer;
         }
 
         .hidden { display: none !important; }
@@ -346,8 +356,8 @@
     <!-- Start -->
     <div class="modal-wrap show" id="start-modal">
         <div class="modal-box">
-            <span class="modal-emoji">🚌</span>
-            <div class="modal-title" style="background: linear-gradient(135deg, var(--primary), #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BUS JAM!</div>
+            <div class="start-icon">🚌</div>
+            <div class="start-title">BUS JAM!</div>
             <button class="btn-main" onclick="game.start()">시작하기</button>
         </div>
     </div>
@@ -355,9 +365,9 @@
     <!-- Pause -->
     <div class="modal-wrap" id="pause-modal">
         <div class="modal-box">
-            <span class="modal-emoji">⏸️</span>
+            <div style="font-size:3rem; margin-bottom:15px;">⏸️</div>
             <h2 class="modal-title">일시정지</h2>
-            <p class="modal-desc">잠시 휴식 중입니다.</p>
+            <p class="modal-desc">잠시 쉬어가는 중입니다</p>
             <button class="btn-main" onclick="game.resume()">계속하기</button>
             <button class="btn-sub" onclick="location.reload()">처음으로</button>
         </div>
@@ -366,12 +376,12 @@
     <!-- Game Over -->
     <div class="modal-wrap" id="gameover-modal">
         <div class="modal-box">
-            <span class="modal-emoji">🚨</span>
+            <div style="font-size:3rem; margin-bottom:15px;">🚨</div>
             <h2 class="modal-title" style="color:var(--danger)">게임 오버</h2>
-            <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다.</p>
-            <div style="margin-bottom:20px;">
+            <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다</p>
+            <div style="margin-bottom:25px;">
                 <div style="font-size:0.8rem; color:var(--text-sub);">최종 점수</div>
-                <div style="font-size:2rem; font-weight:900;" id="final-score">0</div>
+                <div style="font-size:2.5rem; font-weight:900;" id="final-score">0</div>
             </div>
             <button class="btn-main" onclick="game.restart()">다시 도전</button>
             <button class="btn-sub" onclick="location.reload()">게임 종료</button>
@@ -631,7 +641,7 @@
                             type: 'bus',
                             c: COLORS[Math.floor(Math.random()*COLORS.length)],
                             max: cap, load: 0, state: 'parked', el: null,
-                            isDeparting: false // Add flag for safe check
+                            isDeparting: false 
                         });
                     }
                 }
@@ -720,7 +730,6 @@
         },
 
         renderBuses: () => {
-            // Pixel-based sizing from JS
             const pixelW = ui.grid.clientWidth;
             const unit = pixelW / game.gridSize;
             
@@ -820,14 +829,10 @@
                 bus.el.style.width = (sRect.width - 10) + 'px';
                 bus.el.style.height = (sRect.height - 10) + 'px';
                 
-                // Vertical transform for station
                 bus.el.style.flexDirection = 'column';
                 bus.el.classList.remove('horizontal');
                 bus.el.classList.add('vertical');
-                // Re-layout seats for vertical
-                const seats = bus.el.querySelector('.seats');
-                seats.style.flexDirection = 'row'; 
-                
+                bus.el.querySelector('.seats').style.flexDirection = 'row';
                 bus.el.querySelector('.arrow').style.display = 'none';
             });
             
