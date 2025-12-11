@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>임용고시 고난이도 어휘 마스터</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chosen Palette: Warm Academy (Stone, Blue, Amber) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            800: '#292524',
+                            900: '#1c1917',
+                        },
+                        academy: {
+                            blue: '#2563eb',
+                            gold: '#d97706',
+                            bg: '#fdfbf7' // Warm paper-like background
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Merriweather', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Chart Container Styling Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .chart-height-sm {
+            height: 250px;
+            max-height: 250px;
+        }
+
+        .chart-height-lg {
+            height: 400px;
+            max-height: 400px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        /* Card Flip Animation */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-academy-bg text-stone-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Application Structure Plan: 
+         1. Header: Branding and context.
+         2. Stats Dashboard: Immediate progress feedback (Pie Chart).
+         3. Interactive Learning: Split view for Flashcards (Study) and Quiz (Test).
+         4. Analysis: Bar chart showing dataset distribution by alphabet.
+         5. Reference: Searchable full list of vocabulary.
+         Rationale: This flow moves from overview -> active study -> testing -> reference, covering all stages of learning.
+    -->
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                <i data-lucide="book-open" class="h-8 w-8 text-academy-blue"></i>
+                <div>
+                    <h1 class="text-xl font-bold text-stone-900 tracking-tight">임고 고난이도 어휘 마스터</h1>
+                    <p class="text-xs text-stone-500">Advanced Vocabulary Prep for Teacher Certification</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right hidden sm:block">
+                    <p class="text-sm font-medium text-stone-600">Total Words</p>
+                    <p class="text-2xl font-bold text-academy-blue" id="totalWordsHeader">0</p>
+                </div>
+                <button onclick="resetProgress()" class="text-xs text-stone-400 hover:text-red-500 underline transition-colors">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+
+        <!-- Intro Section -->
+        <section class="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+            <h2 class="text-lg font-semibold text-stone-800 mb-2 flex items-center">
+                <i data-lucide="info" class="w-5 h-5 mr-2 text-academy-gold"></i>
+                학습 가이드
+            </h2>
+            <p class="text-stone-600 leading-relaxed">
+                이 학습 도구는 임용고시 및 고난이도 시험을 대비하기 위해 엄선된 <strong>536개의 필수 영단어</strong>를 제공합니다. 
+                아래의 <strong>플래시카드</strong>를 통해 단어를 암기하고, <strong>퀴즈</strong>를 통해 실력을 점검하세요. 
+                '암기 완료' 버튼을 누르면 진도율이 업데이트되며, 하단의 차트에서 학습 현황을 한눈에 확인할 수 있습니다.
+            </p>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: Flashcard & Learning (8 cols) -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Flashcard Section -->
+                <div class="bg-white rounded-xl shadow-lg border border-stone-200 overflow-hidden flex flex-col">
+                    <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                        <h3 class="font-bold text-stone-700 flex items-center">
+                            <i data-lucide="layers" class="w-5 h-5 mr-2 text-academy-blue"></i>
+                            Flashcard Study
+                        </h3>
+                        <span class="text-xs font-mono bg-white border border-stone-200 px-2 py-1 rounded text-stone-500" id="cardCounter">1 / 536</span>
+                    </div>
+                    
+                    <div class="p-8 flex-grow flex flex-col items-center justify-center min-h-[300px] relative bg-stone-50/50">
+                        <!-- Card Container -->
+                        <div class="perspective-1000 w-full max-w-lg h-64 cursor-pointer group" onclick="flipCard()">
+                            <div id="flashcardInner" class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
+                                <!-- Front -->
+                                <div class="absolute w-full h-full backface-hidden bg-white border-2 border-academy-blue/10 rounded-2xl flex flex-col items-center justify-center p-6 hover:border-academy-blue/30 transition-colors">
+                                    <span class="text-sm text-stone-400 mb-2 uppercase tracking-widest font-semibold">Word</span>
+                                    <h2 id="cardWord" class="text-4xl font-serif font-bold text-stone-800 mb-4">abate</h2>
+                                    <p class="text-xs text-stone-400 mt-4">(Click to reveal meaning)</p>
+                                </div>
+                                <!-- Back -->
+                                <div class="absolute w-full h-full backface-hidden bg-academy-blue rotate-y-180 rounded-2xl flex flex-col items-center justify-center p-6 text-white shadow-inner">
+                                    <span class="text-sm text-blue-200 mb-2 uppercase tracking-widest font-semibold">Meaning</span>
+                                    <h2 id="cardMeaning" class="text-3xl font-bold">줄이다</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="p-4 bg-white border-t border-stone-100 flex justify-between items-center">
+                        <div class="flex space-x-2">
+                            <button onclick="prevCard()" class="p-2 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors tooltip" title="Previous Word">
+                                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                            </button>
+                            <button onclick="nextCard()" class="p-2 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors tooltip" title="Next Word">
+                                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                            </button>
+                            <button onclick="randomCard()" class="p-2 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors tooltip" title="Random Word">
+                                <i data-lucide="shuffle" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                        <button onclick="markAsKnown()" id="btnKnown" class="flex items-center px-4 py-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 font-medium transition-colors border border-emerald-200">
+                            <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i>
+                            암기 완료 (Mark Known)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-stone-700 flex items-center">
+                            <i data-lucide="brain-circuit" class="w-5 h-5 mr-2 text-purple-600"></i>
+                            Quick Quiz
+                        </h3>
+                        <span id="quizScore" class="text-sm font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Score: 0</span>
+                    </div>
+                    <div id="quizContainer">
+                        <p class="text-lg text-center mb-6 text-stone-800">
+                            What is the meaning of <span id="quizWord" class="font-serif font-bold text-2xl text-academy-blue mx-2">abate</span>?
+                        </p>
+                        <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Options generated by JS -->
+                        </div>
+                        <div id="quizFeedback" class="mt-4 text-center h-6 font-medium"></div>
+                        <button onclick="initQuiz()" class="mt-4 w-full py-2 text-stone-500 text-sm hover:text-stone-800 underline">Skip / Next Question</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Stats & Charts (4 cols) -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- Progress Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 flex flex-col items-center">
+                    <h3 class="font-bold text-stone-700 mb-4 self-start flex items-center">
+                        <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-academy-blue"></i>
+                        Learning Progress
+                    </h3>
+                    
+                    <!-- Visualization & Content Choices: 
+                         Doughnut chart for immediate visual feedback on progress.
+                         Libraries: Chart.js (Canvas)
+                         Constraint: Wrapped in chart-container div
+                    -->
+                    <div class="chart-container chart-height-sm w-full max-w-[250px]">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+
+                    <div class="mt-6 w-full grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-stone-50 p-3 rounded-lg border border-stone-100">
+                            <p class="text-xs text-stone-500">Memorized</p>
+                            <p class="text-xl font-bold text-emerald-600" id="statKnown">0</p>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded-lg border border-stone-100">
+                            <p class="text-xs text-stone-500">Remaining</p>
+                            <p class="text-xl font-bold text-stone-600" id="statRemaining">536</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alphabet Distribution Chart -->
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+                    <h3 class="font-bold text-stone-700 mb-2 flex items-center">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5 mr-2 text-stone-600"></i>
+                        Alphabet Distribution
+                    </h3>
+                    <p class="text-xs text-stone-500 mb-4">Frequency of words by starting letter.</p>
+                    
+                    <div class="chart-container chart-height-sm">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Dictionary Table Section -->
+        <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+            <div class="p-6 border-b border-stone-200 bg-stone-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h3 class="font-bold text-stone-800 text-lg flex items-center">
+                        <i data-lucide="list" class="w-5 h-5 mr-2 text-stone-600"></i>
+                        Full Vocabulary List
+                    </h3>
+                    <p class="text-sm text-stone-500 mt-1">Browse, search, or review the entire collection.</p>
+                </div>
+                <div class="relative w-full md:w-64">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400"></i>
+                    <input type="text" id="searchInput" oninput="filterTable()" placeholder="Search word or meaning..." 
+                        class="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-academy-blue focus:border-transparent">
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto max-h-[600px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-stone-100 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th class="p-4 text-xs font-bold text-stone-500 uppercase tracking-wider w-16 text-center">#</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 uppercase tracking-wider cursor-pointer hover:bg-stone-200" onclick="sortTable('word')">Word <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
+                            <th class="p-4 text-xs font-bold text-stone-500 uppercase tracking-wider">Meaning (Korean)</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 uppercase tracking-wider w-24 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vocabTableBody" class="divide-y divide-stone-100">
+                        <!-- Table Rows Generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 border-t border-stone-200 bg-stone-50 text-center text-xs text-stone-500" id="tableFooter">
+                Showing 536 words
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Raw Data Embed (Hidden) -->
+    <script type="text/plain" id="rawData">
+1. **abate**: 줄이다
+
+  2. **abdicate**: 물러나다
+
+  3. **aberration**: 일탈
+
+  4. **abhor**: 혐오하다
+
+  5. **abolish**: 폐지하다
+
+  6. **abridge**: 요약하다
+
+  7. **abstruse**: 난해한
+
+  8. **acclaim**: 찬사
+
+  9. **acquiesce**: 묵인하다
+
+ 10. **acrimonious**: 험악한
+
+ 11. **acrimony**: 악감정
+
+ 12. **admonish**: 꾸짖다
+
+ 13. **adorn**: 장식하다
+
+ 14. **adroit**: 능숙한
+
+ 15. **adulate**: 아부하다
+
+ 16. **adversarial**: 적대적인
+
+ 17. **adversary**: 적수
+
+ 18. **adverse**: 불리한
+
+ 19. **adversity**: 역경
+
+ 20. **advocate**: 지지하다
+
+ 21. **aegis**: 후원
+
+ 22. **aesthetic**: 미적인
+
+ 23. **aftermath**: 여파
+
+ 24. **alacrity**: 민첩
+
+ 25. **alienate**: 소외시키다
+
+ 26. **alleviate**: 완화하다
+
+ 27. **allocate**: 할당하다
+
+ 28. **ambiguous**: 모호한
+
+ 29. **ambivalent**: 양면적인
+
+ 30. **ameliorate**: 개선하다
+
+ 31. **amelioration**: 개선
+
+ 32. **amiable**: 상냥한
+
+ 33. **amorphous**: 무정형의
+
+ 34. **anachronism**: 시대착오
+
+ 35. **anachronistic**: 시대착오적인
+
+ 36. **analogous**: 유사한
+
+ 37. **anarchy**: 무정부 상태
+
+ 38. **animosity**: 적대감
+
+ 39. **anomaly**: 이례적인 것
+
+ 40. **antagonism**: 적대감
+
+ 41. **antagonize**: 적대하다
+
+ 42. **antithesis**: 정반대
+
+ 43. **apathetic**: 무관심한
+
+ 44. **apathy**: 무관심
+
+ 45. **apex**: 정점
+
+ 46. **appease**: 달래다
+
+ 47. **arbitrary**: 독단적인
+
+ 48. **arcane**: 불가사의한
+
+ 49. **arduous**: 힘든
+
+ 50. **arid**: 메마른
+
+ 51. **assimilate**: 동화되다
+
+ 52. **assuage**: 달래다
+
+ 53. **astute**: 영리한
+
+ 54. **audacious**: 대담한
+
+ 55. **augment**: 늘리다
+
+ 56. **austere**: 엄격한
+
+ 57. **authenticate**: 입증하다
+
+ 58. **aversion**: 혐오
+
+ 59. **avid**: 열렬한
+
+ 60. **banal**: 진부한
+
+ 61. **barren**: 불모의
+
+ 62. **belated**: 뒤늦은
+
+ 63. **belittle**: 얕보다
+
+ 64. **bellicose**: 호전적인
+
+ 65. **belligerent**: 호전적인
+
+ 66. **benevolent**: 자비로운
+
+ 67. **benign**: 온화한
+
+ 68. **bestow**: 수여하다
+
+ 69. **blithe**: 태평한
+
+ 70. **boisterous**: 떠들썩한
+
+ 71. **bolster**: 강화하다
+
+ 72. **brevity**: 간결함
+
+ 73. **brittle**: 부서지기 쉬운
+
+ 74. **brusque**: 무뚝뚝한
+
+ 75. **cajole**: 회유하다
+
+ 76. **calligraphy**: 서예
+
+ 77. **callous**: 냉담한
+
+ 78. **callow**: 미숙한
+
+ 79. **candid**: 솔직한
+
+ 80. **candor**: 솔직함
+
+ 81. **capacious**: 널찍한
+
+ 82. **capitulate**: 굴복하다
+
+ 83. **capricious**: 변덕스러운
+
+ 84. **catalyst**: 기폭제
+
+ 85. **catalyze**: 촉진하다
+
+ 86. **censure**: 비난하다
+
+ 87. **chastise**: 꾸짖다
+
+ 88. **chronic**: 만성적인
+
+ 89. **circumscribe**: 제한하다
+
+ 90. **circumspect**: 신중한
+
+ 91. **circumvent**: 피하다
+
+ 92. **clandestine**: 은밀한
+
+ 93. **clout**: 영향력
+
+ 94. **coalesce**: 합치다
+
+ 95. **coerce**: 강요하다
+
+ 96. **cogent**: 설득력 있는
+
+ 97. **cognizant**: 인지하는
+
+ 98. **coherent**: 일관성 있는
+
+ 99. **cohesive**: 단결된
+
+100. **coincide**: 일치하다
+
+101. **commence**: 시작하다
+
+102. **concord**: 화합
+
+103. **concur**: 동의하다
+
+104. **conduce**: 공헌하다
+
+105. **conducive**: 도움이 되는
+
+106. **condone**: 용납하다
+
+107. **conflate**: 융합하다
+
+108. **congenial**: 마음이 맞는
+
+109. **congruent**: 일치하는
+
+110. **conjecture**: 추측
+
+111. **connive**: 공모하다
+
+112. **conscientious**: 성실한
+
+113. **consolidate**: 통합하다
+
+114. **conspicuous**: 눈에 띄는
+
+115. **constraint**: 제약
+
+116. **contemplate**: 숙고하다
+
+117. **contemplative**: 사색하는
+
+118. **contempt**: 경멸
+
+119. **contingent**: 우발적인
+
+120. **conventional**: 관습적인
+
+121. **convoluted**: 복잡한
+
+122. **copious**: 풍부한
+
+123. **corroborate**: 입증하다
+
+124. **corrode**: 부식하다
+
+125. **correspond**: 일치하다
+
+126. **cosmopolitan**: 세계적인
+
+127. **covert**: 비밀의
+
+128. **credence**: 신용
+
+129. **credibility**: 신뢰성
+
+130. **credulous**: 잘 속는
+
+131. **criteria**: 기준
+
+132. **criterion**: 기준
+
+133. **cryptic**: 수수께끼 같은
+
+134. **culminate**: 절정에 달하다
+
+135. **culmination**: 절정
+
+136. **culpable**: 비난받을 만한
+
+137. **cumulative**: 누적되는
+
+138. **cumbersome**: 다루기 힘든
+
+139. **cursory**: 대충 하는
+
+140. **cynical**: 냉소적인
+
+141. **debase**: (가치를) 떨어뜨리다
+
+142. **debilitate**: 쇠약하게 하다
+
+143. **deference**: 존중
+
+144. **deplete**: 고갈시키다
+
+145. **deplore**: 한탄하다
+
+146. **depravity**: 타락
+
+147. **deride**: 조롱하다
+
+148. **derivative**: 파생적인
+
+149. **derisive**: 조롱하는
+
+150. **desolate**: 황량한
+
+151. **despondent**: 낙담한
+
+152. **destitute**: 빈곤한
+
+153. **destitution**: 빈곤
+
+154. **deter**: 단념시키다
+
+155. **deteriorate**: 악화되다
+
+156. **detract**: 손상시키다
+
+157. **detrimental**: 해로운
+
+158. **didactic**: 교훈적인
+
+159. **diffident**: 소심한
+
+160. **digress**: (주제에서) 벗어나다
+
+161. **diligent**: 성실한
+
+162. **dilute**: 묽게 하다
+
+163. **discern**: 식별하다
+
+164. **discord**: 불화
+
+165. **discordance**: 불일치
+
+166. **discordant**: 조화롭지 않은
+
+167. **discredit**: 불신하다
+
+168. **discrepancy**: 차이
+
+169. **discrete**: 별개의
+
+170. **discreet**: 신중한
+
+171. **disdain**: 경멸
+
+172. **disoriented**: 혼란스러운
+
+173. **disparage**: 폄하하다
+
+174. **disparate**: 이질적인
+
+175. **disparity**: 차이
+
+176. **dispel**: 없애다
+
+177. **dispense**: 나누어 주다
+
+178. **dissent**: 반대
+
+179. **dissonance**: 불협화음
+
+180. **divergent**: 갈라지는
+
+181. **divulge**: 누설하다
+
+182. **docile**: 유순한
+
+183. **dogmatic**: 독단적인
+
+184. **dormant**: 잠재적인
+
+185. **dour**: 시무룩한
+
+186. **duplicity**: 이중성
+
+187. **eclectic**: 절충적인
+
+188. **effervescent**: 활기찬
+
+189. **egregious**: 지독한
+
+190. **elicit**: 끌어내다
+
+191. **elusive**: 파악하기 힘든
+
+192. **embark**: 착수하다
+
+193. **embellish**: 꾸미다
+
+194. **embolden**: 대담하게 하다
+
+195. **emulate**: 모방하다
+
+196. **enervate**: 약화시키다
+
+197. **engender**: 낳다
+
+198. **enigma**: 수수께끼
+
+199. **enigmatic**: 수수께끼 같은
+
+200. **enlisted**: 입대한
+
+201. **enmity**: 적대감
+
+202. **entrench**: 단단히 자리잡다
+
+203. **ephemeral**: 덧없는
+
+204. **epiphany**: 깨달음
+
+205. **equanimity**: 침착함
+
+206. **equitable**: 공정한
+
+207. **eradicate**: 근절하다
+
+208. **erode**: 침식하다
+
+209. **erudite**: 박식한
+
+210. **esoteric**: 난해한
+
+211. **euphemism**: 완곡어법
+
+212. **evoke**: 불러일으키다
+
+213. **exacerbate**: 악화시키다
+
+214. **exemplary**: 모범적인
+
+215. **exemplify**: 예시가 되다
+
+216. **exert**: 행사하다
+
+217. **exhort**: 권고하다
+
+218. **exonerate**: 무죄를 입증하다
+
+219. **expedite**: 신속히 하다
+
+220. **exquisite**: 정교한
+
+221. **extol**: 극찬하다
+
+222. **extraneous**: 관련 없는
+
+223. **extricate**: 구해내다
+
+224. **fabricate**: 조작하다
+
+225. **facetious**: 익살스런
+
+226. **faction**: 파벌
+
+227. **fallacious**: 틀린
+
+228. **fallacy**: 오류
+
+229. **fallible**: 틀리기 쉬운
+
+230. **fastidious**: 까다로운
+
+231. **feasible**: 실행 가능한
+
+232. **fervent**: 열렬한
+
+233. **flagrant**: 노골적인
+
+234. **fledgling**: 초보자
+
+235. **florid**: 화려한
+
+236. **fluctuate**: 변동하다
+
+237. **fluctuation**: 변동
+
+238. **forte**: 강점
+
+239. **fortitude**: 인내
+
+240. **fortuitous**: 우연한
+
+241. **foster**: 육성하다
+
+242. **frigid**: 몹시 추운
+
+243. **frivolous**: 경솔한
+
+244. **fruition**: 결실
+
+245. **frugal**: 검소한
+
+246. **furtive**: 은밀한
+
+247. **futile**: 헛된
+
+248. **garrulous**: 수다스러운
+
+249. **genteel**: 고상한
+
+250. **gratify**: 만족시키다
+
+251. **gratuitous**: 불필요한
+
+252. **gregarious**: 사교적인
+
+253. **grievance**: 불만
+
+254. **guile**: 속임수
+
+255. **gullible**: 잘 속는
+
+256. **hackneyed**: 진부한
+
+257. **haphazard**: 무계획적인
+
+258. **headstrong**: 고집 센
+
+259. **heterogeneous**: 이질적인
+
+260. **hinder**: 방해하다
+
+261. **holistic**: 전체적인
+
+262. **hubris**: 오만
+
+263. **hypocrisy**: 위선
+
+264. **hypothetical**: 가상의
+
+265. **idiosyncratic**: 특이한
+
+266. **imminent**: 임박한
+
+267. **immutable**: 불변의
+
+268. **impair**: 손상시키다
+
+269. **impartial**: 공정한
+
+270. **impeccable**: 완벽한
+
+271. **impede**: 방해하다
+
+272. **imperative**: 필수적인
+
+273. **impervious**: 통하지 않는
+
+274. **impetuous**: 충동적인
+
+275. **implement**: 실행하다
+
+276. **implicate**: 연루시키다
+
+277. **implicit**: 암시적인
+
+278. **imposing**: 웅장한
+
+279. **improvise**: 즉흥적으로 하다
+
+280. **inadvertent**: 우연한
+
+281. **incarcerate**: 투옥하다
+
+282. **incessant**: 끊임없는
+
+283. **incisive**: 예리한
+
+284. **incongruous**: 어울리지 않는
+
+285. **incumbent**: 현직의
+
+286. **indifferent**: 무관심한
+
+287. **indignant**: 분개한
+
+288. **indict**: 기소하다
+
+289. **indolent**: 게으른
+
+290. **infer**: 추론하다
+
+291. **ingenious**: 기발한
+
+292. **inhibit**: 억제하다
+
+293. **innate**: 타고난
+
+294. **innocuous**: 무해한
+
+295. **innovate**: 혁신하다
+
+296. **innovative**: 혁신적인
+
+297. **innovator**: 혁신가
+
+298. **insatiable**: 탐욕스러운
+
+299. **insipid**: 재미없는
+
+300. **insolent**: 무례한
+
+301. **insular**: 편협한
+
+302. **intangible**: 무형의
+
+303. **integral**: 필수적인
+
+304. **intermittent**: 간헐적인
+
+305. **intervene**: 개입하다
+
+306. **intricate**: 복잡한
+
+307. **intrepid**: 용감한
+
+308. **intuitive**: 직관적인
+
+309. **inundate**: 쇄도하다
+
+310. **invalidate**: 무효화하다
+
+311. **invoke**: 적용하다
+
+312. **irate**: 화난
+
+313. **irrelevant**: 무관한
+
+314. **irreverent**: 불손한
+
+315. **jeopardize**: 위태롭게 하다
+
+316. **jeopardy**: 위험
+
+317. **judicious**: 신중한
+
+318. **laconic**: 간결한
+
+319. **lament**: 슬퍼하다
+
+320. **lavish**: 호화로운
+
+321. **lethargic**: 무기력한
+
+322. **lethargy**: 무기력
+
+323. **litigate**: 소송하다
+
+324. **lucid**: 명쾌한
+
+325. **magnanimous**: 관대한
+
+326. **magnate**: 거물
+
+327. **malevolent**: 악의적인
+
+328. **malicious**: 악의적인
+
+329. **malignant**: 악성의
+
+330. **malleable**: 유순한
+
+331. **mandatory**: 의무적인
+
+332. **meander**: 거닐다
+
+333. **meek**: 온순한
+
+334. **melancholy**: 우울함
+
+335. **mend**: 고치다
+
+336. **mendacious**: 거짓의
+
+337. **metaphor**: 은유
+
+338. **metaphysical**: 형이상학적인
+
+339. **methodical**: 체계적인
+
+340. **meticulous**: 꼼꼼한
+
+341. **mitigate**: 완화하다
+
+342. **modicum**: 소량
+
+343. **mollify**: 달래다
+
+344. **morbid**: 병적인
+
+345. **morose**: 시무룩한
+
+346. **multifarious**: 다채로운
+
+347. **nefarious**: 사악한
+
+348. **negligent**: 태만한
+
+349. **novel**: 새로운
+
+350. **noxious**: 유해한
+
+351. **nurture**: 양육하다
+
+352. **obdurate**: 고집 센
+
+353. **obliterate**: 지우다
+
+354. **oblivion**: 망각
+
+355. **oblivious**: 알아채지 못한
+
+356. **obscenity**: 음란
+
+357. **obscure**: 모호한
+
+358. **obsolete**: 구식의
+
+359. **obstinate**: 완강한
+
+360. **obstruct**: 방해하다
+
+361. **obtuse**: 둔한
+
+362. **omnipotent**: 전능한
+
+363. **onerous**: 아주 힘든
+
+364. **opaque**: 불투명한
+
+365. **ordinance**: 법령
+
+366. **orthodox**: 정통의
+
+367. **ostensible**: 표면상의
+
+368. **ostentatious**: 과시하는
+
+369. **ostracize**: 배척하다
+
+370. **palliate**: 완화하다
+
+371. **palpable**: 명백한
+
+372. **panacea**: 만병통치약
+
+373. **paradox**: 역설
+
+374. **paragon**: 표본
+
+375. **paramount**: 최고의
+
+376. **paraphrase**: 바꿔 말하다
+
+377. **pariah**: 따돌림받는 사람
+
+378. **partisan**: 편파적인
+
+379. **pensive**: 생각에 잠긴
+
+380. **perceptive**: 통찰력 있는
+
+381. **perennial**: 연중 계속되는
+
+382. **perfunctory**: 형식적인
+
+383. **peripheral**: 주변의
+
+384. **pernicious**: 치명적인
+
+385. **perplex**: 당혹하게 하다
+
+386. **pertinent**: 적절한
+
+387. **perturb**: 교란하다
+
+388. **peruse**: 정독하다
+
+389. **pivotal**: 중추적인
+
+390. **placate**: 달래다
+
+391. **placid**: 평온한
+
+392. **plausible**: 그럴듯한
+
+393. **plunder**: 약탈하다
+
+394. **pragmatic**: 실용적인
+
+395. **precipitate**: 촉발하다
+
+396. **precocious**: 조숙한
+
+397. **prestigious**: 명망 있는
+
+398. **procur**: 입수하다
+
+399. **prodigal**: 낭비하는
+
+400. **profound**: 심오한
+
+401. **profundity**: 심오함
+
+402. **profuse**: 풍부한
+
+403. **prohibitive**: 엄두 못 낼 비싼
+
+404. **proliferate**: 급증하다
+
+405. **prolific**: 다작의
+
+406. **prosaic**: 평범한
+
+407. **proximity**: 근접
+
+408. **prudent**: 신중한
+
+409. **quandary**: 곤경
+
+410. **quell**: 진압하다
+
+411. **quixotic**: 비현실적인
+
+412. **ramble**: 횡설수설하다
+
+413. **ramify**: 분기하다
+
+414. **rancor**: 원한
+
+415. **rapture**: 황홀
+
+416. **ravenous**: 굶주린
+
+417. **rebuke**: 꾸짖다
+
+418. **recalcitrant**: 저항하는
+
+419. **recluse**: 은둔자
+
+420. **reclusive**: 은둔하는
+
+421. **reconcile**: 화해시키다
+
+422. **recount**: 이야기하다
+
+423. **redundant**: 불필요한
+
+424. **refrain**: 자제하다
+
+425. **refurbish**: 재단장하다
+
+426. **refute**: 반박하다
+
+427. **reiterate**: 반복하다
+
+428. **rejuvenate**: 회춘시키다
+
+429. **relapse**: 재발하다
+
+430. **relegate**: 격하시키다
+
+431. **relinquish**: 포기하다
+
+432. **reluctant**: 꺼리는
+
+433. **remorse**: 후회
+
+434. **renounce**: 포기하다
+
+435. **renunciation**: 포기
+
+436. **repercussion**: 영향
+
+437. **reprehend**: 비난하다
+
+438. **reprehensible**: 비난받을 만한
+
+439. **reproach**: 비난하다
+
+440. **repudiate**: 거부하다
+
+441. **repute**: 평판
+
+442. **rescind**: 폐지하다
+
+443. **resilient**: 회복력 있는
+
+444. **resolute**: 단호한
+
+445. **resonate**: 울려 퍼지다
+
+446. **respite**: 휴식
+
+447. **reticent**: 과묵한
+
+448. **revel**: 즐기다
+
+449. **revere**: 숭배하다
+
+450. **revoke**: 취소하다
+
+451. **rhetoric**: 미사여구
+
+452. **ruthless**: 무자비한
+
+453. **sagacious**: 현명한
+
+454. **sagacity**: 현명함
+
+455. **salient**: 두드러진
+
+456. **salvage**: 구조하다
+
+457. **sanctimonious**: 독실한 체하는
+
+458. **sanguine**: 낙관적인
+
+459. **satiate**: 충족시키다
+
+460. **saturate**: 포화시키다
+
+461. **scant**: 부족한
+
+462. **scramble**: 재빨리 움직이다
+
+463. **scrutinize**: 세밀히 조사하다
+
+464. **scrutiny**: 정밀 조사
+
+465. **scrupulous**: 꼼꼼한
+
+466. **skeptical**: 회의적인
+
+467. **sonorous**: 낭랑한
+
+468. **spontaneous**: 자발적인
+
+469. **spurious**: 가짜의
+
+470. **stagnant**: 침체된
+
+471. **stagnate**: 침체되다
+
+472. **static**: 정적인
+
+473. **stifle**: 억누르다
+
+474. **stipulate**: 규정하다
+
+475. **stoic**: 금욕적인
+
+476. **stymie**: 방해하다
+
+477. **subdue**: 진압하다
+
+478. **sublime**: 숭고한
+
+479. **substantiate**: 입증하다
+
+480. **subvert**: 전복시키다
+
+481. **succinct**: 간결한
+
+482. **succumb**: 굴복하다
+
+483. **supercilious**: 거만한
+
+484. **superfluous**: 불필요한
+
+485. **suppress**: 진압하다
+
+486. **surmise**: 추측하다
+
+487. **surmount**: 극복하다
+
+488. **surreptitious**: 은밀한
+
+489. **sustain**: 유지하다
+
+490. **synthesize**: 통합하다
+
+491. **tacit**: 암묵적인
+
+492. **taciturn**: 과묵한
+
+493. **tangible**: 명백한
+
+494. **tedious**: 지루한
+
+495. **tedium**: 지루함
+
+496. **tenable**: 방어할 수 있는
+
+497. **tenacious**: 끈질긴
+
+498. **tentative**: 잠정적인
+
+499. **thwart**: 좌절시키다
+
+500. **tirade**: 장황한 비난
+
+501. **tractable**: 다루기 쉬운
+
+502. **transcend**: 초월하다
+
+503. **transcribe**: 기록하다
+
+504. **transgress**: 위반하다
+
+505. **transient**: 일시적인
+
+506. **transitory**: 일시적인
+
+507. **translucent**: 반투명의
+
+508. **traverse**: 가로지르다
+
+509. **tremulous**: 떨리는
+
+510. **trenchant**: 날카로운
+
+511. **trite**: 진부한
+
+512. **trivial**: 사소한
+
+513. **tumultuous**: 격동의
+
+514. **turbid**: 탁한
+
+515. **turbulence**: 난기류
+
+516. **turbulent**: 격동하는
+
+517. **undermine**: 약화시키다
+
+518. **underscore**: 강조하다
+
+519. **uniform**: 균일한
+
+520. **uniformity**: 획일성
+
+521. **venerate**: 숭배하다
+
+522. **verbose**: 장황한
+
+523. **vicarious**: 대리의
+
+524. **vilify**: 비방하다
+
+525. **vindicate**: 정당성을 입증하다
+
+526. **vindictive**: 보복적인
+
+527. **vivid**: 생생한
+
+528. **volatile**: 변덕스러운
+
+529. **vulnerable**: 취약한
+
+530. **wane**: 약해지다
+
+531. **wary**: 경계하는
+
+532. **wistful**: 아쉬워하는
+
+533. **withstand**: 견디다
+
+534. **zeal**: 열정
+
+535. **zealous**: 열성적인
+
+536. **zenith**: 정점
+    </script>
+
+    <script>
+        // --- Logic ---
+        
+        // State
+        let vocabList = [];
+        let knownIds = new Set();
+        let currentFlashcardIndex = 0;
+        let isFlipped = false;
+        let quizCurrentWord = null;
+        let quizScore = 0;
+        
+        // Charts
+        let progressChart = null;
+        let distributionChart = null;
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            parseData();
+            initCharts();
+            updateStats(); // Changed from renderStats() to updateStats()
+            initFlashcards();
+            initQuiz();
+            renderTable();
+        });
+
+        // 1. Data Parsing
+        function parseData() {
+            const rawText = document.getElementById('rawData').textContent;
+            const lines = rawText.trim().split('\n');
+            const regex = /(\d+)\.\s*\*\*(.*?)\*\*:\s*(.*)/;
+
+            vocabList = lines.map(line => {
+                const match = line.match(regex);
+                if (match) {
+                    return {
+                        id: parseInt(match[1]),
+                        word: match[2].trim(),
+                        meaning: match[3].trim()
+                    };
+                }
+                return null;
+            }).filter(item => item !== null);
+
+            document.getElementById('totalWordsHeader').textContent = vocabList.length;
+            document.getElementById('statRemaining').textContent = vocabList.length;
+        }
+
+        // 2. Charts
+        function initCharts() {
+            // Progress Doughnut
+            const ctxP = document.getElementById('progressChart').getContext('2d');
+            progressChart = new Chart(ctxP, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Memorized', 'Remaining'],
+                    datasets: [{
+                        data: [0, vocabList.length],
+                        backgroundColor: ['#10b981', '#e7e5e4'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Distribution Bar
+            const alphabetCounts = {};
+            'abcdefghijklmnopqrstuvwxyz'.split('').forEach(l => alphabetCounts[l] = 0);
+            
+            vocabList.forEach(item => {
+                const char = item.word.charAt(0).toLowerCase();
+                if (alphabetCounts[char] !== undefined) alphabetCounts[char]++;
+            });
+
+            const ctxD = document.getElementById('distributionChart').getContext('2d');
+            distributionChart = new Chart(ctxD, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(alphabetCounts).map(l => l.toUpperCase()),
+                    datasets: [{
+                        label: 'Word Count',
+                        data: Object.values(alphabetCounts),
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f5f5f4' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function updateStats() {
+            const knownCount = knownIds.size;
+            const remaining = vocabList.length - knownCount;
+            
+            // DOM
+            document.getElementById('statKnown').textContent = knownCount;
+            document.getElementById('statRemaining').textContent = remaining;
+            
+            // Chart
+            progressChart.data.datasets[0].data = [knownCount, remaining];
+            progressChart.update();
+        }
+
+        function resetProgress() {
+            if(confirm('Are you sure you want to reset your progress?')) {
+                knownIds.clear();
+                updateStats();
+                renderTable(); // Update status icons
+                initFlashcards(); // Reset card index
+            }
+        }
+
+        // 3. Flashcards
+        function initFlashcards() {
+            // Randomly shuffle for start, or start from 0
+            currentFlashcardIndex = 0; 
+            renderCard();
+        }
+
+        function renderCard() {
+            const item = vocabList[currentFlashcardIndex];
+            if (!item) return;
+
+            const cardInner = document.getElementById('flashcardInner');
+            const btnKnown = document.getElementById('btnKnown');
+            
+            // Reset Flip
+            isFlipped = false;
+            cardInner.style.transform = 'rotateY(0deg)';
+
+            // Content
+            document.getElementById('cardWord').textContent = item.word;
+            document.getElementById('cardMeaning').textContent = item.meaning;
+            document.getElementById('cardCounter').textContent = `${currentFlashcardIndex + 1} / ${vocabList.length}`;
+
+            // Button State
+            if (knownIds.has(item.id)) {
+                btnKnown.classList.remove('bg-emerald-50', 'text-emerald-600');
+                btnKnown.classList.add('bg-emerald-600', 'text-white');
+                btnKnown.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i> Memorized';
+            } else {
+                btnKnown.classList.add('bg-emerald-50', 'text-emerald-600');
+                btnKnown.classList.remove('bg-emerald-600', 'text-white');
+                btnKnown.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> Mark as Known';
+            }
+            lucide.createIcons();
+        }
+
+        function flipCard() {
+            const cardInner = document.getElementById('flashcardInner');
+            isFlipped = !isFlipped;
+            cardInner.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+        }
+
+        function nextCard() {
+            if (currentFlashcardIndex < vocabList.length - 1) {
+                currentFlashcardIndex++;
+                renderCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                renderCard();
+            }
+        }
+
+        function randomCard() {
+            currentFlashcardIndex = Math.floor(Math.random() * vocabList.length);
+            renderCard();
+        }
+
+        function markAsKnown() {
+            const item = vocabList[currentFlashcardIndex];
+            if (knownIds.has(item.id)) {
+                knownIds.delete(item.id);
+            } else {
+                knownIds.add(item.id);
+            }
+            updateStats();
+            renderCard(); // Re-render button state
+            renderTable(); // Update table row
+        }
+
+        // 4. Quiz
+        function initQuiz() {
+            // Pick random target
+            const targetIndex = Math.floor(Math.random() * vocabList.length);
+            quizCurrentWord = vocabList[targetIndex];
+            
+            // Pick 3 distractors
+            const options = [quizCurrentWord];
+            while (options.length < 4) {
+                const randIndex = Math.floor(Math.random() * vocabList.length);
+                if (randIndex !== targetIndex && !options.includes(vocabList[randIndex])) {
+                    options.push(vocabList[randIndex]);
+                }
+            }
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+            
+            // Render
+            document.getElementById('quizWord').textContent = quizCurrentWord.word;
+            document.getElementById('quizFeedback').textContent = '';
+            document.getElementById('quizFeedback').className = 'mt-4 text-center h-6 font-medium';
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-3 text-left bg-stone-50 border border-stone-200 rounded-lg hover:bg-stone-100 transition-colors text-sm font-medium text-stone-700";
+                btn.textContent = opt.meaning;
+                btn.onclick = () => checkAnswer(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, btn) {
+            const feedback = document.getElementById('quizFeedback');
+            const allBtns = document.getElementById('quizOptions').children;
+            
+            // Disable all buttons
+            for (let b of allBtns) b.disabled = true;
+
+            if (selected.id === quizCurrentWord.id) {
+                // Correct
+                btn.classList.remove('bg-stone-50', 'text-stone-700');
+                btn.classList.add('bg-green-100', 'border-green-300', 'text-green-800');
+                feedback.textContent = 'Correct! 🎉';
+                feedback.classList.add('text-green-600');
+                quizScore += 10;
+                document.getElementById('quizScore').textContent = `Score: ${quizScore}`;
+                setTimeout(initQuiz, 1500); // Auto next
+            } else {
+                // Incorrect
+                btn.classList.remove('bg-stone-50', 'text-stone-700');
+                btn.classList.add('bg-red-50', 'border-red-200', 'text-red-700');
+                feedback.textContent = `Incorrect. The answer is "${quizCurrentWord.meaning}".`;
+                feedback.classList.add('text-red-500');
+                
+                // Highlight correct answer
+                for (let b of allBtns) {
+                    if (b.textContent === quizCurrentWord.meaning) {
+                        b.classList.add('bg-green-50', 'border-green-200', 'text-green-700');
+                    }
+                }
+            }
+        }
+
+        // 5. Table
+        function renderTable(filterText = '') {
+            const tbody = document.getElementById('vocabTableBody');
+            tbody.innerHTML = '';
+            
+            const filtered = vocabList.filter(item => 
+                item.word.toLowerCase().includes(filterText.toLowerCase()) || 
+                item.meaning.includes(filterText)
+            );
+
+            // Limit render for performance if empty filter, else show all filtered
+            const displayList = filtered; // Can add pagination if needed, but 536 is manageable
+
+            displayList.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-stone-50 transition-colors";
+                
+                const isKnown = knownIds.has(item.id);
+                const statusIcon = isKnown 
+                    ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">Known</span>`
+                    : `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-stone-100 text-stone-500">Learning</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-4 text-center text-xs text-stone-400 font-mono">${item.id}</td>
+                    <td class="p-4 font-medium text-stone-800 font-serif">${item.word}</td>
+                    <td class="p-4 text-stone-600">${item.meaning}</td>
+                    <td class="p-4 text-center">${statusIcon}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('tableFooter').textContent = `Showing ${filtered.length} of ${vocabList.length} words`;
+        }
+
+        function filterTable() {
+            const text = document.getElementById('searchInput').value;
+            renderTable(text);
+        }
+
+        let sortAsc = true;
+        function sortTable(key) {
+            sortAsc = !sortAsc;
+            if (key === 'word') {
+                vocabList.sort((a, b) => sortAsc ? a.word.localeCompare(b.word) : b.word.localeCompare(a.word));
+            }
+            // Re-render
+            filterTable();
+        }
+
+    </script>
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. (Lucide icons via script used as requested alternative) -->
+</body>
+</html>
