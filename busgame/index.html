@@ -3,51 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BUS JAM!</title>
+    <title>BUS Escape!</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚌</text></svg>">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
 
     <style>
         :root {
-            /* --- Aurora Masterpiece Theme (Restored) --- */
-            --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,90%,1) 0, transparent 50%), 
-                           radial-gradient(at 50% 0%, hsla(225,39%,90%,1) 0, transparent 50%), 
-                           radial-gradient(at 100% 0%, hsla(339,49%,90%,1) 0, transparent 50%);
-            --bg-color: #e0e5ec;
+            /* --- Theme Variables --- */
+            --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,95%,1) 0, transparent 50%), 
+                           radial-gradient(at 50% 0%, hsla(225,39%,95%,1) 0, transparent 50%), 
+                           radial-gradient(at 100% 0%, hsla(339,49%,95%,1) 0, transparent 50%);
+            --bg-color: #f0f2f5;
             
-            /* High-End Glass */
-            --glass-surface: rgba(255, 255, 255, 0.65);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.8);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --glass-surface: rgba(255, 255, 255, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
             --glass-blur: blur(20px);
             
-            --text-main: #2d3436;
-            --text-sub: #636e72;
+            /* Modal High Readability */
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --modal-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.15);
             
-            --primary: #0984e3;
-            --danger: #d63031;
-            --warning-bg: rgba(255, 118, 117, 0.3);
+            --text-main: #1c1c1e;
+            --text-sub: #636366;
+            
+            --primary: #007aff;
+            --danger: #ff3b30;
+            --warning-bg: rgba(255, 59, 48, 0.1);
+            --btn-secondary-bg: rgba(118, 118, 128, 0.12); 
 
-            /* Bus Colors (Jelly Glossy) */
-            --c-red-bg: linear-gradient(135deg, #ff7675, #d63031);
-            --c-blue-bg: linear-gradient(135deg, #74b9ff, #0984e3);
-            --c-green-bg: linear-gradient(135deg, #55efc4, #00b894);
-            --c-yellow-bg: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-            --c-purple-bg: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            /* Bus Colors */
+            --c-red-bg: linear-gradient(135deg, #ff6b6b, #ee5253);
+            --c-blue-bg: linear-gradient(135deg, #48dbfb, #0abde3);
+            --c-green-bg: linear-gradient(135deg, #1dd1a1, #10ac84);
+            --c-yellow-bg: linear-gradient(135deg, #feca57, #ff9f43);
+            --c-purple-bg: linear-gradient(135deg, #a29bfe, #5f27cd);
             --c-rock-bg: linear-gradient(135deg, #95a5a6, #7f8c8d);
         }
 
         body.dark-mode {
-            /* --- Deep Space Theme --- */
-            --bg-gradient: radial-gradient(circle at 50% 50%, #1e272e, #000000);
-            --bg-color: #2d3436;
-            --glass-surface: rgba(30, 30, 35, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            --text-main: #dfe6e9;
-            --text-sub: #b2bec3;
-            --primary: #74b9ff;
-            --warning-bg: rgba(214, 48, 49, 0.4);
+            --bg-gradient: radial-gradient(circle at 50% 50%, #2c3e50, #000000);
+            --bg-color: #1c1c1e;
+            --glass-surface: rgba(44, 44, 46, 0.8);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            
+            --modal-bg: rgba(35, 35, 38, 0.98);
+            --modal-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.6);
+
+            --text-main: #ffffff;
+            --text-sub: #aeaeb2;
+            --primary: #0a84ff;
+            --warning-bg: rgba(255, 69, 58, 0.2);
+            --btn-secondary-bg: rgba(255, 255, 255, 0.15);
             --c-rock-bg: linear-gradient(135deg, #7f8c8d, #2c3e50);
         }
 
@@ -73,6 +81,7 @@
             transition: color 0.3s, background 0.3s;
         }
 
+        /* --- Flexible Main Container --- */
         .app-container {
             width: 100%;
             height: 100%;
@@ -111,7 +120,6 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; }
         
         .logo-wrap { display: flex; align-items: center; gap: 8px; }
-        
         .logo-text { 
             font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px;
             background: linear-gradient(135deg, var(--primary) 0%, #8e44ad 100%);
@@ -127,13 +135,14 @@
 
         .controls { display: flex; gap: 8px; }
         .icon-btn {
-            width: 36px; height: 36px; border-radius: 10px;
+            width: 32px; height: 32px; border-radius: 10px;
             background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.1);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: var(--text-main); transition: 0.2s;
+            padding: 0;
         }
         .icon-btn:active { transform: scale(0.92); }
-        .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .icon-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
         .score-board { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
         .score-item .label { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); margin-bottom: 2px; text-transform: uppercase; }
@@ -159,7 +168,6 @@
             position: relative;
             display: flex; align-items: center;
         }
-
         .queue-track {
             width: 100%; height: 100%;
             display: flex; align-items: center;
@@ -167,7 +175,6 @@
             -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
             mask-image: linear-gradient(to right, black 85%, transparent 100%);
         }
-
         .passenger {
             width: 30px; height: 30px; border-radius: 50%;
             border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
@@ -288,66 +295,141 @@
         /* --- Modals --- */
         .modal-wrap {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(12px);
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
             display: flex; justify-content: center; align-items: center;
             z-index: 5000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .modal-wrap.show { opacity: 1; pointer-events: auto; }
 
-        /* Clean Start Screen */
+        /* Balanced Modal Box */
         .modal-box {
-            background: var(--glass-surface); border: var(--glass-border);
-            padding: 40px; border-radius: 32px; text-align: center;
-            width: 85%; max-width: 360px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-            transform: scale(0.9); transition: transform 0.3s;
+            background: var(--modal-bg);
+            border: var(--modal-border);
+            padding: 40px 32px 40px; 
+            border-radius: 32px; text-align: center;
+            width: 80%; max-width: 340px;
+            box-shadow: var(--modal-shadow);
+            transform: scale(0.95); transition: transform 0.3s;
             display: flex; flex-direction: column; align-items: center;
+            position: relative; 
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            text-align: left; 
         }
         .modal-wrap.show .modal-box { transform: scale(1); }
 
-        /* Minimal Start Elements */
-        .start-icon {
-            font-size: 3.5rem; margin-bottom: 20px;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+        /* Start Modal Specific - Extra padding top */
+        .modal-box.start-box {
+             padding-top: 60px; /* Safe space for toggle */
         }
 
-        .start-title {
-            font-size: 2.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 30px;
-            background: linear-gradient(135deg, var(--text-main) 20%, var(--primary) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: -1.5px;
-        }
-        body.dark-mode .start-title { background: linear-gradient(135deg, #fff 20%, #aaa 100%); -webkit-background-clip: text; }
-
-        .modal-title { font-size: 2rem; font-weight: 900; margin-bottom: 10px; color: var(--text-main); }
-        .modal-desc { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
-
-        .btn-main {
-            width: 100%; padding: 18px; border: none; border-radius: 16px;
-            font-size: 1.1rem; font-weight: 800; cursor: pointer;
-            background: var(--primary); color: #fff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
-        }
-        .btn-main:active { transform: scale(0.97); }
-
-        .btn-sub {
-            background: transparent; color: var(--text-sub); border: 2px solid var(--glass-border);
-            margin-top: 8px; padding: 12px; width: 100%; border-radius: 14px; font-weight: 600; cursor: pointer;
+        /* Horizontal Header Layout */
+        .modal-header-row {
+            display: flex;
+            align-items: center;
+            gap: 16px; 
+            margin-bottom: 28px;
+            width: 100%;
         }
 
-        .hidden { display: none !important; }
+        .modal-icon-wrapper {
+            flex-shrink: 0;
+            width: 80px; height: 80px; 
+            display: flex; align-items: center; justify-content: center;
+            background: transparent; 
+            font-size: 4rem; 
+            margin-top: -6px; 
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+        }
+
+        .modal-text-wrapper {
+            flex: 1;
+            display: flex; flex-direction: column;
+            gap: 4px; 
+        }
+
+        .modal-title { 
+            font-size: 2rem; font-weight: 900; 
+            color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1;
+            margin: 0;
+        }
+        .modal-desc { 
+            color: var(--text-sub); 
+            font-size: 1rem; line-height: 1.4; word-break: keep-all; 
+            margin: 0;
+        }
+
+        .stats-inline {
+            margin-top: 6px;
+            font-size: 1rem; color: var(--text-sub);
+        }
+        .stats-inline strong {
+            color: var(--primary); font-size: 1.2rem; font-weight: 800;
+            margin-left: 4px;
+        }
+
+        /* Theme toggle on start screen */
+        .theme-toggle-absolute {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: rgba(128,128,128,0.1);
+            border: 1px solid rgba(128,128,128,0.15);
+            color: var(--text-main);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
+            z-index: 10;
+        }
+        .theme-toggle-absolute:active { transform: scale(0.9); }
+        .theme-toggle-absolute svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+        /* Button Group */
+        .btn-group { 
+            display: flex; flex-direction: column; 
+            gap: 8px; 
+            width: 100%; 
+        }
+
+        .btn-main { 
+            width: 100%; padding: 18px; border: none; /* Thicker button */
+            border-radius: 16px; 
+            font-size: 1.2rem; font-weight: 800; cursor: pointer; 
+            background: var(--primary); color: #fff; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            transition: transform 0.1s; 
+        }
+        .btn-main:active { transform: scale(0.98); box-shadow: none; }
+
+        .btn-sub { 
+            background: var(--btn-secondary-bg); 
+            color: var(--text-main); 
+            border: none; 
+            margin: 0; padding: 14px; width: 100%; 
+            border-radius: 16px; 
+            font-weight: 700; font-size: 0.95rem; cursor: pointer; 
+            transition: background 0.2s;
+        }
+        .btn-sub:active { background: rgba(128,128,128,0.2); }
         
-        .combo-text {
-            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 2.5rem; font-weight: 900; color: var(--text-main);
-            text-shadow: 0 4px 20px rgba(255,255,255,0.8); pointer-events: none; z-index: 9999;
-            animation: floatUp 0.8s forwards; white-space: nowrap;
-        }
-        
+        .combo-text { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; font-weight: 900; color: var(--text-main); text-shadow: 0 4px 20px rgba(255,255,255,0.8); pointer-events: none; z-index: 9999; animation: floatUp 0.8s forwards; white-space: nowrap; }
         @keyframes floatUp { 0%{opacity:0;transform:translate(-50%,20px)} 20%{opacity:1;transform:translate(-50%,0)} 100%{opacity:0;transform:translate(-50%,-80px)} }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+
+        @media (max-height: 800px) {
+            .app-container { gap: 10px; padding: 10px; }
+            .header { padding: 10px 16px 12px; gap: 6px; }
+            .queue-box { height: 50px; }
+            .station-area { height: 65px; gap: 6px; }
+            .passenger { width: 24px; height: 24px; }
+            .passenger.first { width: 32px; height: 32px; }
+            .modal-icon-wrapper { width: 60px; height: 60px; font-size: 3rem; }
+            .modal-title { font-size: 1.6rem; }
+            .logo-text { font-size: 1rem; }
+            .modal-box { padding: 32px 24px; } 
+            .btn-main { padding: 14px; font-size: 1rem; }
+        }
 
     </style>
 </head>
@@ -355,36 +437,57 @@
 
     <!-- Start -->
     <div class="modal-wrap show" id="start-modal">
-        <div class="modal-box">
-            <div class="start-icon">🚌</div>
-            <div class="start-title">BUS JAM!</div>
-            <button class="btn-main" onclick="game.start()">시작하기</button>
+        <div class="modal-box start-box">
+            <button class="theme-toggle-absolute" onclick="ui.toggleTheme()">
+                <!-- Icon injected by JS -->
+            </button>
+            <div class="modal-header-row">
+                <div class="modal-icon-wrapper">🚌</div>
+                <div class="modal-text-wrapper">
+                    <div class="modal-title" style="background: linear-gradient(135deg, var(--primary), #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem;">BUS Escape!</div>
+                    <p class="modal-desc">전략 퍼즐 게임</p>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-main" onclick="game.start()">시작하기</button>
+            </div>
         </div>
     </div>
 
     <!-- Pause -->
     <div class="modal-wrap" id="pause-modal">
         <div class="modal-box">
-            <div style="font-size:3rem; margin-bottom:15px;">⏸️</div>
-            <h2 class="modal-title">일시정지</h2>
-            <p class="modal-desc">잠시 쉬어가는 중입니다</p>
-            <button class="btn-main" onclick="game.resume()">계속하기</button>
-            <button class="btn-sub" onclick="location.reload()">처음으로</button>
+            <div class="modal-header-row">
+                <div class="modal-icon-wrapper">⏸️</div>
+                <div class="modal-text-wrapper">
+                    <h2 class="modal-title">일시정지</h2>
+                    <p class="modal-desc">잠시 쉬어가는 중입니다.</p>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-main" onclick="game.resume()">계속하기</button>
+                <button class="btn-sub" onclick="location.reload()">처음으로</button>
+            </div>
         </div>
     </div>
 
     <!-- Game Over -->
     <div class="modal-wrap" id="gameover-modal">
         <div class="modal-box">
-            <div style="font-size:3rem; margin-bottom:15px;">🚨</div>
-            <h2 class="modal-title" style="color:var(--danger)">게임 오버</h2>
-            <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다</p>
-            <div style="margin-bottom:25px;">
-                <div style="font-size:0.8rem; color:var(--text-sub);">최종 점수</div>
-                <div style="font-size:2.5rem; font-weight:900;" id="final-score">0</div>
+            <div class="modal-header-row">
+                <div class="modal-icon-wrapper">🚨</div>
+                <div class="modal-text-wrapper">
+                    <h2 class="modal-title" style="color:var(--danger)">게임 오버</h2>
+                    <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다.</p>
+                    <div class="stats-inline">
+                        최종 점수: <strong id="final-score">0</strong>
+                    </div>
+                </div>
             </div>
-            <button class="btn-main" onclick="game.restart()">다시 도전</button>
-            <button class="btn-sub" onclick="location.reload()">게임 종료</button>
+            <div class="btn-group">
+                <button class="btn-main" onclick="game.restart()">다시 도전</button>
+                <button class="btn-sub" onclick="location.reload()">게임 종료</button>
+            </div>
         </div>
     </div>
 
@@ -393,16 +496,14 @@
         <header class="header" id="header-box">
             <div class="header-top">
                 <div class="logo-wrap">
-                    <span class="logo-text">BUS JAM!</span>
+                    <span class="logo-text">BUS Escape!</span>
                     <span class="wave-tag" id="wave-txt">WAVE 1</span>
                 </div>
                 <div class="controls">
-                    <button class="icon-btn" onclick="ui.toggleTheme()" id="theme-btn">
-                        <!-- Sun Icon -->
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <button class="icon-btn theme-btn-main" onclick="ui.toggleTheme()">
+                        <!-- Icon injected by JS -->
                     </button>
                     <button class="icon-btn" onclick="game.pause()">
-                        <!-- Pause Icon -->
                         <svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
                     </button>
                 </div>
@@ -423,7 +524,6 @@
         </header>
 
         <div class="queue-box" id="queue-box">
-            <!-- Inner wrapper for masking -->
             <div class="queue-track" id="queue-track"></div>
         </div>
         
@@ -453,7 +553,8 @@
         wave: document.getElementById('wave-txt'),
         timer: document.getElementById('time-bar'),
         header: document.getElementById('header-box'),
-        themeBtn: document.getElementById('theme-btn'),
+        startThemeBtn: document.querySelector('.theme-toggle-absolute'),
+        mainThemeBtn: document.querySelector('.theme-btn-main'),
         modals: {
             start: document.getElementById('start-modal'),
             pause: document.getElementById('pause-modal'),
@@ -466,13 +567,19 @@
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('busJamTheme', isDark ? 'dark' : 'light');
-            ui.themeBtn.innerHTML = isDark ? ICONS.sun : ICONS.moon;
+            ui.updateThemeIcons(isDark);
         },
         
         initTheme: () => {
             const isDark = localStorage.getItem('busJamTheme') === 'dark';
             if(isDark) document.body.classList.add('dark-mode');
-            ui.themeBtn.innerHTML = isDark ? ICONS.sun : ICONS.moon;
+            ui.updateThemeIcons(isDark);
+        },
+
+        updateThemeIcons: (isDark) => {
+            const icon = isDark ? ICONS.sun : ICONS.moon;
+            if(ui.startThemeBtn) ui.startThemeBtn.innerHTML = icon;
+            if(ui.mainThemeBtn) ui.mainThemeBtn.innerHTML = icon;
         },
 
         showFloat: (txt) => {
@@ -483,7 +590,6 @@
             setTimeout(() => el.remove(), 800);
         },
 
-        // JS Driven Grid Sizing
         fitGrid: () => {
             if (!ui.wrapper) return;
             const w = ui.wrapper.clientWidth;
@@ -491,7 +597,6 @@
             const size = Math.min(w, h) - 4; 
             ui.grid.style.width = size + 'px';
             ui.grid.style.height = size + 'px';
-            
             if(game.state === 'playing') game.renderBuses();
         }
     };
@@ -508,17 +613,13 @@
         passengers: [],
         station: [],
         
-        time: 0,
-        maxTime: 0,
-        timerId: null,
-        isBusy: false,
-        combo: 0,
-        isTransitioning: false,
+        time: 0, maxTime: 0, timerId: null,
+        isBusy: false, combo: 0, isTransitioning: false,
 
         start: () => {
             ui.modals.start.classList.remove('show');
             game.resetGlobal();
-            ui.fitGrid(); // Initial fit
+            ui.fitGrid();
             game.startWave();
         },
 
@@ -559,18 +660,13 @@
             game.setupGrid();
             game.setupStation();
             
-            game.buses = []; 
-            game.passengers = [];
+            game.buses = []; game.passengers = [];
             game.station = Array(game.slotCount).fill(null);
             
-            let base = (game.gridSize===7)? 14 : 9;
+            let base = (game.gridSize===7)? 15 : 10;
             if(game.wave >= 4) base += 2;
             const extra = Math.min(Math.floor(game.wave/1.5), 8);
-            
-            let obsCount = 0;
-            if(game.wave >= 4) obsCount = 1;
-            if(game.wave >= 7) obsCount = 2;
-            if(game.wave >= 10) obsCount = 3;
+            let obsCount = (game.wave>=10)?3:(game.wave>=7)?2:(game.wave>=4)?1:0;
 
             game.placeBuses(base + extra, obsCount);
             game.generateQueue();
@@ -581,7 +677,7 @@
             ui.wave.innerText = `WAVE ${game.wave}`;
             ui.showFloat(`WAVE ${game.wave}`);
 
-            let tBase = Math.max(25, 55 - (game.wave * 3));
+            let tBase = Math.max(30, 60 - (game.wave * 2));
             if(game.gridSize===7) tBase += 15;
             game.maxTime = tBase;
             game.time = game.maxTime;
@@ -607,7 +703,6 @@
         placeBuses: (count, obstacles) => {
             let attempts = 0;
             let obsPlaced = 0;
-            
             while((game.buses.length < count + obsPlaced) && attempts < 5000){
                 attempts++;
                 let isObs = false;
@@ -640,8 +735,7 @@
                             id: Math.random(), x, y, w, h, d,
                             type: 'bus',
                             c: COLORS[Math.floor(Math.random()*COLORS.length)],
-                            max: cap, load: 0, state: 'parked', el: null,
-                            isDeparting: false 
+                            max: cap, load: 0, state: 'parked', el: null, isDeparting: false 
                         });
                     }
                 }
@@ -660,17 +754,11 @@
             let sim = game.buses.map(b=>({...b}));
             let order = [];
             let solvable = true;
-            
             while(true){
                 let parkedBuses = sim.filter(b => b.type === 'bus');
                 if(parkedBuses.length === 0) break;
-
                 let exits = parkedBuses.filter(b => game.canExit(b, sim));
-                
-                if(exits.length === 0){
-                    solvable = false;
-                    break;
-                }
+                if(exits.length === 0){ solvable = false; break; }
                 const next = exits[Math.floor(Math.random()*exits.length)];
                 order.push(next);
                 sim = sim.filter(b => b.id !== next.id);
@@ -678,7 +766,7 @@
 
             if(!solvable) {
                 game.buses = [];
-                let base = (game.gridSize===7)? 14 : 9;
+                let base = (game.gridSize===7)? 15 : 10;
                 if(game.wave >= 4) base += 2;
                 const extra = Math.min(Math.floor(game.wave/1.5), 8);
                 let obsCount = (game.wave>=10)?3:(game.wave>=7)?2:(game.wave>=4)?1:0;
@@ -691,7 +779,6 @@
             order.forEach(b => {
                 for(let i=0; i<b.max; i++) flat.push(b.c);
             });
-            
             const win = Math.floor(game.slotCount * 1.5);
             for(let i=0; i<flat.length; i++){
                 if(Math.random()<0.6){
@@ -730,9 +817,7 @@
         },
 
         renderBuses: () => {
-            const pixelW = ui.grid.clientWidth;
-            const unit = pixelW / game.gridSize;
-            
+            const unit = 100 / game.gridSize;
             game.buses.forEach(b => {
                 if(b.state !== 'parked') return;
                 let el = b.el;
@@ -766,11 +851,10 @@
                     b.el = el;
                     ui.grid.appendChild(el);
                 }
-                
-                el.style.width = (b.w * unit) + 'px';
-                el.style.height = (b.h * unit) + 'px';
-                el.style.left = (b.x * unit) + 'px';
-                el.style.top = (b.y * unit) + 'px';
+                el.style.width = (b.w * unit) + '%';
+                el.style.height = (b.h * unit) + '%';
+                el.style.left = (b.x * unit) + '%';
+                el.style.top = (b.y * unit) + '%';
                 
                 if(b.type === 'bus') {
                     const seatDots = el.querySelectorAll('.seat');
@@ -927,6 +1011,7 @@
             if(gEmp && sEmp && game.passengers.length === 0){
                 game.isTransitioning = true; // Lock
                 clearInterval(game.timerId);
+                // Lower bonus
                 game.score += 100 + (game.time * 2);
                 game.updateScore();
                 game.wave++;
