@@ -142,7 +142,7 @@
             padding: 0;
         }
         .icon-btn:active { transform: scale(0.92); }
-        .icon-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
         .score-board { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
         .score-item .label { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); margin-bottom: 2px; text-transform: uppercase; }
@@ -327,7 +327,7 @@
         .modal-header-row {
             display: flex;
             align-items: center;
-            gap: 16px; 
+            gap: 20px; 
             margin-bottom: 28px;
             width: 100%;
         }
@@ -339,8 +339,10 @@
             background: transparent; 
             font-size: 4rem; 
             margin-top: -6px; 
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
         }
+        
+        .modal-icon-wrapper svg { width: 100%; height: 100%; }
 
         .modal-text-wrapper {
             flex: 1;
@@ -368,7 +370,7 @@
             margin-left: 4px;
         }
 
-        /* Theme toggle on start screen */
+        /* Fixed Position Toggle on Start Screen */
         .theme-toggle-absolute {
             position: absolute;
             top: 20px;
@@ -424,7 +426,7 @@
             .station-area { height: 65px; gap: 6px; }
             .passenger { width: 24px; height: 24px; }
             .passenger.first { width: 32px; height: 32px; }
-            .modal-icon-wrapper { width: 60px; height: 60px; font-size: 3rem; }
+            .modal-icon-wrapper { width: 60px; height: 60px; }
             .modal-title { font-size: 1.6rem; }
             .logo-text { font-size: 1rem; }
             .modal-box { padding: 32px 24px; } 
@@ -442,7 +444,29 @@
                 <!-- Icon injected by JS -->
             </button>
             <div class="modal-header-row">
-                <div class="modal-icon-wrapper">🚌</div>
+                <div class="modal-icon-wrapper">
+                    <!-- Premium Bus SVG -->
+                    <svg viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="busGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#48dbfb;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#0abde3;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        <rect x="15" y="25" width="70" height="55" rx="12" fill="url(#busGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                        <rect x="20" y="32" width="60" height="20" rx="6" fill="rgba(255,255,255,0.9)" />
+                        <rect x="20" y="60" width="15" height="4" rx="2" fill="rgba(255,255,255,0.4)" />
+                        <rect x="65" y="60" width="15" height="4" rx="2" fill="rgba(255,255,255,0.4)" />
+                        <circle cx="28" cy="78" r="6" fill="#333" />
+                        <circle cx="72" cy="78" r="6" fill="#333" />
+                        <circle cx="28" cy="78" r="2" fill="#555" />
+                        <circle cx="72" cy="78" r="2" fill="#555" />
+                    </svg>
+                </div>
                 <div class="modal-text-wrapper">
                     <div class="modal-title" style="background: linear-gradient(135deg, var(--primary), #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem;">BUS Escape!</div>
                     <p class="modal-desc">전략 퍼즐 게임</p>
@@ -458,7 +482,14 @@
     <div class="modal-wrap" id="pause-modal">
         <div class="modal-box">
             <div class="modal-header-row">
-                <div class="modal-icon-wrapper">⏸️</div>
+                <div class="modal-icon-wrapper">
+                     <!-- Pause SVG -->
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" fill="rgba(128,128,128,0.1)" stroke="var(--text-main)" stroke-width="3"/>
+                        <rect x="38" y="32" width="8" height="36" rx="4" fill="var(--text-main)"/>
+                        <rect x="54" y="32" width="8" height="36" rx="4" fill="var(--text-main)"/>
+                    </svg>
+                </div>
                 <div class="modal-text-wrapper">
                     <h2 class="modal-title">일시정지</h2>
                     <p class="modal-desc">잠시 쉬어가는 중입니다.</p>
@@ -475,7 +506,15 @@
     <div class="modal-wrap" id="gameover-modal">
         <div class="modal-box">
             <div class="modal-header-row">
-                <div class="modal-icon-wrapper">🚨</div>
+                <div class="modal-icon-wrapper">
+                    <!-- Alert SVG -->
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 15 L85 80 H15 Z" fill="rgba(255,59,48,0.1)" stroke="var(--danger)" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M50 25 L75 75 H25 Z" fill="var(--danger)"/>
+                        <rect x="47" y="38" width="6" height="20" rx="3" fill="#fff"/>
+                        <circle cx="50" cy="68" r="4" fill="#fff"/>
+                    </svg>
+                </div>
                 <div class="modal-text-wrapper">
                     <h2 class="modal-title" style="color:var(--danger)">게임 오버</h2>
                     <p class="modal-desc" id="fail-msg">더 이상 움직일 수 없습니다.</p>
