@@ -2,12 +2,13 @@
 <html lang="ko" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 1. Prevent Zoom on Mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>영어과 논리 및 논술지도 단어장</title>
-    <!-- Google Fonts: Noto Serif KR added -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,7 +17,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Chosen Palette: Warm Academy (Stone, Blue, Amber) + Dark Mode Support -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -28,50 +28,40 @@
                             100: '#f5f5f4',
                             200: '#e7e5e4',
                             300: '#d6d3d1',
-                            600: '#57534e', // Added for softer dark mode card back
+                            600: '#57534e',
                             700: '#44403c',
                             800: '#292524',
-                            850: '#1f1d1b', // Custom dark bg
+                            850: '#1f1d1b',
                             900: '#1c1917',
                             950: '#0c0a09',
                         },
                         academy: {
                             blue: '#2563eb',
                             gold: '#d97706',
-                            bg: '#fdfbf7', // Warm paper-like background (Light)
-                            darkBg: '#0c0a09' // Deep Stone (Dark)
+                            bg: '#fdfbf7',
+                            darkBg: '#0c0a09'
                         }
                     },
                     fontFamily: {
-                        // Updated to prioritize Noto Serif KR for a literary feel
-                        sans: ['Noto Sans KR', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        serif: ['Noto Serif KR', 'Merriweather', 'ui-serif', 'Georgia', 'serif'],
+                        sans: ['Noto Serif KR', 'sans-serif'],
+                        serif: ['Noto Serif KR', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Chart Container Styling Rules - Fixed Height */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            height: 250px; /* Explicit height for Chart.js */
-        }
-        
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: transparent; 
         }
         ::-webkit-scrollbar-thumb {
             background: #d6d3d1; 
-            border-radius: 4px;
+            border-radius: 3px;
         }
         .dark ::-webkit-scrollbar-thumb {
             background: #44403c; 
@@ -80,7 +70,6 @@
             background: #a8a29e; 
         }
 
-        /* Card Flip Animation */
         .perspective-1000 {
             perspective: 1000px;
         }
@@ -94,7 +83,16 @@
             transform: rotateY(180deg);
         }
         
-        /* Transition for Dark Mode */
+        /* Chart Container for PC */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 250px; /* Fixed height for consistent layout */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         body, div, nav, header, main, section, table, tr, td, th {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
@@ -105,17 +103,18 @@
     <!-- Header -->
     <header class="bg-white dark:bg-stone-900 shadow-sm border-b border-stone-200 dark:border-stone-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
-            <!-- Title with Reload -->
             <div class="flex items-center space-x-3 mb-2 sm:mb-0 cursor-pointer group" onclick="location.reload()">
                 <i data-lucide="book-open" class="h-8 w-8 text-academy-blue group-hover:scale-110 transition-transform"></i>
                 <div>
                     <h1 class="text-xl font-bold text-stone-900 dark:text-stone-100 tracking-tight group-hover:text-academy-blue transition-colors">
-                        영어과 논리 및 논술지도 단어장
+                        <!-- Mobile Title -->
+                        <span class="block sm:hidden">논리논술 단어장</span>
+                        <!-- Desktop Title -->
+                        <span class="hidden sm:block">영어과 논리 및 논술지도 단어장</span>
                     </h1>
                 </div>
             </div>
             
-            <!-- Controls -->
             <div class="flex items-center space-x-4">
                 <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="다크 모드 전환">
                     <i data-lucide="moon" class="w-5 h-5 text-stone-600 dark:text-stone-400 dark:hidden"></i>
@@ -136,14 +135,16 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
 
-        <!-- Dashboard Grid -->
+        <!-- 
+           Grid Layout Optimized for Height Matching:
+           Row 1: Flashcard (8) + Progress (4) -> matched height using h-full
+           Row 2: Quiz (8) + Review (4) -> matched height using h-full
+        -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- Left Column: Flashcard & Learning (8 cols) -->
-            <div class="lg:col-span-8 space-y-6">
-                
-                <!-- Flashcard Section -->
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col">
+            <!-- Row 1 Left: Flashcard -->
+            <div class="lg:col-span-8 flex flex-col h-full">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col h-full">
                     <div class="p-4 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center bg-stone-50 dark:bg-stone-850">
                         <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
                             <i data-lucide="layers" class="w-5 h-5 mr-2 text-academy-blue"></i>
@@ -152,26 +153,23 @@
                         <span class="text-xs font-mono bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 px-2 py-1 rounded text-stone-500 dark:text-stone-400" id="cardCounter">1 / 536</span>
                     </div>
                     
-                    <div class="p-8 flex-grow flex flex-col items-center justify-center min-h-[300px] relative bg-stone-50/50 dark:bg-stone-950/50">
-                        <!-- Card Container -->
+                    <div class="p-8 flex-grow flex flex-col items-center justify-center relative bg-stone-50/50 dark:bg-stone-950/50 min-h-[300px]">
                         <div class="perspective-1000 w-full max-w-lg h-64 cursor-pointer group" onclick="flipCard()">
                             <div id="flashcardInner" class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
                                 <!-- Front -->
                                 <div class="absolute w-full h-full backface-hidden bg-white dark:bg-stone-800 border-2 border-academy-blue/10 dark:border-academy-blue/20 rounded-2xl flex flex-col items-center justify-center p-6 hover:border-academy-blue/30 dark:hover:border-academy-blue/40 transition-colors">
-                                    <span class="text-sm text-stone-400 mb-2 uppercase tracking-widest font-semibold">단어 (Word)</span>
+                                    <span class="text-sm text-stone-400 mb-2 uppercase tracking-widest font-semibold">단어</span>
                                     <h2 id="cardWord" class="text-4xl font-bold text-stone-800 dark:text-stone-100 mb-4">abate</h2>
-                                    <!-- Hint removed as requested -->
                                 </div>
                                 <!-- Back -->
                                 <div class="absolute w-full h-full backface-hidden bg-academy-blue dark:bg-stone-700 rotate-y-180 rounded-2xl flex flex-col items-center justify-center p-6 text-white shadow-inner">
-                                    <span class="text-sm text-blue-200 dark:text-stone-400 mb-2 uppercase tracking-widest font-semibold">뜻 (Meaning)</span>
+                                    <span class="text-sm text-blue-200 dark:text-stone-400 mb-2 uppercase tracking-widest font-semibold">뜻</span>
                                     <h2 id="cardMeaning" class="text-3xl font-bold">줄이다</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Controls -->
                     <div class="p-4 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex justify-between items-center">
                         <div class="flex space-x-2">
                             <button onclick="prevCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="이전 단어">
@@ -185,92 +183,84 @@
                             </button>
                         </div>
                         <button onclick="markAsKnown()" id="btnKnown" class="flex items-center px-4 py-2 rounded-lg font-medium transition-colors border shadow-sm text-sm sm:text-base">
-                            <!-- Icon and text injected by JS -->
+                            <!-- Icon injected by JS -->
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Quiz Section -->
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6">
-                    <div class="flex justify-between items-center mb-4">
+            <!-- Row 1 Right: Progress -->
+            <div class="lg:col-span-4 flex flex-col h-full">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col justify-center h-full">
+                    <h3 class="font-bold text-stone-700 dark:text-stone-200 mb-6 flex items-center self-start">
+                        <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-academy-blue"></i>
+                        학습 진행률
+                    </h3>
+                    
+                    <!-- 1. PC: Doughnut Chart -->
+                    <div class="chart-container hidden lg:flex">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+
+                    <!-- 2. Mobile: Bar Gauge -->
+                    <div class="w-full mb-8 lg:hidden">
+                        <div class="flex justify-between text-sm text-stone-600 dark:text-stone-300 mb-2 font-medium">
+                            <span id="progressPercent" class="text-3xl font-bold text-academy-blue">0%</span>
+                            <span class="text-xs text-stone-400 self-end">목표: 100%</span>
+                        </div>
+                        <div class="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-4 overflow-hidden border border-stone-200 dark:border-stone-700">
+                            <div id="progressBar" class="bg-gradient-to-r from-academy-blue to-cyan-500 h-4 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(37,99,235,0.3)]" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-center mt-auto lg:mt-6 w-full">
+                        <div class="bg-stone-50 dark:bg-stone-800 p-4 rounded-lg border border-stone-100 dark:border-stone-700">
+                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-1">암기 완료</p>
+                            <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400" id="statKnown">0</p>
+                        </div>
+                        <div class="bg-stone-50 dark:bg-stone-800 p-4 rounded-lg border border-stone-100 dark:border-stone-700">
+                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-1">남은 단어</p>
+                            <p class="text-2xl font-bold text-stone-600 dark:text-stone-300" id="statRemaining">536</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2 Left: Quiz -->
+            <div class="lg:col-span-8 flex flex-col h-full">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-center mb-6">
                         <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
                             <i data-lucide="brain-circuit" class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400"></i>
                             퀴즈
                         </h3>
                         <span id="quizScore" class="text-sm font-bold text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full">점수: 0</span>
                     </div>
-                    <div id="quizContainer">
-                        <!-- Spacing Increased -->
+                    <div id="quizContainer" class="flex-grow flex flex-col justify-center">
                         <div class="text-center mb-12">
-                            <span id="quizWord" class="font-bold text-4xl text-academy-blue dark:text-blue-400 inline-block">abate</span>
+                            <span id="quizWord" class="font-bold text-4xl text-academy-blue dark:text-blue-400 inline-block transition-all duration-300 transform hover:scale-105">abate</span>
                         </div>
                         <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <!-- Options generated by JS -->
                         </div>
                         <div id="quizFeedback" class="mt-2 text-center h-6 font-medium"></div>
-                        <!-- Spacing Decreased -->
-                        <button onclick="initQuiz()" class="mt-2 w-full py-2 text-stone-500 dark:text-stone-400 text-sm hover:text-stone-800 dark:hover:text-stone-200 underline">건너뛰기 / 다음 문제</button>
+                        <button onclick="initQuiz()" class="mt-2 w-full py-3 text-stone-400 dark:text-stone-500 text-sm hover:text-stone-700 dark:hover:text-stone-300 underline transition-colors">건너뛰기 / 다음 문제</button>
                     </div>
                 </div>
-
             </div>
 
-            <!-- Right Column: Stats & Extras (4 cols) -->
-            <div class="lg:col-span-4 space-y-6">
-                
-                <!-- Progress Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col items-center">
-                    <h3 class="font-bold text-stone-700 dark:text-stone-200 mb-4 self-start flex items-center">
-                        <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-academy-blue"></i>
-                        학습 진행률
-                    </h3>
-                    
-                    <div class="chart-container">
-                        <canvas id="progressChart"></canvas>
-                    </div>
-
-                    <div class="mt-6 w-full grid grid-cols-2 gap-4 text-center">
-                        <div class="bg-stone-50 dark:bg-stone-800 p-3 rounded-lg border border-stone-100 dark:border-stone-700">
-                            <p class="text-xs text-stone-500 dark:text-stone-400">암기 완료</p>
-                            <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400" id="statKnown">0</p>
-                        </div>
-                        <div class="bg-stone-50 dark:bg-stone-800 p-3 rounded-lg border border-stone-100 dark:border-stone-700">
-                            <p class="text-xs text-stone-500 dark:text-stone-400">남은 단어</p>
-                            <p class="text-xl font-bold text-stone-600 dark:text-stone-300" id="statRemaining">536</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Focus Timer -->
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6">
-                    <h3 class="font-bold text-stone-700 dark:text-stone-200 mb-4 flex items-center">
-                        <i data-lucide="timer" class="w-5 h-5 mr-2 text-academy-gold"></i>
-                        집중 타이머
-                    </h3>
-                    <div class="text-center mb-4">
-                        <!-- Font Updated to Serif -->
-                        <div id="timerDisplay" class="text-5xl font-serif font-bold text-stone-800 dark:text-stone-100 tracking-wider">25:00</div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="toggleTimer()" id="timerBtn" class="bg-stone-800 dark:bg-stone-700 text-white py-2 rounded-lg hover:bg-stone-700 dark:hover:bg-stone-600 transition-colors font-medium text-sm">
-                            시작
-                        </button>
-                        <button onclick="resetTimer()" class="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 py-2 rounded-lg hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors font-medium text-sm">
-                            리셋
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Review Notes -->
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6">
+            <!-- Row 2 Right: Review Notes -->
+            <div class="lg:col-span-4 flex flex-col h-full">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
                             <i data-lucide="clipboard-list" class="w-5 h-5 mr-2 text-red-500"></i>
                             오답 노트
                         </h3>
-                        <button onclick="clearReviewList()" class="text-xs text-stone-400 hover:text-red-500">전체 삭제</button>
+                        <button onclick="clearReviewList()" class="text-xs text-stone-400 hover:text-red-500 transition-colors">전체 삭제</button>
                     </div>
-                    <div class="bg-stone-50 dark:bg-stone-850 rounded-lg border border-stone-100 dark:border-stone-800 h-48 overflow-y-auto p-2" id="reviewListContainer">
+                    <!-- h-full allows it to stretch to match the Quiz column's height -->
+                    <div class="bg-stone-50 dark:bg-stone-850 rounded-lg border border-stone-100 dark:border-stone-800 flex-grow overflow-y-auto p-2 custom-scroll" id="reviewListContainer" style="min-height: 200px;">
                         <!-- Review Items -->
                         <div class="h-full flex flex-col items-center justify-center text-stone-400 text-xs text-center p-4">
                             <i data-lucide="check-circle-2" class="w-6 h-6 mb-2 opacity-20"></i>
@@ -278,8 +268,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
 
         <!-- Dictionary Table Section -->
@@ -290,7 +280,6 @@
                         <i data-lucide="list" class="w-5 h-5 mr-2 text-stone-600 dark:text-stone-400"></i>
                         전체 단어 목록
                     </h3>
-                    <!-- Subtitle Removed -->
                 </div>
                 <div class="relative w-full md:w-64">
                     <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400"></i>
@@ -299,14 +288,14 @@
                 </div>
             </div>
             
-            <div class="overflow-x-auto max-h-[600px]">
-                <table class="w-full text-left border-collapse">
+            <div class="w-full">
+                <table class="w-full text-left border-collapse table-fixed">
                     <thead class="bg-stone-100 dark:bg-stone-800 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-16 text-center">번호</th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider cursor-pointer hover:bg-stone-200 dark:hover:bg-stone-700" onclick="sortTable('word')">단어 (Word) <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">뜻 (Meaning)</th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-24 text-center">상태 (클릭하여 변경)</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-12 text-center">#</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider cursor-pointer hover:bg-stone-200 dark:hover:bg-stone-700 w-1/3" onclick="sortTable('word')">단어 <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-1/3">뜻</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-20 text-center">상태</th>
                         </tr>
                     </thead>
                     <tbody id="vocabTableBody" class="divide-y divide-stone-100 dark:divide-stone-800">
@@ -1403,16 +1392,13 @@
         let vocabList = [];
         let knownIds = new Set();
         let quizScore = 0;
-        let reviewList = []; // Review Notes (O-Dap)
+        let reviewList = []; 
 
         let currentFlashcardIndex = 0;
         let isFlipped = false;
         let quizCurrentWord = null;
         
-        // Timer State
-        let timerInterval = null;
-        let timerTime = 25 * 60; // 25 mins in seconds
-        let isTimerRunning = false;
+        // Timer State - Removed completely
         
         // Charts
         let progressChart = null;
@@ -1429,11 +1415,9 @@
             loadState();
             initTheme();
             parseData();
-            // Important: Call initCharts *after* parseData so vocabList is populated
-            initCharts();
+            initCharts(); // Re-enabled
             updateStats();
             renderReviewList();
-            updateTimerDisplay();
             initFlashcards();
             initQuiz();
             renderTable();
@@ -1546,13 +1530,24 @@
         function updateStats() {
             const knownCount = knownIds.size;
             const remaining = vocabList.length - knownCount;
+            const percent = vocabList.length > 0 ? Math.round((knownCount / vocabList.length) * 100) : 0;
             
+            // DOM Updates
             document.getElementById('statKnown').textContent = knownCount;
             document.getElementById('statRemaining').textContent = remaining;
             
+            // Update Desktop Chart
             if (progressChart) {
                 progressChart.data.datasets[0].data = [knownCount, remaining];
                 progressChart.update();
+            }
+
+            // Update Mobile Progress Bar
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            if (progressBar && progressPercent) {
+                progressBar.style.width = `${percent}%`;
+                progressPercent.textContent = `${percent}%`;
             }
         }
 
@@ -1570,57 +1565,7 @@
             }
         }
 
-        // --- NEW: Focus Timer Logic ---
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timerTime / 60);
-            const seconds = timerTime % 60;
-            document.getElementById('timerDisplay').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function toggleTimer() {
-            const btn = document.getElementById('timerBtn');
-            if (isTimerRunning) {
-                // Stop
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                btn.textContent = "재개";
-                btn.classList.replace('bg-red-600', 'bg-stone-800');
-                btn.classList.replace('dark:bg-red-700', 'dark:bg-stone-700');
-            } else {
-                // Start
-                isTimerRunning = true;
-                btn.textContent = "일시정지";
-                btn.classList.replace('bg-stone-800', 'bg-red-600'); // Change to stop color
-                btn.classList.replace('dark:bg-stone-700', 'dark:bg-red-700');
-                
-                timerInterval = setInterval(() => {
-                    if (timerTime > 0) {
-                        timerTime--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        isTimerRunning = false;
-                        btn.textContent = "시작";
-                        btn.classList.replace('bg-red-600', 'bg-stone-800');
-                        alert("시간 종료! 고생하셨습니다.");
-                    }
-                }, 1000);
-            }
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            timerTime = 25 * 60;
-            updateTimerDisplay();
-            const btn = document.getElementById('timerBtn');
-            btn.textContent = "시작";
-            btn.classList.remove('bg-red-600', 'dark:bg-red-700');
-            btn.classList.add('bg-stone-800', 'dark:bg-stone-700');
-        }
-
-        // --- NEW: Review Notes Logic ---
+        // --- Review Notes Logic ---
         function addToReviewList(item) {
             // Avoid duplicates
             if (!reviewList.some(r => r.id === item.id)) {
@@ -1674,7 +1619,7 @@
             lucide.createIcons();
         }
 
-        // 3. Flashcards (Existing)
+        // Flashcards
         function initFlashcards() {
             currentFlashcardIndex = 0; 
             renderCard();
@@ -1741,11 +1686,9 @@
             saveState();
             updateStats();
             
-            // If current card is the one toggled, update card button
             if (vocabList[currentFlashcardIndex].id === id) {
                 renderCard();
             }
-            // Re-render table to show updated status
             renderTable(document.getElementById('searchInput').value);
         }
 
@@ -1753,7 +1696,7 @@
             toggleKnown(vocabList[currentFlashcardIndex].id);
         }
 
-        // 4. Quiz (Updated)
+        // Quiz
         function initQuiz() {
             const targetIndex = Math.floor(Math.random() * vocabList.length);
             quizCurrentWord = vocabList[targetIndex];
@@ -1791,23 +1734,20 @@
             for (let b of allBtns) b.disabled = true;
 
             if (selected.id === quizCurrentWord.id) {
-                // Correct
                 btn.classList.remove('bg-stone-50', 'dark:bg-stone-800', 'text-stone-700', 'dark:text-stone-300');
                 btn.classList.add('bg-green-100', 'dark:bg-green-900/30', 'border-green-300', 'dark:border-green-800', 'text-green-800', 'dark:text-green-300');
                 feedback.textContent = '정답입니다! 🎉';
                 feedback.classList.add('text-green-600', 'dark:text-green-400');
                 quizScore += 10;
                 document.getElementById('quizScore').textContent = `점수: ${quizScore}`;
-                saveState(); // Save score
+                saveState();
                 setTimeout(initQuiz, 1500);
             } else {
-                // Incorrect
                 btn.classList.remove('bg-stone-50', 'dark:bg-stone-800', 'text-stone-700', 'dark:text-stone-300');
                 btn.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-800', 'text-red-700', 'dark:text-red-300');
                 feedback.textContent = `오답입니다. 오답 노트에 추가되었습니다.`;
                 feedback.classList.add('text-red-500', 'dark:text-red-400');
                 
-                // Add to Review List (NEW)
                 addToReviewList(quizCurrentWord);
                 
                 for (let b of allBtns) {
@@ -1818,7 +1758,7 @@
             }
         }
 
-        // 5. Table (Updated with Clickable Status)
+        // Table
         function renderTable(filterText = '') {
             const tbody = document.getElementById('vocabTableBody');
             tbody.innerHTML = '';
@@ -1835,15 +1775,14 @@
                 tr.className = "hover:bg-stone-50 dark:hover:bg-stone-850 transition-colors border-b border-stone-100 dark:border-stone-800";
                 
                 const isKnown = knownIds.has(item.id);
-                // Changed from static span to button with onclick event
                 const statusButton = isKnown 
                     ? `<button onclick="toggleKnown(${item.id})" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors cursor-pointer">암기완료</button>`
                     : `<button onclick="toggleKnown(${item.id})" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer">학습중</button>`;
 
                 tr.innerHTML = `
-                    <td class="p-4 text-center text-xs text-stone-400 font-mono">${item.id}</td>
-                    <td class="p-4 font-medium text-stone-800 dark:text-stone-200 font-serif">${item.word}</td>
-                    <td class="p-4 text-stone-600 dark:text-stone-400">${item.meaning}</td>
+                    <td class="p-4 text-center text-xs text-stone-400 font-mono break-words">${item.id}</td>
+                    <td class="p-4 font-medium text-stone-800 dark:text-stone-200 font-serif break-words">${item.word}</td>
+                    <td class="p-4 text-stone-600 dark:text-stone-400 break-words">${item.meaning}</td>
                     <td class="p-4 text-center">${statusButton}</td>
                 `;
                 tbody.appendChild(tr);
