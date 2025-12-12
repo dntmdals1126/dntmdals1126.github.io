@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영어과 논리 및 논술지도 단어장</title>
+    <!-- Google Fonts: Noto Serif KR added -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -23,6 +28,7 @@
                             100: '#f5f5f4',
                             200: '#e7e5e4',
                             300: '#d6d3d1',
+                            600: '#57534e', // Added for softer dark mode card back
                             700: '#44403c',
                             800: '#292524',
                             850: '#1f1d1b', // Custom dark bg
@@ -37,27 +43,24 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Noto Sans KR', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                        serif: ['Merriweather', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+                        // Updated to prioritize Noto Serif KR for a literary feel
+                        sans: ['Noto Sans KR', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        serif: ['Noto Serif KR', 'Merriweather', 'ui-serif', 'Georgia', 'serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Chart Container Styling Rules */
+        /* Chart Container Styling Rules - Fixed Height */
         .chart-container {
             position: relative;
             width: 100%;
             margin-left: auto;
             margin-right: auto;
+            height: 250px; /* Explicit height for Chart.js */
         }
         
-        .chart-height-sm {
-            height: 250px;
-            max-height: 250px;
-        }
-
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -97,16 +100,7 @@
         }
     </style>
 </head>
-<body class="bg-academy-bg dark:bg-academy-darkBg text-stone-800 dark:text-stone-200 font-sans min-h-screen flex flex-col transition-colors duration-300">
-
-    <!-- Application Structure Plan: 
-         1. Header: Branding, Dark Mode Toggle, Progress Reset.
-         2. Main Content: 
-            - Left: Flashcards & Quiz.
-            - Right: Progress Stats (Doughnut Chart only).
-         3. Reference: Searchable Dictionary.
-         Changes: Removed Guide & Alphabet Chart. Added Persistence & Dark Mode.
-    -->
+<body class="bg-academy-bg dark:bg-academy-darkBg text-stone-800 dark:text-stone-200 font-serif min-h-screen flex flex-col transition-colors duration-300">
 
     <!-- Header -->
     <header class="bg-white dark:bg-stone-900 shadow-sm border-b border-stone-200 dark:border-stone-800 sticky top-0 z-50">
@@ -123,18 +117,18 @@
             
             <!-- Controls -->
             <div class="flex items-center space-x-4">
-                <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="Toggle Dark Mode">
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="다크 모드 전환">
                     <i data-lucide="moon" class="w-5 h-5 text-stone-600 dark:text-stone-400 dark:hidden"></i>
                     <i data-lucide="sun" class="w-5 h-5 text-stone-400 hidden dark:block"></i>
                 </button>
                 
                 <div class="text-right hidden sm:block">
-                    <p class="text-xs font-medium text-stone-500 dark:text-stone-400">Total Words</p>
+                    <p class="text-xs font-medium text-stone-500 dark:text-stone-400">총 단어 수</p>
                     <p class="text-xl font-bold text-academy-blue" id="totalWordsHeader">0</p>
                 </div>
                 
                 <button onclick="resetProgress()" class="text-xs text-stone-400 hover:text-red-500 dark:hover:text-red-400 underline transition-colors">
-                    Reset Progress
+                    진행 초기화
                 </button>
             </div>
         </div>
@@ -153,7 +147,7 @@
                     <div class="p-4 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center bg-stone-50 dark:bg-stone-850">
                         <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
                             <i data-lucide="layers" class="w-5 h-5 mr-2 text-academy-blue"></i>
-                            Flashcard Study
+                            플래시카드 학습
                         </h3>
                         <span class="text-xs font-mono bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 px-2 py-1 rounded text-stone-500 dark:text-stone-400" id="cardCounter">1 / 536</span>
                     </div>
@@ -164,13 +158,13 @@
                             <div id="flashcardInner" class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
                                 <!-- Front -->
                                 <div class="absolute w-full h-full backface-hidden bg-white dark:bg-stone-800 border-2 border-academy-blue/10 dark:border-academy-blue/20 rounded-2xl flex flex-col items-center justify-center p-6 hover:border-academy-blue/30 dark:hover:border-academy-blue/40 transition-colors">
-                                    <span class="text-sm text-stone-400 mb-2 uppercase tracking-widest font-semibold">Word</span>
-                                    <h2 id="cardWord" class="text-4xl font-serif font-bold text-stone-800 dark:text-stone-100 mb-4">abate</h2>
-                                    <p class="text-xs text-stone-400 mt-4">(Click to reveal meaning)</p>
+                                    <span class="text-sm text-stone-400 mb-2 uppercase tracking-widest font-semibold">단어 (Word)</span>
+                                    <h2 id="cardWord" class="text-4xl font-bold text-stone-800 dark:text-stone-100 mb-4">abate</h2>
+                                    <!-- Hint removed as requested -->
                                 </div>
                                 <!-- Back -->
-                                <div class="absolute w-full h-full backface-hidden bg-academy-blue dark:bg-blue-700 rotate-y-180 rounded-2xl flex flex-col items-center justify-center p-6 text-white shadow-inner">
-                                    <span class="text-sm text-blue-200 mb-2 uppercase tracking-widest font-semibold">Meaning</span>
+                                <div class="absolute w-full h-full backface-hidden bg-academy-blue dark:bg-stone-700 rotate-y-180 rounded-2xl flex flex-col items-center justify-center p-6 text-white shadow-inner">
+                                    <span class="text-sm text-blue-200 dark:text-stone-400 mb-2 uppercase tracking-widest font-semibold">뜻 (Meaning)</span>
                                     <h2 id="cardMeaning" class="text-3xl font-bold">줄이다</h2>
                                 </div>
                             </div>
@@ -180,13 +174,13 @@
                     <!-- Controls -->
                     <div class="p-4 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex justify-between items-center">
                         <div class="flex space-x-2">
-                            <button onclick="prevCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="Previous">
+                            <button onclick="prevCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="이전 단어">
                                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
                             </button>
-                            <button onclick="nextCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="Next">
+                            <button onclick="nextCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="다음 단어">
                                 <i data-lucide="chevron-right" class="w-6 h-6"></i>
                             </button>
-                            <button onclick="randomCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="Shuffle">
+                            <button onclick="randomCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="랜덤 섞기">
                                 <i data-lucide="shuffle" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -201,46 +195,86 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
                             <i data-lucide="brain-circuit" class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400"></i>
-                            Quick Quiz
+                            퀴즈
                         </h3>
-                        <span id="quizScore" class="text-sm font-bold text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full">Score: 0</span>
+                        <span id="quizScore" class="text-sm font-bold text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full">점수: 0</span>
                     </div>
                     <div id="quizContainer">
-                        <p class="text-lg text-center mb-6 text-stone-800 dark:text-stone-200">
-                            What is the meaning of <span id="quizWord" class="font-serif font-bold text-2xl text-academy-blue dark:text-blue-400 mx-2">abate</span>?
-                        </p>
+                        <!-- Spacing Increased -->
+                        <div class="text-center mb-12">
+                            <span id="quizWord" class="font-bold text-4xl text-academy-blue dark:text-blue-400 inline-block">abate</span>
+                        </div>
                         <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <!-- Options generated by JS -->
                         </div>
-                        <div id="quizFeedback" class="mt-4 text-center h-6 font-medium"></div>
-                        <button onclick="initQuiz()" class="mt-4 w-full py-2 text-stone-500 dark:text-stone-400 text-sm hover:text-stone-800 dark:hover:text-stone-200 underline">Skip / Next Question</button>
+                        <div id="quizFeedback" class="mt-2 text-center h-6 font-medium"></div>
+                        <!-- Spacing Decreased -->
+                        <button onclick="initQuiz()" class="mt-2 w-full py-2 text-stone-500 dark:text-stone-400 text-sm hover:text-stone-800 dark:hover:text-stone-200 underline">건너뛰기 / 다음 문제</button>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Right Column: Stats Only (4 cols) -->
+            <!-- Right Column: Stats & Extras (4 cols) -->
             <div class="lg:col-span-4 space-y-6">
                 
                 <!-- Progress Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col items-center sticky top-24">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col items-center">
                     <h3 class="font-bold text-stone-700 dark:text-stone-200 mb-4 self-start flex items-center">
                         <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-academy-blue"></i>
-                        Learning Progress
+                        학습 진행률
                     </h3>
                     
-                    <div class="chart-container chart-height-sm w-full max-w-[250px]">
+                    <div class="chart-container">
                         <canvas id="progressChart"></canvas>
                     </div>
 
                     <div class="mt-6 w-full grid grid-cols-2 gap-4 text-center">
                         <div class="bg-stone-50 dark:bg-stone-800 p-3 rounded-lg border border-stone-100 dark:border-stone-700">
-                            <p class="text-xs text-stone-500 dark:text-stone-400">Memorized</p>
+                            <p class="text-xs text-stone-500 dark:text-stone-400">암기 완료</p>
                             <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400" id="statKnown">0</p>
                         </div>
                         <div class="bg-stone-50 dark:bg-stone-800 p-3 rounded-lg border border-stone-100 dark:border-stone-700">
-                            <p class="text-xs text-stone-500 dark:text-stone-400">Remaining</p>
+                            <p class="text-xs text-stone-500 dark:text-stone-400">남은 단어</p>
                             <p class="text-xl font-bold text-stone-600 dark:text-stone-300" id="statRemaining">536</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Focus Timer -->
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6">
+                    <h3 class="font-bold text-stone-700 dark:text-stone-200 mb-4 flex items-center">
+                        <i data-lucide="timer" class="w-5 h-5 mr-2 text-academy-gold"></i>
+                        집중 타이머
+                    </h3>
+                    <div class="text-center mb-4">
+                        <!-- Font Updated to Serif -->
+                        <div id="timerDisplay" class="text-5xl font-serif font-bold text-stone-800 dark:text-stone-100 tracking-wider">25:00</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="toggleTimer()" id="timerBtn" class="bg-stone-800 dark:bg-stone-700 text-white py-2 rounded-lg hover:bg-stone-700 dark:hover:bg-stone-600 transition-colors font-medium text-sm">
+                            시작
+                        </button>
+                        <button onclick="resetTimer()" class="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 py-2 rounded-lg hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors font-medium text-sm">
+                            리셋
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Review Notes -->
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
+                            <i data-lucide="clipboard-list" class="w-5 h-5 mr-2 text-red-500"></i>
+                            오답 노트
+                        </h3>
+                        <button onclick="clearReviewList()" class="text-xs text-stone-400 hover:text-red-500">전체 삭제</button>
+                    </div>
+                    <div class="bg-stone-50 dark:bg-stone-850 rounded-lg border border-stone-100 dark:border-stone-800 h-48 overflow-y-auto p-2" id="reviewListContainer">
+                        <!-- Review Items -->
+                        <div class="h-full flex flex-col items-center justify-center text-stone-400 text-xs text-center p-4">
+                            <i data-lucide="check-circle-2" class="w-6 h-6 mb-2 opacity-20"></i>
+                            <p>퀴즈에서 틀린 단어가<br>여기에 자동으로 추가됩니다.</p>
                         </div>
                     </div>
                 </div>
@@ -254,13 +288,13 @@
                 <div>
                     <h3 class="font-bold text-stone-800 dark:text-stone-200 text-lg flex items-center">
                         <i data-lucide="list" class="w-5 h-5 mr-2 text-stone-600 dark:text-stone-400"></i>
-                        Full Vocabulary List
+                        전체 단어 목록
                     </h3>
-                    <p class="text-sm text-stone-500 dark:text-stone-400 mt-1">Browse, search, or review the entire collection.</p>
+                    <!-- Subtitle Removed -->
                 </div>
                 <div class="relative w-full md:w-64">
                     <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400"></i>
-                    <input type="text" id="searchInput" oninput="filterTable()" placeholder="Search..." 
+                    <input type="text" id="searchInput" oninput="filterTable()" placeholder="단어 검색..." 
                         class="w-full pl-10 pr-4 py-2 border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-academy-blue focus:border-transparent">
                 </div>
             </div>
@@ -269,10 +303,10 @@
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-stone-100 dark:bg-stone-800 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-16 text-center">#</th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider cursor-pointer hover:bg-stone-200 dark:hover:bg-stone-700" onclick="sortTable('word')">Word <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">Meaning (Korean)</th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-24 text-center">Status</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-16 text-center">번호</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider cursor-pointer hover:bg-stone-200 dark:hover:bg-stone-700" onclick="sortTable('word')">단어 (Word) <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">뜻 (Meaning)</th>
+                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-24 text-center">상태</th>
                         </tr>
                     </thead>
                     <tbody id="vocabTableBody" class="divide-y divide-stone-100 dark:divide-stone-800">
@@ -1369,9 +1403,16 @@
         let vocabList = [];
         let knownIds = new Set();
         let quizScore = 0;
+        let reviewList = []; // Review Notes (O-Dap)
+
         let currentFlashcardIndex = 0;
         let isFlipped = false;
         let quizCurrentWord = null;
+        
+        // Timer State
+        let timerInterval = null;
+        let timerTime = 25 * 60; // 25 mins in seconds
+        let isTimerRunning = false;
         
         // Charts
         let progressChart = null;
@@ -1379,6 +1420,7 @@
         // Persistence Keys
         const STORAGE_KEY_KNOWN = 'vocabMaster_knownIds';
         const STORAGE_KEY_SCORE = 'vocabMaster_quizScore';
+        const STORAGE_KEY_REVIEW = 'vocabMaster_reviewList';
         const STORAGE_KEY_THEME = 'vocabMaster_theme';
 
         // Initialization
@@ -1387,8 +1429,11 @@
             loadState();
             initTheme();
             parseData();
+            // Important: Call initCharts *after* parseData so vocabList is populated
             initCharts();
             updateStats();
+            renderReviewList();
+            updateTimerDisplay();
             initFlashcards();
             initQuiz();
             renderTable();
@@ -1409,13 +1454,22 @@
             const savedScore = localStorage.getItem(STORAGE_KEY_SCORE);
             if (savedScore) {
                 quizScore = parseInt(savedScore, 10);
-                document.getElementById('quizScore').textContent = `Score: ${quizScore}`;
+                document.getElementById('quizScore').textContent = `점수: ${quizScore}`;
+            }
+
+            // Load Review List
+            const savedReview = localStorage.getItem(STORAGE_KEY_REVIEW);
+            if (savedReview) {
+                try {
+                    reviewList = JSON.parse(savedReview);
+                } catch(e) { console.error("Error loading review list", e); }
             }
         }
 
         function saveState() {
             localStorage.setItem(STORAGE_KEY_KNOWN, JSON.stringify([...knownIds]));
             localStorage.setItem(STORAGE_KEY_SCORE, quizScore);
+            localStorage.setItem(STORAGE_KEY_REVIEW, JSON.stringify(reviewList));
         }
 
         // Theme Management
@@ -1460,12 +1514,18 @@
         // 2. Charts (Doughnut Only)
         function initCharts() {
             const ctxP = document.getElementById('progressChart').getContext('2d');
+            
+            // Check if chart instance already exists and destroy it if so (prevents duplication bugs)
+            if (progressChart) {
+                progressChart.destroy();
+            }
+
             progressChart = new Chart(ctxP, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Memorized', 'Remaining'],
+                    labels: ['암기 완료', '남은 단어'],
                     datasets: [{
-                        data: [0, vocabList.length],
+                        data: [knownIds.size, vocabList.length - knownIds.size], // Initialize with current data
                         backgroundColor: ['#10b981', '#e7e5e4'],
                         borderWidth: 0,
                         hoverOffset: 4
@@ -1481,40 +1541,140 @@
                     cutout: '70%'
                 }
             });
-            
-            // Check dark mode changes to update chart colors dynamically if needed (Optional refinement)
-            // For now, static colors are fine as they contrast well in both modes.
         }
 
         function updateStats() {
             const knownCount = knownIds.size;
             const remaining = vocabList.length - knownCount;
             
-            // DOM
             document.getElementById('statKnown').textContent = knownCount;
             document.getElementById('statRemaining').textContent = remaining;
             
-            // Chart
-            progressChart.data.datasets[0].data = [knownCount, remaining];
-            // Update chart background color based on theme is tricky without chart.js plugin, 
-            // but standard colors #10b981 (green) and #e7e5e4 (light gray) work okay on dark too.
-            // Let's adjust the gray for dark mode if strictly needed, but standard usually works.
-            progressChart.update();
+            if (progressChart) {
+                progressChart.data.datasets[0].data = [knownCount, remaining];
+                progressChart.update();
+            }
         }
 
         function resetProgress() {
             if(confirm('진행 상황을 초기화하시겠습니까? 모든 암기 기록이 삭제됩니다.')) {
                 knownIds.clear();
                 quizScore = 0;
+                reviewList = [];
                 saveState();
                 updateStats();
-                document.getElementById('quizScore').textContent = `Score: 0`;
+                document.getElementById('quizScore').textContent = `점수: 0`;
+                renderReviewList();
                 renderTable(); 
                 initFlashcards();
             }
         }
 
-        // 3. Flashcards
+        // --- NEW: Focus Timer Logic ---
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerTime / 60);
+            const seconds = timerTime % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timerBtn');
+            if (isTimerRunning) {
+                // Stop
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btn.textContent = "재개";
+                btn.classList.replace('bg-red-600', 'bg-stone-800');
+                btn.classList.replace('dark:bg-red-700', 'dark:bg-stone-700');
+            } else {
+                // Start
+                isTimerRunning = true;
+                btn.textContent = "일시정지";
+                btn.classList.replace('bg-stone-800', 'bg-red-600'); // Change to stop color
+                btn.classList.replace('dark:bg-stone-700', 'dark:bg-red-700');
+                
+                timerInterval = setInterval(() => {
+                    if (timerTime > 0) {
+                        timerTime--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        btn.textContent = "시작";
+                        btn.classList.replace('bg-red-600', 'bg-stone-800');
+                        alert("시간 종료! 고생하셨습니다.");
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerTime = 25 * 60;
+            updateTimerDisplay();
+            const btn = document.getElementById('timerBtn');
+            btn.textContent = "시작";
+            btn.classList.remove('bg-red-600', 'dark:bg-red-700');
+            btn.classList.add('bg-stone-800', 'dark:bg-stone-700');
+        }
+
+        // --- NEW: Review Notes Logic ---
+        function addToReviewList(item) {
+            // Avoid duplicates
+            if (!reviewList.some(r => r.id === item.id)) {
+                reviewList.unshift(item); // Add to top
+                saveState();
+                renderReviewList();
+            }
+        }
+
+        function removeFromReviewList(id) {
+            reviewList = reviewList.filter(item => item.id !== id);
+            saveState();
+            renderReviewList();
+        }
+
+        function clearReviewList() {
+            if (reviewList.length === 0) return;
+            if (confirm("오답 노트를 모두 삭제하시겠습니까?")) {
+                reviewList = [];
+                saveState();
+                renderReviewList();
+            }
+        }
+
+        function renderReviewList() {
+            const container = document.getElementById('reviewListContainer');
+            container.innerHTML = '';
+
+            if (reviewList.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-stone-400 text-xs text-center p-4">
+                        <i data-lucide="check-circle-2" class="w-6 h-6 mb-2 opacity-20"></i>
+                        <p>퀴즈에서 틀린 단어가<br>여기에 자동으로 추가됩니다.</p>
+                    </div>`;
+            } else {
+                reviewList.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center p-2 mb-2 bg-white dark:bg-stone-800 rounded border border-stone-100 dark:border-stone-700 shadow-sm text-sm";
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-bold text-stone-700 dark:text-stone-200 mr-2">${item.word}</span>
+                            <span class="text-stone-500 dark:text-stone-400 text-xs">${item.meaning}</span>
+                        </div>
+                        <button onclick="removeFromReviewList(${item.id})" class="text-stone-400 hover:text-red-500 p-1">
+                            <i data-lucide="x" class="w-3 h-3"></i>
+                        </button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // 3. Flashcards (Existing)
         function initFlashcards() {
             currentFlashcardIndex = 0; 
             renderCard();
@@ -1539,10 +1699,10 @@
             // Button State
             if (knownIds.has(item.id)) {
                 btnKnown.className = "flex items-center px-4 py-2 rounded-lg font-medium transition-colors border shadow-sm bg-emerald-600 border-emerald-700 text-white hover:bg-emerald-700";
-                btnKnown.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i> Memorized';
+                btnKnown.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i> 암기 됨';
             } else {
                 btnKnown.className = "flex items-center px-4 py-2 rounded-lg font-medium transition-colors border shadow-sm bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-700";
-                btnKnown.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> Mark as Known';
+                btnKnown.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> 암기 완료';
             }
             lucide.createIcons();
         }
@@ -1585,7 +1745,7 @@
             renderTable();
         }
 
-        // 4. Quiz
+        // 4. Quiz (Updated)
         function initQuiz() {
             const targetIndex = Math.floor(Math.random() * vocabList.length);
             quizCurrentWord = vocabList[targetIndex];
@@ -1602,7 +1762,7 @@
             document.getElementById('quizWord').textContent = quizCurrentWord.word;
             const feedback = document.getElementById('quizFeedback');
             feedback.textContent = '';
-            feedback.className = 'mt-4 text-center h-6 font-medium';
+            feedback.className = 'mt-2 text-center h-6 font-medium';
             
             const optionsContainer = document.getElementById('quizOptions');
             optionsContainer.innerHTML = '';
@@ -1623,19 +1783,24 @@
             for (let b of allBtns) b.disabled = true;
 
             if (selected.id === quizCurrentWord.id) {
+                // Correct
                 btn.classList.remove('bg-stone-50', 'dark:bg-stone-800', 'text-stone-700', 'dark:text-stone-300');
                 btn.classList.add('bg-green-100', 'dark:bg-green-900/30', 'border-green-300', 'dark:border-green-800', 'text-green-800', 'dark:text-green-300');
-                feedback.textContent = 'Correct! 🎉';
+                feedback.textContent = '정답입니다! 🎉';
                 feedback.classList.add('text-green-600', 'dark:text-green-400');
                 quizScore += 10;
-                document.getElementById('quizScore').textContent = `Score: ${quizScore}`;
+                document.getElementById('quizScore').textContent = `점수: ${quizScore}`;
                 saveState(); // Save score
                 setTimeout(initQuiz, 1500);
             } else {
+                // Incorrect
                 btn.classList.remove('bg-stone-50', 'dark:bg-stone-800', 'text-stone-700', 'dark:text-stone-300');
                 btn.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-800', 'text-red-700', 'dark:text-red-300');
-                feedback.textContent = `Incorrect. The answer is "${quizCurrentWord.meaning}".`;
+                feedback.textContent = `오답입니다. 오답 노트에 추가되었습니다.`;
                 feedback.classList.add('text-red-500', 'dark:text-red-400');
+                
+                // Add to Review List (NEW)
+                addToReviewList(quizCurrentWord);
                 
                 for (let b of allBtns) {
                     if (b.textContent === quizCurrentWord.meaning) {
@@ -1645,7 +1810,7 @@
             }
         }
 
-        // 5. Table
+        // 5. Table (Existing)
         function renderTable(filterText = '') {
             const tbody = document.getElementById('vocabTableBody');
             tbody.innerHTML = '';
@@ -1663,8 +1828,8 @@
                 
                 const isKnown = knownIds.has(item.id);
                 const statusIcon = isKnown 
-                    ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300">Known</span>`
-                    : `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400">Learning</span>`;
+                    ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300">암기완료</span>`
+                    : `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400">학습중</span>`;
 
                 tr.innerHTML = `
                     <td class="p-4 text-center text-xs text-stone-400 font-mono">${item.id}</td>
@@ -1675,7 +1840,7 @@
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('tableFooter').textContent = `Showing ${filtered.length} of ${vocabList.length} words`;
+            document.getElementById('tableFooter').textContent = `총 ${vocabList.length}개 중 ${filtered.length}개 표시`;
         }
 
         function filterTable() {
