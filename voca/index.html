@@ -100,13 +100,14 @@
 </head>
 <body class="bg-academy-bg dark:bg-academy-darkBg text-stone-800 dark:text-stone-200 font-serif min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- Header -->
+    <!-- Header: Optimized for Mobile (One Line) -->
     <header class="bg-white dark:bg-stone-900 shadow-sm border-b border-stone-200 dark:border-stone-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
-            <div class="flex items-center space-x-3 mb-2 sm:mb-0 cursor-pointer group" onclick="location.reload()">
-                <i data-lucide="book-open" class="h-8 w-8 text-academy-blue group-hover:scale-110 transition-transform"></i>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-row justify-between items-center">
+            <!-- Title -->
+            <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer group shrink-0" onclick="location.reload()">
+                <i data-lucide="book-open" class="h-6 w-6 sm:h-8 sm:w-8 text-academy-blue group-hover:scale-110 transition-transform"></i>
                 <div>
-                    <h1 class="text-xl font-bold text-stone-900 dark:text-stone-100 tracking-tight group-hover:text-academy-blue transition-colors">
+                    <h1 class="text-base sm:text-xl font-bold text-stone-900 dark:text-stone-100 tracking-tight group-hover:text-academy-blue transition-colors">
                         <!-- Mobile Title -->
                         <span class="block sm:hidden">논리논술 단어장</span>
                         <!-- Desktop Title -->
@@ -115,10 +116,11 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="다크 모드 전환">
-                    <i data-lucide="moon" class="w-5 h-5 text-stone-600 dark:text-stone-400 dark:hidden"></i>
-                    <i data-lucide="sun" class="w-5 h-5 text-stone-400 hidden dark:block"></i>
+            <!-- Controls -->
+            <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
+                <button onclick="toggleDarkMode()" class="p-1.5 sm:p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="다크 모드 전환">
+                    <i data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5 text-stone-600 dark:text-stone-400 dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 sm:w-5 sm:h-5 text-stone-400 hidden dark:block"></i>
                 </button>
                 
                 <div class="text-right hidden sm:block">
@@ -126,14 +128,14 @@
                     <p class="text-xl font-bold text-academy-blue" id="totalWordsHeader">0</p>
                 </div>
                 
-                <button onclick="resetProgress()" class="text-xs text-stone-400 hover:text-red-500 dark:hover:text-red-400 underline transition-colors">
-                    진행 초기화
+                <button onclick="resetProgress()" class="text-[10px] sm:text-xs text-stone-400 hover:text-red-500 dark:hover:text-red-400 underline transition-colors whitespace-nowrap">
+                    초기화
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full space-y-6 sm:space-y-8">
 
         <!-- 
            Grid Layout Optimized for Height Matching:
@@ -143,46 +145,46 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- Row 1 Left: Flashcard -->
-            <div class="lg:col-span-8 flex flex-col h-full">
+            <div class="lg:col-span-8 flex flex-col h-full order-1">
                 <div class="bg-white dark:bg-stone-900 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col h-full">
-                    <div class="p-4 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center bg-stone-50 dark:bg-stone-850">
-                        <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
-                            <i data-lucide="layers" class="w-5 h-5 mr-2 text-academy-blue"></i>
+                    <div class="p-3 sm:p-4 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center bg-stone-50 dark:bg-stone-850">
+                        <h3 class="font-bold text-sm sm:text-base text-stone-700 dark:text-stone-200 flex items-center">
+                            <i data-lucide="layers" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-academy-blue"></i>
                             플래시카드 학습
                         </h3>
-                        <span class="text-xs font-mono bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 px-2 py-1 rounded text-stone-500 dark:text-stone-400" id="cardCounter">1 / 536</span>
+                        <span class="text-[10px] sm:text-xs font-mono bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 px-2 py-1 rounded text-stone-500 dark:text-stone-400" id="cardCounter">1 / 536</span>
                     </div>
                     
-                    <div class="p-8 flex-grow flex flex-col items-center justify-center relative bg-stone-50/50 dark:bg-stone-950/50 min-h-[300px]">
-                        <div class="perspective-1000 w-full max-w-lg h-64 cursor-pointer group" onclick="flipCard()">
+                    <div class="p-4 sm:p-8 flex-grow flex flex-col items-center justify-center relative bg-stone-50/50 dark:bg-stone-950/50 min-h-[250px] sm:min-h-[300px]">
+                        <div class="perspective-1000 w-full max-w-lg h-56 sm:h-64 cursor-pointer group" onclick="flipCard()">
                             <div id="flashcardInner" class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
                                 <!-- Front -->
-                                <div class="absolute w-full h-full backface-hidden bg-white dark:bg-stone-800 border-2 border-academy-blue/10 dark:border-academy-blue/20 rounded-2xl flex flex-col items-center justify-center p-6 hover:border-academy-blue/30 dark:hover:border-academy-blue/40 transition-colors">
-                                    <span class="text-sm text-stone-400 mb-2 uppercase tracking-widest font-semibold">단어</span>
-                                    <h2 id="cardWord" class="text-4xl font-bold text-stone-800 dark:text-stone-100 mb-4">abate</h2>
+                                <div class="absolute w-full h-full backface-hidden bg-white dark:bg-stone-800 border-2 border-academy-blue/10 dark:border-academy-blue/20 rounded-2xl flex flex-col items-center justify-center p-4 sm:p-6 hover:border-academy-blue/30 dark:hover:border-academy-blue/40 transition-colors">
+                                    <span class="text-[10px] sm:text-sm text-stone-400 mb-1 sm:mb-2 uppercase tracking-widest font-semibold">단어</span>
+                                    <h2 id="cardWord" class="text-3xl sm:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-2 sm:mb-4">abate</h2>
                                 </div>
                                 <!-- Back -->
-                                <div class="absolute w-full h-full backface-hidden bg-academy-blue dark:bg-stone-700 rotate-y-180 rounded-2xl flex flex-col items-center justify-center p-6 text-white shadow-inner">
-                                    <span class="text-sm text-blue-200 dark:text-stone-400 mb-2 uppercase tracking-widest font-semibold">뜻</span>
-                                    <h2 id="cardMeaning" class="text-3xl font-bold">줄이다</h2>
+                                <div class="absolute w-full h-full backface-hidden bg-academy-blue dark:bg-stone-700 rotate-y-180 rounded-2xl flex flex-col items-center justify-center p-4 sm:p-6 text-white shadow-inner">
+                                    <span class="text-[10px] sm:text-sm text-blue-200 dark:text-stone-400 mb-1 sm:mb-2 uppercase tracking-widest font-semibold">뜻</span>
+                                    <h2 id="cardMeaning" class="text-2xl sm:text-3xl font-bold">줄이다</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="p-4 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex justify-between items-center">
-                        <div class="flex space-x-2">
-                            <button onclick="prevCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="이전 단어">
-                                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    <div class="p-3 sm:p-4 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex justify-between items-center">
+                        <div class="flex space-x-1 sm:space-x-2">
+                            <button onclick="prevCard()" class="p-1.5 sm:p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="이전 단어">
+                                <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                             </button>
-                            <button onclick="nextCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="다음 단어">
-                                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                            <button onclick="nextCard()" class="p-1.5 sm:p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="다음 단어">
+                                <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                             </button>
-                            <button onclick="randomCard()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="랜덤 섞기">
-                                <i data-lucide="shuffle" class="w-6 h-6"></i>
+                            <button onclick="randomCard()" class="p-1.5 sm:p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 transition-colors tooltip" title="랜덤 섞기">
+                                <i data-lucide="shuffle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                             </button>
                         </div>
-                        <button onclick="markAsKnown()" id="btnKnown" class="flex items-center px-4 py-2 rounded-lg font-medium transition-colors border shadow-sm text-sm sm:text-base">
+                        <button onclick="markAsKnown()" id="btnKnown" class="flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-colors border shadow-sm text-xs sm:text-sm">
                             <!-- Icon injected by JS -->
                         </button>
                     </div>
@@ -190,10 +192,10 @@
             </div>
 
             <!-- Row 1 Right: Progress -->
-            <div class="lg:col-span-4 flex flex-col h-full">
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col justify-center h-full">
-                    <h3 class="font-bold text-stone-700 dark:text-stone-200 mb-6 flex items-center self-start">
-                        <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-academy-blue"></i>
+            <div class="lg:col-span-4 flex flex-col h-full order-2">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-4 sm:p-6 flex flex-col justify-center h-full">
+                    <h3 class="font-bold text-sm sm:text-base text-stone-700 dark:text-stone-200 mb-4 sm:mb-6 flex items-center self-start">
+                        <i data-lucide="pie-chart" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-academy-blue"></i>
                         학습 진행률
                     </h3>
                     
@@ -203,67 +205,67 @@
                     </div>
 
                     <!-- 2. Mobile: Bar Gauge -->
-                    <div class="w-full mb-8 lg:hidden">
-                        <div class="flex justify-between text-sm text-stone-600 dark:text-stone-300 mb-2 font-medium">
-                            <span id="progressPercent" class="text-3xl font-bold text-academy-blue">0%</span>
-                            <span class="text-xs text-stone-400 self-end">목표: 100%</span>
+                    <div class="w-full mb-4 sm:mb-8 lg:hidden">
+                        <div class="flex justify-between text-xs sm:text-sm text-stone-600 dark:text-stone-300 mb-1 sm:mb-2 font-medium">
+                            <span id="progressPercent" class="text-lg sm:text-3xl font-bold text-academy-blue">0%</span>
+                            <span class="text-[10px] sm:text-xs text-stone-400 self-end">목표: 100%</span>
                         </div>
-                        <div class="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-4 overflow-hidden border border-stone-200 dark:border-stone-700">
-                            <div id="progressBar" class="bg-gradient-to-r from-academy-blue to-cyan-500 h-4 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(37,99,235,0.3)]" style="width: 0%"></div>
+                        <div class="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-3 sm:h-4 overflow-hidden border border-stone-200 dark:border-stone-700">
+                            <div id="progressBar" class="bg-gradient-to-r from-academy-blue to-cyan-500 h-3 sm:h-4 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(37,99,235,0.3)]" style="width: 0%"></div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 text-center mt-auto lg:mt-6 w-full">
-                        <div class="bg-stone-50 dark:bg-stone-800 p-4 rounded-lg border border-stone-100 dark:border-stone-700">
-                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-1">암기 완료</p>
-                            <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400" id="statKnown">0</p>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 text-center mt-auto lg:mt-6 w-full">
+                        <div class="bg-stone-50 dark:bg-stone-800 p-3 sm:p-4 rounded-lg border border-stone-100 dark:border-stone-700">
+                            <p class="text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 mb-1">암기 완료</p>
+                            <p class="text-lg sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400" id="statKnown">0</p>
                         </div>
-                        <div class="bg-stone-50 dark:bg-stone-800 p-4 rounded-lg border border-stone-100 dark:border-stone-700">
-                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-1">남은 단어</p>
-                            <p class="text-2xl font-bold text-stone-600 dark:text-stone-300" id="statRemaining">536</p>
+                        <div class="bg-stone-50 dark:bg-stone-800 p-3 sm:p-4 rounded-lg border border-stone-100 dark:border-stone-700">
+                            <p class="text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 mb-1">남은 단어</p>
+                            <p class="text-lg sm:text-2xl font-bold text-stone-600 dark:text-stone-300" id="statRemaining">536</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Row 2 Left: Quiz -->
-            <div class="lg:col-span-8 flex flex-col h-full">
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
-                            <i data-lucide="brain-circuit" class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400"></i>
+            <div class="lg:col-span-8 flex flex-col h-full order-3">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-4 sm:p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-center mb-4 sm:mb-6">
+                        <h3 class="font-bold text-sm sm:text-base text-stone-700 dark:text-stone-200 flex items-center">
+                            <i data-lucide="brain-circuit" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-purple-600 dark:text-purple-400"></i>
                             퀴즈
                         </h3>
-                        <span id="quizScore" class="text-sm font-bold text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full">점수: 0</span>
+                        <span id="quizScore" class="text-xs sm:text-sm font-bold text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full">점수: 0</span>
                     </div>
                     <div id="quizContainer" class="flex-grow flex flex-col justify-center">
-                        <div class="text-center mb-12">
-                            <span id="quizWord" class="font-bold text-4xl text-academy-blue dark:text-blue-400 inline-block transition-all duration-300 transform hover:scale-105">abate</span>
+                        <div class="text-center mb-8 sm:mb-12">
+                            <span id="quizWord" class="font-bold text-3xl sm:text-4xl text-academy-blue dark:text-blue-400 inline-block transition-all duration-300 transform hover:scale-105">abate</span>
                         </div>
-                        <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                             <!-- Options generated by JS -->
                         </div>
-                        <div id="quizFeedback" class="mt-2 text-center h-6 font-medium"></div>
-                        <button onclick="initQuiz()" class="mt-2 w-full py-3 text-stone-400 dark:text-stone-500 text-sm hover:text-stone-700 dark:hover:text-stone-300 underline transition-colors">건너뛰기 / 다음 문제</button>
+                        <div id="quizFeedback" class="mt-2 text-center h-5 sm:h-6 font-medium text-xs sm:text-sm"></div>
+                        <button onclick="initQuiz()" class="mt-2 w-full py-2 sm:py-3 text-stone-400 dark:text-stone-500 text-xs sm:text-sm hover:text-stone-700 dark:hover:text-stone-300 underline transition-colors">건너뛰기 / 다음 문제</button>
                     </div>
                 </div>
             </div>
 
             <!-- Row 2 Right: Review Notes -->
-            <div class="lg:col-span-4 flex flex-col h-full">
-                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 flex flex-col h-full">
+            <div class="lg:col-span-4 flex flex-col h-full order-4">
+                <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-4 sm:p-6 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-bold text-stone-700 dark:text-stone-200 flex items-center">
-                            <i data-lucide="clipboard-list" class="w-5 h-5 mr-2 text-red-500"></i>
+                        <h3 class="font-bold text-sm sm:text-base text-stone-700 dark:text-stone-200 flex items-center">
+                            <i data-lucide="clipboard-list" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-red-500"></i>
                             오답 노트
                         </h3>
-                        <button onclick="clearReviewList()" class="text-xs text-stone-400 hover:text-red-500 transition-colors">전체 삭제</button>
+                        <button onclick="clearReviewList()" class="text-[10px] sm:text-xs text-stone-400 hover:text-red-500 transition-colors">전체 삭제</button>
                     </div>
                     <!-- h-full allows it to stretch to match the Quiz column's height -->
                     <div class="bg-stone-50 dark:bg-stone-850 rounded-lg border border-stone-100 dark:border-stone-800 flex-grow overflow-y-auto p-2 custom-scroll" id="reviewListContainer" style="min-height: 200px;">
                         <!-- Review Items -->
                         <div class="h-full flex flex-col items-center justify-center text-stone-400 text-xs text-center p-4">
-                            <i data-lucide="check-circle-2" class="w-6 h-6 mb-2 opacity-20"></i>
+                            <i data-lucide="check-circle-2" class="w-5 h-5 sm:w-6 sm:h-6 mb-2 opacity-20"></i>
                             <p>퀴즈에서 틀린 단어가<br>여기에 자동으로 추가됩니다.</p>
                         </div>
                     </div>
@@ -274,17 +276,17 @@
 
         <!-- Dictionary Table Section -->
         <section class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden">
-            <div class="p-6 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="p-4 sm:p-6 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
                 <div>
-                    <h3 class="font-bold text-stone-800 dark:text-stone-200 text-lg flex items-center">
-                        <i data-lucide="list" class="w-5 h-5 mr-2 text-stone-600 dark:text-stone-400"></i>
+                    <h3 class="font-bold text-base sm:text-lg text-stone-800 dark:text-stone-200 flex items-center">
+                        <i data-lucide="list" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-stone-600 dark:text-stone-400"></i>
                         전체 단어 목록
                     </h3>
                 </div>
                 <div class="relative w-full md:w-64">
-                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400"></i>
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-stone-400"></i>
                     <input type="text" id="searchInput" oninput="filterTable()" placeholder="단어 검색..." 
-                        class="w-full pl-10 pr-4 py-2 border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-academy-blue focus:border-transparent">
+                        class="w-full pl-9 sm:pl-10 pr-4 py-1.5 sm:py-2 border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-academy-blue focus:border-transparent">
                 </div>
             </div>
             
@@ -292,10 +294,10 @@
                 <table class="w-full text-left border-collapse table-fixed">
                     <thead class="bg-stone-100 dark:bg-stone-800 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-12 text-center">#</th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider cursor-pointer hover:bg-stone-200 dark:hover:bg-stone-700 w-1/3" onclick="sortTable('word')">단어 <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-1/3">뜻</th>
-                            <th class="p-4 text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-20 text-center">상태</th>
+                            <th class="p-3 sm:p-4 text-[10px] sm:text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-10 sm:w-12 text-center">#</th>
+                            <th class="p-3 sm:p-4 text-[10px] sm:text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider cursor-pointer hover:bg-stone-200 dark:hover:bg-stone-700 w-1/3" onclick="sortTable('word')">단어 <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
+                            <th class="p-3 sm:p-4 text-[10px] sm:text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-1/3">뜻</th>
+                            <th class="p-3 sm:p-4 text-[10px] sm:text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider w-16 sm:w-20 text-center">상태</th>
                         </tr>
                     </thead>
                     <tbody id="vocabTableBody" class="divide-y divide-stone-100 dark:divide-stone-800">
@@ -303,7 +305,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 text-center text-xs text-stone-500 dark:text-stone-400" id="tableFooter">
+            <div class="p-3 sm:p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 text-center text-[10px] sm:text-xs text-stone-500 dark:text-stone-400" id="tableFooter">
                 Showing 536 words
             </div>
         </section>
@@ -1776,14 +1778,14 @@
                 
                 const isKnown = knownIds.has(item.id);
                 const statusButton = isKnown 
-                    ? `<button onclick="toggleKnown(${item.id})" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors cursor-pointer">암기완료</button>`
-                    : `<button onclick="toggleKnown(${item.id})" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer">학습중</button>`;
+                    ? `<button onclick="toggleKnown(${item.id})" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors cursor-pointer">암기완료</button>`
+                    : `<button onclick="toggleKnown(${item.id})" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer">학습중</button>`;
 
                 tr.innerHTML = `
-                    <td class="p-4 text-center text-xs text-stone-400 font-mono break-words">${item.id}</td>
-                    <td class="p-4 font-medium text-stone-800 dark:text-stone-200 font-serif break-words">${item.word}</td>
-                    <td class="p-4 text-stone-600 dark:text-stone-400 break-words">${item.meaning}</td>
-                    <td class="p-4 text-center">${statusButton}</td>
+                    <td class="p-2 sm:p-4 text-center text-[10px] sm:text-xs text-stone-400 font-mono break-words">${item.id}</td>
+                    <td class="p-2 sm:p-4 font-medium text-xs sm:text-base text-stone-800 dark:text-stone-200 font-serif break-words">${item.word}</td>
+                    <td class="p-2 sm:p-4 text-xs sm:text-base text-stone-600 dark:text-stone-400 break-words">${item.meaning}</td>
+                    <td class="p-2 sm:p-4 text-center">${statusButton}</td>
                 `;
                 tbody.appendChild(tr);
             });
