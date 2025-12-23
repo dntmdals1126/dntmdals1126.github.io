@@ -45,8 +45,8 @@
       
       --max-w: 1000px; 
       --header-max-w: 1100px;
-      /* 요청사항 1: 모서리 곡률 통일 (기존 20px -> 28px로 rounded-3xl 느낌 강화) */
-      --radius-md: 28px;
+      /* 요청사항: 곡률을 22px로 줄여서 너무 원형 같지 않게 조정 */
+      --radius-md: 22px;
       --header-h: 64px;
       --section-gap: 20px; 
 
@@ -269,7 +269,6 @@
       font-size: 16px; font-weight: 300; /* Light weight for PC */
       color: var(--text-main); padding: 0 12px; min-width: 0;
     }
-    /* 요청사항 2: 검색어 Placeholder 얇게 */
     #q::placeholder { font-weight: 300; opacity: 0.5; }
     #q::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 
@@ -554,13 +553,13 @@
       .mobile-clock-container { display: block; }
       
       /* Search */
-      /* 요청사항 2: 검색 섹션 패딩 넉넉하게 */
-      .search-inner { padding: 24px !important; gap: 12px; }
+      /* 요청사항: 검색 섹션 패딩을 20px로 조정 (기존 24px -> 20px) */
+      .search-inner { padding: 20px !important; gap: 12px; }
       .engine-box { padding: 2px; } /* Slimmer */
       .engine-chip { padding: 6px 12px; font-size: 13px; }
       .search-bar { height: 52px; border-radius: 16px; }
       
-      /* 요청사항 2: 입력 글씨 얇게 */
+      /* 요청사항: 입력 글씨 얇게 유지 */
       #q { font-size: 16px; font-weight: 300; }
       
       /* Grid - 2 cols, fill last */
@@ -710,6 +709,23 @@
       </div>
     </section>
 
+    <!-- Weather Section (New) -->
+    <!-- 요청사항: Other Services 위쪽에 날씨 섹션 추가 -->
+    <section class="section-card no-select" id="weather-card-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 14px;">
+         <div style="display:flex; align-items:center; gap:12px;">
+            <span id="weatherIconLarge" style="font-size: 32px;">☀</span>
+            <div style="display:flex; flex-direction:column;">
+               <span id="weatherTempLarge" style="font-size: 24px; font-weight:700;">--°C</span>
+               <span style="font-size:13px; opacity:0.7;">Cheongju-si</span>
+            </div>
+         </div>
+         <div style="text-align:right;">
+            <span style="font-size:12px; opacity:0.6;">Current Weather</span>
+         </div>
+      </div>
+    </section>
+
     <!-- Other Services -->
     <details id="det-other">
       <summary class="no-select">
@@ -755,7 +771,7 @@
           <div class="det-content">
             <div class="grid no-select">
               <a href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" class="card-link">
-                <img src="https://www.google.com/s2/favicons?sz=32&domain=cbnu.ac.kr" class="card-icon" alt="">
+                <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
                 <span class="card-label">충북대 공지사항</span>
               </a>
               <a href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" class="card-link">
@@ -1101,15 +1117,29 @@
       updateTime();
 
       // --- Real Weather ---
+      // 업데이트: 날씨 섹션에 정보 표시 로직 추가
       const weatherIcon = document.getElementById('weatherIcon');
+      const wTempLarge = document.getElementById('weatherTempLarge');
+      const wIconLarge = document.getElementById('weatherIconLarge');
+
       async function fetchWeather() {
         try {
             const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.6372&longitude=127.4897&current_weather=true');
             const data = await res.json();
             const temp = Math.round(data.current_weather.temperature);
             let icon = '☀';
+            
+            // PC 헤더용 업데이트
             weatherIcon.innerHTML = `${icon} ${temp}°C`;
-        } catch(e) { weatherIcon.innerHTML = '☀'; }
+
+            // 모바일/새 섹션용 업데이트
+            if(wTempLarge) wTempLarge.textContent = `${temp}°C`;
+            if(wIconLarge) wIconLarge.textContent = icon;
+
+        } catch(e) { 
+            weatherIcon.innerHTML = '☀';
+            if(wTempLarge) wTempLarge.textContent = '--°C';
+        }
       }
       fetchWeather(); setInterval(fetchWeather, 1800000);
 
