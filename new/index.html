@@ -95,7 +95,6 @@
       background: radial-gradient(circle at top left, rgba(30, 58, 138, 0.15), transparent 50%),
                   radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.1), transparent 50%);
       overflow-x: hidden; transition: background 0.3s;
-      /* Removed user-select: none from body to fix input issues */
     }
     body.locked { overflow: hidden; }
 
@@ -193,7 +192,7 @@
     .time-sec { font-size: 16px; font-weight: 500; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 
     /* Mobile Clock Style */
-    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 18px 0; }
+    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 24px 0; /* More padding for mobile */ }
     .mobile-clock-text { font-size: 15px; color: var(--text-main); line-height: 1.4; }
     .mobile-date-part { font-weight: 300; opacity: 0.9; margin-right: 8px; font-family: var(--font-base); }
     .mobile-time-part { font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0px; font-family: var(--font-base); }
@@ -256,7 +255,7 @@
       position: relative; display: flex; align-items: center;
       background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
       border-radius: 18px; padding: 0 6px; transition: all 0.3s;
-      margin-top: 2px; height: 52px; z-index: 10;
+      margin-top: 2px; height: 56px; /* Slightly taller for PC */
     }
     html[data-theme="light"] .search-bar { background: rgba(0, 0, 0, 0.04); border-color: rgba(0,0,0,0.1); }
     
@@ -266,7 +265,7 @@
     #q {
       flex: 1; border: none; background: transparent;
       height: 100%; 
-      font-size: 16px; font-weight: 400; 
+      font-size: 16px; font-weight: 300; /* Light weight for PC */
       color: var(--text-main); padding: 0 12px; min-width: 0;
     }
     #q::placeholder { font-weight: 700; opacity: 0.5; }
@@ -319,7 +318,7 @@
     summary::-webkit-details-marker { display: none; }
     @media (hover: hover) { summary:hover { background: var(--glass-highlight); } }
     
-    .sum-title { font-family: var(--font-base); font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+    .sum-title { font-family: var(--font-base); font-weight: 700; font-size: 19px; display: flex; align-items: center; gap: 10px; }
     .sum-icon { color: var(--text-sub); width: 20px; height: 20px; transition: color 0.3s; }
     details[open] .sum-title { color: var(--primary); }
     details[open] .sum-icon { color: var(--primary); }
@@ -368,7 +367,7 @@
     /* --- Music --- */
     .yt-container {
       width: 100%; max-width: 600px; margin: 0 auto; /* Centered & Limited Width */
-      position: relative; padding-bottom: 42%; /* ~21:9 for PC */
+      position: relative; padding-bottom: 250px; /* Reduced Height ~21:9 for PC */
       border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border);
       background: #000;
     }
@@ -491,7 +490,7 @@
     /* Smoother infinite scroll without jump */
     .notice-text { 
         position: absolute; white-space: nowrap; font-size: 13px; color: var(--text-sub); font-weight: 500; top: 4px;
-        animation: marquee 15s linear infinite; 
+        animation: marquee 20s linear infinite; 
     }
     /* Fixed Keyframes for seamless loop */
     @keyframes marquee { 
@@ -535,7 +534,7 @@
     @media (max-width: 480px) {
       :root {
         --header-h: 60px; 
-        --section-gap: 12px; /* Decreased gap */
+        --section-gap: 16px; 
       }
       
       main { padding-top: 80px; padding-left: 12px; padding-right: 12px; }
@@ -553,9 +552,11 @@
       .mobile-clock-container { display: block; }
       
       /* Search */
+      .engine-box { padding: 2px; } /* Slimmer */
       .engine-chip { padding: 6px 12px; font-size: 13px; }
       .search-bar { height: 52px; border-radius: 16px; }
-      #q { font-size: 16px; }
+      .search-inner { gap: 12px; } /* Wider Gap */
+      #q { font-size: 16px; font-weight: 400; }
       
       /* Grid - 2 cols, fill last */
       .grid { 
@@ -571,7 +572,7 @@
           border-radius: 18px; min-height: 90px;
       }
       .card-icon { width: 28px; height: 28px; margin-bottom: 0; } /* Reduced */
-      .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 400; /* Thinner */ }
+      .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 500; } /* Thinner font */
       
       /* Stopwatch Mobile Fullscreen Fix */
       .sw-time { font-size: 40px; margin-bottom: 20px; }
@@ -592,9 +593,9 @@
       .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; } 
 
       /* Sections */
-      .section-card { padding: 4px; }
-      summary { padding: 14px 16px; margin: 0; }
-      .sum-title { font-weight: 600; font-size: 15px; } /* Smaller title */
+      .section-card { padding: 8px; } /* Increase padding */
+      summary { padding: 18px 16px; margin: 0; } /* Taller */
+      .sum-title { font-weight: 600; font-size: 15px; } 
       .det-content { padding: 8px 12px 20px; }
       .yt-container { padding-bottom: 40%; } 
     }
@@ -704,7 +705,7 @@
     </section>
 
     <!-- Other Services -->
-    <details>
+    <details id="det-other">
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
@@ -735,7 +736,7 @@
     </details>
 
     <!-- Educational Volunteering -->
-    <details open>
+    <details id="det-edu" open>
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -770,7 +771,7 @@
     </details>
 
     <!-- CBNU -->
-    <details>
+    <details id="det-cbnu">
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
@@ -805,7 +806,7 @@
     </details>
 
     <!-- Music -->
-    <details>
+    <details id="det-music">
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -825,7 +826,7 @@
     </details>
 
     <!-- Stopwatch -->
-    <details>
+    <details id="det-stopwatch">
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -855,7 +856,7 @@
     </details>
 
     <!-- AI Tools -->
-    <details>
+    <details id="det-ai">
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
@@ -911,6 +912,149 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // --- Persistence Logic ---
+      
+      // 1. Theme Persistence
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      html.setAttribute('data-theme', savedTheme);
+      themeToggle.onclick = () => {
+        const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      };
+
+      // 2. Section Persistence
+      const allDetails = document.querySelectorAll('details');
+      allDetails.forEach((dt) => {
+          const id = dt.id;
+          if(id) {
+              const state = localStorage.getItem(id);
+              if (state === 'open') dt.setAttribute('open', '');
+              else if (state === 'closed') dt.removeAttribute('open');
+              // Default is handled by HTML 'open' attribute if storage is null
+          }
+      });
+      // Hook into click to save state (after toggle logic)
+      document.querySelectorAll('summary').forEach(summary => {
+        summary.addEventListener('click', (e) => {
+          e.preventDefault(); 
+          const details = summary.closest('details');
+          const id = details.id;
+          if (details.hasAttribute('open')) {
+            // Closing
+            const wrapper = details.querySelector('.details-wrapper');
+            wrapper.style.gridTemplateRows = '0fr';
+            setTimeout(() => {
+                details.removeAttribute('open');
+                wrapper.style.gridTemplateRows = '';
+                if(id) localStorage.setItem(id, 'closed');
+            }, 300);
+          } else {
+            // Opening
+            details.setAttribute('open', '');
+            if(id) localStorage.setItem(id, 'open');
+          }
+        });
+      });
+
+      // --- Search Logic & Persistence ---
+      const engineList = document.getElementById('engineList');
+      const engineWrapper = document.getElementById('engineWrapper');
+      const q = document.getElementById('q');
+      const searchBtn = document.getElementById('searchBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      
+      // 3. Search Engine Persistence
+      let curEngine = localStorage.getItem('lastEngine') || 'google';
+      
+      const engines = {
+        google: t => `https://www.google.com/search?q=${t}`,
+        naver: t => `https://search.naver.com/search.naver?query=${t}`,
+        youtube: t => `https://www.youtube.com/results?search_query=${t}`,
+        namu: t => `https://namu.wiki/w/${encodeURIComponent(t)}`,
+        cbnul: t => `https://cbnul.chungbuk.ac.kr/search/i-discovery?ALL=k|a|${t}`,
+        wikipedia: t => `https://ko.wikipedia.org/w/index.php?search=${t}`,
+        dbpia: t => `https://www.dbpia.co.kr/search/topSearch?query=${t}`,
+        riss: t => `https://www.riss.kr/search/Search.do?query=${t}`,
+        everytime: t => `https://everytime.kr/search/all/${encodeURIComponent(t)}`,
+        googlemap: t => `https://www.google.com/maps/search/${t}`
+      };
+
+      function updateSearchColor(color) {
+        searchBtn.style.backgroundColor = color;
+        if (color === '#555') searchBtn.style.boxShadow = `0 4px 12px rgba(85, 85, 85, 0.4)`;
+        else searchBtn.style.boxShadow = `none`;
+      }
+
+      // Initialize Engine State
+      const initialChip = document.querySelector(`.engine-chip[data-engine="${curEngine}"]`);
+      if (initialChip) {
+          const color = initialChip.dataset.color;
+          const name = initialChip.dataset.name;
+          // Deactivate others
+          document.querySelectorAll('.engine-chip').forEach(c => c.removeAttribute('data-active'));
+          initialChip.setAttribute('data-active', 'true');
+          updateSearchColor(color);
+          q.placeholder = `${name} 검색어 입력...`;
+          
+          // Scroll to active chip if needed (simple approximation)
+          // engineList.scrollLeft = initialChip.offsetLeft - 20; 
+      }
+
+      engineList.addEventListener('click', e => {
+        const chip = e.target.closest('.engine-chip');
+        if(chip) {
+          curEngine = chip.dataset.engine;
+          const color = chip.dataset.color;
+          const name = chip.dataset.name;
+          
+          // Save State
+          localStorage.setItem('lastEngine', curEngine);
+
+          [...engineList.children].forEach(c => c.dataset.active = (c === chip));
+          updateSearchColor(color);
+          q.placeholder = `${name} 검색어 입력...`;
+        }
+      });
+      
+      const updateMask = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = engineList;
+        const hasOverflow = scrollWidth > clientWidth;
+        if (!hasOverflow) { engineWrapper.className = 'engine-wrapper'; return; }
+        
+        const atStart = scrollLeft <= 1; 
+        const atEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) <= 1;
+        
+        if (atStart) engineWrapper.className = 'engine-wrapper mask-right';
+        else if (atEnd) engineWrapper.className = 'engine-wrapper mask-left';
+        else engineWrapper.className = 'engine-wrapper mask-both';
+      };
+      
+      engineList.addEventListener('scroll', updateMask);
+      window.addEventListener('resize', updateMask);
+      setTimeout(updateMask, 100); 
+
+      // Horizontal Drag
+      let isDown=false, startX, scrollLeft;
+      engineList.onmousedown = e => { isDown=true; startX=e.pageX-engineList.offsetLeft; scrollLeft=engineList.scrollLeft; };
+      engineList.onmouseleave = () => isDown=false;
+      engineList.onmouseup = () => isDown=false;
+      engineList.onmousemove = e => {
+        if(!isDown) return; e.preventDefault();
+        const x = e.pageX-engineList.offsetLeft; const walk = (x-startX)*2;
+        engineList.scrollLeft = scrollLeft - walk;
+      };
+
+      // Critical Fix for Mobile Input
+      q.addEventListener('keydown', e => e.stopPropagation());
+      q.addEventListener('input', () => clearBtn.classList.toggle('visible', q.value.length > 0));
+      clearBtn.onclick = () => { q.value = ''; clearBtn.classList.remove('visible'); q.focus(); };
+      const doSearch = () => { const val = q.value.trim(); if(val) window.open(engines[curEngine](val), '_blank'); };
+      searchBtn.onclick = doSearch;
+      q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
+
       // --- Time & Date ---
       const dateEl = document.getElementById('dateDisplay');
       const timeMain = document.querySelector('.time-main');
@@ -963,52 +1107,24 @@
       }
       fetchWeather(); setInterval(fetchWeather, 1800000);
 
-      // --- Theme ---
-      const html = document.documentElement;
-      const themeToggle = document.getElementById('themeToggle');
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      html.setAttribute('data-theme', savedTheme);
-      themeToggle.onclick = () => {
-        const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-      };
-
       // --- Expand/Collapse All ---
       const expandToggle = document.getElementById('expandToggle');
       let allExpanded = true;
       expandToggle.onclick = () => {
-        const details = document.querySelectorAll('details');
+        // Toggle logic based on current state
         allExpanded = !allExpanded;
+        const details = document.querySelectorAll('details');
         details.forEach(d => {
+          const id = d.id;
           if (allExpanded) {
              d.setAttribute('open', '');
+             if(id) localStorage.setItem(id, 'open');
           } else {
              d.removeAttribute('open');
+             if(id) localStorage.setItem(id, 'closed');
           }
         });
       };
-
-      // --- Smooth Accordion JS Logic ---
-      document.querySelectorAll('summary').forEach(summary => {
-        summary.addEventListener('click', (e) => {
-          e.preventDefault(); // Prevent default snap
-          const details = summary.closest('details');
-          if (details.hasAttribute('open')) {
-            // Close: animate grid to 0fr
-            const wrapper = details.querySelector('.details-wrapper');
-            wrapper.style.gridTemplateRows = '0fr';
-            // Wait for transition then remove open
-            setTimeout(() => {
-                details.removeAttribute('open');
-                wrapper.style.gridTemplateRows = ''; // Reset inline
-            }, 300); // 0.3s transition
-          } else {
-            // Open: set open, grid will animate from 0fr to 1fr via CSS
-            details.setAttribute('open', '');
-          }
-        });
-      });
 
       // --- Drawer ---
       const drawer = document.getElementById('drawer');
@@ -1022,82 +1138,6 @@
       menuToggle.onclick = () => setDrawer(true);
       closeDrawer.onclick = () => setDrawer(false);
       drawerOverlay.onclick = () => setDrawer(false);
-
-      // --- Search ---
-      const engineList = document.getElementById('engineList');
-      const engineWrapper = document.getElementById('engineWrapper');
-      const q = document.getElementById('q');
-      const searchBtn = document.getElementById('searchBtn');
-      const clearBtn = document.getElementById('clearBtn');
-      let curEngine = 'google';
-      
-      const engines = {
-        google: t => `https://www.google.com/search?q=${t}`,
-        naver: t => `https://search.naver.com/search.naver?query=${t}`,
-        youtube: t => `https://www.youtube.com/results?search_query=${t}`,
-        namu: t => `https://namu.wiki/w/${encodeURIComponent(t)}`,
-        cbnul: t => `https://cbnul.chungbuk.ac.kr/search/i-discovery?ALL=k|a|${t}`,
-        wikipedia: t => `https://ko.wikipedia.org/w/index.php?search=${t}`,
-        dbpia: t => `https://www.dbpia.co.kr/search/topSearch?query=${t}`,
-        riss: t => `https://www.riss.kr/search/Search.do?query=${t}`,
-        everytime: t => `https://everytime.kr/search/all/${encodeURIComponent(t)}`,
-        googlemap: t => `https://www.google.com/maps/search/${t}`
-      };
-
-      function updateSearchColor(color) {
-        searchBtn.style.backgroundColor = color;
-        // No Shadow as requested
-        searchBtn.style.boxShadow = `none`;
-      }
-      updateSearchColor('#4285F4');
-
-      engineList.addEventListener('click', e => {
-        const chip = e.target.closest('.engine-chip');
-        if(chip) {
-          curEngine = chip.dataset.engine;
-          const color = chip.dataset.color;
-          const name = chip.dataset.name;
-          [...engineList.children].forEach(c => c.dataset.active = (c === chip));
-          updateSearchColor(color);
-          q.placeholder = `${name} 검색어 입력...`;
-        }
-      });
-      
-      const updateMask = () => {
-        const { scrollLeft, scrollWidth, clientWidth } = engineList;
-        const hasOverflow = scrollWidth > clientWidth;
-        if (!hasOverflow) { engineWrapper.className = 'engine-wrapper'; return; }
-        
-        const atStart = scrollLeft <= 1; 
-        const atEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) <= 1;
-        
-        if (atStart) engineWrapper.className = 'engine-wrapper mask-right';
-        else if (atEnd) engineWrapper.className = 'engine-wrapper mask-left';
-        else engineWrapper.className = 'engine-wrapper mask-both';
-      };
-      
-      engineList.addEventListener('scroll', updateMask);
-      window.addEventListener('resize', updateMask);
-      setTimeout(updateMask, 100); 
-
-      // Horizontal Drag
-      let isDown=false, startX, scrollLeft;
-      engineList.onmousedown = e => { isDown=true; startX=e.pageX-engineList.offsetLeft; scrollLeft=engineList.scrollLeft; };
-      engineList.onmouseleave = () => isDown=false;
-      engineList.onmouseup = () => isDown=false;
-      engineList.onmousemove = e => {
-        if(!isDown) return; e.preventDefault();
-        const x = e.pageX-engineList.offsetLeft; const walk = (x-startX)*2;
-        engineList.scrollLeft = scrollLeft - walk;
-      };
-
-      // Critical Fix for Mobile Input
-      q.addEventListener('keydown', e => e.stopPropagation());
-      q.addEventListener('input', () => clearBtn.classList.toggle('visible', q.value.length > 0));
-      clearBtn.onclick = () => { q.value = ''; clearBtn.classList.remove('visible'); q.focus(); };
-      const doSearch = () => { const val = q.value.trim(); if(val) window.open(engines[curEngine](val), '_blank'); };
-      searchBtn.onclick = doSearch;
-      q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
 
       // --- Stopwatch ---
       let timer=null, startT=0, elapsed=0;
