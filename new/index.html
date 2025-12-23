@@ -14,8 +14,8 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- 1. 파비콘 롤백 및 안정적인 SVG 적용 -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E" />
+  <!-- 3. 파비콘 롤백 (이전 버전 데이터) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
     /* --- Variables --- */
@@ -531,11 +531,11 @@
       .tool-btn { width: 36px; height: 36px; }
 
       .time-container { display: none; }
-      /* 3. 모바일 시계 상하좌우 여백 조금씩 축소 (24px -> 16px) */
-      .mobile-clock-container { display: block; padding: 16px 0; }
+      /* 6. 모바일 시계 상하좌우 여백 조금씩 축소 (16px -> 12px) */
+      .mobile-clock-container { display: block; padding: 12px 0; }
       
-      /* 3. 모바일 검색창 패딩 축소 (20px -> 16px) */
-      .search-inner { padding: 16px !important; gap: 12px; }
+      /* 6. 모바일 검색창 패딩 축소 (16px -> 12px) */
+      .search-inner { padding: 12px !important; gap: 12px; }
       .engine-box { padding: 2px; } 
       .engine-chip { padding: 6px 12px; font-size: 13px; }
       .search-bar { height: 52px; border-radius: 16px; }
@@ -569,8 +569,8 @@
       }
       .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; } 
 
-      /* 3. 섹션 카드 패딩 축소 (20px -> 16px) */
-      .section-card { padding: 16px; } 
+      /* 6. 섹션 카드 패딩 축소 (16px -> 12px) */
+      .section-card { padding: 12px; } 
       summary { padding: 18px 16px; margin: 0; }
       .sum-title { font-weight: 600; font-size: 15px; } 
       .det-content { padding: 8px 12px 20px; }
@@ -594,12 +594,22 @@
   <header class="no-select">
     <div class="logo" id="reloadBtn">WebHub <span class="by">by Seungmin Woo</span></div>
     <div class="header-tools">
+      <!-- 5. 전체 펼치기/접기 버튼 -->
       <button class="tool-btn" id="expandToggle" title="전체 펼치기/접기">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4m0 6l-4 4-4-4"/></svg>
       </button>
+      
+      <!-- 4. 테마 변경 버튼 (해/달 아이콘) -->
       <button class="tool-btn" id="themeToggle" title="테마 변경">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/></svg>
+        <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path>
+        </svg>
+        <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"></circle>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+        </svg>
       </button>
+      
       <button class="tool-btn" id="menuToggle" title="메뉴">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
@@ -681,12 +691,12 @@
       </div>
     </section>
 
-    <!-- 2. Weather Section (Enhanced) -->
+    <!-- 1. Weather Section (Korean Localized) -->
     <details id="det-weather" open>
       <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>
-          Weather Info
+          현재 날씨
         </div>
         <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
@@ -699,42 +709,42 @@
                    <span id="wMainIcon" style="font-size:36px;">☀</span>
                    <div style="display:flex; flex-direction:column;">
                       <span id="wMainTemp" style="font-size:26px; font-weight:700;">--°C</span>
-                      <span id="wLocation" style="font-size:14px; opacity:0.7;">Cheongju-si</span>
+                      <span id="wLocation" style="font-size:14px; opacity:0.7;">청주시</span>
                    </div>
                 </div>
                 <div style="text-align:right;">
-                   <span id="wDesc" style="font-size:13px; font-weight:500;">Clear Sky</span>
-                   <div style="font-size:11px; opacity:0.5; margin-top:2px;">Updated just now</div>
+                   <span id="wDesc" style="font-size:13px; font-weight:500;">맑음</span>
+                   <div style="font-size:11px; opacity:0.5; margin-top:2px;">방금 업데이트됨</div>
                 </div>
              </div>
 
              <!-- 상세 정보 그리드 -->
              <div class="weather-grid no-select">
                 <div class="weather-item">
-                   <span class="weather-label">Humidity</span>
+                   <span class="weather-label">습도</span>
                    <span class="weather-val" id="wHumidity">--%</span>
                 </div>
                 <div class="weather-item">
-                   <span class="weather-label">Wind Speed</span>
+                   <span class="weather-label">풍속</span>
                    <span class="weather-val" id="wWind">-- km/h</span>
                 </div>
                 <div class="weather-item">
-                    <span class="weather-label">Precipitation</span>
-                    <span class="weather-val" id="wRain">-- %</span>
+                    <span class="weather-label">강수량</span>
+                    <span class="weather-val" id="wRain">-- mm</span>
                  </div>
                  <div class="weather-item">
-                    <span class="weather-label">Feels Like</span>
+                    <span class="weather-label">체감온도</span>
                     <span class="weather-val" id="wFeel">--°C</span>
                  </div>
              </div>
 
              <!-- 검색 및 위치 제어 -->
              <div class="weather-search">
-                <button class="weather-btn" id="wBtnLoc" title="Current Location">
+                <button class="weather-btn" id="wBtnLoc" title="현재 위치">
                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
                 </button>
-                <input type="text" class="weather-input" id="wInputLoc" placeholder="Search City (e.g. Seoul)...">
-                <button class="weather-btn" id="wBtnSearch" title="Search">
+                <input type="text" class="weather-input" id="wInputLoc" placeholder="도시 검색 (예: Seoul, 청주)...">
+                <button class="weather-btn" id="wBtnSearch" title="검색">
                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                 </button>
              </div>
@@ -955,11 +965,28 @@
       const html = document.documentElement;
       const themeToggle = document.getElementById('themeToggle');
       const savedTheme = localStorage.getItem('theme') || 'dark';
-      html.setAttribute('data-theme', savedTheme);
+      const iconMoon = document.getElementById('iconMoon');
+      const iconSun = document.getElementById('iconSun');
+
+      // 4. 테마 적용 함수 수정 (아이콘 토글 포함)
+      function applyTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (theme === 'light') {
+            if(iconSun) iconSun.style.display = 'block';
+            if(iconMoon) iconMoon.style.display = 'none';
+        } else {
+            if(iconSun) iconSun.style.display = 'none';
+            if(iconMoon) iconMoon.style.display = 'block';
+        }
+      }
+      
+      // 초기 테마 로드
+      applyTheme(savedTheme);
+
       themeToggle.onclick = () => {
         const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
+        applyTheme(next);
       };
 
       const allDetails = document.querySelectorAll('details');
@@ -1127,23 +1154,27 @@
 
       let currentLat = 36.6372; // Default Cheongju
       let currentLon = 127.4897;
-      let currentLocationName = "Cheongju-si";
+      let currentLocationName = "청주시";
 
-      // 날씨 상태 코드 매핑 (WMO Code)
+      // 1. 날씨 상태 코드 한국어 매핑 (WMO Code)
       function getWeatherDesc(code) {
-         if(code === 0) return { t: "Clear Sky", i: "☀" };
-         if(code === 1 || code === 2 || code === 3) return { t: "Partly Cloudy", i: "⛅" };
-         if(code === 45 || code === 48) return { t: "Foggy", i: "🌫" };
-         if(code >= 51 && code <= 67) return { t: "Rainy", i: "🌧" };
-         if(code >= 71 && code <= 77) return { t: "Snowy", i: "❄" };
-         if(code >= 80 && code <= 82) return { t: "Showers", i: "🌦" };
-         if(code >= 95) return { t: "Thunderstorm", i: "⛈" };
-         return { t: "Clear", i: "☀" };
+         if(code === 0) return { t: "맑음", i: "☀" };
+         if(code === 1 || code === 2 || code === 3) return { t: "구름 조금/많음", i: "⛅" };
+         if(code === 45 || code === 48) return { t: "안개", i: "🌫" };
+         if(code >= 51 && code <= 55) return { t: "이슬비", i: "🌧" };
+         if(code >= 56 && code <= 57) return { t: "어는 이슬비", i: "🌧" };
+         if(code >= 61 && code <= 65) return { t: "비", i: "🌧" };
+         if(code >= 66 && code <= 67) return { t: "어는 비", i: "🌧" };
+         if(code >= 71 && code <= 77) return { t: "눈", i: "❄" };
+         if(code >= 80 && code <= 82) return { t: "소나기", i: "🌦" };
+         if(code >= 85 && code <= 86) return { t: "눈 소나기", i: "❄" };
+         if(code >= 95) return { t: "천둥번개", i: "⛈" };
+         return { t: "맑음", i: "☀" };
       }
 
       async function fetchWeather(lat, lon, name) {
          try {
-            // Open-Meteo API (Current + Hourly for extra details)
+            // Open-Meteo API
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&timezone=auto`;
             const res = await fetch(url);
             const data = await res.json();
@@ -1173,54 +1204,79 @@
          } catch (e) {
             console.error(e);
             wMainTemp.textContent = "--";
-            wLocation.textContent = "Error";
+            wLocation.textContent = "오류";
          }
       }
 
-      // 1. 초기 로드
+      // 초기 로드
       fetchWeather(currentLat, currentLon, currentLocationName);
 
-      // 2. 현재 위치 (Geolocation)
+      // 2. 현재 위치 (Geolocation) 오류 해결 및 한국어 처리
       wBtnLoc.addEventListener('click', () => {
-         if(!navigator.geolocation) { alert("Geolocation is not supported."); return; }
+         if(!navigator.geolocation) { 
+             alert("이 브라우저에서는 위치 정보를 지원하지 않습니다."); 
+             return; 
+         }
          wBtnLoc.style.opacity = '0.5';
          navigator.geolocation.getCurrentPosition(async (pos) => {
             currentLat = pos.coords.latitude;
             currentLon = pos.coords.longitude;
-            // 역지오코딩은 API 필요하지만 여기선 간단히 "My Location" 혹은 좌표 근사
-            // Open-Meteo는 좌표만 있으면 됨. 이름은 Geocoding API로 가져올 수 있음.
-            // 일단 간단히:
-            fetchWeather(currentLat, currentLon, "My Location");
+            // 좌표를 기반으로 날씨 갱신 (지명은 임시로 '내 위치' 표기, 역지오코딩은 별도 API 필요)
+            fetchWeather(currentLat, currentLon, "내 위치");
             wBtnLoc.style.opacity = '1';
-         }, () => {
-            alert("Unable to retrieve your location");
+         }, (err) => {
+            console.error(err);
+            // 2. 오류 메시지 한국어화
+            alert("위치 정보를 가져올 수 없습니다.\n브라우저 설정에서 위치 권한을 허용해주세요.");
             wBtnLoc.style.opacity = '1';
          });
       });
 
-      // 3. 지역 검색 (Open-Meteo Geocoding API)
+      // 3. 지역 검색 (한국어 지원 파라미터 추가)
       async function searchLocation() {
          const query = wInputLoc.value.trim();
          if(!query) return;
          try {
-            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`);
+            // &language=ko 추가하여 한국어 검색 결과 유도
+            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=ko&format=json`);
             const data = await res.json();
             if(data.results && data.results.length > 0) {
                const loc = data.results[0];
                currentLat = loc.latitude;
                currentLon = loc.longitude;
+               // 국가 코드 포함하여 지명 표시
                currentLocationName = `${loc.name}, ${loc.country_code.toUpperCase()}`;
                fetchWeather(currentLat, currentLon, currentLocationName);
                wInputLoc.value = '';
             } else {
-               alert("Location not found.");
+               alert("도시를 찾을 수 없습니다.");
             }
-         } catch(e) { alert("Search failed."); }
+         } catch(e) { alert("검색 중 오류가 발생했습니다."); }
       }
 
       wBtnSearch.addEventListener('click', searchLocation);
       wInputLoc.addEventListener('keydown', (e) => { if(e.key === 'Enter') searchLocation(); });
-      wInputLoc.addEventListener('keydown', (e) => e.stopPropagation()); // 검색창 단축키 방지
+      wInputLoc.addEventListener('keydown', (e) => e.stopPropagation()); 
+
+      // 5. 전체 펼치기/접기 기능 수정
+      const expandToggle = document.getElementById('expandToggle');
+      let allExpanded = true; // 초기 상태 (대부분 열려있음)
+
+      expandToggle.onclick = () => {
+        allExpanded = !allExpanded; // 상태 토글
+        const details = document.querySelectorAll('details');
+        
+        details.forEach(d => {
+          const id = d.id;
+          if (allExpanded) {
+             d.setAttribute('open', '');
+             if(id) localStorage.setItem(id, 'open');
+          } else {
+             d.removeAttribute('open');
+             if(id) localStorage.setItem(id, 'closed');
+          }
+        });
+      };
 
       // --- Drawer ---
       const drawer = document.getElementById('drawer');
