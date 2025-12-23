@@ -14,6 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- 3. 파비콘 롤백 (이전 버전 데이터) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
@@ -810,7 +811,7 @@
           <div class="det-content">
             <div class="grid no-select">
               <a href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" class="card-link">
-                <img src="https://www.google.com/s2/favicons?sz=32&domain=cbnu.ac.kr" class="card-icon" alt="">
+                <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
                 <span class="card-label">충북대 공지사항</span>
               </a>
               <a href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" class="card-link">
@@ -1223,35 +1224,68 @@
       // 초기 로드
       fetchWeather(currentLat, currentLon, currentLocationName);
 
-      // 4. Geolocation Logic Update
-      wBtnLoc.addEventListener('click', () => {
-         if(!navigator.geolocation) { 
-             alert("이 브라우저에서는 위치 정보를 지원하지 않습니다."); 
-             return; 
+      // 4. Geolocation Logic Update (Enhanced with Permissions API check)
+      wBtnLoc.addEventListener('click', async () => {
+         // 1. Check browser support
+         if (!navigator.geolocation) {
+             alert("이 브라우저/기기에서는 위치 정보를 지원하지 않습니다.");
+             return;
          }
+
+         // Visual Feedback: Loading state
          wBtnLoc.style.opacity = '0.5';
-         
-         // 4. Options for better reliability
+         wBtnLoc.style.pointerEvents = 'none'; // Prevent double clicks
+
+         const resetBtn = () => {
+            wBtnLoc.style.opacity = '1';
+            wBtnLoc.style.pointerEvents = 'auto';
+         };
+
+         // 2. Check Permissions API (if supported)
+         if (navigator.permissions && navigator.permissions.query) {
+            try {
+                const result = await navigator.permissions.query({ name: 'geolocation' });
+                if (result.state === 'denied') {
+                    alert("위치 권한이 차단되어 있습니다.\n브라우저 주소창 옆 설정 아이콘을 눌러 권한을 허용하거나,\n직접 도시 이름을 검색해주세요.");
+                    resetBtn();
+                    wInputLoc.focus(); // Focus search input for convenience
+                    return;
+                }
+            } catch (e) {
+                // Permissions API might not be supported or failed, proceed to try Geolocation
+                console.log("Permissions API check failed, proceeding...", e);
+            }
+         }
+
          const options = {
-            enableHighAccuracy: false,
-            timeout: 10000,
+            enableHighAccuracy: false, // Low accuracy is faster and enough for weather
+            timeout: 8000,             // 8 seconds timeout
             maximumAge: 0
          };
 
          navigator.geolocation.getCurrentPosition(async (pos) => {
             currentLat = pos.coords.latitude;
             currentLon = pos.coords.longitude;
+            // 좌표 기반 날씨 갱신
             fetchWeather(currentLat, currentLon, "내 위치");
-            wBtnLoc.style.opacity = '1';
+            resetBtn();
          }, (err) => {
-            console.error(err);
+            console.error("Geolocation error:", err);
             let msg = "위치 정보를 가져올 수 없습니다.";
-            if (err.code === 1) msg += "\n(권한 거부됨: 브라우저 설정에서 위치 권한을 허용해주세요)";
-            else if (err.code === 2) msg += "\n(위치 확인 불가: 네트워크/GPS 신호 확인 필요)";
-            else if (err.code === 3) msg += "\n(시간 초과)";
             
-            alert(msg);
-            wBtnLoc.style.opacity = '1';
+            if (window.isSecureContext === false) {
+                msg += "\n(원인: 보안 연결(HTTPS)이 아닙니다. 브라우저가 위치 접근을 차단했습니다.)";
+            } else if (err.code === 1) { // PERMISSION_DENIED
+                msg += "\n(원인: 권한 거부됨. 브라우저 설정에서 허용해주세요.)";
+            } else if (err.code === 2) { // POSITION_UNAVAILABLE
+                msg += "\n(원인: 위치 확인 불가. GPS/네트워크 신호 확인 필요)";
+            } else if (err.code === 3) { // TIMEOUT
+                msg += "\n(원인: 시간 초과)";
+            }
+            
+            alert(msg + "\n\n대신 도시 이름을 검색해보세요.");
+            resetBtn();
+            wInputLoc.focus(); // Failover to search
          }, options);
       });
 
