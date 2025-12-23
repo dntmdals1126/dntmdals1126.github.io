@@ -6,9 +6,10 @@
   <title>WebHub</title>
   <meta name="theme-color" content="#02040a" />
   
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,10 +26,12 @@
       
       --header-bg: rgba(15, 23, 42, 0.6); 
       
+      /* Midnight Blue Theme */
       --primary: #3b82f6; 
       --primary-glow: rgba(59, 130, 246, 0.4);
       --accent: #22d3ee;
       
+      /* Clock Colors */
       --time-am: #fb923c; 
       --time-pm: #60a5fa; 
       
@@ -46,8 +49,9 @@
       --header-h: 64px;
       --section-gap: 20px; 
 
+      /* Strict Font Stack */
       --font-logo: 'Cal Sans', sans-serif;
-      --font-base: 'Outfit', 'Pretendard', sans-serif;
+      --font-base: 'Google Sans Flex', 'Outfit', 'Pretendard', sans-serif;
       
       color-scheme: dark;
     }
@@ -91,14 +95,18 @@
       background: radial-gradient(circle at top left, rgba(30, 58, 138, 0.15), transparent 50%),
                   radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.1), transparent 50%);
       overflow-x: hidden; transition: background 0.3s;
-      user-select: none; -webkit-user-select: none;
+      /* Removed user-select: none from body to fix input issues */
     }
     body.locked { overflow: hidden; }
-    /* Ensure inputs are selectable and usable on mobile */
-    input, textarea, .selectable { 
-        user-select: text; 
-        -webkit-user-select: text; 
-        -webkit-touch-callout: default;
+
+    /* Specific No-Select Class for UI Elements */
+    .no-select { user-select: none; -webkit-user-select: none; }
+    
+    /* Ensure Inputs are functional */
+    input, textarea { 
+        user-select: text !important; 
+        -webkit-user-select: text !important; 
+        -webkit-touch-callout: default !important;
     }
 
     a { text-decoration: none; color: inherit; }
@@ -170,7 +178,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     
-    /* --- Time --- */
+    /* --- Time (PC Layout) --- */
     .time-container { padding: 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .date-row { font-size: 15px; color: var(--text-sub); font-weight: 500; display: flex; align-items: center; gap: 8px; }
     .time-row {
@@ -185,10 +193,10 @@
     .time-sec { font-size: 16px; font-weight: 500; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 
     /* Mobile Clock Style */
-    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 14px 0; }
-    .mobile-clock-text { font-size: 14px; color: var(--text-main); line-height: 1.4; }
-    .mobile-date-part { font-weight: 300; opacity: 0.9; margin-right: 8px; }
-    .mobile-time-part { font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; }
+    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 18px 0; }
+    .mobile-clock-text { font-size: 15px; color: var(--text-main); line-height: 1.4; }
+    .mobile-date-part { font-weight: 300; opacity: 0.9; margin-right: 8px; font-family: var(--font-base); }
+    .mobile-time-part { font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0px; font-family: var(--font-base); }
 
     /* --- Search --- */
     .search-inner { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
@@ -248,7 +256,7 @@
       position: relative; display: flex; align-items: center;
       background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
       border-radius: 18px; padding: 0 6px; transition: all 0.3s;
-      margin-top: 2px; height: 52px;
+      margin-top: 2px; height: 52px; z-index: 10;
     }
     html[data-theme="light"] .search-bar { background: rgba(0, 0, 0, 0.04); border-color: rgba(0,0,0,0.1); }
     
@@ -261,7 +269,7 @@
       font-size: 16px; font-weight: 400; 
       color: var(--text-main); padding: 0 12px; min-width: 0;
     }
-    #q::placeholder { font-weight: 700; opacity: 0.5; } /* Bold Placeholder */
+    #q::placeholder { font-weight: 700; opacity: 0.5; }
     #q::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 
     .clear-btn {
@@ -311,8 +319,7 @@
     summary::-webkit-details-marker { display: none; }
     @media (hover: hover) { summary:hover { background: var(--glass-highlight); } }
     
-    /* Font Weight increased for titles */
-    .sum-title { font-family: var(--font-base); font-weight: 700; font-size: 19px; display: flex; align-items: center; gap: 10px; }
+    .sum-title { font-family: var(--font-base); font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 10px; }
     .sum-icon { color: var(--text-sub); width: 20px; height: 20px; transition: color 0.3s; }
     details[open] .sum-title { color: var(--primary); }
     details[open] .sum-icon { color: var(--primary); }
@@ -356,14 +363,12 @@
     html[data-theme="light"] .card-link:active { background: rgba(0,0,0,0.08); }
 
     .card-icon { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
-    /* Font size 16px for PC */
     .card-label { font-size: 16px; font-weight: 600; color: var(--text-main); line-height: 1.3; text-align: left; }
 
     /* --- Music --- */
     .yt-container {
-      /* Reduced height for PC, centered content */
-      width: 100%; max-width: 600px; margin: 0 auto;
-      position: relative; padding-bottom: 42%; /* Approx 21:9 ratio for reduced height */
+      width: 100%; max-width: 600px; margin: 0 auto; /* Centered & Limited Width */
+      position: relative; padding-bottom: 42%; /* ~21:9 for PC */
       border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border);
       background: #000;
     }
@@ -407,6 +412,7 @@
         .btn-sec:hover { background: rgba(255,255,255,0.15); border-color: var(--text-sub); }
         html[data-theme="light"] .btn-sec:hover { background: rgba(0,0,0,0.12); }
     }
+    
     /* Improved Light Mode Stop Button */
     .btn-danger { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.4); }
     html[data-theme="light"] .btn-danger { background: #fee2e2; color: #b91c1c; border-color: #f87171; }
@@ -485,7 +491,7 @@
     /* Smoother infinite scroll without jump */
     .notice-text { 
         position: absolute; white-space: nowrap; font-size: 13px; color: var(--text-sub); font-weight: 500; top: 4px;
-        animation: marquee 20s linear infinite; 
+        animation: marquee 15s linear infinite; 
     }
     /* Fixed Keyframes for seamless loop */
     @keyframes marquee { 
@@ -529,7 +535,7 @@
     @media (max-width: 480px) {
       :root {
         --header-h: 60px; 
-        --section-gap: 16px; /* Compact */
+        --section-gap: 12px; /* Decreased gap */
       }
       
       main { padding-top: 80px; padding-left: 12px; padding-right: 12px; }
@@ -556,6 +562,7 @@
           gap: 10px; 
           grid-template-columns: repeat(2, 1fr); 
       }
+      /* Last item spans 2 cols if it's the 3rd item */
       .grid > :nth-child(2n+1):last-child { grid-column: span 2; }
 
       .card-link { 
@@ -563,31 +570,33 @@
           padding: 16px 8px; gap: 10px; text-align: center;
           border-radius: 18px; min-height: 90px;
       }
-      .card-icon { width: 32px; height: 32px; margin-bottom: 0; }
-      .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 500; } /* 500 for mobile */
+      .card-icon { width: 28px; height: 28px; margin-bottom: 0; } /* Reduced */
+      .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 400; /* Thinner */ }
       
-      /* Stopwatch Reduce */
+      /* Stopwatch Mobile Fullscreen Fix */
       .sw-time { font-size: 40px; margin-bottom: 20px; }
       .btn { height: 44px; padding: 0 16px; font-size: 14px; min-width: 80px; }
       .fs-mode .sw-controls { transform: scale(1.1); margin-bottom: 20px; }
       
-      /* Fullscreen Mobile Tweaks */
+      /* Keep clock size large enough but static */
       .fs-mode .sw-time { font-size: 15vw; } 
       
+      /* Fullscreen Mobile Lap List - Margin Removed */
       .fs-mode .lap-list-container { 
           margin-top: 20px; 
           padding-top: 0; 
-          width: 85% !important; /* Reduced Width */
+          width: 85% !important; 
           border-top: none;
       }
-      /* Gap between Blue Box and Line - Margin */
-      .fs-mode .lap-list-container .lap-row:first-child { margin-bottom: 20px; } 
+      /* Remove gap between blue box and top of container */
+      .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; } 
 
       /* Sections */
       .section-card { padding: 4px; }
       summary { padding: 14px 16px; margin: 0; }
+      .sum-title { font-weight: 600; font-size: 15px; } /* Smaller title */
       .det-content { padding: 8px 12px 20px; }
-      .yt-container { padding-bottom: 40%; } /* Smaller video */
+      .yt-container { padding-bottom: 40%; } 
     }
 
     @media (max-width: 768px) {
@@ -604,7 +613,7 @@
     <div class="blob b2"></div>
   </div>
 
-  <header>
+  <header class="no-select">
     <div class="logo" id="reloadBtn">WebHub <span class="by">by Seungmin Woo</span></div>
     <div class="header-tools">
       <button class="tool-btn" id="expandToggle" title="전체 펼치기/접기">
@@ -632,14 +641,14 @@
       <a href="/" class="nav-link">Home</a>
     </nav>
 
-    <div class="nav-head">MAINTENANCE</div>
+    <div class="nav-head no-select">MAINTENANCE</div>
     <nav class="nav-list">
       <a href="/admin/" target="_blank" class="nav-link">Admin</a>
       <a href="https://github.com/" target="_blank" class="nav-link">Github</a>
       <a href="/testbridge/" target="_blank" class="nav-link">Laboratory</a>
     </nav>
     
-    <div class="nav-head">OTHERS</div>
+    <div class="nav-head no-select">OTHERS</div>
     <nav class="nav-list">
       <a href="/jejubus/" target="_blank" class="nav-link">Jeju Bus Timetable</a>
     </nav>
@@ -647,7 +656,7 @@
 
   <main>
     <!-- Time & Date (PC) -->
-    <section class="section-card time-container">
+    <section class="section-card time-container no-select">
       <div class="date-row">
         <span id="weatherIcon">⌛</span>
         <span id="dateDisplay">Loading...</span>
@@ -662,7 +671,7 @@
     </section>
 
     <!-- Mobile Clock -->
-    <section class="section-card mobile-clock-container" id="mobileClockSection">
+    <section class="section-card mobile-clock-container no-select" id="mobileClockSection">
         <div id="mobileClockText" class="mobile-clock-text"></div>
     </section>
 
@@ -670,7 +679,7 @@
     <section class="section-card search-inner">
       <div class="engine-box">
         <div class="engine-wrapper" id="engineWrapper">
-          <div class="engine-list" id="engineList">
+          <div class="engine-list no-select" id="engineList">
             <div class="engine-chip" data-engine="google" data-name="Google" data-color="#4285F4" data-active="true">Google</div>
             <div class="engine-chip" data-engine="naver" data-name="NAVER" data-color="#03cf5d">NAVER</div>
             <div class="engine-chip" data-engine="youtube" data-name="YouTube" data-color="#ff0000">YouTube</div>
@@ -690,13 +699,13 @@
         <button class="clear-btn" id="clearBtn" title="지우기">
           <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
-        <button class="search-btn" id="searchBtn">검색</button>
+        <button class="search-btn no-select" id="searchBtn">검색</button>
       </div>
     </section>
 
     <!-- Other Services -->
     <details>
-      <summary>
+      <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
           Other Services
@@ -706,7 +715,7 @@
       <div class="details-wrapper">
         <div class="det-inner">
           <div class="det-content">
-            <div class="grid">
+            <div class="grid no-select">
               <a href="/busgame/" target="_blank" class="card-link">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=leagues.withgoogle.com" class="card-icon" alt="">
                 <span class="card-label">BUS Escape!</span>
@@ -727,7 +736,7 @@
 
     <!-- Educational Volunteering -->
     <details open>
-      <summary>
+      <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           Educational Volunteering
@@ -737,7 +746,7 @@
       <div class="details-wrapper">
         <div class="det-inner">
           <div class="det-content">
-            <div class="grid">
+            <div class="grid no-select">
               <a href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" class="card-link">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=cbnu.ac.kr" class="card-icon" alt="">
                 <span class="card-label">충북대 공지사항</span>
@@ -762,7 +771,7 @@
 
     <!-- CBNU -->
     <details>
-      <summary>
+      <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
           Chungbuk National University
@@ -772,7 +781,7 @@
       <div class="details-wrapper">
         <div class="det-inner">
           <div class="det-content">
-            <div class="grid">
+            <div class="grid no-select">
               <a href="https://lms.chungbuk.ac.kr/" target="_blank" class="card-link">
                 <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
                 <span class="card-label">eCampus</span>
@@ -797,7 +806,7 @@
 
     <!-- Music -->
     <details>
-      <summary>
+      <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           Music
@@ -807,7 +816,7 @@
       <div class="details-wrapper">
         <div class="det-inner">
           <div class="det-content">
-            <div class="yt-container">
+            <div class="yt-container no-select">
               <iframe class="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&modestbranding=1" title="Lofi Girl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
           </div>
@@ -817,7 +826,7 @@
 
     <!-- Stopwatch -->
     <details>
-      <summary>
+      <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
           Stopwatch
@@ -827,7 +836,7 @@
       <div class="details-wrapper">
         <div class="det-inner">
           <div class="det-content">
-            <div class="stopwatch-wrap" id="stopwatchWrap">
+            <div class="stopwatch-wrap no-select" id="stopwatchWrap">
               <div class="sw-main-panel">
                 <div class="sw-time" id="swDisplay">00:00:00<small class="sw-ms">.00</small></div>
                 <div class="sw-controls">
@@ -847,7 +856,7 @@
 
     <!-- AI Tools -->
     <details>
-      <summary>
+      <summary class="no-select">
         <div class="sum-title">
           <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
           Artificial Intelligence
@@ -857,7 +866,7 @@
       <div class="details-wrapper">
         <div class="det-inner">
           <div class="det-content">
-            <div class="grid">
+            <div class="grid no-select">
               <a href="https://gemini.google.com/" target="_blank" class="card-link">
                 <img src="https://www.google.com/s2/favicons?sz=64&domain=gemini.google.com" class="card-icon" alt="">
                 <span class="card-label">Gemini</span>
@@ -881,7 +890,7 @@
     </details>
 
     <!-- Notice Bar -->
-    <div class="notice-bar" id="noticeBar">
+    <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
         <span class="notice-text">WebHub Version 5.0.0 Updated. Optimized for Mobile & Enhanced UX.</span>
@@ -889,13 +898,13 @@
       <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
     </div>
 
-    <footer>
+    <footer class="no-select">
       <b>WebHub</b> Ver. 5.0.0<br>
       <p>© 2025 Seungmin Woo. All rights reserved.</p>
     </footer>
 
     <!-- Scroll Buttons -->
-    <button class="scroll-btn" id="scrollBtn" aria-label="스크롤 이동">
+    <button class="scroll-btn no-select" id="scrollBtn" aria-label="스크롤 이동">
       <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
   </main>
@@ -1082,11 +1091,13 @@
         engineList.scrollLeft = scrollLeft - walk;
       };
 
+      // Critical Fix for Mobile Input
+      q.addEventListener('keydown', e => e.stopPropagation());
       q.addEventListener('input', () => clearBtn.classList.toggle('visible', q.value.length > 0));
       clearBtn.onclick = () => { q.value = ''; clearBtn.classList.remove('visible'); q.focus(); };
       const doSearch = () => { const val = q.value.trim(); if(val) window.open(engines[curEngine](val), '_blank'); };
       searchBtn.onclick = doSearch;
-      q.onkeydown = e => e.key==='Enter' && doSearch();
+      q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
 
       // --- Stopwatch ---
       let timer=null, startT=0, elapsed=0;
