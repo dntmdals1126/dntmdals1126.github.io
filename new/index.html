@@ -14,7 +14,8 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
+  <!-- 1. 파비콘 롤백 및 안정적인 SVG 적용 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E" />
   
   <style>
     /* --- Variables --- */
@@ -45,7 +46,6 @@
       
       --max-w: 1000px; 
       --header-max-w: 1100px;
-      /* 요청사항: 곡률을 22px로 줄여서 너무 원형 같지 않게 조정 */
       --radius-md: 22px;
       --header-h: 64px;
       --section-gap: 20px; 
@@ -99,16 +99,12 @@
     }
     body.locked { overflow: hidden; }
 
-    /* Specific No-Select Class for UI Elements */
     .no-select { user-select: none; -webkit-user-select: none; }
-    
-    /* Ensure Inputs are functional */
     input, textarea { 
         user-select: text !important; 
         -webkit-user-select: text !important; 
         -webkit-touch-callout: default !important;
     }
-
     a { text-decoration: none; color: inherit; }
     button { font-family: inherit; }
 
@@ -117,21 +113,18 @@
     ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-thumb-hover); }
 
-    /* --- Background Blobs --- */
     .blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; filter: blur(90px); opacity: 0.5; overflow: hidden; }
     .blob { position: absolute; border-radius: 50%; animation: float 25s infinite ease-in-out alternate; }
     .b1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: rgba(30, 64, 175, 0.15); }
     .b2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: rgba(7, 89, 133, 0.1); animation-delay: -5s; }
     @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(20px, -20px) scale(1.05); } }
 
-    /* --- Scroll Mask --- */
     .scroll-mask {
       position: fixed; top: 0; left: 0; right: 0; height: 90px;
       background: linear-gradient(to bottom, var(--bg-dark) 40%, transparent);
       pointer-events: none; z-index: 900;
     }
 
-    /* --- Header --- */
     header {
       position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h);
@@ -167,7 +160,6 @@
         .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); }
     }
     
-    /* --- Main Layout --- */
     main { max-width: var(--max-w); margin: 0 auto; padding: 100px 16px 60px; position: relative; z-index: 1; }
     
     .section-card {
@@ -178,7 +170,6 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     
-    /* --- Time (PC Layout) --- */
     .time-container { padding: 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .date-row { font-size: 15px; color: var(--text-sub); font-weight: 500; display: flex; align-items: center; gap: 8px; }
     .time-row {
@@ -192,13 +183,11 @@
     .ampm.pm { color: var(--time-pm); }
     .time-sec { font-size: 16px; font-weight: 500; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 
-    /* Mobile Clock Style */
-    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 20px 0; /* More padding for mobile */ }
+    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 24px 0; }
     .mobile-clock-text { font-size: 15px; color: var(--text-main); line-height: 1.4; }
     .mobile-date-part { font-weight: 300; opacity: 0.9; margin-right: 8px; font-family: var(--font-base); }
     .mobile-time-part { font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0px; font-family: var(--font-base); }
 
-    /* --- Search --- */
     .search-inner { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
     
     .engine-box {
@@ -256,7 +245,7 @@
       position: relative; display: flex; align-items: center;
       background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
       border-radius: 18px; padding: 0 6px; transition: all 0.3s;
-      margin-top: 2px; height: 56px; /* Slightly taller for PC */
+      margin-top: 2px; height: 56px;
     }
     html[data-theme="light"] .search-bar { background: rgba(0, 0, 0, 0.04); border-color: rgba(0,0,0,0.1); }
     
@@ -266,7 +255,7 @@
     #q {
       flex: 1; border: none; background: transparent;
       height: 100%; 
-      font-size: 16px; font-weight: 300; /* Light weight for PC */
+      font-size: 16px; font-weight: 300; 
       color: var(--text-main); padding: 0 12px; min-width: 0;
     }
     #q::placeholder { font-weight: 300; opacity: 0.5; }
@@ -290,7 +279,6 @@
     }
     .search-btn:active { transform: scale(0.96); }
 
-    /* --- Accordion --- */
     details {
       background: var(--glass-surface);
       border: 1px solid var(--glass-border); border-radius: var(--radius-md);
@@ -298,7 +286,6 @@
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     details[open] { 
-        /* Slightly Darker Neutral Navy */
         background: rgba(13, 16, 22, 0.95); 
         border-color: rgba(59, 130, 246, 0.25); 
         box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
@@ -326,7 +313,6 @@
     .chevron { transition: transform 0.3s; opacity: 0.5; }
     details[open] .chevron { transform: rotate(180deg); opacity: 1; color: var(--primary); }
 
-    /* Smooth Expansion */
     .details-wrapper {
       display: grid; grid-template-rows: 0fr;
       transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -339,7 +325,15 @@
     }
     details[open] .det-content { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
 
-    /* --- Button Grid --- */
+    /* Weather Specific Styles */
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .weather-item { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .weather-label { font-size: 12px; opacity: 0.6; margin-bottom: 4px; }
+    .weather-val { font-size: 15px; font-weight: 600; }
+    .weather-search { display: flex; gap: 6px; margin-top: 15px; }
+    .weather-input { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); padding: 0 12px; height: 36px; font-size: 14px; }
+    .weather-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
     .grid {
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
@@ -365,16 +359,14 @@
     .card-icon { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
     .card-label { font-size: 16px; font-weight: 600; color: var(--text-main); line-height: 1.3; text-align: left; }
 
-    /* --- Music --- */
     .yt-container {
-      width: 100%; max-width: 600px; margin: 0 auto; /* Centered & Limited Width */
-      position: relative; padding-bottom: 250px; /* Reduced Height ~21:9 for PC */
+      width: 100%; max-width: 600px; margin: 0 auto; 
+      position: relative; padding-bottom: 250px; 
       border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border);
       background: #000;
     }
     .yt-frame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-    /* --- Stopwatch --- */
     .stopwatch-wrap { display: flex; flex-direction: column; gap: 20px; width: 100%; transition: all 0.4s ease; justify-content: center; }
     
     @media (min-width: 720px) {
@@ -413,7 +405,6 @@
         html[data-theme="light"] .btn-sec:hover { background: rgba(0,0,0,0.12); }
     }
     
-    /* Improved Light Mode Stop Button */
     .btn-danger { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.4); }
     html[data-theme="light"] .btn-danger { background: #fee2e2; color: #b91c1c; border-color: #f87171; }
     @media (hover: hover) { .btn-danger:hover { background: rgba(220, 38, 38, 0.3); } }
@@ -440,7 +431,6 @@
     
     .lap-row:first-child { color: #0ea5e9; background: rgba(14, 165, 233, 0.1); font-weight: 600; }
 
-    /* --- Fullscreen Mode --- */
     .fs-mode {
       position: fixed; inset: 0; z-index: 9999;
       background: var(--bg-dark);
@@ -458,18 +448,16 @@
     .fs-mode .lap-list-container {
       display: none; 
       width: 100% !important; 
-      border-top: none; /* Removed Divider */
+      border-top: none; 
       margin-top: 40px; 
-      padding: 0; /* Removed Padding */
+      padding: 0; 
       background: transparent; border-radius: 0;
-      /* Height for ~2.5 laps */
       max-height: 125px; 
       overflow-y: auto;
     }
     .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; }
     .fs-mode.has-laps .lap-list-container.active { display: block; }
 
-    /* --- Footer --- */
     footer {
       text-align: center; padding: 20px 0 10px;
       color: var(--text-sub); font-size: 12px;
@@ -478,7 +466,6 @@
     footer b { font-family: 'Cal Sans', sans-serif; font-weight: 400; color: var(--text-main); }
     footer p { margin: 4px 0 0; opacity: 0.7; }
 
-    /* --- Notice Bar (Fixed Infinite Scroll) --- */
     .notice-bar {
       margin: 0 auto 20px; max-width: var(--max-w);
       background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(34, 211, 238, 0.1));
@@ -488,19 +475,16 @@
     }
     .notice-badge { background: var(--primary); color: white; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; z-index: 2; }
     .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 24px; }
-    /* Smoother infinite scroll without jump */
     .notice-text { 
         position: absolute; white-space: nowrap; font-size: 13px; color: var(--text-sub); font-weight: 500; top: 4px;
         animation: marquee 20s linear infinite; 
     }
-    /* Fixed Keyframes for seamless loop */
     @keyframes marquee { 
         0% { left: 100%; transform: translateX(0); }
         100% { left: -100%; transform: translateX(-100%); }
     }
     .notice-close { background: none; border: none; color: var(--text-sub); cursor: pointer; padding: 0 4px; z-index: 2; font-size: 16px; }
 
-    /* --- Drawer --- */
     .drawer-back { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1100; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
     .drawer {
       position: fixed; top: 0; right: 0; bottom: 0; width: 300px;
@@ -520,7 +504,6 @@
     }
     @media (hover: hover) { .nav-list a:hover { background: var(--glass-border); color: var(--primary); } }
 
-    /* --- Scroll Button --- */
     .scroll-btn {
       position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px;
       border-radius: 14px; background: var(--glass-surface); border: 1px solid var(--glass-border);
@@ -540,7 +523,6 @@
       
       main { padding-top: 80px; padding-left: 12px; padding-right: 12px; }
       
-      /* Header Bar */
       header { top: 0; width: 100%; border-radius: 0; border-top: none; border-left: none; border-right: none; padding: 0 16px; }
       
       .logo { font-size: 22px; }
@@ -548,26 +530,22 @@
       .header-tools { gap: 4px; }
       .tool-btn { width: 36px; height: 36px; }
 
-      /* Clock */
       .time-container { display: none; }
-      .mobile-clock-container { display: block; }
+      /* 3. 모바일 시계 상하좌우 여백 조금씩 축소 (24px -> 16px) */
+      .mobile-clock-container { display: block; padding: 16px 0; }
       
-      /* Search */
-      /* 요청사항: 검색 섹션 패딩을 20px로 조정 (기존 24px -> 20px) */
+      /* 3. 모바일 검색창 패딩 축소 (20px -> 16px) */
       .search-inner { padding: 16px !important; gap: 12px; }
-      .engine-box { padding: 2px; } /* Slimmer */
+      .engine-box { padding: 2px; } 
       .engine-chip { padding: 6px 12px; font-size: 13px; }
       .search-bar { height: 52px; border-radius: 16px; }
       
-      /* 요청사항: 입력 글씨 얇게 유지 */
       #q { font-size: 16px; font-weight: 300; }
       
-      /* Grid - 2 cols, fill last */
       .grid { 
           gap: 10px; 
           grid-template-columns: repeat(2, 1fr); 
       }
-      /* Last item spans 2 cols if it's the 3rd item */
       .grid > :nth-child(2n+1):last-child { grid-column: span 2; }
 
       .card-link { 
@@ -575,31 +553,25 @@
           padding: 16px 8px; gap: 10px; text-align: center;
           border-radius: 18px; min-height: 90px;
       }
-      .card-icon { width: 28px; height: 28px; margin-bottom: 0; } /* Reduced */
-      .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 500; } /* Thinner font */
+      .card-icon { width: 28px; height: 28px; margin-bottom: 0; } 
+      .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 500; } 
       
-      /* Stopwatch Mobile Fullscreen Fix */
       .sw-time { font-size: 40px; margin-bottom: 20px; }
       .btn { height: 44px; padding: 0 16px; font-size: 14px; min-width: 80px; }
       .fs-mode .sw-controls { transform: scale(1.1); margin-bottom: 20px; }
-      
-      /* Keep clock size large enough but static */
       .fs-mode .sw-time { font-size: 15vw; } 
       
-      /* Fullscreen Mobile Lap List - Margin Removed */
       .fs-mode .lap-list-container { 
           margin-top: 20px; 
           padding-top: 0; 
           width: 85% !important; 
           border-top: none;
       }
-      /* Remove gap between blue box and top of container */
       .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; } 
 
-      /* Sections */
-      /* 모바일 섹션 카드 패딩 확보 (곡률과 균형 맞춤) */
-      .section-card { padding: 20px; } 
-      summary { padding: 18px 16px; margin: 0; } /* Taller */
+      /* 3. 섹션 카드 패딩 축소 (20px -> 16px) */
+      .section-card { padding: 16px; } 
+      summary { padding: 18px 16px; margin: 0; }
       .sum-title { font-weight: 600; font-size: 15px; } 
       .det-content { padding: 8px 12px 20px; }
       .yt-container { padding-bottom: 40%; } 
@@ -664,7 +636,7 @@
     <!-- Time & Date (PC) -->
     <section class="section-card time-container no-select">
       <div class="date-row">
-        <span id="weatherIcon">⌛</span>
+        <span id="weatherIconHeader">⌛</span>
         <span id="dateDisplay">Loading...</span>
       </div>
       <div class="time-row" id="timeDisplay">
@@ -709,22 +681,67 @@
       </div>
     </section>
 
-    <!-- Weather Section (New) -->
-    <!-- 요청사항: Other Services 위쪽에 날씨 섹션 추가 -->
-    <section class="section-card no-select" id="weather-card-section">
-      <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 14px;">
-         <div style="display:flex; align-items:center; gap:12px;">
-            <span id="weatherIconLarge" style="font-size: 32px;">☀</span>
-            <div style="display:flex; flex-direction:column;">
-               <span id="weatherTempLarge" style="font-size: 24px; font-weight:700;">--°C</span>
-               <span style="font-size:13px; opacity:0.7;">Cheongju-si</span>
-            </div>
-         </div>
-         <div style="text-align:right;">
-            <span style="font-size:12px; opacity:0.6;">Current Weather</span>
-         </div>
+    <!-- 2. Weather Section (Enhanced) -->
+    <details id="det-weather" open>
+      <summary class="no-select">
+        <div class="sum-title">
+          <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>
+          Weather Info
+        </div>
+        <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="details-wrapper">
+        <div class="det-inner">
+          <div class="det-content">
+             <!-- 메인 날씨 정보 -->
+             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                   <span id="wMainIcon" style="font-size:36px;">☀</span>
+                   <div style="display:flex; flex-direction:column;">
+                      <span id="wMainTemp" style="font-size:26px; font-weight:700;">--°C</span>
+                      <span id="wLocation" style="font-size:14px; opacity:0.7;">Cheongju-si</span>
+                   </div>
+                </div>
+                <div style="text-align:right;">
+                   <span id="wDesc" style="font-size:13px; font-weight:500;">Clear Sky</span>
+                   <div style="font-size:11px; opacity:0.5; margin-top:2px;">Updated just now</div>
+                </div>
+             </div>
+
+             <!-- 상세 정보 그리드 -->
+             <div class="weather-grid no-select">
+                <div class="weather-item">
+                   <span class="weather-label">Humidity</span>
+                   <span class="weather-val" id="wHumidity">--%</span>
+                </div>
+                <div class="weather-item">
+                   <span class="weather-label">Wind Speed</span>
+                   <span class="weather-val" id="wWind">-- km/h</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">Precipitation</span>
+                    <span class="weather-val" id="wRain">-- %</span>
+                 </div>
+                 <div class="weather-item">
+                    <span class="weather-label">Feels Like</span>
+                    <span class="weather-val" id="wFeel">--°C</span>
+                 </div>
+             </div>
+
+             <!-- 검색 및 위치 제어 -->
+             <div class="weather-search">
+                <button class="weather-btn" id="wBtnLoc" title="Current Location">
+                   <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+                </button>
+                <input type="text" class="weather-input" id="wInputLoc" placeholder="Search City (e.g. Seoul)...">
+                <button class="weather-btn" id="wBtnSearch" title="Search">
+                   <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
+             </div>
+          </div>
+        </div>
       </div>
-    </section>
+    </details>
 
     <!-- Other Services -->
     <details id="det-other">
@@ -771,7 +788,7 @@
           <div class="det-content">
             <div class="grid no-select">
               <a href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" class="card-link">
-                <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                <img src="https://www.google.com/s2/favicons?sz=32&domain=cbnu.ac.kr" class="card-icon" alt="">
                 <span class="card-label">충북대 공지사항</span>
               </a>
               <a href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" class="card-link">
@@ -935,8 +952,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // --- Persistence Logic ---
-      
-      // 1. Theme Persistence
       const html = document.documentElement;
       const themeToggle = document.getElementById('themeToggle');
       const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -947,7 +962,6 @@
         localStorage.setItem('theme', next);
       };
 
-      // 2. Section Persistence
       const allDetails = document.querySelectorAll('details');
       allDetails.forEach((dt) => {
           const id = dt.id;
@@ -955,17 +969,14 @@
               const state = localStorage.getItem(id);
               if (state === 'open') dt.setAttribute('open', '');
               else if (state === 'closed') dt.removeAttribute('open');
-              // Default is handled by HTML 'open' attribute if storage is null
           }
       });
-      // Hook into click to save state (after toggle logic)
       document.querySelectorAll('summary').forEach(summary => {
         summary.addEventListener('click', (e) => {
           e.preventDefault(); 
           const details = summary.closest('details');
           const id = details.id;
           if (details.hasAttribute('open')) {
-            // Closing
             const wrapper = details.querySelector('.details-wrapper');
             wrapper.style.gridTemplateRows = '0fr';
             setTimeout(() => {
@@ -974,21 +985,18 @@
                 if(id) localStorage.setItem(id, 'closed');
             }, 300);
           } else {
-            // Opening
             details.setAttribute('open', '');
             if(id) localStorage.setItem(id, 'open');
           }
         });
       });
 
-      // --- Search Logic & Persistence ---
+      // --- Search Logic ---
       const engineList = document.getElementById('engineList');
       const engineWrapper = document.getElementById('engineWrapper');
       const q = document.getElementById('q');
       const searchBtn = document.getElementById('searchBtn');
       const clearBtn = document.getElementById('clearBtn');
-      
-      // 3. Search Engine Persistence
       let curEngine = localStorage.getItem('lastEngine') || 'google';
       
       const engines = {
@@ -1010,19 +1018,14 @@
         else searchBtn.style.boxShadow = `none`;
       }
 
-      // Initialize Engine State
       const initialChip = document.querySelector(`.engine-chip[data-engine="${curEngine}"]`);
       if (initialChip) {
           const color = initialChip.dataset.color;
           const name = initialChip.dataset.name;
-          // Deactivate others
           document.querySelectorAll('.engine-chip').forEach(c => c.removeAttribute('data-active'));
           initialChip.setAttribute('data-active', 'true');
           updateSearchColor(color);
           q.placeholder = `${name} 검색어 입력...`;
-          
-          // Scroll to active chip if needed (simple approximation)
-          // engineList.scrollLeft = initialChip.offsetLeft - 20; 
       }
 
       engineList.addEventListener('click', e => {
@@ -1031,10 +1034,7 @@
           curEngine = chip.dataset.engine;
           const color = chip.dataset.color;
           const name = chip.dataset.name;
-          
-          // Save State
           localStorage.setItem('lastEngine', curEngine);
-
           [...engineList.children].forEach(c => c.dataset.active = (c === chip));
           updateSearchColor(color);
           q.placeholder = `${name} 검색어 입력...`;
@@ -1045,20 +1045,16 @@
         const { scrollLeft, scrollWidth, clientWidth } = engineList;
         const hasOverflow = scrollWidth > clientWidth;
         if (!hasOverflow) { engineWrapper.className = 'engine-wrapper'; return; }
-        
         const atStart = scrollLeft <= 1; 
         const atEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) <= 1;
-        
         if (atStart) engineWrapper.className = 'engine-wrapper mask-right';
         else if (atEnd) engineWrapper.className = 'engine-wrapper mask-left';
         else engineWrapper.className = 'engine-wrapper mask-both';
       };
-      
       engineList.addEventListener('scroll', updateMask);
       window.addEventListener('resize', updateMask);
       setTimeout(updateMask, 100); 
 
-      // Horizontal Drag
       let isDown=false, startX, scrollLeft;
       engineList.onmousedown = e => { isDown=true; startX=e.pageX-engineList.offsetLeft; scrollLeft=engineList.scrollLeft; };
       engineList.onmouseleave = () => isDown=false;
@@ -1069,7 +1065,6 @@
         engineList.scrollLeft = scrollLeft - walk;
       };
 
-      // Critical Fix for Mobile Input
       q.addEventListener('keydown', e => e.stopPropagation());
       q.addEventListener('input', () => clearBtn.classList.toggle('visible', q.value.length > 0));
       clearBtn.onclick = () => { q.value = ''; clearBtn.classList.remove('visible'); q.focus(); };
@@ -1108,7 +1103,7 @@
         ampmEl.textContent = ampm;
         ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
 
-        // 요청사항 3: 모바일 날짜 포맷 변경 (2025년 12월 23일 화요일  오후 10시 33분 57초)
+        // 모바일 날짜 포맷
         mobileClock.innerHTML = 
           `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}요일</span> ` + 
           `<span class="mobile-time-part">${ampmKr} ${h}시 ${mm}분 ${ss}초</span>`;
@@ -1116,51 +1111,116 @@
       setInterval(updateTime, 1000);
       updateTime();
 
-      // --- Real Weather ---
-      // 업데이트: 날씨 섹션에 정보 표시 로직 추가
-      const weatherIcon = document.getElementById('weatherIcon');
-      const wTempLarge = document.getElementById('weatherTempLarge');
-      const wIconLarge = document.getElementById('weatherIconLarge');
+      // --- Enhanced Weather Logic ---
+      const wMainIcon = document.getElementById('wMainIcon');
+      const wMainTemp = document.getElementById('wMainTemp');
+      const wLocation = document.getElementById('wLocation');
+      const wDesc = document.getElementById('wDesc');
+      const wHumidity = document.getElementById('wHumidity');
+      const wWind = document.getElementById('wWind');
+      const wRain = document.getElementById('wRain');
+      const wFeel = document.getElementById('wFeel');
+      const wInputLoc = document.getElementById('wInputLoc');
+      const wBtnSearch = document.getElementById('wBtnSearch');
+      const wBtnLoc = document.getElementById('wBtnLoc');
+      const weatherIconHeader = document.getElementById('weatherIconHeader');
 
-      async function fetchWeather() {
-        try {
-            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.6372&longitude=127.4897&current_weather=true');
-            const data = await res.json();
-            const temp = Math.round(data.current_weather.temperature);
-            let icon = '☀';
-            
-            // PC 헤더용 업데이트
-            weatherIcon.innerHTML = `${icon} ${temp}°C`;
+      let currentLat = 36.6372; // Default Cheongju
+      let currentLon = 127.4897;
+      let currentLocationName = "Cheongju-si";
 
-            // 모바일/새 섹션용 업데이트
-            if(wTempLarge) wTempLarge.textContent = `${temp}°C`;
-            if(wIconLarge) wIconLarge.textContent = icon;
-
-        } catch(e) { 
-            weatherIcon.innerHTML = '☀';
-            if(wTempLarge) wTempLarge.textContent = '--°C';
-        }
+      // 날씨 상태 코드 매핑 (WMO Code)
+      function getWeatherDesc(code) {
+         if(code === 0) return { t: "Clear Sky", i: "☀" };
+         if(code === 1 || code === 2 || code === 3) return { t: "Partly Cloudy", i: "⛅" };
+         if(code === 45 || code === 48) return { t: "Foggy", i: "🌫" };
+         if(code >= 51 && code <= 67) return { t: "Rainy", i: "🌧" };
+         if(code >= 71 && code <= 77) return { t: "Snowy", i: "❄" };
+         if(code >= 80 && code <= 82) return { t: "Showers", i: "🌦" };
+         if(code >= 95) return { t: "Thunderstorm", i: "⛈" };
+         return { t: "Clear", i: "☀" };
       }
-      fetchWeather(); setInterval(fetchWeather, 1800000);
 
-      // --- Expand/Collapse All ---
-      const expandToggle = document.getElementById('expandToggle');
-      let allExpanded = true;
-      expandToggle.onclick = () => {
-        // Toggle logic based on current state
-        allExpanded = !allExpanded;
-        const details = document.querySelectorAll('details');
-        details.forEach(d => {
-          const id = d.id;
-          if (allExpanded) {
-             d.setAttribute('open', '');
-             if(id) localStorage.setItem(id, 'open');
-          } else {
-             d.removeAttribute('open');
-             if(id) localStorage.setItem(id, 'closed');
-          }
-        });
-      };
+      async function fetchWeather(lat, lon, name) {
+         try {
+            // Open-Meteo API (Current + Hourly for extra details)
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&timezone=auto`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const cur = data.current;
+            
+            const temp = Math.round(cur.temperature_2m);
+            const weather = getWeatherDesc(cur.weather_code);
+            const humidity = cur.relative_humidity_2m;
+            const wind = cur.wind_speed_10m;
+            const rain = cur.precipitation;
+            const feel = Math.round(cur.apparent_temperature);
+
+            // Update DOM
+            wMainTemp.textContent = `${temp}°C`;
+            wMainIcon.textContent = weather.i;
+            wLocation.textContent = name;
+            wDesc.textContent = weather.t;
+            
+            wHumidity.textContent = `${humidity}%`;
+            wWind.textContent = `${wind} km/h`;
+            wRain.textContent = `${rain} mm`;
+            wFeel.textContent = `${feel}°C`;
+
+            // 헤더 아이콘 업데이트
+            weatherIconHeader.innerHTML = `${weather.i} ${temp}°C`;
+
+         } catch (e) {
+            console.error(e);
+            wMainTemp.textContent = "--";
+            wLocation.textContent = "Error";
+         }
+      }
+
+      // 1. 초기 로드
+      fetchWeather(currentLat, currentLon, currentLocationName);
+
+      // 2. 현재 위치 (Geolocation)
+      wBtnLoc.addEventListener('click', () => {
+         if(!navigator.geolocation) { alert("Geolocation is not supported."); return; }
+         wBtnLoc.style.opacity = '0.5';
+         navigator.geolocation.getCurrentPosition(async (pos) => {
+            currentLat = pos.coords.latitude;
+            currentLon = pos.coords.longitude;
+            // 역지오코딩은 API 필요하지만 여기선 간단히 "My Location" 혹은 좌표 근사
+            // Open-Meteo는 좌표만 있으면 됨. 이름은 Geocoding API로 가져올 수 있음.
+            // 일단 간단히:
+            fetchWeather(currentLat, currentLon, "My Location");
+            wBtnLoc.style.opacity = '1';
+         }, () => {
+            alert("Unable to retrieve your location");
+            wBtnLoc.style.opacity = '1';
+         });
+      });
+
+      // 3. 지역 검색 (Open-Meteo Geocoding API)
+      async function searchLocation() {
+         const query = wInputLoc.value.trim();
+         if(!query) return;
+         try {
+            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`);
+            const data = await res.json();
+            if(data.results && data.results.length > 0) {
+               const loc = data.results[0];
+               currentLat = loc.latitude;
+               currentLon = loc.longitude;
+               currentLocationName = `${loc.name}, ${loc.country_code.toUpperCase()}`;
+               fetchWeather(currentLat, currentLon, currentLocationName);
+               wInputLoc.value = '';
+            } else {
+               alert("Location not found.");
+            }
+         } catch(e) { alert("Search failed."); }
+      }
+
+      wBtnSearch.addEventListener('click', searchLocation);
+      wInputLoc.addEventListener('keydown', (e) => { if(e.key === 'Enter') searchLocation(); });
+      wInputLoc.addEventListener('keydown', (e) => e.stopPropagation()); // 검색창 단축키 방지
 
       // --- Drawer ---
       const drawer = document.getElementById('drawer');
@@ -1213,11 +1273,9 @@
           startT = Date.now() - elapsed;
           timer = setInterval(() => {
             elapsed = Date.now() - startT;
-            // Prevent changing layout in fullscreen
             if (!swWrap.parentNode.classList.contains('fs-mode')) {
                swDisplay.innerHTML = formatSw(elapsed);
             } else {
-               // In fs-mode, just update text, font size handled by CSS
                swDisplay.innerHTML = formatSw(elapsed); 
             }
           }, 10);
@@ -1240,7 +1298,6 @@
           d.innerHTML = `<span>Lap ${lapCnt++}</span><span>${formatLapText(elapsed)}</span>`;
           lapsDiv.prepend(d);
         } else {
-          // Reset
           elapsed=0; lapCnt=1;
           swDisplay.innerHTML='00:00:00<small class="sw-ms">.00</small>';
           lapsDiv.innerHTML='';
@@ -1270,7 +1327,6 @@
       btnLap.onclick = lapOrReset;
       btnFull.onclick = toggleFull;
 
-      // Shortcuts
       document.addEventListener('keydown', e => {
         if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
         if(e.code==='Space') {
@@ -1284,22 +1340,19 @@
         }
       });
 
-      // --- Scroll Button Logic ---
       const scrollBtn = document.getElementById('scrollBtn');
       window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
-        // Show button if scrolled down OR allow scrolling down if at top
         if (scrollY > 100) {
-            scrollBtn.innerHTML = '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'; // Up Arrow
+            scrollBtn.innerHTML = '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'; 
             scrollBtn.onclick = () => window.scrollTo(0, 0);
             scrollBtn.classList.add('visible');
         } else {
-            scrollBtn.innerHTML = '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'; // Down Arrow
+            scrollBtn.innerHTML = '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'; 
             scrollBtn.onclick = () => window.scrollTo(0, document.body.scrollHeight);
             scrollBtn.classList.add('visible');
         }
       });
-      // Init state
       scrollBtn.classList.add('visible');
       
       document.getElementById('reloadBtn').onclick = () => location.reload();
