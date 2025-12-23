@@ -13,8 +13,8 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Favicon Rolled Back -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E" />
+  <!-- Original Favicon Restored -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
   
   <style>
     /* --- Variables --- */
@@ -153,7 +153,6 @@
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
     }
-    /* Touch devices: remove hover stickiness */
     @media (hover: hover) {
         .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); }
     }
@@ -169,7 +168,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     
-    /* --- Time (Optimized) --- */
+    /* --- Time (PC Layout) --- */
     .time-container { padding: 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .date-row { font-size: 15px; color: var(--text-sub); font-weight: 500; display: flex; align-items: center; gap: 8px; }
     .time-row {
@@ -184,7 +183,9 @@
     .time-sec { font-size: 16px; font-weight: 500; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 
     /* Mobile Clock Style */
-    #mobileClock { display: none; text-align: center; font-size: 15px; font-weight: 600; color: var(--text-main); padding: 10px 0; }
+    .mobile-clock-container { display: none; text-align: center; color: var(--text-main); padding: 12px 0; }
+    .mobile-clock-text { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .mobile-clock-sec { font-weight: 300; opacity: 0.8; font-size: 0.9em; }
 
     /* --- Search --- */
     .search-inner { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
@@ -200,8 +201,7 @@
 
     .engine-list {
       display: flex; gap: 8px; overflow-x: auto; 
-      padding: 16px 12px 8px; 
-      margin: -12px 0 0; 
+      padding: 16px 12px 8px; margin: -12px 0 0; 
       scrollbar-width: none;
     }
     .engine-list::-webkit-scrollbar { display: none; }
@@ -220,6 +220,7 @@
     }
     .engine-chip[data-active="true"] { color: white; border-color: transparent; }
     
+    /* Engine Colors */
     .engine-chip[data-engine="google"][data-active="true"] { background: #4285F4; }
     .engine-chip[data-engine="naver"][data-active="true"] { background: #03cf5d; }
     .engine-chip[data-engine="youtube"][data-active="true"] { background: #ff0000; }
@@ -229,13 +230,13 @@
     .engine-chip[data-engine="dbpia"][data-active="true"] { background: #cf393e; }
     .engine-chip[data-engine="riss"][data-active="true"] { background: #F76323; }
     .engine-chip[data-engine="everytime"][data-active="true"] { background: #f91f15; }
-    .engine-chip[data-engine="googlemap"][data-active="true"] { background: #34A853; }
+    .engine-chip[data-engine="googlemap"][data-active="true"] { background: #4285F4; }
 
     .search-bar {
       position: relative; display: flex; align-items: center;
       background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
       border-radius: 18px; padding: 0 6px; transition: all 0.3s;
-      margin-top: 2px; 
+      margin-top: 2px; height: 40px; /* Reduced Height */
     }
     html[data-theme="light"] .search-bar { background: rgba(0, 0, 0, 0.04); border-color: rgba(0,0,0,0.1); }
     
@@ -244,7 +245,7 @@
     .search-icon { margin-left: 10px; color: var(--text-sub); opacity: 0.8; }
     #q {
       flex: 1; border: none; background: transparent;
-      height: 52px; font-size: 17px; font-weight: 500;
+      height: 100%; font-size: 17px; font-weight: 500;
       color: var(--text-main); padding: 0 12px; min-width: 0;
     }
     #q::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
@@ -258,11 +259,11 @@
     .clear-btn:hover { color: var(--text-main); }
     .clear-btn.visible { display: flex; }
     .search-btn {
-      min-width: 60px; height: 44px; border-radius: 14px;
+      min-width: 60px; height: 32px; border-radius: 10px; /* Smaller Button */
       background: var(--primary); color: white; border: none;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s; margin-right: 2px;
-      font-weight: 600; font-size: 14px; padding: 0 12px;
+      cursor: pointer; transition: all 0.2s; margin-right: 4px;
+      font-weight: 600; font-size: 13px; padding: 0 12px;
     }
     .search-btn:hover { transform: scale(1.05); }
 
@@ -274,13 +275,13 @@
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     details[open] { 
-        /* Neutral Navy, Slightly Darker than base */
+        /* Slightly Darker than base for better contrast */
         background: rgba(14, 17, 23, 0.95); 
         border-color: rgba(59, 130, 246, 0.25); 
         box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
     }
     html[data-theme="light"] details[open] { 
-        background: #fcfcfc; 
+        background: #fdfdfd; 
         box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
     }
 
@@ -324,19 +325,24 @@
     .card-link {
       display: flex; flex-direction: row; align-items: center; justify-content: flex-start;
       padding: 16px 20px; gap: 12px;
-      background: rgba(255,255,255,0.03);
+      /* Increased contrast for card background */
+      background: rgba(255,255,255,0.06); 
       border: 1px solid var(--glass-border); border-radius: 16px;
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); 
       position: relative; overflow: hidden;
     }
+    html[data-theme="light"] .card-link { background: rgba(0,0,0,0.04); }
+    
     @media (hover: hover) {
-        .card-link:hover { background: rgba(255,255,255,0.08); border-color: var(--primary); transform: translateY(-3px); }
+        .card-link:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); transform: translateY(-3px); }
+        html[data-theme="light"] .card-link:hover { background: rgba(0,0,0,0.08); }
     }
-    /* Touch interaction highlight handled by :active in general or JS */
-    .card-link:active { background: rgba(255,255,255,0.08); border-color: var(--primary); transform: scale(0.98); }
+    /* Touch interaction highlight */
+    .card-link:active { background: rgba(255,255,255,0.1); border-color: var(--primary); transform: scale(0.98); }
+    html[data-theme="light"] .card-link:active { background: rgba(0,0,0,0.08); }
 
     .card-icon { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
-    .card-label { font-size: 15px; font-weight: 500; color: var(--text-main); line-height: 1.3; text-align: left; }
+    .card-label { font-size: 16px; font-weight: 600; color: var(--text-main); line-height: 1.3; text-align: left; }
 
     /* --- Music --- */
     .yt-container {
@@ -384,11 +390,14 @@
         .btn-sec:hover { background: rgba(255,255,255,0.15); border-color: var(--text-sub); }
         html[data-theme="light"] .btn-sec:hover { background: rgba(0,0,0,0.12); }
     }
+    /* Improved Light Mode Danger Button Visibility */
     .btn-danger { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.4); }
+    html[data-theme="light"] .btn-danger { background: rgba(220, 38, 38, 0.1); color: #dc2626; border-color: rgba(220, 38, 38, 0.3); }
     @media (hover: hover) { .btn-danger:hover { background: rgba(220, 38, 38, 0.3); } }
 
     .lap-list-container {
       width: 100%; 
+      /* Max 3 items */
       max-height: 140px; 
       overflow-y: auto;
       border-top: 1px solid var(--glass-border); 
@@ -426,18 +435,20 @@
     
     .fs-mode .lap-list-container {
       display: none; 
-      width: 100% !important; border-top: 1px solid var(--glass-border) !important;
-      margin-top: 40px; /* Increased Spacing */
+      width: 100% !important; 
+      border-top: none; /* No Divider */
+      margin-top: 40px; /* Spacious */
       padding: 20px 0; 
       background: transparent; border-radius: 0;
-      max-height: 120px; 
+      /* Height for ~2.5 laps */
+      max-height: 125px; 
       overflow-y: auto;
     }
     .fs-mode.has-laps .lap-list-container.active { display: block; }
 
     /* --- Footer --- */
     footer {
-      text-align: center; padding: 20px 0 20px;
+      text-align: center; padding: 20px 0 10px;
       color: var(--text-sub); font-size: 12px;
       border-top: 1px solid var(--glass-border); margin-top: 20px;
     }
@@ -496,7 +507,7 @@
     @media (hover: hover) { .scroll-btn:hover { transform: translateY(-4px); } }
     .scroll-btn.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
-    /* Mobile Adjustments */
+    /* Mobile Optimization */
     @media (max-width: 480px) {
       :root {
         --header-h: 60px; 
@@ -508,30 +519,39 @@
       /* Header Bar */
       header { top: 0; width: 100%; border-radius: 0; border-top: none; border-left: none; border-right: none; padding: 0 16px; }
       
-      .logo { font-size: 20px; }
-      .logo .by { font-size: 11px; margin-left: 4px; }
+      .logo { font-size: 22px; }
+      .logo .by { font-size: 12px; margin-left: 4px; }
       .header-tools { gap: 6px; }
       .tool-btn { width: 36px; height: 36px; }
 
-      /* Clock Hidden */
+      /* Clock */
       .time-container { display: none; }
-      #mobileClock { display: block; }
+      .mobile-clock-container { display: block; }
       
       /* Search */
       .search-bar { height: 48px; border-radius: 16px; }
       #q { font-size: 16px; }
       
       /* Grid - App Icon Style */
-      .grid { gap: 10px; grid-template-columns: repeat(4, 1fr); }
+      .grid { 
+          gap: 10px; 
+          grid-template-columns: repeat(auto-fit, minmax(calc(50% - 10px), 1fr)); 
+      }
       .card-link { 
           flex-direction: column; justify-content: center; align-items: center;
-          padding: 12px 4px; gap: 8px; text-align: center;
-          border-radius: 16px; min-height: 80px;
+          padding: 16px 8px; gap: 10px; text-align: center;
+          border-radius: 18px; min-height: 90px;
       }
-      .card-icon { width: 32px; height: 32px; margin-bottom: 0; }
-      .card-label { font-size: 12px; text-align: center; line-height: 1.2; word-break: keep-all; }
+      .card-icon { width: 36px; height: 36px; margin-bottom: 0; }
+      .card-label { font-size: 13px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 500; }
       
-      /* Details */
+      /* Stopwatch Reduce */
+      .sw-time { font-size: 40px; margin-bottom: 20px; }
+      .btn { height: 44px; padding: 0 16px; font-size: 14px; min-width: 80px; }
+      .fs-mode .sw-controls { transform: scale(1.1); margin-bottom: 20px; }
+      .fs-mode .sw-time { font-size: 18vw; }
+      
+      /* Sections */
       summary { padding: 14px 16px; margin: 0; }
       .det-content { padding: 8px 12px 20px; }
     }
@@ -608,7 +628,9 @@
     </section>
 
     <!-- Mobile Clock -->
-    <div id="mobileClock"></div>
+    <section class="section-card mobile-clock-container" id="mobileClockSection">
+        <div id="mobileClockText" class="mobile-clock-text"></div>
+    </section>
 
     <!-- Search -->
     <section class="section-card search-inner">
@@ -623,7 +645,7 @@
           <div class="engine-chip" data-engine="dbpia" data-name="DBpia" data-color="#cf393e">DBpia</div>
           <div class="engine-chip" data-engine="riss" data-name="RISS" data-color="#F76323">RISS</div>
           <div class="engine-chip" data-engine="everytime" data-name="에브리타임" data-color="#f91f15">에브리타임</div>
-          <div class="engine-chip" data-engine="googlemap" data-name="Google Maps" data-color="#34A853">Google Maps</div>
+          <div class="engine-chip" data-engine="googlemap" data-name="Google Maps" data-color="#4285F4">Google Maps</div>
         </div>
       </div>
       <div class="search-bar">
@@ -849,7 +871,7 @@
       const timeMain = document.querySelector('.time-main');
       const ampmEl = document.querySelector('.ampm');
       const secEl = document.querySelector('.time-sec');
-      const mobileClock = document.getElementById('mobileClock');
+      const mobileClock = document.getElementById('mobileClockText');
       
       function updateTime() {
         const now = new Date();
@@ -875,7 +897,7 @@
         ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
 
         // Mobile
-        mobileClock.textContent = `${y}. ${m}. ${d}. (${wd}) ${ampm} ${hh}:${mm}:${ss}`;
+        mobileClock.innerHTML = `${y}. ${m}. ${d}. (${wd}) ${ampm} ${hh}:${mm}<span class="mobile-clock-sec">:${ss}</span>`;
       }
       setInterval(updateTime, 1000);
       updateTime();
