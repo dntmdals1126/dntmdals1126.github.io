@@ -21,7 +21,7 @@
   <style>
     /* --- CSS Variables --- */
     :root {
-      --bg-dark: #050505; /* More Dark (Less Blue) */
+      --bg-dark: #050505; 
       --glass-surface: rgba(20, 20, 25, 0.75);
       --glass-border: rgba(255, 255, 255, 0.08);
       --glass-highlight: rgba(255, 255, 255, 0.04);
@@ -59,7 +59,7 @@
     }
 
     html[data-theme="light"] {
-      --bg-dark: #ffffff; /* Pure White */
+      --bg-dark: #ffffff; 
       --glass-surface: rgba(255, 255, 255, 0.95);
       --glass-border: rgba(0, 0, 0, 0.06);
       --glass-highlight: rgba(0, 0, 0, 0.02);
@@ -94,13 +94,11 @@
     }
     body {
       margin: 0; min-height: 100vh;
-      /* Darker, less blue gradient for dark mode */
       background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                   radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
       overflow-x: hidden; transition: background 0.3s;
     }
     html[data-theme="light"] body {
-        /* Cleaner white for light mode */
         background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
     }
     body.locked { overflow: hidden; }
@@ -312,9 +310,16 @@
         border-color: rgba(59, 130, 246, 0.25); 
         box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
     }
+    /* Fixed Light Mode Visibility */
+    html[data-theme="light"] details { 
+        background: #ffffff; 
+        border-color: rgba(0,0,0,0.12);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
     html[data-theme="light"] details[open] { 
-        background: #fdfdfd; 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
+        background: #ffffff; 
+        border-color: rgba(37, 99, 235, 0.3); /* Primary color hint */
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08); 
     }
 
     summary {
@@ -407,12 +412,12 @@
         flex: 1;
     }
     .fc-item {
-        flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+        flex: 1; display: flex; flex-direction: column; align-items: center; 
+        gap: 2px; /* Decreased from 4px */
         padding: 6px 2px;
         background: rgba(255,255,255,0.04); border-radius: 10px;
-        /* Increased Height */
         height: 110px;
-        justify-content: space-evenly;
+        justify-content: space-evenly; /* Rollback to space-evenly */
     }
     html[data-theme="light"] .fc-item { background: rgba(0,0,0,0.04); }
     
@@ -900,7 +905,7 @@
                             </div>
                             <div class="weather-text-group">
                                 <span id="wDescText">--</span>
-                                <span class="update-text">방금 업데이트됨</span>
+                                <span class="update-text" id="updateText">방금 업데이트됨</span>
                             </div>
                         </div>
 
@@ -1158,7 +1163,7 @@
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
-        <span class="notice-text">WebHub Version 5.1.0 Updated. Optimized for Mobile & Enhanced UX.</span>
+        <span class="notice-text">WebHub Version 5.1.0 Updated. Enhanced UX.</span>
       </div>
       <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
     </div>
@@ -1435,7 +1440,10 @@
       const ampmEl = document.querySelector('.ampm');
       const secEl = document.querySelector('.time-sec');
       const mobileClock = document.getElementById('mobileClockText');
+      const updateText = document.getElementById('updateText');
       
+      let weatherUpdateTime = null;
+
       function updateTime() {
         const now = new Date();
         const y = now.getFullYear();
@@ -1462,6 +1470,17 @@
         mobileClock.innerHTML = 
           `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}요일</span> ` + 
           `<span class="mobile-time-part">${ampmKr} ${h}시 ${mm}분 ${ss}초</span>`;
+          
+        if (weatherUpdateTime) {
+            const diffMin = (now - weatherUpdateTime) / 1000 / 60;
+            if (diffMin < 5) {
+                updateText.textContent = "방금 업데이트됨";
+            } else if (diffMin < 60) {
+                updateText.textContent = `${Math.floor(diffMin / 5) * 5}분 전 업데이트됨`;
+            } else {
+                updateText.textContent = `${Math.floor(diffMin / 60)}시간 전 업데이트됨`;
+            }
+        }
       }
       setInterval(updateTime, 1000);
       updateTime();
@@ -1543,6 +1562,8 @@
             wFeel.textContent = `${feel}°C`;
             
             weatherIconHeader.innerHTML = `<i class="wi ${weather.i}"></i> ${temp}°C`;
+            
+            weatherUpdateTime = new Date(); // Update time set
 
             // --- Hourly (Short-term: Now, +3, +6, +9) ---
             const hourly = data.hourly;
