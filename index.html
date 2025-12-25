@@ -1731,20 +1731,31 @@
       async function searchLocation() {
          const query = wInputLoc.value.trim();
          if(!query) return;
-         try {
-            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=ko&format=json`);
-            const data = await res.json();
-            if(data.results && data.results.length > 0) {
-               const loc = data.results[0];
-               currentLat = loc.latitude;
-               currentLon = loc.longitude;
-               currentLocationName = `${loc.name}, ${loc.country_code.toUpperCase()}`;
-               fetchWeather(currentLat, currentLon, currentLocationName);
-               wInputLoc.value = '';
-            } else {
-               alert("도시를 찾을 수 없습니다.");
-            }
-         } catch(e) { alert("검색 중 오류가 발생했습니다."); }
+         
+         // 한국어 행정구역 자동 완성 시도 목록
+         const suffixes = ["", "시", "특별시", "광역시", "군"];
+         let found = false;
+
+         for (const suffix of suffixes) {
+            try {
+                const searchQ = query + suffix;
+                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchQ)}&count=1&language=ko&format=json`);
+                const data = await res.json();
+                
+                if(data.results && data.results.length > 0) {
+                   const loc = data.results[0];
+                   currentLat = loc.latitude;
+                   currentLon = loc.longitude;
+                   currentLocationName = `${loc.name}, ${loc.country_code.toUpperCase()}`;
+                   fetchWeather(currentLat, currentLon, currentLocationName);
+                   wInputLoc.value = '';
+                   found = true;
+                   break; // 결과를 찾았으므로 중단
+                }
+            } catch(e) { console.error(e); }
+         }
+
+         if(!found) alert("도시를 찾을 수 없습니다.");
       }
 
       wBtnSearch.addEventListener('click', searchLocation);
