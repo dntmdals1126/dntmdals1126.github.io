@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>WebHub - Warning</title>
+  <title>WebHub 경고</title>
   <meta name="theme-color" content="#050505" />
   
   <!-- Fonts -->
@@ -65,6 +65,9 @@
     html, body {
       height: 100%; margin: 0; padding: 0;
       overflow: hidden;
+      /* 텍스트 선택 및 드래그 스크롤 방지 */
+      user-select: none; -webkit-user-select: none;
+      touch-action: none;
     }
 
     body {
@@ -76,10 +79,7 @@
                   radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
       transition: background 0.3s;
     }
-    
-    html[data-theme="light"] body {
-      background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
-    }
+    html[data-theme="light"] body { background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%); }
 
     /* --- Background Animation --- */
     .blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; filter: blur(90px); opacity: 0.4; }
@@ -97,7 +97,6 @@
     .glass-card {
       background: var(--glass-surface);
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      /* Refined Glass Border with Light Reflection */
       border: 1px solid transparent;
       background-image: linear-gradient(var(--glass-surface), var(--glass-surface)), 
                         linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
@@ -108,7 +107,7 @@
       box-shadow: 0 20px 50px -10px rgba(0,0,0,0.25);
       padding: 40px 32px;
       text-align: center;
-      /* Card Entry Animation */
+      
       opacity: 0; transform: scale(0.9) translateY(20px);
       animation: cardEnter 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
     }
@@ -117,25 +116,16 @@
                         linear-gradient(145deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3));
         box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     }
-
-    @keyframes cardEnter {
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
+    @keyframes cardEnter { 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
     /* --- Staggered Content Animation --- */
-    .stagger-item {
-        opacity: 0; transform: translateY(10px);
-        animation: contentFadeUp 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-    }
+    .stagger-item { opacity: 0; transform: translateY(10px); animation: contentFadeUp 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
     .delay-1 { animation-delay: 0.1s; }
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
+    @keyframes contentFadeUp { 100% { opacity: 1; transform: translateY(0); } }
 
-    @keyframes contentFadeUp {
-        100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* --- Typography & Icon --- */
+    /* --- Icon & Text --- */
     .icon-wrapper {
       width: 72px; height: 72px; margin: 0 auto 24px;
       display: flex; align-items: center; justify-content: center;
@@ -159,7 +149,6 @@
       font-family: var(--font-logo);
       font-size: 36px; font-weight: 800;
       margin: 0 0 16px;
-      /* Gradient Text */
       background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -174,10 +163,7 @@
     .warning-text b { color: var(--text-main); font-weight: 600; }
 
     /* --- Buttons --- */
-    .button-group {
-      display: flex; gap: 14px;
-      justify-content: center;
-    }
+    .button-group { display: flex; gap: 14px; justify-content: center; }
     
     .btn {
       flex: 1; height: 54px;
@@ -188,7 +174,6 @@
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
     }
-    
     .btn:active { transform: scale(0.96); }
 
     .btn-yes {
@@ -224,7 +209,6 @@
       transition: opacity 0.4s ease;
     }
     html[data-theme="light"] .loader-overlay { background: rgba(255, 255, 255, 0.7); }
-    
     .loader-overlay.show { opacity: 1; pointer-events: auto; }
 
     .spinner {
@@ -237,7 +221,11 @@
       margin-bottom: 24px;
       box-shadow: 0 0 20px var(--primary-glow);
     }
-    html[data-theme="light"] .spinner { border-color: rgba(0,0,0,0.1); }
+    html[data-theme="light"] .spinner { 
+        border-color: rgba(0,0,0,0.1); 
+        border-top-color: var(--primary);
+        border-right-color: var(--primary);
+    }
     
     .loader-text {
       font-size: 15px; font-weight: 500; color: var(--text-main);
@@ -272,7 +260,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       </div>
-      <h1 class="warning-title stagger-item delay-1">WARNING</h1>
+      <h1 class="warning-title stagger-item delay-1">WARNING!</h1>
       <p class="warning-text stagger-item delay-2">
         이곳은 <b>코드 테스트용 페이지</b>입니다.<br>
         <br>
@@ -302,7 +290,6 @@
 
       // 아니오: 메인으로 이동
       btnNo.addEventListener('click', () => {
-        // 버튼 클릭 피드백 후 이동
         btnNo.style.transform = 'scale(0.95)';
         setTimeout(() => {
             window.location.href = '/'; 
@@ -314,7 +301,7 @@
         loader.classList.add('show');
         setTimeout(() => {
           window.location.href = '/test/';
-        }, 2500); // 로더 애니메이션 감상용 딜레이
+        }, 2500); 
       });
     });
   </script>
