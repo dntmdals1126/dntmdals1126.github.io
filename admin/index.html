@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>WebHub 관리자</title>
+  <title>WebHub - Admin Access</title>
   <meta name="theme-color" content="#050505" />
   
   <!-- Fonts -->
@@ -61,9 +61,11 @@
     html, body {
       height: 100%; margin: 0; padding: 0;
       overflow: hidden; /* 스크롤 방지 */
-      /* 입력창 외 텍스트 선택 및 터치 스크롤 방지 */
-      user-select: none; -webkit-user-select: none;
-      touch-action: none; 
+      
+      /* 텍스트 선택 및 드래그 방지 (기본값) */
+      user-select: none; 
+      -webkit-user-select: none;
+      touch-action: none;
     }
 
     body {
@@ -169,6 +171,7 @@
       font-family: var(--font-base); font-size: 16px; font-weight: 500;
       text-align: center; outline: none; padding: 0 20px;
       transition: all 0.2s;
+      
       /* 입력창 내부는 텍스트 선택 및 입력 허용 */
       user-select: text; -webkit-user-select: text;
       touch-action: manipulation;
@@ -244,7 +247,10 @@
       animation: spin 0.8s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
       margin-bottom: 24px; box-shadow: 0 0 20px var(--primary-glow);
     }
-    html[data-theme="light"] .spinner { border-color: rgba(0,0,0,0.1); }
+    html[data-theme="light"] .spinner { 
+      border-color: rgba(0,0,0,0.1); 
+      border-top-color: var(--primary);
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
     
     .loader-text { font-size: 15px; font-weight: 600; color: var(--text-main); letter-spacing: 1px; text-transform: uppercase; animation: pulse 1.5s infinite; }
@@ -276,7 +282,7 @@
       </div>
       <h1 class="admin-title stagger-item delay-1">WebHub Admin</h1>
       <p class="admin-desc stagger-item delay-2">
-        관리자 페이지 접속을 위해<br>비밀번호를 입력해주세요.
+        관리자 페이지 접속을 위해<br><b>비밀번호</b>를 입력해주세요.
       </p>
       
       <form id="access-form" class="stagger-item delay-3">
@@ -287,7 +293,7 @@
         
         <div class="button-group">
           <button type="button" id="btn-back" class="btn btn-back">돌아가기</button>
-          <button type="submit" class="btn btn-submit">관리자 접속</button>
+          <button type="submit" class="btn btn-submit">접속</button>
         </div>
       </form>
     </div>
