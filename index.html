@@ -6,9 +6,9 @@
   <title>WebHub</title>
   <meta name="theme-color" content="#050505" />
   
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -59,11 +59,11 @@
       color-scheme: dark;
     }
 
-    /* Light Theme Overrides (High Contrast) */
+    /* Light Theme Overrides */
     html[data-theme="light"] {
-      --bg-dark: #f2f4f7; /* 배경을 흰색이 아닌 아주 옅은 회색으로 하여 카드와 구분 */
-      --glass-surface: #ffffff; /* 카드는 완전 흰색 */
-      --glass-border: #e2e8f0; /* 테두리 색상 강화 (Slate 200) */
+      --bg-dark: #f2f4f7;
+      --glass-surface: #ffffff;
+      --glass-border: #e2e8f0;
       --glass-highlight: rgba(0, 0, 0, 0.03);
       
       --header-bg: rgba(255, 255, 255, 0.9);
@@ -74,8 +74,8 @@
       --time-am: #f97316;
       --time-pm: #3b82f6;
       
-      --text-main: #1e293b; /* Slate 800 - 진한 텍스트 */
-      --text-sub: #64748b; /* Slate 500 */
+      --text-main: #1e293b;
+      --text-sub: #64748b;
       --text-dim: #94a3b8;
       
       --scrollbar-thumb: rgba(0, 0, 0, 0.2); 
@@ -99,6 +99,9 @@
       background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                   radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
       overflow-x: hidden; transition: background 0.3s;
+      
+      /* iOS Overscroll Fix */
+      overscroll-behavior-y: none;
     }
     html[data-theme="light"] body {
         background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
@@ -153,7 +156,7 @@
     .fs-mode-active header { transform: translateY(-100px); opacity: 0; pointer-events: none; }
     
     html[data-theme="light"] header {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06); /* Lighter shadow for header */
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
 
     .logo {
@@ -186,7 +189,6 @@
       padding: 6px; margin-bottom: 20px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
-    /* Light Mode: Card pop */
     html[data-theme="light"] .section-card {
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
@@ -198,7 +200,6 @@
       display: flex; align-items: center; gap: 8px;
       color: var(--text-main); line-height: 1;
     }
-    /* PC Clock Size Reduced */
     .time-main { font-size: 42px; font-weight: 700; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
     .time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 34px; text-align: left; }
     .ampm { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
@@ -325,7 +326,6 @@
         border-color: rgba(59, 130, 246, 0.25); 
         box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
     }
-    /* Fixed Light Mode Visibility */
     html[data-theme="light"] details { 
         background: #ffffff; 
         border-color: var(--glass-border);
@@ -333,7 +333,7 @@
     }
     html[data-theme="light"] details[open] { 
         background: #ffffff; 
-        border-color: rgba(37, 99, 235, 0.3); /* Primary color hint */
+        border-color: rgba(37, 99, 235, 0.3);
         box-shadow: 0 6px 20px rgba(0,0,0,0.08); 
     }
 
@@ -362,7 +362,6 @@
     details[open] .details-wrapper { grid-template-rows: 1fr; }
     .det-inner { overflow: hidden; }
     
-    /* Modified Content Area for Weather */
     .det-content { 
       padding: 12px 20px 20px; 
       opacity: 0; transform: translateY(-10px); transition: 0.3s; 
@@ -372,8 +371,7 @@
     .no-select-weather { user-select: none; -webkit-user-select: none; }
     .no-select-weather .weather-input { user-select: text !important; -webkit-user-select: text !important; }
 
-    /* --- Weather Widget New Layout --- */
-    
+    /* --- Weather Widget --- */
     .weather-header {
         display: flex; justify-content: space-between; align-items: flex-end;
         margin-bottom: 20px;
@@ -408,7 +406,6 @@
     .stat-label { font-size: 10px; opacity: 0.6; margin-bottom: 2px; }
     .stat-val { font-size: 13px; font-weight: 600; }
 
-    /* Middle Section: Forecasts */
     .weather-forecasts-wrapper {
         display: flex; gap: 15px; margin-bottom: 15px;
         align-items: stretch;
@@ -431,11 +428,11 @@
     }
     .fc-item {
         flex: 1; display: flex; flex-direction: column; align-items: center; 
-        gap: 2px; /* Decreased from 4px */
+        gap: 2px;
         padding: 6px 2px;
         background: rgba(255,255,255,0.04); border-radius: 10px;
         height: 110px;
-        justify-content: space-evenly; /* Rollback to space-evenly */
+        justify-content: space-evenly;
     }
     html[data-theme="light"] .fc-item { background: rgba(0,0,0,0.04); }
     
@@ -444,7 +441,6 @@
     .fc-temp { font-size: 12px; font-weight: 700; }
     .fc-sub { font-size: 10px; opacity: 0.6; } 
 
-    /* Search Bar */
     .weather-search { display: flex; gap: 6px; height: 40px; }
     .weather-input { 
         flex: 1; 
@@ -466,7 +462,6 @@
         display: flex; align-items: center; justify-content: center;
         height: 100%; box-sizing: border-box;
     }
-    /* Light Mode Inputs */
     html[data-theme="light"] .weather-input { 
         background: #ffffff; 
         border-color: var(--glass-border); 
@@ -480,7 +475,7 @@
     }
     
     .spin-anim { animation: spin 1s linear infinite; }
-    @keyframes spin { 100% { transform: rotate(-360deg); } } /* Counter-clockwise for refresh */
+    @keyframes spin { 100% { transform: rotate(360deg); } } /* Clockwise spin */
 
     /* Mobile Layout Override */
     @media (max-width: 720px) {
@@ -700,7 +695,7 @@
         border: 1px solid var(--glass-border); border-radius: 20px;
         padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         transform: scale(0.95); transition: transform 0.3s;
-        max-height: 80vh; /* Prevent modal from being larger than screen */
+        max-height: 80vh;
         display: flex; flex-direction: column;
     }
     .modal-overlay.open .modal-content { transform: scale(1); }
@@ -711,10 +706,10 @@
 
     /* Settings UI in Modal */
     #settingsList {
-        overflow-y: auto; /* Scroll inside the list */
+        overflow-y: auto;
         margin-bottom: 20px;
-        scrollbar-width: thin; /* Firefox */
-        overscroll-behavior: contain; /* Prevent body scroll */
+        scrollbar-width: thin;
+        overscroll-behavior: contain;
     }
     
     .settings-item {
@@ -722,9 +717,8 @@
         padding: 10px; margin-bottom: 6px;
         background: rgba(255,255,255,0.03); border-radius: 10px;
         border: 1px solid var(--glass-border);
-        user-select: none; -webkit-user-select: none; /* Prevent text selection */
+        user-select: none; -webkit-user-select: none;
     }
-    /* Light Mode Settings Item */
     html[data-theme="light"] .settings-item {
         background: #ffffff;
         border-color: var(--glass-border);
@@ -885,7 +879,6 @@
     <!-- Top Fixed Sections: Clock & Search -->
     <section class="section-card time-container no-select">
       <div class="date-row">
-        <!-- Removed weather icon and old format here -->
         <span id="dateDisplay">Loading...</span>
       </div>
       <div class="time-row" id="timeDisplay">
@@ -930,7 +923,7 @@
 
     <!-- Reorderable Sections Wrapper -->
     <div id="sectionWrapper">
-        <!-- Weather (Lazy Load implemented) -->
+        <!-- Weather -->
         <details id="det-weather" open>
             <summary class="no-select">
                 <div class="sum-title">
@@ -942,9 +935,7 @@
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content no-select-weather">
-                    <!-- Top Section: Main Info + Stats -->
                     <div class="weather-header">
-                        <!-- Left: Current Main Info -->
                         <div class="weather-main-info">
                             <span id="wMainIcon"></span>
                             <div class="weather-temp-group">
@@ -957,7 +948,6 @@
                             </div>
                         </div>
 
-                        <!-- Right: Detailed Stats in Row -->
                         <div class="weather-stats-row">
                             <div class="stat-box">
                                 <span class="stat-label">습도</span>
@@ -982,33 +972,25 @@
                         </div>
                     </div>
 
-                    <!-- Mid Section: Forecasts -->
                     <div class="weather-forecasts-wrapper">
-                        <!-- Left: Short-term (Hourly) -->
                         <div class="forecast-panel">
                             <span class="fc-title">단기 예보</span>
-                            <div class="fc-list-row" id="hourlyForecastBox">
-                                <!-- JS Generated -->
-                            </div>
+                            <div class="fc-list-row" id="hourlyForecastBox"></div>
                         </div>
-
-                        <!-- Right: Daily -->
                         <div class="forecast-panel">
                             <span class="fc-title">주간 예보</span>
-                            <div class="fc-list-row" id="dailyForecastBox">
-                                <!-- JS Generated -->
-                            </div>
+                            <div class="fc-list-row" id="dailyForecastBox"></div>
                         </div>
                     </div>
 
-                    <!-- Search Bar -->
                     <div class="weather-search">
                         <button class="weather-btn" id="wBtnLoc" title="현재 위치">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
                         </button>
-                        <!-- New Refresh Button -->
                         <button class="weather-btn" id="wBtnRefresh" title="새로고침">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
                         </button>
                         <input type="text" class="weather-input" id="wInputLoc" placeholder="도시 검색 (예: Seoul, 청주)">
                         <button class="weather-btn" id="wBtnSearch" title="검색">
@@ -1211,13 +1193,13 @@
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
-        <span class="notice-text">WebHub Version 5.2.0 Updated. Enhanced Readability.</span>
+        <span class="notice-text">WebHub Version 5.1.1 Updated. Enhanced Readability & Fixes.</span>
       </div>
       <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
     </div>
 
     <footer class="no-select">
-      <b>WebHub</b> Ver. 5.2.0<br>
+      <b>WebHub</b> Ver. 5.1.1<br>
       <p>© 2025 Seungmin Woo. All rights reserved.</p>
     </footer>
 
@@ -1233,7 +1215,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- Persistence Logic ---
+      // --- Theme & Settings ---
       const html = document.documentElement;
       const themeToggle = document.getElementById('themeToggle');
       const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -1259,7 +1241,7 @@
         applyTheme(next);
       };
 
-      // Accordion State Logic
+      // --- Accordion Logic ---
       const allDetails = document.querySelectorAll('details');
       allDetails.forEach((dt) => {
           const id = dt.id;
@@ -1289,7 +1271,7 @@
         });
       });
 
-      // --- Section Settings Logic (Modified) ---
+      // --- Section Config (Order/Visibility) ---
       const sectionWrapper = document.getElementById('sectionWrapper');
       const settingsList = document.getElementById('settingsList');
       const resetSettingsBtn = document.getElementById('resetSettings');
@@ -1297,7 +1279,6 @@
       const floatSettingsBtn = document.getElementById('floatSettingsBtn');
       const closeSettingsModal = document.getElementById('closeSettingsModal');
 
-      // Default Section Config
       const defaultSections = [
           { id: 'det-weather', name: 'Weather', visible: true },
           { id: 'det-edu', name: 'Educational Volunteering', visible: true },
@@ -1308,10 +1289,8 @@
           { id: 'det-music', name: 'Music', visible: true },
       ];
 
-      // Load Config
       let sectionsConfig = JSON.parse(localStorage.getItem('sectionsConfig')) || defaultSections;
 
-      // Apply Config to DOM
       function applySectionConfig() {
           sectionsConfig.forEach(conf => {
               const el = document.getElementById(conf.id);
@@ -1324,7 +1303,6 @@
           localStorage.setItem('sectionsConfig', JSON.stringify(sectionsConfig));
       }
 
-      // Render Settings UI in Modal
       function updateSettingsUI() {
           settingsList.innerHTML = '';
           sectionsConfig.forEach((conf, index) => {
@@ -1382,7 +1360,6 @@
           }
       };
 
-      // Modal Logic
       function toggleModal(open) {
           if(open) {
               settingsModal.classList.add('open');
@@ -1400,8 +1377,7 @@
 
       applySectionConfig();
 
-
-      // --- Search Logic ---
+      // --- Search ---
       const engineList = document.getElementById('engineList');
       const engineWrapper = document.getElementById('engineWrapper');
       const q = document.getElementById('q');
@@ -1436,8 +1412,6 @@
           initialChip.setAttribute('data-active', 'true');
           updateSearchColor(color);
           q.placeholder = `${name} 검색어 입력`;
-          
-          // --- Fix: Scroll active chip into view ---
           setTimeout(() => {
             initialChip.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
           }, 100);
@@ -1503,7 +1477,6 @@
         const y = now.getFullYear();
         const m = String(now.getMonth() + 1).padStart(2, '0');
         const d = String(now.getDate()).padStart(2, '0');
-        // Update format: Sunday -> 일요일
         const wd = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][now.getDay()];
         
         let h = now.getHours();
@@ -1516,7 +1489,6 @@
         const mm = String(now.getMinutes()).padStart(2, '0');
         const ss = String(now.getSeconds()).padStart(2, '0');
         
-        // Update PC Date Format
         dateEl.textContent = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}`;
         timeMain.textContent = `${hh}:${mm}`;
         secEl.textContent = ss;
@@ -1541,7 +1513,7 @@
       setInterval(updateTime, 1000);
       updateTime();
 
-      // --- Weather Logic (With Forecast) ---
+      // --- Weather ---
       const wMainIcon = document.getElementById('wMainIcon');
       const wMainTemp = document.getElementById('wMainTemp');
       const wLocation = document.getElementById('wLocation');
@@ -1558,7 +1530,6 @@
       const dailyForecastBox = document.getElementById('dailyForecastBox');
       const hourlyForecastBox = document.getElementById('hourlyForecastBox');
       
-      // Lazy Load Elements
       const detWeather = document.getElementById('det-weather');
       let weatherLoaded = false;
 
@@ -1589,12 +1560,10 @@
 
       async function fetchWeather(lat, lon, name) {
          try {
-            // Get Current + Forecast (Daily + Hourly)
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code,precipitation_probability&timezone=auto`;
             const res = await fetch(url);
             const data = await res.json();
             
-            // --- Current ---
             const cur = data.current;
             const temp = Math.round(cur.temperature_2m);
             const weather = getWeatherDesc(cur.weather_code);
@@ -1603,7 +1572,6 @@
             const rain = cur.precipitation;
             const feel = Math.round(cur.apparent_temperature);
 
-            // Get current probability from hourly (using current time index)
             const now = new Date();
             const currentHourIndex = now.getHours();
             const prob = data.hourly.precipitation_probability[currentHourIndex] || 0;
@@ -1620,15 +1588,13 @@
             wRain.textContent = `${rain}mm`;
             wFeel.textContent = `${feel}°C`;
             
-            weatherUpdateTime = new Date(); // Update time set
+            weatherUpdateTime = new Date();
 
-            // --- Hourly (Short-term: Now, +3, +6, +9) ---
             const hourly = data.hourly;
             hourlyForecastBox.innerHTML = '';
             
             [0, 3, 6, 9].forEach(offset => {
                 const idx = currentHourIndex + offset;
-                // Basic array bound check (usually ample data)
                 if (idx < hourly.time.length) {
                     const hTemp = Math.round(hourly.temperature_2m[idx]);
                     const hCode = hourly.weather_code[idx];
@@ -1646,11 +1612,9 @@
                 }
             });
 
-            // --- Daily Forecast ---
             const daily = data.daily;
             dailyForecastBox.innerHTML = '';
             
-            // Show 4 days
             for(let i=0; i<4; i++) {
                 const date = new Date(daily.time[i]);
                 const dayName = ['일','월','화','수','목','금','토'][date.getDay()];
@@ -1697,7 +1661,6 @@
          );
       }
       
-      // Lazy Load Logic: Check open state or listen for toggle
       function loadWeatherIfOpen() {
         if(detWeather.hasAttribute('open') && !weatherLoaded) {
             initWeather();
@@ -1705,10 +1668,8 @@
         }
       }
       
-      // Initial Check
       loadWeatherIfOpen();
       
-      // Listener for subsequent opens
       detWeather.addEventListener('toggle', () => {
           if(detWeather.open) loadWeatherIfOpen();
       });
@@ -1732,8 +1693,7 @@
          const query = wInputLoc.value.trim();
          if(!query) return;
          
-         // 한국어 행정구역 자동 완성 시도 목록
-         const suffixes = ["", "시", "특별시", "광역시", "군"];
+         const suffixes = ["", "시", "특별시", "광역시", "군", "구"];
          let found = false;
 
          for (const suffix of suffixes) {
@@ -1750,7 +1710,7 @@
                    fetchWeather(currentLat, currentLon, currentLocationName);
                    wInputLoc.value = '';
                    found = true;
-                   break; // 결과를 찾았으므로 중단
+                   break;
                 }
             } catch(e) { console.error(e); }
          }
