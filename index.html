@@ -8,6 +8,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="WebHub">
+  
+  <!-- Dynamic PWA Manifest  Placeholder -->
+  <link rel="manifest" id="pwaManifest">
   
   <title>WebHub</title>
   <meta name="theme-color" content="#050505" />
@@ -489,7 +493,7 @@
     }
     
     .spin-anim { animation: spin 1s linear infinite; }
-    @keyframes spin { 100% { transform: rotate(360deg); } } /* Clockwise spin */
+    @keyframes spin { 100% { transform: rotate(-360deg); } } /* Counter-clockwise for refresh */
 
     /* Mobile Layout Override */
     @media (max-width: 720px) {
@@ -696,6 +700,15 @@
     }
     @media (hover: hover) { .settings-float-btn:hover { opacity: 1; transform: translateY(-2px); } }
 
+    /* --- Floating Buttons Visibility Fix for Light Mode --- */
+    html[data-theme="light"] .settings-float-btn,
+    html[data-theme="light"] .scroll-btn {
+        background: #ffffff;
+        border-color: #cbd5e1; /* Darker border for visibility */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow */
+        color: #1e293b;
+    }
+
     /* --- Settings Modal --- */
     .modal-overlay {
         position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1300;
@@ -787,15 +800,6 @@
     .drag-handle:active { cursor: grabbing; color: var(--primary); }
 
     .st-check { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
-
-    /* --- Floating Buttons Visibility Fix for Light Mode --- */
-    html[data-theme="light"] .settings-float-btn,
-    html[data-theme="light"] .scroll-btn {
-        background: #ffffff;
-        border-color: #cbd5e1; /* Darker border for visibility */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow */
-        color: #1e293b;
-    }
 
     /* --- Mobile Styles --- */
     @media (max-width: 480px) {
@@ -981,7 +985,7 @@
 
     <!-- Reorderable Sections Wrapper -->
     <div id="sectionWrapper">
-        <!-- Weather -->
+        <!-- Weather (Lazy Load implemented) -->
         <details id="det-weather" open>
             <summary class="no-select">
                 <div class="sum-title">
@@ -993,7 +997,9 @@
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content no-select-weather">
+                    <!-- Top Section: Main Info + Stats -->
                     <div class="weather-header">
+                        <!-- Left: Current Main Info -->
                         <div class="weather-main-info">
                             <span id="wMainIcon"></span>
                             <div class="weather-temp-group">
@@ -1006,6 +1012,7 @@
                             </div>
                         </div>
 
+                        <!-- Right: Detailed Stats in Row -->
                         <div class="weather-stats-row">
                             <div class="stat-box">
                                 <span class="stat-label">습도</span>
@@ -1030,25 +1037,33 @@
                         </div>
                     </div>
 
+                    <!-- Mid Section: Forecasts -->
                     <div class="weather-forecasts-wrapper">
+                        <!-- Left: Short-term (Hourly) -->
                         <div class="forecast-panel">
                             <span class="fc-title">단기 예보</span>
-                            <div class="fc-list-row" id="hourlyForecastBox"></div>
+                            <div class="fc-list-row" id="hourlyForecastBox">
+                                <!-- JS Generated -->
+                            </div>
                         </div>
+
+                        <!-- Right: Daily -->
                         <div class="forecast-panel">
                             <span class="fc-title">주간 예보</span>
-                            <div class="fc-list-row" id="dailyForecastBox"></div>
+                            <div class="fc-list-row" id="dailyForecastBox">
+                                <!-- JS Generated -->
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Search Bar -->
                     <div class="weather-search">
                         <button class="weather-btn" id="wBtnLoc" title="현재 위치">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
                         </button>
+                        <!-- New Refresh Button -->
                         <button class="weather-btn" id="wBtnRefresh" title="새로고침">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                            </svg>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         </button>
                         <input type="text" class="weather-input" id="wInputLoc" placeholder="도시 검색 (예: Seoul, 청주)">
                         <button class="weather-btn" id="wBtnSearch" title="검색">
@@ -1299,6 +1314,26 @@
         applyTheme(next);
       };
 
+      // --- PWA Manifest Dynamic Generation ---
+      const linkIcon = document.querySelector('link[rel="icon"]');
+      if (linkIcon) {
+          const pwaIcon = linkIcon.href;
+          const pwaManifest = {
+              "name": "WebHub",
+              "short_name": "WebHub",
+              "start_url": ".",
+              "display": "standalone",
+              "background_color": "#050505",
+              "theme_color": "#050505",
+              "icons": [
+                  { "src": pwaIcon, "sizes": "192x192", "type": "image/svg+xml" },
+                  { "src": pwaIcon, "sizes": "512x512", "type": "image/svg+xml" }
+              ]
+          };
+          const manifestBlob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/manifest+json'});
+          document.getElementById('pwaManifest').href = URL.createObjectURL(manifestBlob);
+      }
+
       // --- Accordion Logic ---
       const allDetails = document.querySelectorAll('details');
       allDetails.forEach((dt) => {
@@ -1357,7 +1392,6 @@
                   el.style.display = conf.visible ? 'block' : 'none'; 
               }
           });
-          // Also render settings UI
           renderSettingsUI();
           localStorage.setItem('sectionsConfig', JSON.stringify(sectionsConfig));
       }
@@ -1368,8 +1402,6 @@
               const item = document.createElement('div');
               item.className = 'settings-item';
               item.dataset.id = conf.id;
-              
-              // Staggered Animation
               item.style.animationDelay = `${index * 0.05}s`;
 
               const labelDiv = document.createElement('label');
@@ -1387,7 +1419,6 @@
               labelDiv.appendChild(check);
               labelDiv.appendChild(document.createTextNode(conf.name));
 
-              // Drag Handle
               const dragHandle = document.createElement('div');
               dragHandle.className = 'drag-handle';
               dragHandle.innerHTML = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
@@ -1398,7 +1429,6 @@
           });
       }
 
-      // Initialize Sortable
       new Sortable(settingsList, {
           handle: '.drag-handle',
           animation: 150,
@@ -1408,12 +1438,8 @@
               const itemEl = evt.item;
               const newIndex = evt.newIndex;
               const oldIndex = evt.oldIndex;
-
-              // Reorder array
               const movedItem = sectionsConfig.splice(oldIndex, 1)[0];
               sectionsConfig.splice(newIndex, 0, movedItem);
-              
-              // Save and Apply
               applySectionConfig();
           },
       });
@@ -1427,7 +1453,7 @@
 
       function toggleModal(open) {
           if(open) {
-              renderSettingsUI(); // Re-render to reset animations
+              renderSettingsUI();
               settingsModal.classList.add('open');
               document.body.style.overflow = 'hidden';
           } else {
@@ -1642,6 +1668,7 @@
             const currentHourIndex = now.getHours();
             const prob = data.hourly.precipitation_probability[currentHourIndex] || 0;
 
+            // DOM Update
             wMainTemp.textContent = `${temp}°C`;
             wMainIcon.innerHTML = `<i class="wi ${weather.i}"></i>`;
             wMainIcon.style.color = weather.color; 
@@ -1655,6 +1682,17 @@
             wFeel.textContent = `${feel}°C`;
             
             weatherUpdateTime = new Date();
+            
+            // --- Save to LocalStorage for Offline ---
+            const cacheData = {
+                timestamp: Date.now(),
+                data: data,
+                name: name,
+                lat: lat,
+                lon: lon
+            };
+            localStorage.setItem('weatherCache', JSON.stringify(cacheData));
+            updateText.textContent = "방금 업데이트됨";
 
             const hourly = data.hourly;
             hourlyForecastBox.innerHTML = '';
@@ -1701,9 +1739,26 @@
             }
 
          } catch (e) {
-            console.error(e);
-            wMainTemp.textContent = "--";
-            wLocation.textContent = "오류";
+            console.error("Fetch failed, trying cache", e);
+            // --- Load from Cache if Offline ---
+            const cached = localStorage.getItem('weatherCache');
+            if (cached) {
+                try {
+                    const c = JSON.parse(cached);
+                    // Minimal re-render for cache (or refactor render logic)
+                    // For simplicity, we just set main texts here as fallback
+                    wMainTemp.textContent = `${Math.round(c.data.current.temperature_2m)}°C`;
+                    wLocation.textContent = c.name;
+                    updateText.textContent = "오프라인 (저장된 데이터)";
+                    // We could recall fetchWeather logic with mock data, but for now just text update
+                } catch (err) {
+                    wMainTemp.textContent = "--";
+                    wLocation.textContent = "오류";
+                }
+            } else {
+                wMainTemp.textContent = "--";
+                wLocation.textContent = "연결 끊김";
+            }
          }
       }
 
@@ -1726,6 +1781,15 @@
              { timeout: 5000 }
          );
       }
+      
+      // Network Status Listener
+      window.addEventListener('online', () => {
+          if (weatherLoaded) fetchWeather(currentLat, currentLon, currentLocationName);
+      });
+      window.addEventListener('offline', () => {
+          const updateTextEl = document.getElementById('updateText');
+          if(updateTextEl) updateTextEl.textContent = "오프라인 상태";
+      });
       
       function loadWeatherIfOpen() {
         if(detWeather.hasAttribute('open') && !weatherLoaded) {
