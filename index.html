@@ -684,7 +684,10 @@
     /* --- Floating Buttons --- */
     .scroll-btn {
       position: fixed; bottom: 24px; right: 24px; width: 40px; height: 40px;
-      border-radius: 14px; background: var(--glass-surface); border: 1px solid var(--glass-border);
+      border-radius: 14px; 
+      background: var(--header-bg); /* Glass Effect same as header */
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
       color: var(--text-main); display: flex; align-items: center; justify-content: center;
       cursor: pointer; opacity: 0; transform: translateY(10px); pointer-events: none;
       transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 900;
@@ -694,7 +697,10 @@
 
     .settings-float-btn {
         position: fixed; bottom: 74px; right: 24px; width: 40px; height: 40px;
-        border-radius: 14px; background: var(--glass-surface); border: 1px solid var(--glass-border);
+        border-radius: 14px; 
+        background: var(--header-bg); /* Glass Effect same as header */
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
         color: var(--text-main); display: flex; align-items: center; justify-content: center;
         cursor: pointer; opacity: 0.8; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 900;
     }
@@ -703,7 +709,7 @@
     /* --- Floating Buttons Visibility Fix for Light Mode --- */
     html[data-theme="light"] .settings-float-btn,
     html[data-theme="light"] .scroll-btn {
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
         border-color: #cbd5e1; /* Darker border for visibility */
         box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow */
         color: #1e293b;
@@ -718,7 +724,9 @@
     .modal-overlay.open { display: flex; opacity: 1; }
     
     .modal-content {
-        width: 90%; max-width: 400px; background: var(--glass-surface);
+        width: 90%; max-width: 400px; 
+        background: rgba(20, 20, 25, 0.85); /* Darker glass for modal */
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--glass-border); border-radius: 20px;
         padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         transform: scale(0.95); transition: transform 0.3s;
@@ -727,7 +735,7 @@
     }
     /* Light Mode Modal */
     html[data-theme="light"] .modal-content {
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.9); /* Header-like glass */
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         border-color: rgba(0,0,0,0.1);
     }
@@ -741,14 +749,19 @@
     #settingsList {
         overflow-y: auto; /* Scroll inside the list */
         margin-bottom: 20px;
-        scrollbar-width: thin; /* Firefox */
         overscroll-behavior: contain; /* Prevent body scroll */
     }
-    
+
+    /* Custom Scrollbar for Settings List */
+    #settingsList::-webkit-scrollbar { width: 6px; }
+    #settingsList::-webkit-scrollbar-track { background: transparent; }
+    #settingsList::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+    #settingsList::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-thumb-hover); }
+
     .settings-item {
         display: flex; align-items: center; justify-content: space-between;
         padding: 12px; margin-bottom: 8px;
-        background: rgba(255,255,255,0.03); border-radius: 12px;
+        background: rgba(255,255,255,0.05); border-radius: 12px; /* Glassy item in Dark */
         border: 1px solid var(--glass-border);
         user-select: none; -webkit-user-select: none; /* Prevent text selection */
         
@@ -773,8 +786,8 @@
     
     /* Light Mode Settings Item */
     html[data-theme="light"] .settings-item {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: rgba(255, 255, 255, 0.5); /* Semi-transparent in light */
+        border: 1px solid rgba(0,0,0,0.05);
     }
     
     .st-label { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; cursor: pointer; flex: 1; }
@@ -809,6 +822,9 @@
       }
       
       header { top: 0; width: 100%; border-radius: 0; border-top: none; border-left: none; border-right: none; padding: 0 16px; }
+      
+      /* Mobile Spacing Fix */
+      main { padding-top: 80px; } /* Header(60) + Gap(20) */
       
       .logo { font-size: 22px; }
       .logo .by { font-size: 11px; margin-left: 2px; }
@@ -1266,13 +1282,13 @@
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
-        <span class="notice-text">WebHub Version 5.1.1 Updated. Enhanced Readability & Fixes.</span>
+        <span class="notice-text">WebHub Version 5.1.2 Updated. Enhanced UI for Settings & Mobile Spacing.</span>
       </div>
       <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
     </div>
 
     <footer class="no-select">
-      <b>WebHub</b> Ver. 5.1.1<br>
+      <b>WebHub</b> Ver. 5.1.2<br>
       <p>© 2025 Seungmin Woo. All rights reserved.</p>
     </footer>
 
