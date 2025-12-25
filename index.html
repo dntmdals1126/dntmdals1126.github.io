@@ -13,7 +13,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <!-- Weather Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css">
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
@@ -669,22 +668,31 @@
         border: 1px solid var(--glass-border); border-radius: 20px;
         padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         transform: scale(0.95); transition: transform 0.3s;
+        max-height: 80vh; /* Prevent modal from being larger than screen */
+        display: flex; flex-direction: column;
     }
     .modal-overlay.open .modal-content { transform: scale(1); }
     
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
     .modal-title { font-size: 18px; font-weight: 700; }
     .modal-close { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 24px; }
 
     /* Settings UI in Modal */
+    #settingsList {
+        overflow-y: auto; /* Scroll inside the list */
+        margin-bottom: 20px;
+        scrollbar-width: thin; /* Firefox */
+        overscroll-behavior: contain; /* Prevent body scroll */
+    }
+    
     .settings-item {
         display: flex; align-items: center; justify-content: space-between;
         padding: 10px; margin-bottom: 6px;
         background: rgba(255,255,255,0.03); border-radius: 10px;
         border: 1px solid var(--glass-border);
-        user-select: none; -webkit-user-select: none; 
+        user-select: none; -webkit-user-select: none; /* Prevent text selection */
     }
-    .st-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+    .st-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
     .st-ctrls { display: flex; gap: 4px; }
     .st-btn {
         width: 24px; height: 24px; border-radius: 6px;
@@ -819,25 +827,21 @@
     </nav>
   </aside>
 
-  <!-- Settings Modal -->
   <div class="modal-overlay" id="settingsModal">
       <div class="modal-content">
           <div class="modal-header">
               <span class="modal-title">섹션 설정</span>
               <button class="modal-close" id="closeSettingsModal">×</button>
           </div>
-          <div id="settingsList" class="nav-list" style="margin-bottom:20px;">
-              <!-- JS Generated -->
-          </div>
-          <button class="btn btn-sec" id="resetSettings" style="width:100%; font-size:13px; height:36px;">섹션 설정 초기화</button>
+          <div id="settingsList">
+              </div>
+          <button class="btn btn-sec" id="resetSettings" style="width:100%; font-size:13px; height:36px; margin-top: auto;">위치 초기화</button>
       </div>
   </div>
 
   <main>
-    <!-- Top Fixed Sections: Clock & Search -->
     <section class="section-card time-container no-select">
       <div class="date-row">
-        <span id="weatherIconHeader">⌛</span>
         <span id="dateDisplay">Loading...</span>
       </div>
       <div class="time-row" id="timeDisplay">
@@ -880,9 +884,7 @@
       </div>
     </section>
 
-    <!-- Reorderable Sections Wrapper -->
     <div id="sectionWrapper">
-        <!-- Weather (Renamed from Current Weather) -->
         <details id="det-weather" open>
             <summary class="no-select">
                 <div class="sum-title">
@@ -894,9 +896,7 @@
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content no-select-weather">
-                    <!-- Top Section: Main Info + Stats -->
                     <div class="weather-header">
-                        <!-- Left: Current Main Info -->
                         <div class="weather-main-info">
                             <span id="wMainIcon"></span>
                             <div class="weather-temp-group">
@@ -905,11 +905,10 @@
                             </div>
                             <div class="weather-text-group">
                                 <span id="wDescText">--</span>
-                                <span class="update-text" id="updateText">방금 업데이트됨</span>
+                                <span class="update-text" id="updateText">업데이트 대기 중</span>
                             </div>
                         </div>
 
-                        <!-- Right: Detailed Stats in Row -->
                         <div class="weather-stats-row">
                             <div class="stat-box">
                                 <span class="stat-label">습도</span>
@@ -934,31 +933,24 @@
                         </div>
                     </div>
 
-                    <!-- Mid Section: Forecasts -->
                     <div class="weather-forecasts-wrapper">
-                        <!-- Left: Short-term (Hourly) -->
                         <div class="forecast-panel">
                             <span class="fc-title">단기 예보</span>
                             <div class="fc-list-row" id="hourlyForecastBox">
-                                <!-- JS Generated -->
-                            </div>
+                                </div>
                         </div>
 
-                        <!-- Right: Daily -->
                         <div class="forecast-panel">
                             <span class="fc-title">주간 예보</span>
                             <div class="fc-list-row" id="dailyForecastBox">
-                                <!-- JS Generated -->
-                            </div>
+                                </div>
                         </div>
                     </div>
 
-                    <!-- Search Bar -->
                     <div class="weather-search">
                         <button class="weather-btn" id="wBtnLoc" title="현재 위치">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
                         </button>
-                        <!-- New Refresh Button -->
                         <button class="weather-btn" id="wBtnRefresh" title="새로고침">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         </button>
@@ -972,7 +964,6 @@
             </div>
         </details>
 
-        <!-- Educational Volunteering -->
         <details id="det-edu" open>
             <summary class="no-select">
                 <div class="sum-title">
@@ -1007,7 +998,6 @@
             </div>
         </details>
 
-        <!-- CBNU -->
         <details id="det-cbnu">
             <summary class="no-select">
                 <div class="sum-title">
@@ -1042,7 +1032,6 @@
             </div>
         </details>
 
-        <!-- Stopwatch -->
         <details id="det-stopwatch">
             <summary class="no-select">
                 <div class="sum-title">
@@ -1072,7 +1061,6 @@
             </div>
         </details>
 
-        <!-- AI Tools -->
         <details id="det-ai">
             <summary class="no-select">
                 <div class="sum-title">
@@ -1107,7 +1095,6 @@
             </div>
         </details>
 
-        <!-- Other Services -->
         <details id="det-other">
             <summary class="no-select">
                 <div class="sum-title">
@@ -1138,7 +1125,6 @@
             </div>
         </details>
 
-        <!-- Music -->
         <details id="det-music">
             <summary class="no-select">
                 <div class="sum-title">
@@ -1159,7 +1145,6 @@
         </details>
     </div>
 
-    <!-- Notice Bar -->
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
@@ -1173,7 +1158,6 @@
       <p>© 2025 Seungmin Woo. All rights reserved.</p>
     </footer>
 
-    <!-- Floating Buttons -->
     <button class="settings-float-btn no-select" id="floatSettingsBtn" aria-label="섹션 설정">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
     </button>
@@ -1388,6 +1372,11 @@
           initialChip.setAttribute('data-active', 'true');
           updateSearchColor(color);
           q.placeholder = `${name} 검색어 입력`;
+          
+          // --- Fix: Scroll active chip into view ---
+          setTimeout(() => {
+            initialChip.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
+          }, 100);
       }
 
       engineList.addEventListener('click', e => {
@@ -1400,6 +1389,7 @@
           [...engineList.children].forEach(c => c.dataset.active = (c === chip));
           updateSearchColor(color);
           q.placeholder = `${name} 검색어 입력`;
+          chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
       });
       
@@ -1449,7 +1439,8 @@
         const y = now.getFullYear();
         const m = String(now.getMonth() + 1).padStart(2, '0');
         const d = String(now.getDate()).padStart(2, '0');
-        const wd = ['일', '월', '화', '수', '목', '금', '토'][now.getDay()];
+        // Update format: Sunday -> 일요일
+        const wd = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][now.getDay()];
         
         let h = now.getHours();
         const isAm = h < 12;
@@ -1461,14 +1452,15 @@
         const mm = String(now.getMinutes()).padStart(2, '0');
         const ss = String(now.getSeconds()).padStart(2, '0');
         
-        dateEl.textContent = `${y}. ${parseInt(m)}. ${parseInt(d)} (${wd})`;
+        // Update PC Date Format
+        dateEl.textContent = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}`;
         timeMain.textContent = `${hh}:${mm}`;
         secEl.textContent = ss;
         ampmEl.textContent = ampm;
         ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
 
         mobileClock.innerHTML = 
-          `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}요일</span> ` + 
+          `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}</span> ` + 
           `<span class="mobile-time-part">${ampmKr} ${h}시 ${mm}분 ${ss}초</span>`;
           
         if (weatherUpdateTime) {
@@ -1499,9 +1491,12 @@
       const wBtnSearch = document.getElementById('wBtnSearch');
       const wBtnLoc = document.getElementById('wBtnLoc');
       const wBtnRefresh = document.getElementById('wBtnRefresh');
-      const weatherIconHeader = document.getElementById('weatherIconHeader');
       const dailyForecastBox = document.getElementById('dailyForecastBox');
       const hourlyForecastBox = document.getElementById('hourlyForecastBox');
+      
+      // Lazy Load Elements
+      const detWeather = document.getElementById('det-weather');
+      let weatherLoaded = false;
 
       const defaultLat = 36.6372;
       const defaultLon = 127.4897;
@@ -1560,8 +1555,6 @@
             wProb.textContent = `${prob}%`;
             wRain.textContent = `${rain}mm`;
             wFeel.textContent = `${feel}°C`;
-            
-            weatherIconHeader.innerHTML = `<i class="wi ${weather.i}"></i> ${temp}°C`;
             
             weatherUpdateTime = new Date(); // Update time set
 
@@ -1639,8 +1632,23 @@
              { timeout: 5000 }
          );
       }
+      
+      // Lazy Load Logic: Check open state or listen for toggle
+      function loadWeatherIfOpen() {
+        if(detWeather.hasAttribute('open') && !weatherLoaded) {
+            initWeather();
+            weatherLoaded = true;
+        }
+      }
+      
+      // Initial Check
+      loadWeatherIfOpen();
+      
+      // Listener for subsequent opens
+      detWeather.addEventListener('toggle', () => {
+          if(detWeather.open) loadWeatherIfOpen();
+      });
 
-      initWeather();
       
       wBtnLoc.addEventListener('click', () => {
          wBtnLoc.style.opacity = '0.5';
