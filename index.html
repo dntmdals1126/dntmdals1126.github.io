@@ -93,18 +93,26 @@
       color: var(--text-main);
       overflow-y: auto; scroll-behavior: smooth;
       touch-action: manipulation;
+      
+      /* iOS Overscroll Fix: Prevent 'rubber banding' on HTML element */
+      overscroll-behavior: none;
     }
+    
     body {
       margin: 0; min-height: 100vh;
       background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                   radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
+      /* Fix background attachment to prevent it from scrolling away */
+      background-attachment: fixed;
       overflow-x: hidden; transition: background 0.3s;
       
-      /* iOS Overscroll Fix */
+      /* iOS Overscroll Fix: Prevent 'rubber banding' on Body */
       overscroll-behavior-y: none;
     }
+    
     html[data-theme="light"] body {
         background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
+        background-attachment: fixed;
     }
     body.locked { overflow: hidden; }
 
@@ -871,7 +879,7 @@
           <div id="settingsList">
               <!-- JS Generated -->
           </div>
-          <button class="btn btn-sec" id="resetSettings" style="width:100%; font-size:13px; height:36px; margin-top: auto;">위치 초기화</button>
+          <button class="btn btn-sec" id="resetSettings" style="width:100%; font-size:13px; height:36px; margin-top: auto;">섹션 설정 초기화</button>
       </div>
   </div>
 
