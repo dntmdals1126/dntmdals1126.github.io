@@ -148,12 +148,12 @@
 
         /* --- Scroll Mask (Gradient Header) --- */
         .scroll-mask {
-            position: fixed; top: 0; left: 0; right: 0; height: 140px;
-            background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 40%, transparent 100%);
+            position: fixed; top: 0; left: 0; right: 0; height: 100px;
+            background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 30%, transparent 100%);
             pointer-events: none; z-index: 900;
         }
         html[data-theme="light"] .scroll-mask {
-            background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 40%, transparent 100%);
+            background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%);
         }
 
         /* --- Header --- */
@@ -193,8 +193,8 @@
         /* --- Main Layout --- */
         main { 
             max-width: var(--max-w); margin: 0 auto; 
-            /* 헤더와 간격 넓힘 (110px) */
-            padding: calc(110px + env(safe-area-inset-top)) 16px 60px; 
+            /* 헤더와 간격 넓힘 (120px) */
+            padding: calc(120px + env(safe-area-inset-top)) 16px 60px; 
             position: relative; z-index: 1; 
         }
 
@@ -307,7 +307,7 @@
                 height: calc(var(--header-h) + env(safe-area-inset-top));
                 max-width: none; border: none; border-bottom: 1px solid var(--glass-border);
             }
-            main { padding-top: calc(86px + env(safe-area-inset-top)); }
+            main { padding-top: calc(90px + env(safe-area-inset-top)); } /* Increased padding for mobile */
             .flashcard-container { height: 300px; }
             
             .stat-box {
@@ -429,14 +429,24 @@
                 </div>
                 <div class="overflow-x-auto max-h-[500px]">
                     <table class="w-full text-left border-collapse table-fixed">
-                        <thead class="bg-[var(--glass-surface)] sticky top-0 z-10 text-xs uppercase text-text-dim font-bold">
-                            <tr>
+                        <thead class="sticky top-0 z-10 text-xs uppercase text-text-dim font-bold bg-[var(--bg-dark)] dark:bg-[var(--bg-dark)] light:bg-white" style="background-color: var(--bg-dark);">
+                            <script>
+                                // Script to adjust thead background based on theme for solid color
+                                // handled in CSS mostly but inline style as fallback
+                            </script>
+                            <!-- Use CSS class for solid background based on theme -->
+                            <tr class="bg-[var(--bg-dark)] text-text-dim">
                                 <th class="px-2 py-3 text-center w-8">#</th>
                                 <th class="px-2 py-3 text-center w-8"><i class="fa-solid fa-check"></i></th>
                                 <th class="px-2 py-3 w-[25%]">Term</th>
                                 <th class="px-2 py-3 w-auto">Definition</th>
                             </tr>
                         </thead>
+                        <style>
+                            /* Force solid background for sticky header */
+                            thead tr { background-color: var(--bg-dark); }
+                            html[data-theme="light"] thead tr { background-color: #ffffff; }
+                        </style>
                         <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
                             <!-- 로드됨 -->
                         </tbody>
@@ -458,34 +468,34 @@
             <!-- Card -->
             <div class="flashcard-container perspective-1000" onclick="flipCard()">
                 <div id="flashcard-inner" class="flashcard-inner transform-style-3d duration-500">
-                    <!-- Front -->
+                    <!-- Front (Definition) -->
                     <div class="flashcard-face backface-hidden">
-                        <span class="text-xs text-primary font-bold uppercase tracking-widest mb-4 font-sans">Term</span>
-                        <h2 id="fc-front" class="text-3xl md:text-4xl font-bold text-text-main break-words px-4 font-sans">Loading...</h2>
-                        <div class="mt-8 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans">
-                            <i class="fa-solid fa-arrow-pointer"></i> 탭하여 뜻 확인
+                        <span class="text-xs text-primary font-bold uppercase tracking-widest mb-4 font-sans">Definition</span>
+                        <h2 id="fc-front" class="text-xl md:text-2xl font-bold text-text-main break-words px-4 font-sans leading-relaxed">Loading...</h2>
+                        <!-- Korean Def Subtitle -->
+                        <p id="fc-front-ko" class="mt-4 text-text-dim text-sm font-sans"></p>
+                        
+                        <div class="mt-8 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans absolute bottom-6">
+                            <i class="fa-solid fa-arrow-pointer"></i> 탭하여 용어 확인
                         </div>
                     </div>
-                    <!-- Back -->
+                    <!-- Back (Term) -->
                     <div class="flashcard-face back rotate-y-180 backface-hidden">
-                        <div class="overflow-y-auto w-full max-h-full px-2 no-scrollbar">
-                            <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 block font-sans">Definition</span>
-                            <h3 id="fc-back-ko" class="text-xl font-bold text-text-main mb-3 font-sans"></h3>
-                            <p id="fc-back-def" class="text-text-sub italic mb-3 font-sans leading-relaxed"></p>
-                            <p id="fc-back-def-ko" class="text-text-main text-sm font-medium font-sans"></p>
+                        <div class="overflow-y-auto w-full max-h-full px-2 no-scrollbar flex flex-col items-center justify-center h-full">
+                            <span class="text-xs text-primary font-bold uppercase tracking-widest mb-4 block font-sans">Term</span>
+                            <h3 id="fc-back-term" class="text-3xl font-bold text-text-main mb-2 font-sans text-center"></h3>
+                            <p id="fc-back-koterm" class="text-text-sub text-lg font-sans text-center"></p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Bottom Controls -->
+            <!-- Bottom Controls (Removed TTS) -->
             <div class="flex items-center gap-4 mt-8">
                 <button onclick="prevCard()" class="btn btn-sec w-12 px-0 rounded-full" title="이전">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <button onclick="speakTerm()" class="btn btn-sec w-12 px-0 rounded-full text-primary" title="발음 듣기">
-                    <i class="fa-solid fa-volume-high"></i>
-                </button>
+                <!-- TTS Button Removed -->
                 <button onclick="nextCard()" class="btn btn-pri w-12 px-0 rounded-full" title="다음">
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -576,20 +586,6 @@
         let quizState = { questions: [], currentQIndex: 0, score: 0 };
         let isQuizActive = false;
         let sortOrder = 'asc'; 
-
-        // --- TTS Voice Load (Improved for US English) ---
-        let voices = [];
-        function loadVoices() {
-            voices = window.speechSynthesis.getVoices();
-        }
-        
-        // 초기 로드 시도
-        loadVoices();
-        
-        // 크롬 등 일부 브라우저는 비동기로 로드되므로 이벤트 리스너 추가
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-            window.speechSynthesis.onvoiceschanged = loadVoices;
-        }
 
         window.onload = async function() {
             loadLocalData();
@@ -718,10 +714,13 @@
             appState.currentIndex = index;
             const word = allWords[index];
             
-            document.getElementById('fc-front').innerText = word.term;
-            document.getElementById('fc-back-ko').innerText = word.koTerm;
-            document.getElementById('fc-back-def').innerText = word.def;
-            document.getElementById('fc-back-def-ko').innerText = word.koDef;
+            // Front: Definition (Eng + Ko)
+            document.getElementById('fc-front').innerText = word.def;
+            document.getElementById('fc-front-ko').innerText = word.koDef;
+            
+            // Back: Term (Eng + Ko)
+            document.getElementById('fc-back-term').innerText = word.term;
+            document.getElementById('fc-back-koterm').innerText = word.koTerm;
             
             document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
             
@@ -741,38 +740,6 @@
             if (isMemorized) appState.memorized[term] = true;
             else delete appState.memorized[term];
             saveData();
-        }
-        function speakTerm() {
-            const term = document.getElementById('fc-front').innerText;
-            
-            // 음성 목록이 비어있으면 다시 로드 시도
-            if (voices.length === 0) {
-                voices = window.speechSynthesis.getVoices();
-            }
-
-            const utterance = new SpeechSynthesisUtterance(term);
-            utterance.lang = 'en-US'; // 기본 언어 설정
-            
-            // 영어 전용 음성 찾기 로직 강화
-            // 1순위: Google US English (보통 품질 좋음)
-            // 2순위: Microsoft US English
-            // 3순위: Samantha (Mac)
-            // 4순위: 이름에 'English' 또는 'US'가 들어가는 음성
-            // 5순위: lang 속성이 'en-US'인 음성
-            let preferredVoice = voices.find(v => v.name === 'Google US English') ||
-                                 voices.find(v => v.name.includes('Microsoft') && v.lang === 'en-US') ||
-                                 voices.find(v => v.name === 'Samantha') ||
-                                 voices.find(v => (v.name.includes('English') || v.name.includes('US')) && v.lang.startsWith('en')) ||
-                                 voices.find(v => v.lang === 'en-US');
-
-            if (preferredVoice) {
-                console.log("Selected Voice:", preferredVoice.name);
-                utterance.voice = preferredVoice;
-            } else {
-                console.log("No specific US voice found, using default en-US");
-            }
-            
-            window.speechSynthesis.speak(utterance);
         }
 
         // --- Quiz ---
