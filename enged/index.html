@@ -44,6 +44,7 @@
                     fontFamily: {
                         sans: ['"Google Sans Flex"', '"Pretendard"', 'sans-serif'],
                         logo: ['"Cal Sans"', 'sans-serif'],
+                        kor: ['"Pretendard"', 'sans-serif'],
                     }
                 }
             }
@@ -94,238 +95,103 @@
             color-scheme: light;
         }
 
-        /* 기본적으로 전체 선택 방지, 박스 사이징 */
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-            outline: none; 
-            user-select: none; 
-            -webkit-user-select: none; 
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; -webkit-user-select: none; }
+        input, textarea { user-select: text !important; -webkit-user-select: text !important; }
         
-        /* 입력창은 선택 가능하게 예외 처리 */
-        input, textarea { 
-            user-select: text !important; 
-            -webkit-user-select: text !important; 
-        }
-        
-        html {
-            font-family: var(--font-base);
-            background: var(--bg-dark);
-            color: var(--text-main);
-            overflow-y: scroll; 
-            scroll-behavior: smooth;
-            min-height: 100%;
-        }
-        
-        body {
-            margin: 0; 
-            min-height: 100vh;
-            background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
-                        radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
-            background-attachment: fixed;
-            transition: background 0.3s;
-        }
-        
-        html[data-theme="light"] body {
-            background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
-            background-attachment: fixed;
-        }
-
+        html { font-family: var(--font-base); background: var(--bg-dark); color: var(--text-main); overflow-y: scroll; scroll-behavior: smooth; min-height: 100%; }
+        body { margin: 0; min-height: 100vh; background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%), radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%); background-attachment: fixed; transition: background 0.3s; }
+        html[data-theme="light"] body { background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%); background-attachment: fixed; }
         button { font-family: inherit; cursor: pointer; }
 
-        /* --- Animations --- */
+        /* Animations */
         .blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; filter: blur(90px); opacity: 0.4; overflow: hidden; }
         .blob { position: absolute; border-radius: 50%; animation: float 25s infinite ease-in-out alternate; }
         .b1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: rgba(30, 40, 60, 0.2); }
         .b2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: rgba(20, 30, 40, 0.15); animation-delay: -5s; }
-        
         html[data-theme="light"] .b1 { background: rgba(0,0,0,0.03); }
         html[data-theme="light"] .b2 { background: rgba(0,0,0,0.02); }
-        
         .fade-in-up { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Scroll Mask (Gradient Header) --- */
-        .scroll-mask {
-            position: fixed; top: 0; left: 0; right: 0; height: 100px;
-            background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 30%, transparent 100%);
-            pointer-events: none; z-index: 900;
-        }
-        html[data-theme="light"] .scroll-mask {
-            background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%);
-        }
+        /* Scroll Mask */
+        .scroll-mask { position: fixed; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 30%, transparent 100%); pointer-events: none; z-index: 900; }
+        html[data-theme="light"] .scroll-mask { background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%); }
 
-        /* --- Header --- */
-        header {
-            position: fixed; 
-            top: calc(16px + env(safe-area-inset-top)); 
-            left: 50%; transform: translateX(-50%);
-            width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h);
-            z-index: 1000;
-            background: var(--header-bg);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 99px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 24px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-        }
-
-        .logo {
-            display: flex; align-items: baseline; cursor: pointer;
-            color: var(--text-main);
-        }
-        
+        /* Header */
+        header { position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h); z-index: 1000; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 99px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+        .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
         .header-tools { display: flex; gap: 8px; }
-        .tool-btn {
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid transparent; background: transparent;
-            color: var(--text-main);
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-        }
-        @media (hover: hover) {
-            .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); }
-        }
+        .tool-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid transparent; background: transparent; color: var(--text-main); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        @media (hover: hover) { .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); } }
 
-        /* --- Main Layout --- */
-        main { 
-            max-width: var(--max-w); margin: 0 auto; 
-            /* 헤더와 간격 넓힘 (120px) */
-            padding: calc(120px + env(safe-area-inset-top)) 16px 60px; 
-            position: relative; z-index: 1; 
-        }
-
-        .section-card {
-            background: var(--glass-surface);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-md);
-            padding: 20px; margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
+        /* Main Layout */
+        main { max-width: var(--max-w); margin: 0 auto; padding: calc(120px + env(safe-area-inset-top)) 16px 60px; position: relative; z-index: 1; }
+        .section-card { background: var(--glass-surface); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.2s; }
         
-        /* --- Buttons & Chips --- */
-        .btn {
-            height: 48px; border-radius: 14px;
-            font-weight: 600; font-size: 15px;
-            border: 1px solid transparent; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: all 0.2s;
-            padding: 0 20px;
-        }
+        /* Buttons & Chips */
+        .btn { height: 48px; border-radius: 14px; font-weight: 600; font-size: 15px; border: 1px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; padding: 0 20px; }
         .btn:active { transform: scale(0.96); }
-        
         .btn-pri { background: var(--primary); color: white; }
         .btn-sec { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--glass-border); }
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
-
-        .chip-nav {
-            display: flex; gap: 8px; overflow-x: auto; 
-            scrollbar-width: none; width: 100%;
-            justify-content: flex-start;
-        }
+        .chip-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; width: 100%; justify-content: flex-start; }
         .chip-nav::-webkit-scrollbar { display: none; }
-        
-        .chip {
-            flex: 1; white-space: nowrap; text-align: center;
-            padding: 10px 16px; border-radius: 12px;
-            font-size: 15px; font-weight: 600;
-            background: transparent;
-            color: var(--text-sub); cursor: pointer;
-            transition: all 0.2s;
-        }
-        .chip.active {
-            background: var(--glass-highlight); color: var(--primary);
-        }
+        .chip { flex: 1; white-space: nowrap; text-align: center; padding: 10px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; background: transparent; color: var(--text-sub); cursor: pointer; transition: all 0.2s; }
+        .chip.active { background: var(--glass-highlight); color: var(--primary); }
 
-        /* --- Vocab App Specifics --- */
+        /* Flashcard */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
-
-        .flashcard-container {
-            width: 100%; max-width: 500px; height: 350px;
-            margin: 0 auto; position: relative; cursor: pointer;
-        }
-        .flashcard-inner {
-            position: relative; w-full; h-full; transition: transform 0.6s;
-            transform-style: preserve-3d; width: 100%; height: 100%;
-        }
-        .flashcard-face {
-            position: absolute; w-full; h-full; 
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
-            width: 100%; height: 100%;
-            border-radius: 20px;
-            background: var(--glass-surface);
-            border: 1px solid var(--glass-border);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 24px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+        .flashcard-container { width: 100%; max-width: 500px; height: 350px; margin: 0 auto; position: relative; cursor: pointer; }
+        .flashcard-inner { position: relative; w-full; h-full; transition: transform 0.6s; transform-style: preserve-3d; width: 100%; height: 100%; }
+        .flashcard-face { position: absolute; w-full; h-full; -webkit-backface-visibility: hidden; backface-visibility: hidden; width: 100%; height: 100%; border-radius: 20px; background: var(--glass-surface); border: 1px solid var(--glass-border); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .flashcard-face.back { transform: rotateY(180deg); background: rgba(59, 130, 246, 0.1); border-color: var(--primary); }
         html[data-theme="light"] .flashcard-face.back { background: #eff6ff; }
+        /* Scrollable content inside card */
+        .fc-content { flex: 1; width: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .fc-content::-webkit-scrollbar { display: none; } /* Hide scrollbar for cleaner look */
 
-        .progress-bar-bg {
-            background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden;
-        }
+        /* Progress & Stats */
+        .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
         html[data-theme="light"] .progress-bar-bg { background: #e2e8f0; }
-        .progress-bar-fill {
-            background: var(--primary); height: 100%; transition: width 0.5s ease;
+        .progress-bar-fill { background: var(--primary); height: 100%; transition: width 0.5s ease; }
+        .stat-box { background: var(--glass-highlight); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; border: 1px solid var(--glass-border); height: 100%; }
+        .hl-text { background-color: rgba(251, 191, 36, 0.3); color: #fcd34d; border-radius: 2px; padding: 0 2px; }
+        html[data-theme="light"] .hl-text { background-color: rgba(251, 191, 36, 0.4); color: #92400e; }
+
+        /* Print Styles */
+        @media print {
+            header, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, .no-print { display: none !important; }
+            body { background: white; color: black; }
+            .section-card { box-shadow: none; border: 1px solid #ddd; margin: 0; padding: 0; background: white; }
+            main { padding: 0; max-width: 100%; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; color: black !important; }
+            #wordListBody { display: table-row-group; }
+            .overflow-x-auto { overflow: visible; max-height: none; }
         }
 
-        /* Stats Box Slim */
-        .stat-box {
-            background: var(--glass-highlight);
-            border-radius: 12px; padding: 12px 14px;
-            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
-            border: 1px solid var(--glass-border);
-            height: 100%;
-        }
-
-        /* Highlight Class */
-        .hl-text {
-            background-color: rgba(251, 191, 36, 0.3);
-            color: #fcd34d;
-            border-radius: 2px;
-            padding: 0 2px;
-        }
-        html[data-theme="light"] .hl-text {
-            background-color: rgba(251, 191, 36, 0.4);
-            color: #92400e;
-        }
-
-        /* --- Mobile Tweaks --- */
+        /* Mobile Tweaks */
         @media (max-width: 480px) {
             :root { --header-h: 60px; }
-            header { 
-                top: 0; width: 100%; border-radius: 0; 
-                padding: env(safe-area-inset-top) 16px 0;
-                height: calc(var(--header-h) + env(safe-area-inset-top));
-                max-width: none; border: none; border-bottom: 1px solid var(--glass-border);
-            }
-            main { padding-top: calc(90px + env(safe-area-inset-top)); } /* Increased padding for mobile */
+            header { top: 0; width: 100%; border-radius: 0; padding: env(safe-area-inset-top) 16px 0; height: calc(var(--header-h) + env(safe-area-inset-top)); max-width: none; border: none; border-bottom: 1px solid var(--glass-border); }
+            main { padding-top: calc(90px + env(safe-area-inset-top)); }
             .flashcard-container { height: 300px; }
+            .stat-box { flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; padding: 10px; }
             
-            .stat-box {
-                flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px;
-                padding: 10px;
-            }
-            .stat-box .flex-row-wrap {
-                width: 100%; display: flex; justify-content: space-between; align-items: center;
-            }
+            /* Mobile Table Tweaks */
+            .mobile-hide { display: none; }
+            table th, table td { padding: 8px 4px; }
+            .term-col { width: 35% !important; }
+            .def-col { width: auto !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Scroll Mask Gradient -->
     <div class="scroll-mask"></div>
-
-    <!-- Background Animation -->
     <div class="blobs">
         <div class="blob b1"></div>
         <div class="blob b2"></div>
@@ -350,27 +216,26 @@
     </header>
 
     <main>
-        <!-- Nav Container (Closer to Header) -->
+        <!-- Nav Container -->
         <div class="section-card p-1.5 mb-6">
             <nav class="chip-nav no-select">
                 <div class="chip active" onclick="switchTab('dashboard')" id="btn-dashboard">홈</div>
                 <div class="chip" onclick="switchTab('flashcard')" id="btn-flashcard">플래시카드</div>
                 <div class="chip" onclick="switchTab('quiz')" id="btn-quiz">퀴즈</div>
-                <div class="chip" onclick="switchTab('mistake')" id="btn-mistake">오답노트</div>
+                <div class="chip" onclick="switchTab('notebook')" id="btn-notebook">단어장</div>
             </nav>
         </div>
 
-        <!-- Loading State -->
+        <!-- Loading -->
         <div id="loadingState" class="section-card flex flex-col items-center justify-center py-20 text-text-sub">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-primary"></i>
             <p>데이터 로딩 중...</p>
         </div>
 
-        <!-- 1. Home (Dashboard + Stats + List) -->
+        <!-- 1. Home -->
         <div id="view-dashboard" class="hidden fade-in-up space-y-6">
-            <!-- Combined Dashboard Section -->
+            <!-- Progress & Stats -->
             <section class="section-card flex flex-col gap-4 p-4">
-                <!-- Progress -->
                 <div class="flex flex-col justify-center">
                     <div class="flex justify-between items-end mb-1">
                         <span class="text-xs font-bold text-text-sub uppercase tracking-wider">Total Progress</span>
@@ -380,8 +245,6 @@
                         <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
-                
-                <!-- Stats Grid (Slim & Horizontal Layout) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="stat-box">
                         <div class="flex items-center gap-3">
@@ -392,7 +255,6 @@
                         </div>
                         <span class="text-lg font-bold text-text-main" id="statTotal">0</span>
                     </div>
-                    
                     <div class="stat-box">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center">
@@ -402,22 +264,21 @@
                         </div>
                         <span class="text-lg font-bold text-green-500" id="statMemorized">0</span>
                     </div>
-                    
                     <div class="stat-box">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center">
                                 <i class="fa-solid fa-book-open text-xs"></i>
                             </div>
-                            <span class="text-xs text-text-sub font-bold uppercase">Review</span>
+                            <span class="text-xs text-text-sub font-bold uppercase">Notebook</span>
                         </div>
-                        <span class="text-lg font-bold text-red-500" id="statMistakes">0</span>
+                        <span class="text-lg font-bold text-red-500" id="statNotebook">0</span>
                     </div>
                 </div>
             </section>
 
-            <!-- List Table -->
-            <section class="section-card p-0 overflow-hidden">
-                <div class="p-3 border-b border-[var(--glass-border)] flex flex-col gap-2 bg-[var(--glass-highlight)]">
+            <!-- List -->
+            <section class="section-card p-0 overflow-hidden" id="listSection">
+                <div class="p-3 border-b border-[var(--glass-border)] flex flex-col gap-2 bg-[var(--glass-highlight)] no-print">
                     <div class="flex items-center gap-2">
                          <i class="fa-solid fa-search text-text-dim ml-1"></i>
                          <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable()" 
@@ -425,30 +286,34 @@
                          <button onclick="toggleSort()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" id="sortBtn">
                             <i class="fa-solid fa-arrow-down-a-z mr-1"></i> 정렬
                          </button>
+                         <button onclick="toggleFullscreenList()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" title="전체화면">
+                            <i class="fa-solid fa-expand"></i>
+                         </button>
+                         <button onclick="window.print()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" title="인쇄">
+                            <i class="fa-solid fa-print"></i>
+                         </button>
                     </div>
                 </div>
-                <div class="overflow-x-auto max-h-[500px]">
+                <div class="overflow-x-auto max-h-[500px]" id="listContainer">
                     <table class="w-full text-left border-collapse table-fixed">
-                        <thead class="sticky top-0 z-10 text-xs uppercase text-text-dim font-bold bg-[var(--bg-dark)] dark:bg-[var(--bg-dark)] light:bg-white" style="background-color: var(--bg-dark);">
-                            <script>
-                                // Script to adjust thead background based on theme for solid color
-                                // handled in CSS mostly but inline style as fallback
-                            </script>
-                            <!-- Use CSS class for solid background based on theme -->
-                            <tr class="bg-[var(--bg-dark)] text-text-dim">
-                                <th class="px-2 py-3 text-center w-8">#</th>
+                        <!-- Solid background header for readability -->
+                        <thead class="sticky top-0 z-10 text-xs uppercase text-text-dim font-bold" style="background-color: var(--bg-dark);">
+                            <tr style="background-color: var(--bg-dark);">
+                                <th class="px-2 py-3 text-center w-8 mobile-hide">#</th>
                                 <th class="px-2 py-3 text-center w-8"><i class="fa-solid fa-check"></i></th>
-                                <th class="px-2 py-3 w-[25%]">Term</th>
-                                <th class="px-2 py-3 w-auto">Definition</th>
+                                <th class="px-2 py-3 text-center w-8"><i class="fa-regular fa-star"></i></th>
+                                <th class="px-2 py-3 term-col w-[30%]">Term</th>
+                                <th class="px-2 py-3 def-col w-auto">Definition</th>
                             </tr>
                         </thead>
                         <style>
-                            /* Force solid background for sticky header */
-                            thead tr { background-color: var(--bg-dark); }
-                            html[data-theme="light"] thead tr { background-color: #ffffff; }
+                            /* Fallback solid background */
+                            thead { background-color: var(--bg-dark); }
+                            html[data-theme="light"] thead { background-color: #ffffff; }
+                            thead tr { background-color: inherit; }
                         </style>
                         <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
-                            <!-- 로드됨 -->
+                            <!-- JS Generated -->
                         </tbody>
                     </table>
                 </div>
@@ -458,44 +323,51 @@
         <!-- 2. Flashcard -->
         <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center">
             <!-- Controls Top -->
-            <div class="w-full max-w-[500px] flex justify-end items-center mb-4 px-2 h-8">
-                <label class="flex items-center gap-2 cursor-pointer bg-[var(--glass-surface)] px-3 py-1.5 rounded-full border border-[var(--glass-border)] hover:bg-[var(--glass-highlight)] transition">
-                    <input type="checkbox" id="fc-memorized-check" class="accent-primary w-4 h-4 rounded-full">
-                    <span class="text-xs font-bold text-text-sub uppercase">Memorized</span>
-                </label>
+            <div class="w-full max-w-[500px] flex justify-between items-center mb-4 px-2 h-8">
+                <button onclick="shuffleCards()" class="btn btn-sec h-8 px-3 text-xs rounded-full" title="카드 섞기">
+                    <i class="fa-solid fa-shuffle mr-1"></i> Shuffle
+                </button>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleNotebookFromCard()" class="btn btn-sec h-8 w-8 rounded-full flex items-center justify-center p-0" id="fc-star-btn">
+                        <i class="fa-regular fa-star text-text-sub"></i>
+                    </button>
+                    <label class="flex items-center gap-2 cursor-pointer bg-[var(--glass-surface)] px-3 py-1.5 rounded-full border border-[var(--glass-border)] hover:bg-[var(--glass-highlight)] transition">
+                        <input type="checkbox" id="fc-memorized-check" class="accent-primary w-4 h-4 rounded-full">
+                        <span class="text-xs font-bold text-text-sub uppercase">Done</span>
+                    </label>
+                </div>
             </div>
 
             <!-- Card -->
             <div class="flashcard-container perspective-1000" onclick="flipCard()">
                 <div id="flashcard-inner" class="flashcard-inner transform-style-3d duration-500">
-                    <!-- Front (Definition) -->
+                    <!-- Front (Def) -->
                     <div class="flashcard-face backface-hidden">
                         <span class="text-xs text-primary font-bold uppercase tracking-widest mb-4 font-sans">Definition</span>
-                        <h2 id="fc-front" class="text-xl md:text-2xl font-bold text-text-main break-words px-4 font-sans leading-relaxed">Loading...</h2>
-                        <!-- Korean Def Subtitle -->
-                        <p id="fc-front-ko" class="mt-4 text-text-dim text-sm font-sans"></p>
-                        
-                        <div class="mt-8 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans absolute bottom-6">
+                        <div class="fc-content">
+                            <h2 id="fc-front" class="text-lg md:text-xl font-bold text-text-main break-words font-sans leading-relaxed">Loading...</h2>
+                            <p id="fc-front-ko" class="mt-4 text-text-dim text-sm font-sans font-bold"></p>
+                        </div>
+                        <div class="mt-4 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans">
                             <i class="fa-solid fa-arrow-pointer"></i> 탭하여 용어 확인
                         </div>
                     </div>
                     <!-- Back (Term) -->
                     <div class="flashcard-face back rotate-y-180 backface-hidden">
-                        <div class="overflow-y-auto w-full max-h-full px-2 no-scrollbar flex flex-col items-center justify-center h-full">
-                            <span class="text-xs text-primary font-bold uppercase tracking-widest mb-4 block font-sans">Term</span>
-                            <h3 id="fc-back-term" class="text-3xl font-bold text-text-main mb-2 font-sans text-center"></h3>
-                            <p id="fc-back-koterm" class="text-text-sub text-lg font-sans text-center"></p>
+                        <span class="text-xs text-primary font-bold uppercase tracking-widest mb-4 block font-sans">Term</span>
+                        <div class="fc-content">
+                            <h3 id="fc-back-term" class="text-2xl md:text-3xl font-bold text-text-main mb-2 font-sans text-center"></h3>
+                            <p id="fc-back-koterm" class="text-text-sub text-lg font-kor text-center font-bold"></p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Bottom Controls (Removed TTS) -->
+            <!-- Bottom Controls -->
             <div class="flex items-center gap-4 mt-8">
                 <button onclick="prevCard()" class="btn btn-sec w-12 px-0 rounded-full" title="이전">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <!-- TTS Button Removed -->
                 <button onclick="nextCard()" class="btn btn-pri w-12 px-0 rounded-full" title="다음">
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -506,7 +378,7 @@
         <div id="view-quiz" class="hidden fade-in-up max-w-2xl mx-auto">
             <div id="quiz-game">
                 <div class="flex justify-between items-end mb-4 px-1">
-                    <span class="text-xs font-bold text-text-dim tracking-widest font-sans">QUESTION <span id="quiz-progress" class="text-text-main ml-1">1/10</span></span>
+                    <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
                     <span id="quiz-score" class="text-xs font-bold text-primary bg-[var(--glass-highlight)] px-2 py-1 rounded font-sans">0</span>
                 </div>
                 
@@ -518,7 +390,7 @@
                 </div>
 
                 <div id="quiz-options" class="grid grid-cols-1 gap-3">
-                    <!-- JS로 버튼 생성 -->
+                    <!-- JS Generated -->
                 </div>
 
                 <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
@@ -529,26 +401,29 @@
             </div>
         </div>
 
-        <!-- 5. Mistake -->
-        <div id="view-mistake" class="hidden fade-in-up">
+        <!-- 4. Notebook (Old Mistake) -->
+        <div id="view-notebook" class="hidden fade-in-up">
             <div class="flex justify-between items-center mb-4 px-1">
-                <h2 class="text-lg font-bold text-text-main font-sans">오답 노트</h2>
-                <button onclick="clearMistakes()" class="text-xs btn btn-sec h-8 px-3 font-sans">
-                    모두 비우기
-                </button>
+                <h2 class="text-lg font-bold text-text-main font-kor">나만의 단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
+                <div class="flex gap-2">
+                    <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">
+                        비우기
+                    </button>
+                </div>
             </div>
 
-            <div id="mistake-container" class="space-y-3">
-                <!-- 오답 카드 -->
+            <div id="notebook-container" class="space-y-3">
+                <!-- Cards -->
             </div>
             
-            <div id="mistake-empty" class="hidden flex flex-col items-center justify-center py-20 text-text-dim">
-                <i class="fa-regular fa-face-smile text-4xl mb-3 opacity-50"></i>
-                <p class="text-sm font-sans">오답 노트가 비어있습니다.</p>
+            <div id="notebook-empty" class="hidden flex flex-col items-center justify-center py-20 text-text-dim">
+                <i class="fa-regular fa-star text-4xl mb-3 opacity-50"></i>
+                <p class="text-sm font-sans">단어장이 비어있습니다.</p>
+                <p class="text-xs opacity-70 mt-1">리스트나 플래시카드에서 별표를 눌러 추가하세요.</p>
             </div>
         </div>
 
-        <footer class="no-select text-center py-6 text-xs text-text-sub mt-4 border-t border-[var(--glass-border)]">
+        <footer class="no-select text-center py-6 text-xs text-text-sub mt-4 border-t border-[var(--glass-border)] no-print">
             <span style="font-family: var(--font-base); font-weight: 600;">EngEd.</span>
             <span style="font-family: var(--font-base); opacity: 0.7; margin-left: 6px; margin-right: 2px;">powered by</span>
             <span style="font-family: var(--font-logo);">WebHub</span><br>
@@ -559,7 +434,6 @@
 
     <!-- JS Logic -->
     <script>
-        // --- Theme Logic ---
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
         const iconMoon = document.getElementById('iconMoon');
@@ -569,34 +443,48 @@
         function applyTheme(theme) {
             html.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
-            if (theme === 'light') {
-                iconSun.style.display = 'block';
-                iconMoon.style.display = 'none';
-            } else {
-                iconSun.style.display = 'none';
-                iconMoon.style.display = 'block';
-            }
+            if (theme === 'light') { iconSun.style.display = 'block'; iconMoon.style.display = 'none'; } 
+            else { iconSun.style.display = 'none'; iconMoon.style.display = 'block'; }
         }
         applyTheme(savedTheme);
         themeToggle.onclick = () => applyTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
 
-        // --- App Logic ---
+        // --- App Data ---
         let allWords = [];
-        let appState = { memorized: {}, mistakes: [], currentIndex: 0 };
+        let appState = { 
+            memorized: {}, 
+            notebook: [], // was mistakes
+            currentIndex: 0 
+        };
+        
+        // --- Quiz Data ---
         let quizState = { questions: [], currentQIndex: 0, score: 0 };
         let isQuizActive = false;
+        
+        // --- List Data ---
         let sortOrder = 'asc'; 
+        
+        // --- Flashcard Data ---
+        let flashcardOrder = []; // indices
 
         window.onload = async function() {
             loadLocalData();
             await fetchCSV();
+            // Init Flashcard Order
+            flashcardOrder = allWords.map((_, i) => i);
+            
             updateDashboard();
             switchTab('dashboard');
         };
 
         function loadLocalData() {
             const saved = localStorage.getItem('engVocabState');
-            if (saved) appState = JSON.parse(saved);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Migration: mistakes -> notebook if needed
+                if (parsed.mistakes && !parsed.notebook) parsed.notebook = parsed.mistakes;
+                appState = { ...appState, ...parsed };
+            }
         }
         function saveData() {
             localStorage.setItem('engVocabState', JSON.stringify(appState));
@@ -635,31 +523,18 @@
                 matches.push(cleanCSVField(match));
                 
                 let term, koTerm, def, koDef;
-                
                 const isFirstColNum = /^\d+$/.test(matches[0]);
                 
                 if (matches.length >= 5 && isFirstColNum) {
-                    term = matches[1];
-                    koTerm = matches[2];
-                    def = matches[3];
-                    koDef = matches[4];
+                    term = matches[1]; koTerm = matches[2]; def = matches[3]; koDef = matches[4];
                 } else if (matches.length >= 4) {
                     if (isFirstColNum && matches[1]) {
-                         term = matches[1];
-                         koTerm = matches[2];
-                         def = matches[3];
-                         koDef = matches[4] || ""; 
+                         term = matches[1]; koTerm = matches[2]; def = matches[3]; koDef = matches[4] || ""; 
                     } else {
-                         term = matches[0];
-                         koTerm = matches[1];
-                         def = matches[2];
-                         koDef = matches[3];
+                         term = matches[0]; koTerm = matches[1]; def = matches[2]; koDef = matches[3];
                     }
                 }
-
-                if (term && def) {
-                    allWords.push({ term, koTerm, def, koDef });
-                }
+                if (term && def) allWords.push({ term, koTerm, def, koDef });
             }
         }
         function cleanCSVField(text) {
@@ -668,7 +543,6 @@
             return clean.replace(/""/g, '"');
         }
 
-        // --- UI Control ---
         function switchTab(tabName) {
             document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.chip').forEach(el => el.classList.remove('active'));
@@ -678,13 +552,12 @@
             if (target) target.classList.remove('hidden');
             if (btn) btn.classList.add('active');
 
-            if (tabName === 'dashboard') {
-                updateDashboard();
-                renderListTable();
+            if (tabName === 'dashboard') { updateDashboard(); renderListTable(); }
+            if (tabName === 'flashcard') {
+                if (flashcardOrder.length !== allWords.length) flashcardOrder = allWords.map((_, i) => i);
+                loadFlashcard(appState.currentIndex);
             }
-            if (tabName === 'flashcard') loadFlashcard(appState.currentIndex);
-            if (tabName === 'mistake') renderMistakes();
-            
+            if (tabName === 'notebook') renderNotebook();
             if (tabName === 'quiz') {
                 if (!isQuizActive) startQuiz();
             }
@@ -694,31 +567,28 @@
             const total = allWords.length;
             if (total === 0) return;
             const memorizedCount = Object.keys(appState.memorized).length;
-            const percentage = Math.round((memorizedCount / total) * 100);
+            const pct = Math.round((memorizedCount / total) * 100);
             
-            document.getElementById('progressBar').style.width = `${percentage}%`;
-            document.getElementById('progressText').innerText = `${percentage}%`;
-            
+            document.getElementById('progressBar').style.width = `${pct}%`;
+            document.getElementById('progressText').innerText = `${pct}%`;
             document.getElementById('statTotal').innerText = total;
             document.getElementById('statMemorized').innerText = memorizedCount;
-            document.getElementById('statMistakes').innerText = appState.mistakes.length;
+            document.getElementById('statNotebook').innerText = appState.notebook.length;
         }
         function updateDashboard() { updateProgress(); }
 
         // --- Flashcard ---
-        function loadFlashcard(index) {
+        function loadFlashcard(idx) {
             if (allWords.length === 0) return;
-            if (index < 0) index = 0;
-            if (index >= allWords.length) index = allWords.length - 1;
+            if (idx < 0) idx = 0;
+            if (idx >= flashcardOrder.length) idx = flashcardOrder.length - 1;
             
-            appState.currentIndex = index;
-            const word = allWords[index];
+            appState.currentIndex = idx;
+            const realIndex = flashcardOrder[idx];
+            const word = allWords[realIndex];
             
-            // Front: Definition (Eng + Ko)
             document.getElementById('fc-front').innerText = word.def;
             document.getElementById('fc-front-ko').innerText = word.koDef;
-            
-            // Back: Term (Eng + Ko)
             document.getElementById('fc-back-term').innerText = word.term;
             document.getElementById('fc-back-koterm').innerText = word.koTerm;
             
@@ -727,31 +597,103 @@
             const checkbox = document.getElementById('fc-memorized-check');
             checkbox.checked = !!appState.memorized[word.term];
             checkbox.onclick = function() { toggleMemorized(word.term, this.checked); };
+
+            updateFlashcardStar(word.term);
+        }
+
+        function updateFlashcardStar(term) {
+            const btn = document.getElementById('fc-star-btn');
+            const isSaved = appState.notebook.includes(term);
+            btn.innerHTML = isSaved ? '<i class="fa-solid fa-star text-yellow-400"></i>' : '<i class="fa-regular fa-star text-text-sub"></i>';
+        }
+
+        function toggleNotebookFromCard() {
+            if(allWords.length === 0) return;
+            const realIndex = flashcardOrder[appState.currentIndex];
+            const term = allWords[realIndex].term;
+            toggleNotebook(term);
+            updateFlashcardStar(term);
         }
 
         function flipCard() { document.getElementById('flashcard-inner').classList.toggle('rotate-y-180'); }
-        function nextCard() {
-            if (appState.currentIndex < allWords.length - 1) loadFlashcard(appState.currentIndex + 1);
+        function nextCard() { if (appState.currentIndex < flashcardOrder.length - 1) loadFlashcard(appState.currentIndex + 1); }
+        function prevCard() { if (appState.currentIndex > 0) loadFlashcard(appState.currentIndex - 1); }
+        
+        function shuffleCards() {
+            // Shuffle flashcardOrder array
+            for (let i = flashcardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
+            }
+            appState.currentIndex = 0;
+            loadFlashcard(0);
+            alert("카드가 섞였습니다!");
         }
-        function prevCard() {
-            if (appState.currentIndex > 0) loadFlashcard(appState.currentIndex - 1);
-        }
-        function toggleMemorized(term, isMemorized) {
-            if (isMemorized) appState.memorized[term] = true;
-            else delete appState.memorized[term];
+
+        // --- Notebook (Integration) ---
+        function toggleNotebook(term) {
+            if (appState.notebook.includes(term)) {
+                appState.notebook = appState.notebook.filter(t => t !== term);
+            } else {
+                appState.notebook.push(term);
+            }
             saveData();
+            // If in list view, update UI
+            if(!document.getElementById('view-list').classList.contains('hidden')) renderListTable();
+        }
+
+        function renderNotebook() {
+            const container = document.getElementById('notebook-container');
+            const emptyState = document.getElementById('notebook-empty');
+            const countEl = document.getElementById('nb-count');
+            container.innerHTML = '';
+            
+            countEl.innerText = `(${appState.notebook.length})`;
+
+            if (appState.notebook.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+            
+            appState.notebook.forEach(nbTerm => {
+                const word = allWords.find(w => w.term === nbTerm);
+                if (!word) return;
+                
+                const card = document.createElement('div');
+                card.className = "section-card p-4 flex justify-between items-center mb-0 hover:border-red-500/30 transition-colors";
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
+                            <span class="text-xs text-text-dim font-kor font-bold text-blue-400">${word.koTerm}</span>
+                        </div>
+                        <p class="text-sm text-text-sub font-sans">${word.def}</p>
+                    </div>
+                    <button onclick="toggleNotebook('${nbTerm}'); renderNotebook();" class="ml-4 w-10 h-10 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function clearNotebook() {
+            if (confirm("단어장을 비우시겠습니까?")) {
+                appState.notebook = [];
+                saveData();
+                renderNotebook();
+            }
         }
 
         // --- Quiz ---
         function startQuiz() {
-            if (allWords.length < 4) { 
-                document.getElementById('quiz-game').innerHTML = '<div class="text-center py-10">데이터 부족 (4개 이상 필요)</div>';
-                return; 
-            }
+            if (allWords.length < 4) { return; }
             isQuizActive = true;
-            const quizCount = Math.min(10, allWords.length);
+            // Shuffle ALL words
             const shuffled = [...allWords].sort(() => 0.5 - Math.random());
-            quizState.questions = shuffled.slice(0, quizCount);
+            quizState.questions = shuffled;
             quizState.currentQIndex = 0;
             quizState.score = 0;
             
@@ -763,11 +705,13 @@
         }
 
         function loadQuizQuestion() {
+            if (quizState.currentQIndex >= quizState.questions.length) {
+                finishQuiz();
+                return;
+            }
             const currentQ = quizState.questions[quizState.currentQIndex];
             document.getElementById('quiz-progress').innerText = `${quizState.currentQIndex + 1}/${quizState.questions.length}`;
-            
-            document.getElementById('quiz-question').innerHTML = 
-                `<span class="text-xs text-primary font-bold block mb-2 font-sans">[${currentQ.koTerm}]</span>${currentQ.def}`;
+            document.getElementById('quiz-question').innerHTML = currentQ.def;
             
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('quiz-next-btn').classList.add('hidden');
@@ -807,39 +751,43 @@
 
             if (selected.term === correct.term) {
                 quizState.score++;
-                document.getElementById('quiz-score').innerText = `${quizState.score * 10}`;
-                feedback.innerHTML = '<span class="text-green-500">정답입니다!</span>';
+                document.getElementById('quiz-score').innerText = quizState.score;
+                feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
             } else {
                 btnElement.classList.add('border-red-500', 'bg-red-500/10');
                 btnElement.querySelector('div').classList.add('bg-red-500', 'border-transparent', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                feedback.innerHTML = `<span class="text-red-500">오답! 정답은 '${correct.term}' 입니다.</span>`;
-                addToMistakes(correct.term);
+                feedback.innerHTML = `<span class="text-red-500">Wrong! Answer: <b>${correct.term}</b></span>`;
+                
+                // Add to Notebook automatically
+                if (!appState.notebook.includes(correct.term)) {
+                    appState.notebook.push(correct.term);
+                    saveData();
+                }
             }
             document.getElementById('quiz-next-btn').classList.remove('hidden');
         }
 
         function nextQuizQuestion() {
             quizState.currentQIndex++;
-            if (quizState.currentQIndex < quizState.questions.length) loadQuizQuestion();
-            else finishQuiz();
+            loadQuizQuestion();
         }
 
         function finishQuiz() {
             isQuizActive = false;
             document.getElementById('quiz-game').innerHTML = `
                 <div class="section-card text-center py-10">
-                    <h2 class="text-xl font-bold text-text-main mb-2 font-sans">퀴즈 종료!</h2>
-                    <p class="text-lg mb-6 font-sans">Total Score: <span class="text-primary font-bold">${quizState.score * 10}</span> / ${quizState.questions.length * 10}</p>
+                    <h2 class="text-xl font-bold text-text-main mb-2 font-sans">Quiz Completed!</h2>
+                    <p class="text-lg mb-6 font-sans">Score: <span class="text-primary font-bold">${quizState.score}</span> / ${quizState.questions.length}</p>
                     <div class="flex justify-center gap-3">
-                        <button onclick="window.location.reload()" class="btn btn-pri font-sans">다시 하기</button>
-                        <button onclick="switchTab('mistake')" class="btn btn-sec font-sans">오답 확인</button>
+                        <button onclick="window.location.reload()" class="btn btn-pri font-sans">Restart</button>
+                        <button onclick="switchTab('notebook')" class="btn btn-sec font-sans">Review Notebook</button>
                     </div>
                 </div>
             `;
         }
 
-        // --- List & Mistake ---
+        // --- List ---
         function toggleSort() {
             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
             const btn = document.getElementById('sortBtn');
@@ -847,43 +795,40 @@
             renderListTable();
         }
 
+        function toggleFullscreenList() {
+            const el = document.getElementById('listSection');
+            if (!document.fullscreenElement) {
+                if(el.requestFullscreen) el.requestFullscreen();
+                el.classList.add('h-screen', 'overflow-y-auto');
+                el.querySelector('.overflow-x-auto').style.maxHeight = 'none';
+            } else {
+                if(document.exitFullscreen) document.exitFullscreen();
+                el.classList.remove('h-screen', 'overflow-y-auto');
+                el.querySelector('.overflow-x-auto').style.maxHeight = '500px';
+            }
+        }
+
         function renderListTable() {
             const tbody = document.getElementById('wordListBody');
             if(!tbody) return;
-            
-            const query = document.getElementById('searchInput').value.trim();
-            const queryLower = query.toLowerCase();
-            
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
             tbody.innerHTML = '';
             
-            // 1. Filter
             let filtered = allWords.filter(word => {
                 if(!query) return true;
-                return word.term.toLowerCase().includes(queryLower) || 
+                return word.term.toLowerCase().includes(query) || 
                        word.koTerm.includes(query) || 
-                       word.def.toLowerCase().includes(queryLower);
+                       word.def.toLowerCase().includes(query);
             });
 
-            // 2. Sort
             filtered.sort((a, b) => {
-                if (query) {
-                    const aExact = a.term.toLowerCase() === queryLower;
-                    const bExact = b.term.toLowerCase() === queryLower;
-                    if(aExact && !bExact) return -1;
-                    if(!aExact && bExact) return 1;
-
-                    const aTermHas = a.term.toLowerCase().includes(queryLower);
-                    const bTermHas = b.term.toLowerCase().includes(queryLower);
-                    if(aTermHas && !bTermHas) return -1;
-                    if(!aTermHas && bTermHas) return 1;
-                }
                 const compare = a.term.localeCompare(b.term);
                 return sortOrder === 'asc' ? compare : -compare;
             });
 
-            // 3. Render
             filtered.forEach((word, idx) => {
                 const isMemorized = appState.memorized[word.term];
+                const isSaved = appState.notebook.includes(word.term);
                 const tr = document.createElement('tr');
                 if(isMemorized) tr.className = "bg-green-500/5";
                 
@@ -894,81 +839,36 @@
                 };
 
                 tr.innerHTML = `
-                    <td class="px-2 py-3 text-center text-text-dim text-xs font-sans">${idx + 1}</td>
+                    <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide">${idx + 1}</td>
                     <td class="px-2 py-3 text-center">
                         <input type="checkbox" ${isMemorized ? 'checked' : ''} class="w-4 h-4 accent-primary cursor-pointer rounded"
-                            onchange="toggleListMemorized('${word.term.replace(/'/g, "\\'")}', this.checked, this)">
+                            onchange="toggleMemorized('${word.term.replace(/'/g, "\\'")}', this.checked); renderListTable();">
+                    </td>
+                    <td class="px-2 py-3 text-center cursor-pointer" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
+                        <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim'}"></i>
                     </td>
                     <td class="px-2 py-3 align-top">
                         <div class="font-bold text-text-main font-sans text-sm">${highlight(word.term)}</div>
-                        <div class="text-xs text-text-sub font-sans opacity-80">${highlight(word.koTerm)}</div>
+                        <div class="text-xs font-bold text-blue-400 font-kor mt-0.5">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-2 py-3 align-top">
                         <div class="text-xs text-text-sub font-sans mb-1 leading-relaxed">${highlight(word.def)}</div>
-                        <div class="text-xs text-text-dim font-sans opacity-80 leading-relaxed">${highlight(word.koDef)}</div>
+                        <div class="text-xs text-text-dim font-kor opacity-80 leading-relaxed">${highlight(word.koDef)}</div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
         
-        function toggleListMemorized(term, checked, checkboxEl) {
-            toggleMemorized(term, checked);
-            const row = checkboxEl.closest('tr');
-            if (checked) row.classList.add('bg-green-500/5');
-            else row.classList.remove('bg-green-500/5');
+        function toggleMemorized(term, checked) {
+            if (checked) appState.memorized[term] = true;
+            else delete appState.memorized[term];
+            saveData();
+            updateProgress();
         }
 
-        function renderMistakes() {
-            const container = document.getElementById('mistake-container');
-            const emptyState = document.getElementById('mistake-empty');
-            container.innerHTML = '';
-            
-            if (appState.mistakes.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-            
-            appState.mistakes.forEach(mistakeTerm => {
-                const word = allWords.find(w => w.term === mistakeTerm);
-                if (!word) return;
-                
-                const card = document.createElement('div');
-                card.className = "section-card p-4 flex justify-between items-center mb-0 hover:border-red-500/30 transition-colors";
-                card.innerHTML = `
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
-                            <span class="text-xs text-text-dim font-sans">${word.koTerm}</span>
-                        </div>
-                        <p class="text-sm text-text-sub font-sans">${word.def}</p>
-                    </div>
-                    <button onclick="removeMistake('${mistakeTerm}')" class="ml-4 w-10 h-10 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
-                        <i class="fa-solid fa-check"></i>
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-        
-        function removeMistake(term) {
-            appState.mistakes = appState.mistakes.filter(t => t !== term);
-            saveData();
-            renderMistakes();
-        }
-        
-        function clearMistakes() {
-            if (confirm("정말 비우시겠습니까?")) {
-                appState.mistakes = [];
-                saveData();
-                renderMistakes();
-            }
-        }
-        
         function resetData() {
-            if(confirm("모든 학습 기록(암기 상태, 오답 노트)을 초기화하시겠습니까?")) {
+            if(confirm("모든 학습 기록(암기 상태, 단어장)을 초기화하시겠습니까?")) {
                 localStorage.removeItem('engVocabState');
                 location.reload();
             }
