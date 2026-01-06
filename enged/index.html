@@ -1,1 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어교육론 핵심 어휘 학습</title>
+    <!-- Tailwind CSS (스타일링) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (아이콘) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        /* 플래시카드 뒤집기 효과 */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
 
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- 헤더 & 네비게이션 -->
+    <header class="bg-indigo-600 text-white shadow-lg z-10">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-0">
+                <h1 class="text-xl font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i> 영어교육론 어휘 마스터
+                </h1>
+                <div class="text-sm mt-2 md:mt-0 opacity-90">
+                    데이터 소스: 영어.csv
+                </div>
+            </div>
+            
+            <!-- 학습 게이지 -->
+            <div class="mt-4 bg-indigo-800 rounded-full h-4 relative overflow-hidden w-full max-w-2xl mx-auto">
+                <div id="progressBar" class="bg-green-400 h-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                <div id="progressText" class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white drop-shadow-md">
+                    로딩 중...
+                </div>
+            </div>
+
+            <!-- 메뉴 탭 -->
+            <nav class="flex justify-center gap-2 mt-4 overflow-x-auto pb-1">
+                <button onclick="switchTab('dashboard')" class="nav-btn bg-indigo-700 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap active-tab" id="btn-dashboard">
+                    <i class="fa-solid fa-chart-pie mr-1"></i> 대시보드
+                </button>
+                <button onclick="switchTab('flashcard')" class="nav-btn bg-indigo-700 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap" id="btn-flashcard">
+                    <i class="fa-solid fa-layer-group mr-1"></i> 플래시카드
+                </button>
+                <button onclick="switchTab('quiz')" class="nav-btn bg-indigo-700 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap" id="btn-quiz">
+                    <i class="fa-solid fa-circle-question mr-1"></i> 퀴즈
+                </button>
+                <button onclick="switchTab('list')" class="nav-btn bg-indigo-700 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap" id="btn-list">
+                    <i class="fa-solid fa-list mr-1"></i> 전체 목록
+                </button>
+                <button onclick="switchTab('mistake')" class="nav-btn bg-indigo-700 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap" id="btn-mistake">
+                    <i class="fa-solid fa-book-open-reader mr-1"></i> 오답노트
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main id="mainContent" class="flex-1 overflow-y-auto p-4 md:p-6 container mx-auto max-w-4xl relative">
+        
+        <!-- 로딩/에러 화면 -->
+        <div id="loadingState" class="flex flex-col items-center justify-center h-full text-gray-500">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-indigo-500"></i>
+            <p class="text-lg">데이터를 불러오는 중입니다...</p>
+            <p class="text-sm mt-2 text-gray-400">GitHub Pages 또는 로컬 서버 환경인지 확인해주세요.</p>
+        </div>
+
+        <!-- 1. 대시보드 -->
+        <div id="view-dashboard" class="hidden fade-in space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                    <h3 class="text-gray-500 text-sm font-medium">전체 단어</h3>
+                    <p class="text-3xl font-bold text-gray-800 mt-2" id="statTotal">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                    <h3 class="text-gray-500 text-sm font-medium">암기 완료</h3>
+                    <p class="text-3xl font-bold text-green-600 mt-2" id="statMemorized">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500">
+                    <h3 class="text-gray-500 text-sm font-medium">오답 노트</h3>
+                    <p class="text-3xl font-bold text-red-600 mt-2" id="statMistakes">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fa-solid fa-bullhorn text-indigo-500 mr-2"></i> 학습 가이드
+                </h2>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>플래시카드:</strong> 카드를 클릭해 뒤집으며 용어와 정의를 학습하세요. 아는 단어는 체크하여 진행도를 높이세요.</li>
+                    <li><strong>퀴즈:</strong> 4지 선다 문제를 풉니다. 틀린 문제는 자동으로 <strong>오답노트</strong>에 추가됩니다.</li>
+                    <li><strong>전체 목록:</strong> 모든 단어를 한눈에 보고 학습 상태를 관리할 수 있습니다.</li>
+                    <li><strong>데이터 저장:</strong> 학습 기록은 브라우저에 자동 저장되므로 나중에 이어서 학습할 수 있습니다.</li>
+                </ul>
+                <div class="mt-6 flex justify-center">
+                    <button onclick="switchTab('flashcard')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-bold shadow transition transform hover:-translate-y-1">
+                        학습 시작하기
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center text-sm text-gray-400 mt-10">
+                <button onclick="resetData()" class="text-red-400 hover:text-red-600 underline">
+                    <i class="fa-solid fa-trash-can"></i> 모든 학습 데이터 초기화
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. 플래시카드 -->
+        <div id="view-flashcard" class="hidden fade-in flex flex-col items-center h-full justify-center pb-20">
+            <div class="w-full max-w-lg mb-4 flex justify-between items-center">
+                <span class="text-sm font-bold text-gray-500">Card <span id="fc-index">1</span> / <span id="fc-total">0</span></span>
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="fc-memorized-check" class="w-5 h-5 text-green-600 rounded focus:ring-green-500 border-gray-300">
+                    <span class="text-sm font-medium text-gray-700">암기 완료</span>
+                </label>
+            </div>
+
+            <!-- 카드 영역 -->
+            <div class="group w-full max-w-lg h-80 perspective-1000 cursor-pointer" onclick="flipCard()">
+                <div id="flashcard-inner" class="relative w-full h-full transition-all duration-500 transform-style-3d shadow-xl rounded-2xl">
+                    <!-- 앞면 (영어 용어) -->
+                    <div class="absolute w-full h-full bg-white rounded-2xl flex flex-col items-center justify-center p-6 backface-hidden border-2 border-indigo-100">
+                        <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-2">Term</span>
+                        <h2 id="fc-front" class="text-3xl md:text-4xl font-bold text-gray-800 text-center break-words">Loading...</h2>
+                        <p class="text-gray-400 text-sm mt-4 absolute bottom-6"><i class="fa-solid fa-arrow-rotate-right"></i> 클릭해서 뜻 확인</p>
+                    </div>
+                    <!-- 뒷면 (뜻) -->
+                    <div class="absolute w-full h-full bg-indigo-50 rounded-2xl flex flex-col items-center justify-center p-6 backface-hidden rotate-y-180 border-2 border-indigo-200 overflow-y-auto">
+                        <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Definition</span>
+                        <h3 id="fc-back-ko" class="text-xl font-bold text-indigo-800 mb-2 text-center"></h3>
+                        <p id="fc-back-def" class="text-gray-700 text-center text-sm italic mb-2"></p>
+                        <p id="fc-back-def-ko" class="text-gray-800 text-center font-medium"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 컨트롤 버튼 -->
+            <div class="flex gap-4 mt-8">
+                <button onclick="prevCard()" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full hover:bg-gray-100 shadow-sm transition">
+                    <i class="fa-solid fa-chevron-left"></i> 이전
+                </button>
+                <button onclick="nextCard()" class="bg-indigo-600 text-white px-8 py-3 rounded-full hover:bg-indigo-700 shadow-md transition font-bold">
+                    다음 <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+            
+             <div class="mt-4 flex gap-2">
+                 <button onclick="speakTerm()" class="text-gray-500 hover:text-indigo-600 text-sm">
+                    <i class="fa-solid fa-volume-high"></i> 발음 듣기
+                 </button>
+            </div>
+        </div>
+
+        <!-- 3. 퀴즈 -->
+        <div id="view-quiz" class="hidden fade-in max-w-2xl mx-auto">
+            <div id="quiz-start" class="text-center py-10">
+                <i class="fa-solid fa-puzzle-piece text-6xl text-indigo-300 mb-6"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">단어 퀴즈</h2>
+                <p class="text-gray-600 mb-8">무작위로 출제되는 정의를 보고 올바른 용어를 맞혀보세요.<br>틀린 문제는 자동으로 오답노트에 저장됩니다.</p>
+                <button onclick="startQuiz()" class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 shadow font-bold text-lg">
+                    퀴즈 시작
+                </button>
+            </div>
+
+            <div id="quiz-game" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-bold text-indigo-600">Q. <span id="quiz-progress">1/10</span></span>
+                    <span id="quiz-score" class="text-sm font-bold text-gray-600">점수: 0</span>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md mb-6 border-t-4 border-indigo-500">
+                    <p class="text-xs text-gray-400 mb-2 uppercase font-bold">Definition</p>
+                    <p id="quiz-question" class="text-lg md:text-xl font-medium text-gray-800 leading-relaxed">
+                        문제 내용이 여기에 표시됩니다.
+                    </p>
+                </div>
+
+                <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                    <!-- 보기 버튼들이 동적으로 생성됨 -->
+                </div>
+
+                <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-lg text-center font-bold"></div>
+
+                <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden w-full mt-4 bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-700 transition">
+                    다음 문제 <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 4. 전체 목록 -->
+        <div id="view-list" class="hidden fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
+                <h2 class="text-xl font-bold">전체 단어 목록</h2>
+                <div class="relative w-full md:w-64">
+                    <input type="text" id="searchInput" placeholder="검색 (영어, 한글...)" onkeyup="renderListTable()" 
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10 text-center">상태</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">용어 (Term)</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">정의 (Definition)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wordListBody" class="bg-white divide-y divide-gray-200 text-sm">
+                            <!-- 데이터 로드됨 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 오답 노트 -->
+        <div id="view-mistake" class="hidden fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-red-600"><i class="fa-solid fa-triangle-exclamation"></i> 오답 노트</h2>
+                <button onclick="clearMistakes()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-gray-600 transition">
+                    목록 비우기
+                </button>
+            </div>
+
+            <div id="mistake-container" class="grid grid-cols-1 gap-4">
+                <!-- 오답 카드가 들어감 -->
+            </div>
+            
+            <div id="mistake-empty" class="hidden flex flex-col items-center justify-center py-20 text-gray-400">
+                <i class="fa-regular fa-face-smile text-5xl mb-4"></i>
+                <p>오답 노트가 비어있습니다.</p>
+                <p class="text-sm">퀴즈에서 틀린 단어가 여기에 자동으로 추가됩니다.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 py-4 text-center text-xs">
+        <p>GitHub Pages English Vocabulary Learning App</p>
+    </footer>
+
+    <!-- 알림 모달 (Toast) -->
+    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        메시지
+    </div>
+
+    <script>
+        // --- 1. 전역 상태 변수 ---
+        let allWords = []; // CSV 파싱 데이터 {term, koTerm, def, koDef}
+        let appState = {
+            memorized: {}, // { "term": true }
+            mistakes: [], // ["term", "term"]
+            currentIndex: 0
+        };
+        
+        // 퀴즈 상태
+        let quizState = {
+            questions: [],
+            currentQIndex: 0,
+            score: 0
+        };
+
+        // --- 2. 초기화 및 CSV 로드 ---
+        window.onload = async function() {
+            loadLocalData();
+            await fetchCSV();
+            updateDashboard();
+            switchTab('dashboard'); // 기본 탭
+        };
+
+        // 로컬 스토리지 데이터 불러오기
+        function loadLocalData() {
+            const saved = localStorage.getItem('engVocabState');
+            if (saved) {
+                appState = JSON.parse(saved);
+            }
+        }
+
+        // 로컬 스토리지 데이터 저장하기
+        function saveData() {
+            localStorage.setItem('engVocabState', JSON.stringify(appState));
+            updateProgress();
+            updateDashboard();
+        }
+
+        // CSV 파일 Fetch 및 파싱
+        async function fetchCSV() {
+            try {
+                // 같은 폴더의 '영어.csv'를 가져옴
+                const response = await fetch('./영어.csv');
+                if (!response.ok) throw new Error("CSV 파일을 찾을 수 없습니다.");
+                
+                const text = await response.text();
+                parseCSV(text);
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                updateProgress();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('loadingState').innerHTML = `
+                    <div class="text-center text-red-500">
+                        <i class="fa-solid fa-circle-exclamation text-4xl mb-2"></i>
+                        <p>데이터 로드 실패</p>
+                        <p class="text-sm text-gray-500 mt-2">${error.message}</p>
+                        <p class="text-xs text-gray-400 mt-4">index.html과 영어.csv가 같은 폴더에 있는지,<br>또는 웹 서버(GitHub Pages)를 통해 실행 중인지 확인하세요.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // CSV 파싱 로직 (따옴표 처리 포함)
+        function parseCSV(text) {
+            const lines = text.split(/\r\n|\n/);
+            const headers = lines[0].split(','); // 단순 헤더 분리 (헤더에는 쉼표 없다고 가정)
+            
+            allWords = [];
+            
+            // CSV 파싱 정규식 (따옴표 안의 쉼표 처리)
+            const regex = /(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))/g;
+            
+            // 헤더 줄 제외하고 처리
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                // 간단한 파서: 쉼표로 분리하되 따옴표 안은 무시
+                // 주의: 이 방식은 간단한 CSV에는 작동하지만 매우 복잡한 케이스에는 한계가 있을 수 있음
+                // 여기서는 사용자가 제공한 형식을 기반으로 커스텀 파싱
+                
+                let matches = [];
+                let match = '';
+                let inQuotes = false;
+                
+                for (let char of line) {
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        matches.push(cleanCSVField(match));
+                        match = '';
+                    } else {
+                        match += char;
+                    }
+                }
+                matches.push(cleanCSVField(match)); // 마지막 필드
+
+                if (matches.length >= 4) {
+                    allWords.push({
+                        term: matches[0],
+                        koTerm: matches[1],
+                        def: matches[2],
+                        koDef: matches[3]
+                    });
+                }
+            }
+            console.log(`Loaded ${allWords.length} words.`);
+        }
+
+        function cleanCSVField(text) {
+            let clean = text.trim();
+            if (clean.startsWith('"') && clean.endsWith('"')) {
+                clean = clean.substring(1, clean.length - 1);
+            }
+            // 이중 따옴표(")를 하나로 변경
+            return clean.replace(/""/g, '"');
+        }
+
+        // --- 3. UI 제어 및 탭 전환 ---
+        function switchTab(tabName) {
+            // 모든 탭 컨텐츠 숨기기
+            document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            
+            // 선택된 탭 보이기
+            const target = document.getElementById(`view-${tabName}`);
+            if (target) target.classList.remove('hidden');
+            
+            // 네비게이션 버튼 스타일 업데이트
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-900', 'ring-2', 'ring-offset-2', 'ring-indigo-500'); 
+                btn.classList.add('bg-indigo-700');
+            });
+            const activeBtn = document.getElementById(`btn-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-indigo-700');
+                activeBtn.classList.add('bg-indigo-900', 'ring-2', 'ring-offset-2', 'ring-indigo-500');
+            }
+
+            // 탭별 초기화 로직
+            if (tabName === 'dashboard') updateDashboard();
+            if (tabName === 'flashcard') loadFlashcard(appState.currentIndex);
+            if (tabName === 'list') renderListTable();
+            if (tabName === 'mistake') renderMistakes();
+            if (tabName === 'quiz') {
+                document.getElementById('quiz-start').classList.remove('hidden');
+                document.getElementById('quiz-game').classList.add('hidden');
+            }
+        }
+
+        function updateProgress() {
+            const total = allWords.length;
+            if (total === 0) return;
+            
+            const memorizedCount = Object.keys(appState.memorized).length;
+            const percentage = Math.round((memorizedCount / total) * 100);
+            
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressText').innerText = `학습 진행률: ${percentage}% (${memorizedCount}/${total})`;
+            
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statMemorized').innerText = memorizedCount;
+            document.getElementById('statMistakes').innerText = appState.mistakes.length;
+        }
+        
+        function updateDashboard() {
+            updateProgress();
+        }
+
+        // --- 4. 플래시카드 기능 ---
+        function loadFlashcard(index) {
+            if (allWords.length === 0) return;
+            
+            // 범위 체크
+            if (index < 0) index = 0;
+            if (index >= allWords.length) index = allWords.length - 1;
+            
+            appState.currentIndex = index;
+            const word = allWords[index];
+            
+            // UI 업데이트
+            document.getElementById('fc-index').innerText = index + 1;
+            document.getElementById('fc-total').innerText = allWords.length;
+            
+            document.getElementById('fc-front').innerText = word.term;
+            document.getElementById('fc-back-ko').innerText = word.koTerm;
+            document.getElementById('fc-back-def').innerText = word.def;
+            document.getElementById('fc-back-def-ko').innerText = word.koDef;
+            
+            // 카드 상태 (앞면으로 초기화)
+            const cardInner = document.getElementById('flashcard-inner');
+            cardInner.classList.remove('rotate-y-180');
+            
+            // 암기 체크박스 상태 동기화
+            const checkbox = document.getElementById('fc-memorized-check');
+            checkbox.checked = !!appState.memorized[word.term];
+            
+            // 체크박스 이벤트 리스너 재설정 (중복 방지)
+            checkbox.onclick = function() {
+                toggleMemorized(word.term, this.checked);
+            };
+        }
+
+        function flipCard() {
+            const cardInner = document.getElementById('flashcard-inner');
+            cardInner.classList.toggle('rotate-y-180');
+        }
+
+        function nextCard() {
+            if (appState.currentIndex < allWords.length - 1) {
+                loadFlashcard(appState.currentIndex + 1);
+            } else {
+                showToast("마지막 카드입니다.");
+            }
+        }
+
+        function prevCard() {
+            if (appState.currentIndex > 0) {
+                loadFlashcard(appState.currentIndex - 1);
+            } else {
+                showToast("첫 번째 카드입니다.");
+            }
+        }
+        
+        function toggleMemorized(term, isMemorized) {
+            if (isMemorized) {
+                appState.memorized[term] = true;
+                showToast("암기 완료!");
+            } else {
+                delete appState.memorized[term];
+            }
+            saveData();
+        }
+        
+        function speakTerm() {
+            const term = document.getElementById('fc-front').innerText;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(term);
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showToast("이 브라우저는 음성 합성을 지원하지 않습니다.");
+            }
+        }
+
+        // --- 5. 퀴즈 기능 ---
+        function startQuiz() {
+            if (allWords.length < 4) {
+                alert("데이터가 부족하여 퀴즈를 시작할 수 없습니다. (최소 4개 필요)");
+                return;
+            }
+            
+            // 10문제 무작위 추출
+            const quizCount = Math.min(10, allWords.length);
+            const shuffled = [...allWords].sort(() => 0.5 - Math.random());
+            quizState.questions = shuffled.slice(0, quizCount);
+            quizState.currentQIndex = 0;
+            quizState.score = 0;
+            
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const currentQ = quizState.questions[quizState.currentQIndex];
+            
+            document.getElementById('quiz-progress').innerText = `${quizState.currentQIndex + 1}/${quizState.questions.length}`;
+            document.getElementById('quiz-question').innerHTML = `<span class="text-indigo-600 font-bold">[${currentQ.koTerm}]</span><br>${currentQ.def}`;
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+            
+            // 보기 생성 (정답 1 + 오답 3)
+            let options = [currentQ];
+            while (options.length < 4) {
+                const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+                if (!options.includes(randomWord)) {
+                    options.push(randomWord);
+                }
+            }
+            
+            // 보기 섞기
+            options.sort(() => 0.5 - Math.random());
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center";
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full border-2 border-gray-300 mr-3 flex items-center justify-center"></span> <span class="font-medium">${opt.term}</span>`;
+                btn.onclick = () => checkAnswer(opt, currentQ, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, btnElement) {
+            // 이미 답을 고른 경우 무시
+            if (!document.getElementById('quiz-next-btn').classList.contains('hidden')) return;
+            
+            const feedback = document.getElementById('quiz-feedback');
+            const options = document.getElementById('quiz-options').children;
+            
+            feedback.classList.remove('hidden');
+            
+            // 모든 버튼 비활성화 및 정답 표시
+            for (let btn of options) {
+                btn.disabled = true;
+                if (btn.innerText.includes(correct.term)) {
+                    btn.classList.add('bg-green-100', 'border-green-500');
+                    btn.querySelector('span:first-child').innerHTML = '<i class="fa-solid fa-check text-green-600"></i>';
+                    btn.querySelector('span:first-child').classList.add('border-green-500');
+                }
+            }
+
+            if (selected.term === correct.term) {
+                // 정답
+                quizState.score++;
+                feedback.className = "mt-4 p-4 rounded-lg text-center font-bold bg-green-100 text-green-700";
+                feedback.innerHTML = '<i class="fa-regular fa-face-smile"></i> 정답입니다!';
+                document.getElementById('quiz-score').innerText = `점수: ${quizState.score * 10}`;
+            } else {
+                // 오답
+                btnElement.classList.add('bg-red-100', 'border-red-500');
+                btnElement.querySelector('span:first-child').innerHTML = '<i class="fa-solid fa-xmark text-red-600"></i>';
+                btnElement.querySelector('span:first-child').classList.add('border-red-500');
+                
+                feedback.className = "mt-4 p-4 rounded-lg text-center font-bold bg-red-100 text-red-700";
+                feedback.innerHTML = `<i class="fa-regular fa-face-frown"></i> 오답입니다. 정답은 <strong>${correct.term}</strong> 입니다.`;
+                
+                // 오답 노트 추가
+                addToMistakes(correct.term);
+            }
+            
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            quizState.currentQIndex++;
+            if (quizState.currentQIndex < quizState.questions.length) {
+                loadQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            const container = document.getElementById('quiz-game');
+            container.innerHTML = `
+                <div class="text-center py-10">
+                    <h2 class="text-3xl font-bold mb-4">퀴즈 종료!</h2>
+                    <p class="text-xl mb-6">총점: <span class="text-indigo-600 font-bold">${quizState.score * 10}</span> / ${quizState.questions.length * 10}</p>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="startQuiz()" class="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700">다시 하기</button>
+                        <button onclick="switchTab('mistake')" class="bg-red-500 text-white px-6 py-2 rounded shadow hover:bg-red-600">오답노트 확인</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToMistakes(term) {
+            if (!appState.mistakes.includes(term)) {
+                appState.mistakes.push(term);
+                saveData();
+                showToast("오답노트에 추가되었습니다.");
+            }
+        }
+
+        // --- 6. 목록 및 오답노트 기능 ---
+        function renderListTable() {
+            const tbody = document.getElementById('wordListBody');
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            tbody.innerHTML = '';
+            
+            allWords.forEach((word, index) => {
+                if (word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.def.toLowerCase().includes(query)) {
+                    const isMemorized = appState.memorized[word.term];
+                    const tr = document.createElement('tr');
+                    tr.className = isMemorized ? "bg-green-50" : "";
+                    
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
+                            <input type="checkbox" ${isMemorized ? 'checked' : ''} 
+                                class="w-4 h-4 text-green-600 rounded focus:ring-green-500 cursor-pointer"
+                                onchange="toggleListMemorized('${word.term.replace(/'/g, "\\'")}', this.checked, this)">
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="text-sm font-medium text-gray-900">${word.term}</div>
+                            <div class="text-xs text-gray-500">${word.koTerm}</div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="text-sm text-gray-700 line-clamp-2">${word.def}</div>
+                            <div class="text-xs text-gray-500 mt-1 line-clamp-1">${word.koDef}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+        }
+        
+        function toggleListMemorized(term, checked, checkboxEl) {
+            toggleMemorized(term, checked);
+            // 행 스타일 즉시 변경
+            const row = checkboxEl.closest('tr');
+            if (checked) row.classList.add('bg-green-50');
+            else row.classList.remove('bg-green-50');
+        }
+
+        function renderMistakes() {
+            const container = document.getElementById('mistake-container');
+            const emptyState = document.getElementById('mistake-empty');
+            
+            container.innerHTML = '';
+            
+            if (appState.mistakes.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+            
+            appState.mistakes.forEach(mistakeTerm => {
+                const word = allWords.find(w => w.term === mistakeTerm);
+                if (!word) return;
+                
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-lg shadow border-l-4 border-red-500 flex justify-between items-center";
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg text-gray-800">${word.term} <span class="text-sm text-gray-500 font-normal">(${word.koTerm})</span></h3>
+                        <p class="text-sm text-gray-600 mt-1">${word.def}</p>
+                    </div>
+                    <button onclick="removeMistake('${mistakeTerm}')" class="ml-4 text-gray-400 hover:text-red-500 transition" title="삭제">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function removeMistake(term) {
+            appState.mistakes = appState.mistakes.filter(t => t !== term);
+            saveData();
+            renderMistakes();
+            showToast("오답노트에서 삭제되었습니다.");
+        }
+        
+        function clearMistakes() {
+            if (confirm("오답노트를 정말 비우시겠습니까?")) {
+                appState.mistakes = [];
+                saveData();
+                renderMistakes();
+            }
+        }
+        
+        function resetData() {
+            if(confirm("모든 학습 기록(암기 상태, 오답 노트)이 삭제됩니다. 계속하시겠습니까?")) {
+                localStorage.removeItem('engVocabState');
+                location.reload();
+            }
+        }
+
+        // --- 유틸리티 ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0)';
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 20px)';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
