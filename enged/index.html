@@ -8,10 +8,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="EngEd">
+    <meta name="apple-mobile-web-app-title" content="Enged.">
     
-    <title>EngEd.</title>
+    <title>Enged.</title>
     <meta name="theme-color" content="#050505" />
+    
+    <!-- Favicon (WebHub Original) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%271746%27%20height%3D%271745%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20xml%3Aspace%3D%27preserve%27%20overflow%3D%27hidden%27%3E%3Cdefs%3E%3CclipPath%20id%3D%27clip0%27%3E%3Crect%20x%3D%271327%27%20y%3D%27365%27%20width%3D%271746%27%20height%3D%271745%27/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%27url(%2523clip0)%27%20transform%3D%27translate(-1327%20-365)%27%3E%3Cpath%20d%3D%27M2311.86%201126.81C2291.45%201126.1%202270.58%201128.5%202249.85%201134.37%202139.26%201165.66%202074.17%201283.56%202104.49%201397.72%202165.11%201626.04%202393.55%201760.4%202614.74%201697.83%202808.27%201643.07%202932.12%201455.68%202919.44%201256.73L2914.05%201223.69%202911.9%201230.96%202911.08%201256.02C2900.38%201338.81%202843.04%201411%202760.1%201434.47%202649.5%201465.76%202535.28%201398.58%202504.97%201284.42%202480.35%201191.66%202400.32%201129.92%202311.86%201126.81ZM2004.92%20762.177C1728%20772.703%201498.32%20998.253%201480.1%201289.86%201470.39%201445.38%201584.65%201579.59%201735.31%201589.62%201885.97%201599.65%202015.98%201481.7%202025.7%201326.18%202035.42%201170.66%202165.43%201052.71%202316.09%201062.74%202410.26%201069.01%202490.2%201123.78%202534.55%201201.96L2541.96%201215.66C2546.43%201224.15%202552.28%201237.53%202562.41%201252.11L2568.21%201259%202567.3%201248.26C2532.46%20988.233%202324.54%20780.535%202060.89%20762.983%202042.06%20761.729%202023.38%20761.475%202004.92%20762.177ZM1327%20365%203073%20365%203073%202110%201327%202110Z%27%20fill%3D%27%23161B22%27%20fill-rule%3D%27evenodd%27/%3E%3C/g%3E%3C/svg%3E" />
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,6 +38,7 @@
                         surface: 'var(--glass-surface)',
                         'text-main': 'var(--text-main)',
                         'text-sub': 'var(--text-sub)',
+                        'text-def': 'var(--text-def)',
                         'glass-border': 'var(--glass-border)',
                         'highlight': '#fbbf24',
                     },
@@ -61,6 +65,7 @@
             --text-main: #f1f5f9;
             --text-sub: #94a3b8;
             --text-dim: #64748b;
+            --text-def: #cbd5e1; /* Lighter for dark mode definition */
             --max-w: 1000px; 
             --header-max-w: 1100px;
             --radius-md: 22px;
@@ -81,6 +86,7 @@
             --text-main: #1e293b;
             --text-sub: #64748b;
             --text-dim: #94a3b8;
+            --text-def: #374151; /* Darker for light mode definition */
             color-scheme: light;
         }
 
@@ -158,7 +164,9 @@
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
         .chip-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; width: 100%; justify-content: flex-start; }
         .chip-nav::-webkit-scrollbar { display: none; }
+        
         .chip { flex: 1; white-space: nowrap; text-align: center; padding: 10px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; background: transparent; color: var(--text-sub); cursor: pointer; transition: all 0.2s; }
+        .chip:hover { background: var(--glass-highlight); }
         .chip.active { background: var(--glass-highlight); color: var(--primary); }
 
         /* Flashcard */
@@ -177,33 +185,21 @@
             background: var(--glass-surface); 
             border: 1px solid var(--glass-border); 
             display: flex; flex-direction: column; 
-            /* Padding removed for inner scroll box to fill */
-            padding: 24px;
+            padding: 24px; 
+            text-align: center; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
             overflow: hidden; 
         }
         .flashcard-face.back { transform: rotateY(180deg); background: rgba(59, 130, 246, 0.1); border-color: var(--primary); }
         html[data-theme="light"] .flashcard-face.back { background: #eff6ff; }
 
-        /* Inner Scroll Box for text */
-        .fc-scroll-box {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Center if content is small */
-            -webkit-overflow-scrolling: touch;
-            /* Allow text selection inside */
+        .fc-content { 
+            flex: 1; width: 100%; overflow-y: auto; display: flex; flex-direction: column; 
+            justify-content: flex-start; 
+            -webkit-overflow-scrolling: touch; 
             user-select: text; -webkit-user-select: text;
         }
-        /* When content is tall, justify-content: center behaves like top in flex col? 
-           Need to ensure it starts at top if scrolling. 
-           We use my-auto approach in inner content wrapper. */
-        
-        .fc-scroll-box::-webkit-scrollbar { width: 4px; }
-        .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
+        .fc-content::-webkit-scrollbar { display: none; }
 
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
@@ -224,6 +220,19 @@
         thead th { position: sticky; top: 0; z-index: 10; background-color: var(--bg-dark); }
         html[data-theme="light"] thead th { background-color: #ffffff; }
 
+        /* Print Styles */
+        @media print {
+            header, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, .section-card > *:not(#listSection) { display: none !important; }
+            body { background: white; color: black; overflow: visible; }
+            #listSection { height: auto !important; overflow: visible !important; border: none; box-shadow: none; }
+            #listContainer { max-height: none !important; overflow: visible !important; }
+            #wordListBody tr { break-inside: avoid; }
+            main { padding: 0; max-width: 100%; }
+            table { width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; color: black !important; }
+            .section-card { margin: 0; padding: 0; }
+        }
+
         /* Mobile Tweaks */
         @media (max-width: 480px) {
             :root { --header-h: 60px; }
@@ -239,7 +248,6 @@
             
             .mobile-hide { display: none; }
             table th, table td { padding: 8px 4px; font-size: 13px; }
-            /* Adjusted Widths for List */
             .term-col { width: 20% !important; }
             .def-col { width: auto !important; }
         }
@@ -256,9 +264,9 @@
     <!-- Header -->
     <header class="no-select">
         <div class="logo" onclick="location.reload()">
-            <span class="text-xl font-bold font-sans">EngEd.</span>
-            <span class="text-[10px] text-text-sub mx-1 opacity-70 font-sans" style="transform: translateY(1px);">powered by</span>
-            <span class="text-[10px] font-logo text-text-sub opacity-90" style="transform: translateY(1px);">WebHub</span>
+            <span class="text-xl font-bold font-logo italic">Enged.</span>
+            <span class="text-[10px] text-text-sub mx-4 opacity-70 font-sans" style="transform: translateY(1px);">powered by</span>
+            <span class="text-[10px] font-logo text-text-sub opacity-90 italic" style="transform: translateY(1px);">WebHub</span>
         </div>
         <div class="header-tools">
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
@@ -337,13 +345,22 @@
 
             <!-- List -->
             <section class="section-card p-0 overflow-hidden flex flex-col h-[560px]" id="listSection">
-                <div class="p-3 border-b border-[var(--glass-border)] flex flex-col gap-2 bg-[var(--glass-highlight)] shrink-0">
+                <div class="p-3 border-b border-[var(--glass-border)] flex flex-col gap-2 bg-[var(--glass-highlight)] shrink-0 no-print">
                     <div class="flex items-center gap-2">
                          <i class="fa-solid fa-search text-text-dim ml-1"></i>
                          <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable()" 
                             class="flex-1 bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0">
-                         <button onclick="toggleSort()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" id="sortBtn">
-                            <i class="fa-solid fa-arrow-down-a-z mr-1"></i> 정렬
+                         <button onclick="toggleHideMemorized()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" id="hideBtn" title="암기된 단어 숨기기">
+                            <i class="fa-regular fa-eye"></i>
+                         </button>
+                         <button onclick="toggleSort()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" id="sortBtn" title="정렬">
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                         </button>
+                         <button onclick="toggleFullscreenList()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" title="전체화면">
+                            <i class="fa-solid fa-expand"></i>
+                         </button>
+                         <button onclick="window.print()" class="btn btn-sec h-8 px-3 text-xs whitespace-nowrap" title="리스트 인쇄">
+                            <i class="fa-solid fa-print"></i>
                          </button>
                     </div>
                 </div>
@@ -400,29 +417,20 @@
                 </div>
             </div>
 
-            <!-- Bottom Controls (Reordered) -->
+            <!-- Bottom Controls -->
             <div class="flex items-center gap-3 mt-8 justify-center">
-                <!-- Prev -->
                 <button onclick="prevCard()" class="btn btn-sec w-12 px-0 rounded-full" title="이전">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                
-                <!-- Shuffle -->
                 <button onclick="shuffleCards()" class="btn btn-sec w-12 px-0 rounded-full text-text-sub" title="섞기">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
-
-                <!-- Done (Check) -->
                 <button onclick="toggleMemorizedFromCard()" class="btn btn-sec w-14 h-14 rounded-full border-2 border-green-500/50 text-green-500 hover:bg-green-500 hover:text-white transition" id="fc-check-btn" title="완료">
                     <i class="fa-solid fa-check text-xl"></i>
                 </button>
-
-                <!-- Star -->
                 <button onclick="toggleNotebookFromCard()" class="btn btn-sec w-12 px-0 rounded-full text-yellow-400" id="fc-star-btn" title="중요">
                     <i class="fa-regular fa-star"></i>
                 </button>
-
-                <!-- Next -->
                 <button onclick="nextCard()" class="btn btn-pri w-12 px-0 rounded-full" title="다음">
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -456,7 +464,7 @@
             </div>
         </div>
 
-        <!-- 4. Notebook (Star) -->
+        <!-- 4. Notebook -->
         <div id="view-notebook" class="hidden fade-in-up">
             <div class="flex justify-between items-center mb-4 px-1">
                 <h2 class="text-lg font-bold text-text-main font-kor">나만의 단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
@@ -479,9 +487,9 @@
         </div>
 
         <footer class="no-select text-center py-6 text-xs text-text-sub mt-4 border-t border-[var(--glass-border)] no-print">
-            <span style="font-family: var(--font-base); font-weight: 600;">EngEd.</span>
-            <span style="font-family: var(--font-base); opacity: 0.7; margin-left: 3px; margin-right: 3px;">powered by</span>
-            <span style="font-family: var(--font-logo);">WebHub</span><br>
+            <span style="font-family: var(--font-base); font-weight: 600; font-style: italic;">Enged.</span>
+            <span style="font-family: var(--font-base); opacity: 0.7; margin-left: 6px; margin-right: 2px;">powered by</span>
+            <span style="font-family: var(--font-logo); font-style: italic;">WebHub</span><br>
             <p style="margin: 4px 0 0; opacity: 0.7;">© 2025 Seungmin Woo. All rights reserved.</p>
         </footer>
 
@@ -516,6 +524,7 @@
         let isQuizActive = false;
         let sortOrder = 'asc'; 
         let flashcardOrder = []; 
+        let hideMemorized = false;
 
         window.onload = async function() {
             loadLocalData();
@@ -641,7 +650,6 @@
             
             document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
             
-            // Sync Control Buttons
             updateFlashcardControls(word.term);
         }
 
@@ -704,7 +712,6 @@
                 appState.notebook.push(term);
             }
             saveData();
-            // Refresh list UI if visible
             const listTab = document.getElementById('view-dashboard');
             if(!listTab.classList.contains('hidden')) renderListTable();
         }
@@ -861,6 +868,13 @@
             renderListTable();
         }
 
+        function toggleHideMemorized() {
+            hideMemorized = !hideMemorized;
+            const btn = document.getElementById('hideBtn');
+            btn.innerHTML = hideMemorized ? '<i class="fa-solid fa-eye-slash text-primary"></i>' : '<i class="fa-regular fa-eye"></i>';
+            renderListTable();
+        }
+
         function toggleFullscreenList() {
             const el = document.getElementById('listSection');
             if (!document.fullscreenElement) {
@@ -881,6 +895,9 @@
             tbody.innerHTML = '';
             
             let filtered = allWords.filter(word => {
+                // If hideMemorized is true and word is memorized, skip
+                if (hideMemorized && appState.memorized[word.term]) return false;
+
                 if(!query) return true;
                 return word.term.toLowerCase().includes(query) || 
                        word.koTerm.includes(query) || 
@@ -918,11 +935,11 @@
                         <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim hover:text-yellow-400 transition'}"></i>
                     </td>
                     <td class="px-2 py-3 align-top">
-                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words">${highlight(word.term)}</div>
+                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words leading-tight">${highlight(word.term)}</div>
                         <div class="text-xs font-bold text-blue-400 font-kor mt-0.5 break-words">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-2 py-3 align-top">
-                        <div class="text-xs text-text-sub font-sans mb-1 leading-relaxed font-semibold break-words">${highlight(word.def)}</div>
+                        <div class="text-xs text-text-def font-sans mb-1 leading-relaxed font-semibold break-words">${highlight(word.def)}</div>
                         <div class="text-xs text-text-dim font-kor opacity-80 leading-relaxed break-words">${highlight(word.koDef)}</div>
                     </td>
                 `;
