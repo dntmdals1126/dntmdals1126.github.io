@@ -193,6 +193,19 @@
         .btn-pri { background: var(--primary); color: white; }
         .btn-sec { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--glass-border); }
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
+        
+        /* Button Active State (Toggle Buttons) */
+        .btn-active {
+            background-color: rgba(59, 130, 246, 0.15) !important;
+            color: var(--primary) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
+        }
+        html[data-theme="light"] .btn-active {
+            background-color: #eff6ff !important;
+            color: #2563eb !important;
+            border-color: #bfdbfe !important;
+        }
+
         .chip-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; width: 100%; justify-content: flex-start; }
         .chip-nav::-webkit-scrollbar { display: none; }
         .chip { flex: 1; white-space: nowrap; text-align: center; padding: 10px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; background: transparent; color: var(--text-sub); cursor: pointer; transition: all 0.2s; }
@@ -275,24 +288,29 @@
         .hl-text { background-color: rgba(251, 191, 36, 0.3); color: #fcd34d; border-radius: 2px; padding: 0 2px; }
         html[data-theme="light"] .hl-text { background-color: rgba(251, 191, 36, 0.4); color: #92400e; }
 
-        /* Icon with Strikethrough for Term Hide */
+        /* Icon with Strikethrough for Term Hide (Consistent Angle / ) */
         .line-through-icon { position: relative; }
         .line-through-icon::after {
             content: ''; position: absolute;
             top: 50%; left: -10%; width: 120%; height: 2px;
             background-color: currentColor;
-            transform: rotate(-45deg);
+            transform: rotate(-45deg); /* 통일된 / 방향 빗금 */
             pointer-events: none;
         }
 
-        /* Blur Logic for hiding Terms */
-        .term-hidden { 
+        /* Blur Logic for hiding Terms and Definitions */
+        .blur-target { 
             filter: blur(5px); 
             transition: filter 0.2s; 
             cursor: pointer; 
             user-select: none;
         }
-        .term-hidden:hover, .term-hidden:active { filter: blur(0); }
+        /* 데스크탑 호버 지원 */
+        @media (hover: hover) {
+            .blur-target:hover { filter: blur(0); }
+        }
+        /* 모바일 터치 시 포인터 이벤트로 제어되는 클래스 */
+        .blur-target.is-revealed { filter: blur(0) !important; }
 
         /* Sticky Header */
         thead th { position: sticky; top: 0; z-index: 10; background-color: var(--bg-dark); }
@@ -302,7 +320,7 @@
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
-            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #searchInput, .fa-search, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState { display: none !important; }
+            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState { display: none !important; }
             main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; }
             #view-dashboard { display: block !important; }
             #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: white !important; }
@@ -453,12 +471,17 @@
                          <i class="fa-solid fa-search text-text-dim ml-1"></i>
                          <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable()" 
                             class="flex-1 bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0">
+                         
                          <button onclick="toggleHideTerms()" class="btn btn-sec h-8 w-10 px-0 flex items-center justify-center text-xs whitespace-nowrap min-w-[2.5rem]" id="hideTermBtn" title="단어 가리기">
                             <i class="fa-solid fa-font" id="hideTermIcon"></i>
                          </button>
-                         <button onclick="toggleHideMemorized()" class="btn btn-sec h-8 w-10 px-0 flex items-center justify-center text-xs whitespace-nowrap min-w-[2.5rem]" id="hideBtn" title="암기된 단어 숨기기">
-                            <i class="fa-regular fa-eye"></i>
+                         <button onclick="toggleHideDefs()" class="btn btn-sec h-8 w-10 px-0 flex items-center justify-center text-xs whitespace-nowrap min-w-[2.5rem]" id="hideDefBtn" title="해설 가리기">
+                            <i class="fa-solid fa-align-left" id="hideDefIcon"></i>
                          </button>
+                         <button onclick="toggleHideMemorized()" class="btn btn-sec h-8 w-10 px-0 flex items-center justify-center text-xs whitespace-nowrap min-w-[2.5rem]" id="hideBtn" title="암기된 단어 숨기기">
+                            <i class="fa-regular fa-eye" id="hideMemIcon"></i>
+                         </button>
+                         
                          <button onclick="toggleSort()" class="btn btn-sec h-8 w-10 px-0 flex items-center justify-center text-xs whitespace-nowrap min-w-[2.5rem]" id="sortBtn" title="정렬">
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                          </button>
@@ -604,6 +627,20 @@
 
     <!-- JS Logic -->
     <script>
+        // 모바일/PC 통합: 터치하거나 마우스를 누르고 있으면 가려진 글자 임시 표시
+        document.addEventListener('pointerdown', (e) => {
+            const target = e.target.closest('.blur-target');
+            if (target) {
+                target.classList.add('is-revealed');
+            }
+        });
+        const hideRevealed = () => {
+            document.querySelectorAll('.is-revealed').forEach(el => el.classList.remove('is-revealed'));
+        };
+        // 손/마우스를 떼거나 영역을 벗어나면 다시 가리기
+        document.addEventListener('pointerup', hideRevealed);
+        document.addEventListener('pointercancel', hideRevealed);
+
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
         const iconMoon = document.getElementById('iconMoon');
@@ -633,6 +670,7 @@
         let flashcardOrder = []; 
         let hideMemorized = false;
         let hideTerms = false; 
+        let hideDefs = false;
 
         // D-Day Logic
         const ddayTextEl = document.getElementById('dday-text');
@@ -640,7 +678,7 @@
         const now = new Date();
         const diff = targetDate - now;
         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        ddayTextEl.innerText = days > 0 ? `D-${days}` : (days === 0 ? "D-Day" : `D+${Math.abs(days)}`);
+        ddayTextEl.innerText = days > 0 ? `D-${days}` : "D-?"; // 0일 이하가 되면 D-? 로 표시
 
         window.onload = async function() {
             loadLocalData();
@@ -995,7 +1033,14 @@
         function toggleHideMemorized() {
             hideMemorized = !hideMemorized;
             const btn = document.getElementById('hideBtn');
-            btn.innerHTML = hideMemorized ? '<i class="fa-solid fa-eye-slash text-primary"></i>' : '<i class="fa-regular fa-eye"></i>';
+            const icon = document.getElementById('hideMemIcon');
+            if (hideMemorized) {
+                btn.classList.add('btn-active');
+                icon.classList.add('line-through-icon');
+            } else {
+                btn.classList.remove('btn-active');
+                icon.classList.remove('line-through-icon');
+            }
             renderListTable();
         }
 
@@ -1004,11 +1049,25 @@
             const btn = document.getElementById('hideTermBtn');
             const icon = document.getElementById('hideTermIcon');
             if (hideTerms) {
-                icon.classList.add('line-through-icon'); // Active: Strikethrough A
-                btn.classList.add('bg-[var(--glass-highlight)]');
+                btn.classList.add('btn-active');
+                icon.classList.add('line-through-icon');
             } else {
-                icon.classList.remove('line-through-icon'); // Inactive: Normal A
-                btn.classList.remove('bg-[var(--glass-highlight)]');
+                btn.classList.remove('btn-active');
+                icon.classList.remove('line-through-icon');
+            }
+            renderListTable();
+        }
+        
+        function toggleHideDefs() {
+            hideDefs = !hideDefs;
+            const btn = document.getElementById('hideDefBtn');
+            const icon = document.getElementById('hideDefIcon');
+            if (hideDefs) {
+                btn.classList.add('btn-active');
+                icon.classList.add('line-through-icon');
+            } else {
+                btn.classList.remove('btn-active');
+                icon.classList.remove('line-through-icon');
             }
             renderListTable();
         }
@@ -1075,7 +1134,8 @@
                     return text.replace(regex, '<span class="hl-text">$1</span>');
                 };
 
-                const termClass = hideTerms ? 'term-hidden' : '';
+                const termClass = hideTerms ? 'blur-target' : '';
+                const defClass = hideDefs ? 'blur-target' : '';
 
                 tr.innerHTML = `
                     <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide">${idx + 1}</td>
@@ -1105,8 +1165,8 @@
                         <div class="text-xs font-bold text-blue-400 font-kor mt-0.5 break-words ${termClass}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-2 py-3 align-top">
-                        <div class="text-xs text-text-def font-sans mb-1 leading-snug font-semibold break-words">${highlight(word.def)}</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400 font-kor opacity-80 leading-snug break-words">${highlight(word.koDef)}</div>
+                        <div class="text-xs text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass}">${highlight(word.def)}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 font-kor opacity-80 leading-snug break-words ${defClass}">${highlight(word.koDef)}</div>
                     </td>
                 `;
                 tbody.appendChild(tr);
