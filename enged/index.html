@@ -359,7 +359,9 @@
             .stat-box span.uppercase { font-size: 8px; }
             .stat-box span.text-lg { font-size: 14px; margin-top: 0; }
             
-            .mobile-hide { display: none; }
+            .mobile-hide { display: none !important; }
+            .pc-action-col { display: none !important; }
+            
             table th, table td { padding: 8px 4px; font-size: 13px; }
             .term-col { width: 20% !important; }
             .def-col { width: auto !important; }
@@ -375,7 +377,7 @@
                 position: relative;
                 padding: 12px 12px 12px 48px; /* 좌측 모바일 액션 버튼 공간 확보 */
                 border-bottom: 1px solid var(--glass-border);
-                min-height: 70px;
+                min-height: 90px;
             }
             
             #listContainer td {
@@ -387,6 +389,7 @@
             
             /* 좌측에 고정되는 액션버튼 그룹 */
             #listContainer td.mobile-actions-col {
+                display: block !important;
                 position: absolute;
                 left: 8px;
                 top: 14px;
@@ -394,7 +397,8 @@
             }
             #listContainer td.mobile-actions-col .flex {
                 flex-direction: column;
-                gap: 14px;
+                gap: 10px;
+                align-items: center;
             }
             
             /* Term cell (Top) */
@@ -1184,7 +1188,8 @@
                     
                     <!-- Mobile Combined Actions Column -->
                     <td class="px-2 py-3 text-center mobile-actions-col">
-                        <div class="flex flex-col items-center gap-3">
+                        <div class="flex flex-col items-center gap-2">
+                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1">${idx + 1}</span>
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
                                 <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
