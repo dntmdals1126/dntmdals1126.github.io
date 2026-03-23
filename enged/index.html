@@ -211,14 +211,13 @@
         
         .flashcard-face { 
             position: absolute; width: 100%; height: 100%; 
-            /* 강제 하드웨어 가속 및 뒷면 렌더링 방지로 iOS 거울현상 완벽 차단 */
             -webkit-backface-visibility: hidden; backface-visibility: hidden; 
             transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 20px; 
             background: var(--glass-surface); 
             border: 1px solid var(--glass-border); 
             display: flex; flex-direction: column; 
-            padding: 40px 20px; /* 여백을 넓혀 탭할 수 있는 면적 확장 */
+            padding: 40px 20px; 
             text-align: center; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
             overflow: hidden; 
@@ -230,7 +229,6 @@
         }
         html[data-theme="light"] .flashcard-face.back { background: #eff6ff; }
         
-        /* Flashcard 내부 텍스트에도 backface 강제 적용 */
         .flashcard-face * {
             -webkit-backface-visibility: hidden; backface-visibility: hidden;
         }
@@ -240,8 +238,8 @@
             width: 100%;
             height: 100%;
             overflow-y: auto;
-            touch-action: pan-y; /* 모바일 터치 스크롤 강제 허용 */
-            transform: translateZ(0); /* 모바일 스크롤 버그 해결을 위한 새 레이어 분리 */
+            touch-action: pan-y; 
+            transform: translateZ(0); 
             -webkit-overflow-scrolling: touch; 
             overscroll-behavior-y: contain; 
             display: flex;
@@ -282,7 +280,7 @@
         .hl-text { background-color: rgba(251, 191, 36, 0.3); color: #fcd34d; border-radius: 2px; padding: 0 2px; }
         html[data-theme="light"] .hl-text { background-color: rgba(251, 191, 36, 0.4); color: #92400e; }
 
-        /* Icon Slash Animation (가운데부터 선명하게 차오르는 빗금) */
+        /* Icon Slash Animation */
         .slash-wrapper { position: relative; display: inline-flex; justify-content: center; align-items: center; }
         .slash-wrapper::after {
             content: ''; position: absolute;
@@ -311,7 +309,7 @@
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
-            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState { display: none !important; }
+            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal { display: none !important; }
             main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; }
             #view-dashboard { display: block !important; }
             #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: white !important; }
@@ -325,7 +323,9 @@
             .text-sm { font-size: 11pt !important; }
             .font-bold { font-weight: bold !important; }
             .mobile-hide { display: none !important; }
-            th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) { display: none !important; }
+            
+            /* 인쇄 시에 액션 컬럼(2번째)만 숨기고, 번호(1), 영단어(3), 뜻(4)은 출력되도록 설정 */
+            th:nth-child(2), td:nth-child(2) { display: none !important; }
         }
 
         /* Mobile Tweaks */
@@ -348,9 +348,20 @@
             
             #listContainer tr {
                 position: relative;
-                padding: 12px 12px 12px 48px; /* 좌측 모바일 액션 버튼 공간 확보 */
+                padding: 12px 12px 12px 56px; /* 좌측 모바일 액션 버튼 및 구분선 공간 확보 */
                 border-bottom: 1px solid var(--glass-border);
                 min-height: 90px;
+            }
+            
+            /* 모바일 액션과 단어 사이의 세로 구분선 */
+            #listContainer tr::before {
+                content: '';
+                position: absolute;
+                left: 44px;
+                top: 15px;
+                bottom: 15px;
+                width: 1px;
+                background-color: var(--glass-border);
             }
             
             #listContainer td {
@@ -530,7 +541,8 @@
                                 <th class="px-2 py-3 text-center w-[90px] mobile-hide">
                                     <div class="flex flex-row justify-center items-center gap-4"><i class="fa-solid fa-check"></i><i class="fa-solid fa-star"></i></div>
                                 </th>
-                                <th class="px-4 py-3 term-col w-[30%]">Term</th>
+                                <!-- PC버전 Term 폭 20% 원복 -->
+                                <th class="px-4 py-3 term-col w-[20%]">Term</th>
                                 <th class="px-4 py-3 def-col w-auto">Definition</th>
                             </tr>
                         </thead>
@@ -1190,7 +1202,7 @@
                     <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
                     <td class="px-2 py-3 text-center actions-col">
                         <div class="flex flex-col sm:flex-row items-center gap-2">
-                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 pc-hide">${idx + 1}</span>
+                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'} hover:text-green-400">
                                 <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
@@ -1200,7 +1212,7 @@
                         </div>
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
-                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words ${termClass}" style="line-height: 0.85; padding-bottom: 0.15em;">${highlight(word.term)}</div>
+                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words ${termClass}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
                         <div class="text-xs font-bold text-blue-400 font-kor mt-1 break-words ${termClass}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-3 py-3 align-top def-col-content">
