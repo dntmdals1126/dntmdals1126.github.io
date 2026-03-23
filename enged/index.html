@@ -101,8 +101,8 @@
             --header-bg: rgba(255, 255, 255, 0.9);
             --primary: #2563eb; 
             --text-main: #1e293b;
-            --text-sub: #475569;
-            --text-dim: #64748b;
+            --text-sub: #475569; 
+            --text-dim: #64748b; 
             --text-def: #111827; 
             color-scheme: light;
         }
@@ -130,8 +130,6 @@
             color: var(--text-main);
             overflow-y: scroll; 
             scroll-behavior: smooth;
-            min-height: 100%;
-            touch-action: manipulation;
         }
         
         body {
@@ -142,7 +140,6 @@
             background-attachment: fixed;
             transition: background 0.3s;
             overflow-x: hidden;
-            touch-action: manipulation;
         }
         
         html[data-theme="light"] body {
@@ -171,7 +168,6 @@
         .scroll-mask { position: fixed; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 30%, transparent 100%); pointer-events: none; z-index: 900; }
         html[data-theme="light"] .scroll-mask { background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%); }
 
-        /* 데스크탑 기본 헤더 (플로팅) */
         header { position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h); z-index: 1000; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 99px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15); transition: all 0.3s ease; }
         .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
         .header-tools { display: flex; gap: 8px; align-items: center; }
@@ -233,11 +229,17 @@
         
         .flashcard-face * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 
+        /* 터치 막힘 방지를 위한 포인터 이벤트 제어 */
+        .flashcard-face.front { z-index: 2; pointer-events: auto; }
+        .flashcard-face.back { z-index: 1; pointer-events: none; }
+        .flashcard-container.is-flipped .flashcard-face.front { pointer-events: none; z-index: 1; }
+        .flashcard-container.is-flipped .flashcard-face.back { pointer-events: auto; z-index: 2; }
+
         /* Inner Scroll Box Logic */
         .fc-scroll-box {
             width: 100%; height: 100%; overflow-y: auto;
             touch-action: pan-y; 
-            isolation: isolate; 
+            transform: translateZ(0); 
             -webkit-overflow-scrolling: touch; 
             overscroll-behavior-y: contain; 
             display: flex; flex-direction: column;
@@ -292,7 +294,7 @@
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
-            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal { display: none !important; }
+            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal { display: none !important; }
             main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; }
             #view-dashboard { display: block !important; }
             #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: white !important; }
@@ -312,7 +314,7 @@
             th.num-col, td.num-col { display: table-cell !important; width: 40px !important; }
         }
 
-        /* iPad & Mobile Header Flush (태블릿 위쪽 여백 제거) */
+        /* iPad & Mobile Header Flush */
         @media (max-width: 1024px) {
             :root { --header-h: 60px; }
             header { 
@@ -363,6 +365,14 @@
         /* PC styles for columns */
         @media (min-width: 481px) {
             .pc-hide { display: none !important; }
+
+            /* PC 아이콘 열 넓이 축소 및 영단어 열 확장 */
+            #listContainer th:nth-child(2), #listContainer td.actions-col {
+                width: 70px !important;
+            }
+            #listContainer th:nth-child(3), #listContainer td.term-col-content {
+                width: 25% !important;
+            }
 
             /* PC버전 TERM / DEFINITION / 액션 사이 세로선 (구분선) 추가 */
             #listContainer th, #listContainer td { position: relative; }
@@ -472,8 +482,11 @@
                     <div class="flex flex-wrap items-center gap-2">
                          <div class="flex-1 min-w-[140px] flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg px-3 focus-within:border-primary/50 transition-colors relative">
                              <i class="fa-solid fa-search text-text-dim"></i>
-                             <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable()" 
-                                class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0 ml-2">
+                             <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable(); toggleClearBtn();" 
+                                class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0 ml-2 pr-6">
+                             <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2 w-6 h-6 flex items-center justify-center text-text-dim hover:text-text-main">
+                                 <i class="fa-solid fa-xmark"></i>
+                             </button>
                          </div>
                          
                          <div class="flex items-center gap-1.5 shrink-0">
@@ -498,7 +511,7 @@
                              <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
                                 <i class="fa-solid fa-print"></i>
                              </button>
-                             <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs pc-hide" title="도움말">
+                             <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" title="도움말">
                                 <i class="fa-solid fa-question"></i>
                              </button>
                          </div>
@@ -510,10 +523,10 @@
                         <thead class="text-xs uppercase text-text-dim font-bold shadow-sm">
                             <tr>
                                 <th class="px-2 py-3 text-center w-12 mobile-hide num-col">#</th>
-                                <th class="px-2 py-3 text-center w-[90px] mobile-hide">
+                                <th class="px-2 py-3 text-center w-[70px] mobile-hide">
                                     <div class="flex flex-row justify-center items-center gap-4"><i class="fa-solid fa-check"></i><i class="fa-solid fa-star"></i></div>
                                 </th>
-                                <th class="px-4 py-3 term-col w-[20%]">Term</th>
+                                <th class="px-4 py-3 term-col w-[25%]">Term</th>
                                 <th class="px-4 py-3 def-col w-auto">Definition</th>
                             </tr>
                         </thead>
@@ -539,7 +552,7 @@
                             </div>
                         </div>
                         <div class="mt-3 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans shrink-0">
-                            <i class="fa-solid fa-arrow-pointer"></i> 여백 부분을 탭하여 용어 확인
+                            <i class="fa-solid fa-arrow-pointer"></i> 탭하여 용어 확인
                         </div>
                     </div>
                     <!-- Back (Term) -->
@@ -598,8 +611,8 @@
                     <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
 
                     <div id="quiz-actions" class="hidden flex gap-2 w-full mt-4">
-                        <button onclick="finishQuiz()" class="btn btn-sec flex-[0.3] justify-center font-sans text-xs">종료</button>
-                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans">다음 문제 <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                        <button onclick="finishQuiz()" class="btn btn-sec flex-[0.3] justify-center font-sans text-sm font-bold">END</button>
+                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-sm font-bold">NEXT <i class="fa-solid fa-arrow-right ml-2"></i></button>
                     </div>
                 </div>
                 
@@ -617,7 +630,7 @@
         <!-- 4. Notebook -->
         <div id="view-notebook" class="hidden fade-in-up">
             <div class="flex justify-between items-center mb-4 px-1">
-                <h2 class="text-lg font-bold text-text-main font-kor">단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
+                <h2 class="text-lg font-bold text-text-main font-kor">나만의 단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
                 <div class="flex gap-2">
                     <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">
                         비우기
@@ -655,19 +668,19 @@
             <div class="space-y-4 text-sm font-sans text-text-main">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-xs"></i></span></div>
-                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 가려진 부분에 마우스를 올리거나 터치하는 경우 내용이 일시적으로 표시됩니다.</span></div>
+                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 마우스를 올리거나 터치 시 임시 표시.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-align-left text-xs"></i></span></div>
-                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 가려진 부분에 마우스를 올리거나 터치하는 경우 내용이 일시적으로 표시됩니다.</span></div>
+                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 마우스를 올리거나 터치 시 임시 표시.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-regular fa-eye text-xs"></i></span></div>
-                    <div><strong class="text-primary">암기 숨기기</strong><br><span class="text-text-dim text-xs">암기 완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
+                    <div><strong class="text-primary">암기 숨기기</strong><br><span class="text-text-dim text-xs">완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-arrow-down-a-z text-xs"></i></div>
-                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳 순/알파벳 역순으로 정렬합니다.</span></div>
+                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳/가나다 순으로 정렬합니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-green-500 text-xs"></i></div>
@@ -675,7 +688,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-star text-yellow-400 text-xs"></i></div>
-                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
+                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">나만의 단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
                 </div>
             </div>
         </div>
@@ -708,8 +721,13 @@
         themeToggle.onclick = () => applyTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
 
         let allWords = [];
-        let appState = { memorized: {}, notebook: [], currentIndex: 0 };
-        let quizState = { asked: new Set(), currentQIndex: 0, score: 0 };
+        let appState = { 
+            memorized: {}, 
+            notebook: [], 
+            currentIndex: 0,
+            quizState: { asked: [], score: 0 }
+        };
+        
         let isQuizActive = false;
         let sortOrder = 'asc'; 
         let flashcardOrder = []; 
@@ -737,6 +755,7 @@
             if (saved) {
                 const parsed = JSON.parse(saved);
                 if (parsed.mistakes && !parsed.notebook) parsed.notebook = parsed.mistakes;
+                if (!parsed.quizState) parsed.quizState = { asked: [], score: 0 };
                 appState = { ...appState, ...parsed };
             }
         }
@@ -838,12 +857,14 @@
         function loadFlashcard(idx) {
             if (allWords.length === 0) return;
             
+            const container = document.getElementById('fc-container');
             const inner = document.getElementById('flashcard-inner');
-            const isFlipped = inner.classList.contains('rotate-y-180');
+            const isFlipped = container.classList.contains('is-flipped');
             
             if (isFlipped) {
                 inner.style.transition = 'none';
                 inner.classList.remove('rotate-y-180');
+                container.classList.remove('is-flipped');
                 void inner.offsetWidth; 
                 inner.style.transition = '';
             }
@@ -869,17 +890,21 @@
             
             const checkBtn = document.getElementById('fc-check-btn');
             if(isMemorized) {
-                checkBtn.className = "btn w-14 h-14 rounded-full transition bg-green-500 text-white border-green-500 shadow-lg shadow-green-500/30";
+                checkBtn.classList.remove('btn-sec', 'text-text-sub');
+                checkBtn.classList.add('bg-green-500', 'text-white', 'border-green-500');
             } else {
-                checkBtn.className = "btn btn-sec w-14 h-14 rounded-full text-text-sub hover:text-green-500 transition";
+                checkBtn.classList.add('btn-sec', 'text-text-sub');
+                checkBtn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
             }
 
             const starBtn = document.getElementById('fc-star-btn');
             if(isSaved) {
-                starBtn.className = "btn w-12 px-0 rounded-full transition bg-yellow-500 text-white border-yellow-500 shadow-lg shadow-yellow-500/30";
+                starBtn.classList.remove('btn-sec', 'text-text-sub');
+                starBtn.classList.add('bg-yellow-500', 'text-white', 'border-yellow-500');
                 starBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
             } else {
-                starBtn.className = "btn btn-sec w-12 px-0 rounded-full text-text-sub hover:text-yellow-400 transition";
+                starBtn.classList.add('btn-sec', 'text-text-sub');
+                starBtn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-500');
                 starBtn.innerHTML = '<i class="fa-regular fa-star"></i>';
             }
         }
@@ -899,8 +924,10 @@
         }
 
         function flipCard() { 
+            const container = document.getElementById('fc-container');
             const inner = document.getElementById('flashcard-inner');
             inner.classList.toggle('rotate-y-180'); 
+            container.classList.toggle('is-flipped');
         }
         function nextCard() { if (appState.currentIndex < flashcardOrder.length - 1) loadFlashcard(appState.currentIndex + 1); }
         function prevCard() { if (appState.currentIndex > 0) loadFlashcard(appState.currentIndex - 1); }
@@ -912,6 +939,22 @@
             }
             appState.currentIndex = 0;
             loadFlashcard(0);
+        }
+
+        // --- Search Clear ---
+        function toggleClearBtn() {
+            const input = document.getElementById('searchInput');
+            const btn = document.getElementById('clearSearchBtn');
+            if (input.value.length > 0) btn.classList.remove('hidden');
+            else btn.classList.add('hidden');
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            toggleClearBtn();
+            renderListTable();
+            input.focus();
         }
 
         // --- Notebook ---
@@ -970,11 +1013,16 @@
         function startQuiz() {
             if (allWords.length < 4) return;
             isQuizActive = true;
-            quizState = { asked: new Set(), currentQIndex: 0, score: 0 };
+            
+            // 퀴즈를 끝까지 풀면 초기화
+            if (appState.quizState.asked.length >= allWords.length) {
+                appState.quizState = { asked: [], score: 0 };
+                saveData();
+            }
             
             document.getElementById('quiz-active-screen').classList.remove('hidden');
             document.getElementById('quiz-end-screen').classList.add('hidden');
-            document.getElementById('quiz-score').innerText = `0`;
+            document.getElementById('quiz-score').innerText = appState.quizState.score;
             document.getElementById('quiz-actions').classList.add('hidden');
             document.getElementById('quiz-feedback').classList.add('hidden');
             
@@ -982,34 +1030,36 @@
         }
 
         function loadQuizQuestion() {
-            quizState.currentQIndex++;
-            document.getElementById('quiz-progress').innerText = `${quizState.currentQIndex}`;
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('quiz-actions').classList.add('hidden');
             
-            let unasked = allWords.filter(w => !quizState.asked.has(w.term));
+            let unasked = allWords.filter(w => !appState.quizState.asked.includes(w.term));
             let isRepeat = false;
             let currentQ;
 
             if (unasked.length === 0) {
-                currentQ = allWords[Math.floor(Math.random() * allWords.length)];
+                appState.quizState.asked = []; // 배열 초기화
+                unasked = allWords;
+                isRepeat = true;
+            }
+
+            if (appState.quizState.asked.length > 0 && Math.random() < 0.25) {
+                currentQ = allWords.find(w => w.term === appState.quizState.asked[Math.floor(Math.random() * appState.quizState.asked.length)]);
                 isRepeat = true;
             } else {
-                if (quizState.asked.size > 0 && Math.random() < 0.25) {
-                    let askedArr = Array.from(quizState.asked);
-                    currentQ = allWords.find(w => w.term === askedArr[Math.floor(Math.random() * askedArr.length)]);
-                    isRepeat = true;
-                } else {
-                    currentQ = unasked[Math.floor(Math.random() * unasked.length)];
-                }
+                currentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                appState.quizState.asked.push(currentQ.term);
+                saveData();
             }
-            quizState.asked.add(currentQ.term);
             
-            let questionHtml = currentQ.def;
-            if (isRepeat) {
-                questionHtml = `<span class="inline-block bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 tracking-widest border border-blue-500/30">REPEATED</span><br>` + questionHtml;
-            }
-            document.getElementById('quiz-question').innerHTML = questionHtml;
+            document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
+
+            let badgesHtml = '';
+            if (isRepeat) badgesHtml += `<span class="inline-block bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-blue-500/30">REPEATED</span>`;
+            if (appState.memorized[currentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
+            if (appState.notebook.includes(currentQ.term)) badgesHtml += `<span class="inline-block bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-yellow-500/30"><i class="fa-solid fa-star"></i></span>`;
+
+            document.getElementById('quiz-question').innerHTML = badgesHtml + (badgesHtml ? '<br>' : '') + currentQ.def;
             
             let options = [currentQ];
             while (options.length < 4) {
@@ -1046,9 +1096,10 @@
             }
 
             if (selected.term === correct.term) {
-                quizState.score++;
-                document.getElementById('quiz-score').innerText = quizState.score;
+                appState.quizState.score++;
+                document.getElementById('quiz-score').innerText = appState.quizState.score;
                 feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
+                saveData();
             } else {
                 btnElement.classList.add('border-red-500', 'bg-red-500/10');
                 btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
@@ -1069,8 +1120,8 @@
             isQuizActive = false;
             document.getElementById('quiz-active-screen').classList.add('hidden');
             document.getElementById('quiz-end-screen').classList.remove('hidden');
-            document.getElementById('quiz-final-score').innerText = quizState.score;
-            document.getElementById('quiz-final-total').innerText = quizState.currentQIndex;
+            document.getElementById('quiz-final-score').innerText = appState.quizState.score;
+            document.getElementById('quiz-final-total').innerText = appState.quizState.asked.length;
         }
 
         // --- List Controls ---
