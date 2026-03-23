@@ -240,8 +240,10 @@
             width: 100%;
             height: 100%;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* 부드러운 스크롤 */
-            overscroll-behavior-y: contain; /* 터치 스크롤 이벤트 격리 */
+            touch-action: pan-y; /* 모바일 터치 스크롤 강제 허용 */
+            transform: translateZ(0); /* 모바일 스크롤 버그 해결을 위한 새 레이어 분리 */
+            -webkit-overflow-scrolling: touch; 
+            overscroll-behavior-y: contain; 
             display: flex;
             flex-direction: column;
             user-select: text; -webkit-user-select: text;
@@ -265,18 +267,6 @@
         }
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
-
-        /* Flashcard Action Buttons (Hover 고착 방지 커스텀 CSS) */
-        .fc-btn-check {
-            border: 2px solid rgba(34, 197, 94, 0.5); color: #22c55e; transition: all 0.2s;
-        }
-        @media (hover: hover) { .fc-btn-check:hover { background: #22c55e; color: white; border-color: #22c55e; } }
-        .fc-btn-check.active { background: #22c55e; color: white; border-color: #22c55e; }
-        
-        .fc-btn-star {
-            color: #facc15; transition: all 0.2s;
-        }
-        @media (hover: hover) { .fc-btn-star:hover { background: rgba(250, 204, 21, 0.15); } }
 
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
@@ -351,7 +341,6 @@
             .stat-box span.text-lg { font-size: 14px; margin-top: 0; }
             
             .mobile-hide { display: none !important; }
-            .pc-action-col { display: none !important; }
             
             /* Vertical Mobile Table Layout (Term ▲ Def ▼ 방식을 위한 절대 배치) */
             #listContainer table, #listContainer tbody, #listContainer tr { display: block; width: 100%; }
@@ -372,6 +361,9 @@
             #listContainer td.actions-col {
                 position: absolute; left: 8px; top: 14px; width: 32px !important;
             }
+            #listContainer td.actions-col .flex {
+                flex-direction: column; gap: 10px; align-items: center;
+            }
             
             /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
@@ -379,14 +371,24 @@
         
         /* PC styles for columns */
         @media (min-width: 481px) {
-            .mobile-actions-col { display: none !important; }
-            .pc-hide { display: none !important; } 
+            /* PC버전 TERM / DEFINITION / 액션 사이 세로선 (구분선) 추가 */
+            #listContainer th, #listContainer td {
+                position: relative;
+            }
+            #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
+            #listContainer th:nth-child(2)::after, #listContainer td:nth-child(2)::after,
+            #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 20%;
+                height: 60%;
+                width: 1px;
+                background-color: var(--glass-border);
+            }
             
-            /* PC버전 TERM / DEFINITION / 액션 사이 세로선 추가 */
-            #listContainer th:nth-child(1), #listContainer td:nth-child(1),
-            #listContainer th:nth-child(2), #listContainer td:nth-child(2),
-            #listContainer th:nth-child(3), #listContainer td:nth-child(3) {
-                border-right: 1px solid var(--glass-border) !important;
+            #listContainer td.actions-col .flex {
+                flex-direction: row; gap: 12px; justify-content: center;
             }
         }
     </style>
@@ -507,14 +509,14 @@
                              <button onclick="toggleSort()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="sortBtn" title="정렬">
                                 <i class="fa-solid fa-arrow-down-a-z"></i>
                              </button>
-                             <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs pc-hide" title="도움말">
-                                <i class="fa-solid fa-question"></i>
-                             </button>
                              <button onclick="toggleFullscreenList()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="전체화면">
                                 <i class="fa-solid fa-expand"></i>
                              </button>
                              <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
                                 <i class="fa-solid fa-print"></i>
+                             </button>
+                             <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" title="도움말">
+                                <i class="fa-solid fa-question"></i>
                              </button>
                          </div>
                     </div>
@@ -525,8 +527,8 @@
                         <thead class="text-xs uppercase text-text-dim font-bold shadow-sm">
                             <tr>
                                 <th class="px-2 py-3 text-center w-12 mobile-hide">#</th>
-                                <th class="px-2 py-3 text-center w-16 mobile-hide">
-                                    <div class="flex flex-col items-center gap-1"><i class="fa-solid fa-check"></i><i class="fa-solid fa-star"></i></div>
+                                <th class="px-2 py-3 text-center w-[90px] mobile-hide">
+                                    <div class="flex flex-row justify-center items-center gap-4"><i class="fa-solid fa-check"></i><i class="fa-solid fa-star"></i></div>
                                 </th>
                                 <th class="px-4 py-3 term-col w-[30%]">Term</th>
                                 <th class="px-4 py-3 def-col w-auto">Definition</th>
@@ -578,10 +580,10 @@
                 <button onclick="shuffleCards()" class="btn btn-sec w-12 px-0 rounded-full text-text-sub hover:text-primary hover:bg-[var(--glass-highlight)] transition" title="섞기">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
-                <button onclick="toggleMemorizedFromCard()" class="btn fc-btn-check w-14 h-14 rounded-full" id="fc-check-btn" title="완료">
+                <button onclick="toggleMemorizedFromCard()" class="btn btn-sec w-14 h-14 rounded-full text-text-sub transition" id="fc-check-btn" title="완료">
                     <i class="fa-solid fa-check text-xl"></i>
                 </button>
-                <button onclick="toggleNotebookFromCard()" class="btn fc-btn-star w-12 px-0 rounded-full" id="fc-star-btn" title="중요">
+                <button onclick="toggleNotebookFromCard()" class="btn btn-sec w-12 px-0 rounded-full text-text-sub transition" id="fc-star-btn" title="중요">
                     <i class="fa-regular fa-star"></i>
                 </button>
                 <button onclick="nextCard()" class="btn btn-pri w-12 px-0 rounded-full" title="다음">
@@ -595,7 +597,7 @@
             <div id="quiz-game">
                 <div id="quiz-active-screen">
                     <div class="flex justify-between items-end mb-4 px-1">
-                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">QUESTION <span id="quiz-progress" class="text-text-main ml-1"></span></span>
+                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
                         <span id="quiz-score" class="text-xs font-bold text-primary bg-[var(--glass-highlight)] px-2 py-1 rounded font-sans">0</span>
                     </div>
                     
@@ -670,11 +672,11 @@
             <div class="space-y-4 text-sm font-sans text-text-main">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-xs"></i></span></div>
-                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 터치 시 임시 표시.</span></div>
+                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 마우스를 올리거나 터치 시 임시 표시.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-align-left text-xs"></i></span></div>
-                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 터치 시 임시 표시.</span></div>
+                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 마우스를 올리거나 터치 시 임시 표시.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-regular fa-eye text-xs"></i></span></div>
@@ -856,11 +858,10 @@
             const inner = document.getElementById('flashcard-inner');
             const isFlipped = inner.classList.contains('rotate-y-180');
             
-            // 모바일/태블릿 잔상(Glitch) 제거를 위한 임시 애니메이션 비활성화
             if (isFlipped) {
                 inner.style.transition = 'none';
                 inner.classList.remove('rotate-y-180');
-                void inner.offsetWidth; // 강제 리플로우
+                void inner.offsetWidth; 
                 inner.style.transition = '';
             }
 
@@ -884,11 +885,20 @@
             const isSaved = appState.notebook.includes(term);
             
             const checkBtn = document.getElementById('fc-check-btn');
-            if(isMemorized) checkBtn.classList.add('active');
-            else checkBtn.classList.remove('active');
+            if(isMemorized) {
+                checkBtn.className = "btn w-14 h-14 rounded-full transition bg-green-500 text-white border-green-500 shadow-lg shadow-green-500/30";
+            } else {
+                checkBtn.className = "btn btn-sec w-14 h-14 rounded-full text-text-sub hover:text-green-500 transition";
+            }
 
             const starBtn = document.getElementById('fc-star-btn');
-            starBtn.innerHTML = isSaved ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+            if(isSaved) {
+                starBtn.className = "btn w-12 px-0 rounded-full transition bg-yellow-500 text-white border-yellow-500 shadow-lg shadow-yellow-500/30";
+                starBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
+            } else {
+                starBtn.className = "btn btn-sec w-12 px-0 rounded-full text-text-sub hover:text-yellow-400 transition";
+                starBtn.innerHTML = '<i class="fa-regular fa-star"></i>';
+            }
         }
 
         function toggleMemorizedFromCard() {
@@ -1009,11 +1019,12 @@
             }
             quizState.asked.add(currentQ.term);
             
-            let questionHtml = currentQ.def;
-            if (isRepeat) {
-                questionHtml = `<span class="inline-block bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 tracking-widest border border-blue-500/30">REPEATED</span><br>` + questionHtml;
-            }
-            document.getElementById('quiz-question').innerHTML = questionHtml;
+            let badgesHtml = '';
+            if (isRepeat) badgesHtml += `<span class="inline-block bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-blue-500/30">REPEATED</span>`;
+            if (appState.memorized[currentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
+            if (appState.notebook.includes(currentQ.term)) badgesHtml += `<span class="inline-block bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-yellow-500/30"><i class="fa-solid fa-star"></i></span>`;
+
+            document.getElementById('quiz-question').innerHTML = badgesHtml + (badgesHtml ? '<br>' : '') + currentQ.def;
             
             let options = [currentQ];
             while (options.length < 4) {
@@ -1178,18 +1189,18 @@
                 tr.innerHTML = `
                     <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
                     <td class="px-2 py-3 text-center actions-col">
-                        <div class="flex flex-col items-center gap-2">
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
                             <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 pc-hide">${idx + 1}</span>
-                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
+                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'} hover:text-green-400">
                                 <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
-                            <div class="cursor-pointer" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
+                            <div class="cursor-pointer text-lg transition-colors hover:text-yellow-400" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
                                 <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim'}"></i>
                             </div>
                         </div>
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
-                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words ${termClass}" style="line-height: 0.95; padding-bottom: 0.1em;">${highlight(word.term)}</div>
+                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words ${termClass}" style="line-height: 0.85; padding-bottom: 0.15em;">${highlight(word.term)}</div>
                         <div class="text-xs font-bold text-blue-400 font-kor mt-1 break-words ${termClass}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-3 py-3 align-top def-col-content">
