@@ -13,37 +13,32 @@
     <title>Enged.</title>
     <meta name="theme-color" content="#050505" />
     
-    <!-- 기본 Favicon (데스크탑 및 일반 브라우저용 SVG) -->
+    <!-- 기본 Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2789' height='2789' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-102 638)'%3E%3Crect x='102' y='-638' width='2789' height='2789' fill='%23050505'/%3E%3Cpath d='M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
     
-    <!-- iOS Apple Touch Icon (SVG 지원이 안되므로 캔버스를 통해 PNG로 즉시 자동 변환하여 주입) -->
+    <!-- iOS Apple Touch Icon 자동 생성 -->
     <script>
         (function() {
             const svgData = `<svg width="2789" height="2789" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-102 638)"><rect x="102" y="-638" width="2789" height="2789" fill="#050505"/><path d="M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z" fill="#F2F5F9" fill-rule="evenodd"/><path d="M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z" fill="#F2C14B" fill-rule="evenodd"/></g></svg>`;
-            
             const canvas = document.createElement('canvas');
             canvas.width = 512;
             canvas.height = 512;
             const ctx = canvas.getContext('2d');
             const img = new Image();
-            
             img.onload = function() {
                 ctx.drawImage(img, 0, 0, 512, 512);
                 const link = document.createElement('link');
                 link.rel = 'apple-touch-icon';
-                link.href = canvas.toDataURL('image/png'); // iOS가 인식할 수 있는 PNG 형식으로 변환
+                link.href = canvas.toDataURL('image/png'); 
                 document.head.appendChild(link);
             };
             img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
         })();
     </script>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
@@ -104,7 +99,6 @@
             --glass-highlight: rgba(0, 0, 0, 0.03);
             --header-bg: rgba(255, 255, 255, 0.9);
             --primary: #2563eb; 
-            --primary-glow: rgba(37, 99, 235, 0.15);
             --text-main: #1e293b;
             --text-sub: #64748b;
             --text-dim: #94a3b8;
@@ -121,7 +115,7 @@
         }
         
         button, input, textarea, a {
-            touch-action: manipulation; /* 모바일 더블 탭 확대 방지 */
+            touch-action: manipulation;
         }
         
         input, textarea { 
@@ -155,18 +149,15 @@
             background-attachment: fixed;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        html[data-theme="light"] ::-webkit-scrollbar-track { background: #e5e7eb; /* Gray-200 for better visibility in light */ }
+        html[data-theme="light"] ::-webkit-scrollbar-track { background: #e5e7eb; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
         html[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
-        html[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
 
         button { font-family: inherit; cursor: pointer; }
 
-        /* Animations */
         .blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; filter: blur(90px); opacity: 0.4; overflow: hidden; }
         .blob { position: absolute; border-radius: 50%; animation: float 25s infinite ease-in-out alternate; }
         .b1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: rgba(30, 40, 60, 0.2); }
@@ -176,29 +167,24 @@
         .fade-in-up { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* Scroll Mask */
         .scroll-mask { position: fixed; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 30%, transparent 100%); pointer-events: none; z-index: 900; }
         html[data-theme="light"] .scroll-mask { background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%); }
 
-        /* Header */
         header { position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h); z-index: 1000; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 99px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15); transition: all 0.3s ease; }
         .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
         .header-tools { display: flex; gap: 8px; align-items: center; }
         .tool-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid transparent; background: transparent; color: var(--text-main); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         @media (hover: hover) { .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); } }
 
-        /* Main Layout */
         main { max-width: var(--max-w); margin: 0 auto; padding: calc(100px + env(safe-area-inset-top)) 16px 60px; position: relative; z-index: 1; }
         .section-card { background: var(--glass-surface); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.2s; }
         
-        /* Buttons & Chips */
         .btn { height: 48px; border-radius: 14px; font-weight: 600; font-size: 15px; border: 1px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 20px; }
         .btn:active { transform: scale(0.96); }
         .btn-pri { background: var(--primary); color: white; }
         .btn-sec { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--glass-border); }
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
         
-        /* Button Active State (Toggle Buttons) */
         .btn-active {
             background-color: rgba(59, 130, 246, 0.15) !important;
             color: var(--primary) !important;
@@ -216,42 +202,51 @@
         .chip:hover { background: var(--glass-highlight); }
         .chip.active { background: var(--glass-highlight); color: var(--primary); }
 
-        /* Flashcard */
+        /* Flashcard 3D & Mobile Glitch Fixes */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         .flashcard-container { width: 100%; max-width: 500px; height: 350px; margin: 0 auto; position: relative; cursor: pointer; }
-        .flashcard-inner { position: relative; w-full; h-full; transition: transform 0.6s; transform-style: preserve-3d; width: 100%; height: 100%; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         
         .flashcard-face { 
-            position: absolute; w-full; h-full; 
+            position: absolute; width: 100%; height: 100%; 
+            /* 강제 하드웨어 가속 및 뒷면 렌더링 방지로 iOS 거울현상 완벽 차단 */
             -webkit-backface-visibility: hidden; backface-visibility: hidden; 
-            width: 100%; height: 100%; 
+            transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 20px; 
             background: var(--glass-surface); 
             border: 1px solid var(--glass-border); 
             display: flex; flex-direction: column; 
-            padding: 24px; 
+            padding: 40px 20px; /* 여백을 넓혀 탭할 수 있는 면적 확장 */
             text-align: center; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
             overflow: hidden; 
         }
-        .flashcard-face.back { transform: rotateY(180deg); background: rgba(59, 130, 246, 0.1); border-color: var(--primary); }
+        .flashcard-face.back { 
+            transform: rotateY(180deg) translate3d(0,0,1px); 
+            -webkit-transform: rotateY(180deg) translate3d(0,0,1px);
+            background: rgba(59, 130, 246, 0.1); border-color: var(--primary); 
+        }
         html[data-theme="light"] .flashcard-face.back { background: #eff6ff; }
+        
+        /* Flashcard 내부 텍스트에도 backface 강제 적용 */
+        .flashcard-face * {
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        }
 
-        /* Inner Scroll Box Logic with VISIBLE background/border */
+        /* Inner Scroll Box Logic */
         .fc-scroll-box {
             width: 100%;
             height: 100%;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* 부드러운 스크롤 */
+            overscroll-behavior-y: contain; /* 터치 스크롤 이벤트 격리 */
             display: flex;
             flex-direction: column;
-            -webkit-overflow-scrolling: touch;
             user-select: text; -webkit-user-select: text;
             
-            /* Box Styling */
-            background-color: rgba(249, 250, 251, 0.5); /* Light gray transparent */
+            background-color: rgba(249, 250, 251, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 10px;
@@ -266,16 +261,22 @@
         }
 
         .fc-inner-content {
-            width: 100%;
-            margin-top: auto;
-            margin-bottom: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+            width: 100%; margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; align-items: center; text-align: center;
         }
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
+
+        /* Flashcard Action Buttons (Hover 고착 방지 커스텀 CSS) */
+        .fc-btn-check {
+            border: 2px solid rgba(34, 197, 94, 0.5); color: #22c55e; transition: all 0.2s;
+        }
+        @media (hover: hover) { .fc-btn-check:hover { background: #22c55e; color: white; border-color: #22c55e; } }
+        .fc-btn-check.active { background: #22c55e; color: white; border-color: #22c55e; }
+        
+        .fc-btn-star {
+            color: #facc15; transition: all 0.2s;
+        }
+        @media (hover: hover) { .fc-btn-star:hover { background: rgba(250, 204, 21, 0.15); } }
 
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
@@ -283,8 +284,7 @@
         .progress-bar-fill { background: var(--primary); height: 100%; transition: width 0.5s ease; }
         
         .stat-box { 
-            background: var(--glass-highlight); 
-            border-radius: 12px; padding: 12px 14px; 
+            background: var(--glass-highlight); border-radius: 12px; padding: 12px 14px; 
             display: flex; flex-direction: row; align-items: center; justify-content: space-between; 
             border: 1px solid var(--glass-border); height: 100%; 
         }
@@ -307,25 +307,17 @@
             transform: translateY(-50%) rotate(-45deg) scaleX(1);
         }
 
-        /* Blur Logic for hiding Terms and Definitions */
+        /* Blur Logic */
         .blur-target { 
-            filter: blur(5px); 
-            transition: filter 0.3s ease; 
-            cursor: pointer; 
-            user-select: none;
+            filter: blur(5px); transition: filter 0.3s ease; cursor: pointer; user-select: none;
         }
-        /* 데스크탑 호버 지원 */
-        @media (hover: hover) {
-            .blur-target:hover { filter: blur(0); }
-        }
-        /* 모바일 터치 시 포인터 이벤트로 제어되는 클래스 (빠른 해제 반응형) */
+        @media (hover: hover) { .blur-target:hover { filter: blur(0); } }
         .blur-target.is-revealed { filter: blur(0) !important; transition: filter 0.1s; }
 
         /* Sticky Header */
         thead th { position: sticky; top: 0; z-index: 10; background-color: var(--bg-dark); }
         html[data-theme="light"] thead th { background-color: #ffffff; }
 
-        /* Print Styles - Only List Content */
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
@@ -351,7 +343,6 @@
             :root { --header-h: 60px; }
             header { top: 0; width: 100%; border-radius: 0; padding: env(safe-area-inset-top) 16px 0; height: calc(var(--header-h) + env(safe-area-inset-top)); max-width: none; border: none; border-bottom: 1px solid var(--glass-border); }
             main { padding-top: calc(90px + env(safe-area-inset-top)); }
-            .flashcard-container { height: 300px; }
             
             .stat-box { flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px 4px; min-height: 60px; text-align: center; }
             .stat-box .flex { flex-direction: column; gap: 2px; }
@@ -361,13 +352,6 @@
             
             .mobile-hide { display: none !important; }
             .pc-action-col { display: none !important; }
-            
-            table th, table td { padding: 8px 4px; font-size: 13px; }
-            .term-col { width: 20% !important; }
-            .def-col { width: auto !important; }
-            
-            /* Hide print and fullscreen on mobile */
-            button[title="전체화면"], button[title="리스트 인쇄"] { display: none !important; }
             
             /* Vertical Mobile Table Layout (Term ▲ Def ▼ 방식을 위한 절대 배치) */
             #listContainer table, #listContainer tbody, #listContainer tr { display: block; width: 100%; }
@@ -381,54 +365,28 @@
             }
             
             #listContainer td {
-                display: block;
-                border: none !important;
-                padding: 0 !important;
-                text-align: left;
+                display: block; border: none !important; padding: 0 !important; text-align: left;
             }
             
             /* 좌측에 고정되는 액션버튼 그룹 */
-            #listContainer td.mobile-actions-col {
-                display: block !important;
-                position: absolute;
-                left: 8px;
-                top: 14px;
-                width: 32px !important;
-            }
-            #listContainer td.mobile-actions-col .flex {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
+            #listContainer td.actions-col {
+                position: absolute; left: 8px; top: 14px; width: 32px !important;
             }
             
-            /* Term cell (Top) */
-            #listContainer td:nth-child(5) {
-                width: 100% !important;
-                margin-bottom: 6px;
-            }
-            
-            /* Def cell (Bottom) */
-            #listContainer td:nth-child(6) {
-                width: 100% !important;
-            }
+            /* Term cell (Top) & Def cell (Bottom) */
+            #listContainer td.term-col-content { margin-bottom: 6px; }
         }
+        
         /* PC styles for columns */
         @media (min-width: 481px) {
             .mobile-actions-col { display: none !important; }
-            .pc-action-col { display: table-cell !important; }
-            .pc-hide { display: none !important; } /* PC 버전 숨김 클래스 추가 */
+            .pc-hide { display: none !important; } 
             
-            /* PC버전 TERM / DEFINITION 사이 세로선 추가 */
-            #listContainer th.term-col {
+            /* PC버전 TERM / DEFINITION / 액션 사이 세로선 추가 */
+            #listContainer th:nth-child(1), #listContainer td:nth-child(1),
+            #listContainer th:nth-child(2), #listContainer td:nth-child(2),
+            #listContainer th:nth-child(3), #listContainer td:nth-child(3) {
                 border-right: 1px solid var(--glass-border) !important;
-            }
-            #listContainer td.term-col-content {
-                border-right: 1px solid var(--glass-border) !important;
-                padding-right: 16px !important;
-            }
-            #listContainer th.def-col, 
-            #listContainer td.def-col-content {
-                padding-left: 16px !important;
             }
         }
     </style>
@@ -441,11 +399,9 @@
         <div class="blob b2"></div>
     </div>
 
-    <!-- Header -->
     <header class="no-select">
         <div class="logo" onclick="location.reload()">
             <span class="text-xl font-logo font-semibold italic tracking-tight">Enged<span class="text-highlight">.</span></span>
-            <!-- Spacing adjustment: ml-4 for enged-powered, mr-1 for powered-webhub -->
             <span class="text-[10px] text-text-sub ml-4 mr-1 opacity-70 font-sans" style="transform: translateY(1px);">powered by</span>
             <span class="text-[10px] font-logo text-text-sub opacity-90" style="transform: translateY(1px);">WebHub</span>
         </div>
@@ -468,7 +424,6 @@
     </header>
 
     <main>
-        <!-- Nav Container -->
         <div class="section-card p-1.5 mb-6">
             <nav class="chip-nav no-select">
                 <div class="chip active" onclick="switchTab('dashboard')" id="btn-dashboard">홈</div>
@@ -478,7 +433,6 @@
             </nav>
         </div>
 
-        <!-- Loading -->
         <div id="loadingState" class="section-card flex flex-col items-center justify-center py-20 text-text-sub">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-primary"></i>
             <p>데이터 로딩 중...</p>
@@ -486,7 +440,6 @@
 
         <!-- 1. Home -->
         <div id="view-dashboard" class="hidden fade-in-up space-y-6">
-            <!-- Progress & Stats -->
             <section class="section-card flex flex-col gap-4 p-4">
                 <div class="flex flex-col justify-center">
                     <div class="flex justify-between items-end mb-1">
@@ -532,14 +485,12 @@
             <section class="section-card p-0 overflow-hidden flex flex-col h-[560px]" id="listSection">
                 <div class="p-3 border-b border-[var(--glass-border)] bg-[var(--glass-highlight)] shrink-0 no-print">
                     <div class="flex flex-wrap items-center gap-2">
-                         <!-- 유동적으로 늘어나고 모바일 시 밑으로 떨어지도록 flex-1 세팅, 높이를 버튼과 동일하게 맞춤 -->
                          <div class="flex-1 min-w-[140px] flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg px-3 focus-within:border-primary/50 transition-colors">
                              <i class="fa-solid fa-search text-text-dim"></i>
                              <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable()" 
                                 class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0 ml-2">
                          </div>
                          
-                         <!-- Action Buttons (Wrap safely) -->
                          <div class="flex items-center gap-1.5 shrink-0">
                              <button onclick="toggleHideTerms()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="hideTermBtn" title="단어 가리기">
                                 <span class="slash-wrapper"><i class="fa-solid fa-font"></i></span>
@@ -548,23 +499,21 @@
                                 <span class="slash-wrapper"><i class="fa-solid fa-align-left"></i></span>
                              </button>
                              <button onclick="toggleHideMemorized()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="hideBtn" title="암기된 단어 숨기기">
-                            <span class="slash-wrapper"><i class="fa-regular fa-eye"></i></span>
-                         </button>
-                         
-                         <!-- 구분선 -->
-                         <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
-                         
-                         <button onclick="toggleSort()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="sortBtn" title="정렬">
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                         </button>
-                         <!-- 모바일 사용자를 위한 도움말 버튼 추가 (pc-hide 클래스 적용) -->
-                         <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs pc-hide" title="도움말">
-                            <i class="fa-solid fa-question"></i>
-                         </button>
-                         <button onclick="toggleFullscreenList()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="전체화면">
-                            <i class="fa-solid fa-expand"></i>
-                         </button>
-                         <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
+                                <span class="slash-wrapper"><i class="fa-regular fa-eye"></i></span>
+                             </button>
+                             
+                             <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
+                             
+                             <button onclick="toggleSort()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="sortBtn" title="정렬">
+                                <i class="fa-solid fa-arrow-down-a-z"></i>
+                             </button>
+                             <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs pc-hide" title="도움말">
+                                <i class="fa-solid fa-question"></i>
+                             </button>
+                             <button onclick="toggleFullscreenList()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="전체화면">
+                                <i class="fa-solid fa-expand"></i>
+                             </button>
+                             <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
                                 <i class="fa-solid fa-print"></i>
                              </button>
                          </div>
@@ -575,12 +524,12 @@
                     <table class="w-full text-left border-collapse table-fixed">
                         <thead class="text-xs uppercase text-text-dim font-bold shadow-sm">
                             <tr>
-                                <th class="px-2 py-3 text-center w-8 mobile-hide">#</th>
-                                <th class="px-2 py-3 text-center w-10 pc-action-col"><i class="fa-solid fa-check"></i></th>
-                                <th class="px-2 py-3 text-center w-8 pc-action-col"><i class="fa-solid fa-star"></i></th>
-                                <th class="px-2 py-3 text-center w-10 mobile-actions-col"><i class="fa-solid fa-check"></i>/<i class="fa-solid fa-star"></i></th>
-                                <th class="px-2 py-3 term-col w-[20%]">Term</th>
-                                <th class="px-2 py-3 def-col w-auto">Definition</th>
+                                <th class="px-2 py-3 text-center w-12 mobile-hide">#</th>
+                                <th class="px-2 py-3 text-center w-16 mobile-hide">
+                                    <div class="flex flex-col items-center gap-1"><i class="fa-solid fa-check"></i><i class="fa-solid fa-star"></i></div>
+                                </th>
+                                <th class="px-4 py-3 term-col w-[30%]">Term</th>
+                                <th class="px-4 py-3 def-col w-auto">Definition</th>
                             </tr>
                         </thead>
                         <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
@@ -593,27 +542,24 @@
 
         <!-- 2. Flashcard -->
         <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center justify-center h-full pb-10">
-            <!-- Card -->
             <div class="flashcard-container perspective-1000" onclick="flipCard()">
-                <div id="flashcard-inner" class="flashcard-inner transform-style-3d duration-500">
+                <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
-                    <div class="flashcard-face backface-hidden">
+                    <div class="flashcard-face">
                         <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 font-sans shrink-0">Definition</span>
-                        <!-- Scroll Box with Visible Background -->
                         <div class="fc-scroll-box" onclick="event.stopPropagation()">
                             <div class="fc-inner-content">
                                 <h2 id="fc-front" class="text-lg md:text-xl font-bold text-text-main break-words font-sans leading-relaxed">Loading...</h2>
-                                <p id="fc-front-ko" class="mt-4 text-text-dim text-sm font-sans font-bold"></p>
+                                <p id="fc-front-ko" class="mt-4 text-gray-500 dark:text-gray-400 text-[11px] sm:text-xs font-kor font-light"></p>
                             </div>
                         </div>
-                        <div class="mt-2 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans shrink-0">
+                        <div class="mt-3 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans shrink-0">
                             <i class="fa-solid fa-arrow-pointer"></i> 탭하여 용어 확인
                         </div>
                     </div>
                     <!-- Back (Term) -->
-                    <div class="flashcard-face back rotate-y-180 backface-hidden">
+                    <div class="flashcard-face back">
                         <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 block font-sans shrink-0">Term</span>
-                        <!-- Scroll Box with Visible Background -->
                         <div class="fc-scroll-box" onclick="event.stopPropagation()">
                             <div class="fc-inner-content">
                                 <h3 id="fc-back-term" class="text-2xl md:text-3xl font-bold text-text-main mb-2 font-sans text-center"></h3>
@@ -632,10 +578,10 @@
                 <button onclick="shuffleCards()" class="btn btn-sec w-12 px-0 rounded-full text-text-sub hover:text-primary hover:bg-[var(--glass-highlight)] transition" title="섞기">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
-                <button onclick="toggleMemorizedFromCard()" class="btn btn-sec w-14 h-14 rounded-full border-2 border-green-500/50 text-green-500 hover:bg-green-500 hover:text-white transition" id="fc-check-btn" title="완료">
+                <button onclick="toggleMemorizedFromCard()" class="btn fc-btn-check w-14 h-14 rounded-full" id="fc-check-btn" title="완료">
                     <i class="fa-solid fa-check text-xl"></i>
                 </button>
-                <button onclick="toggleNotebookFromCard()" class="btn btn-sec w-12 px-0 rounded-full text-yellow-400 hover:bg-yellow-400/10 transition" id="fc-star-btn" title="중요">
+                <button onclick="toggleNotebookFromCard()" class="btn fc-btn-star w-12 px-0 rounded-full" id="fc-star-btn" title="중요">
                     <i class="fa-regular fa-star"></i>
                 </button>
                 <button onclick="nextCard()" class="btn btn-pri w-12 px-0 rounded-full" title="다음">
@@ -712,9 +658,9 @@
             <p style="margin: 4px 0 0; opacity: 0.7;">© 2026 Seungmin Woo. All rights reserved.</p>
         </footer>
 
-    </main> <!-- main 태그 닫힘 (모달을 main 태그 밖으로 이동) -->
+    </main>
 
-    <!-- Help Modal (헤더를 덮기 위해 main 태그 밖으로 이동) -->
+    <!-- Help Modal -->
     <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeHelpModal()">
         <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300" id="helpModalContent" onclick="event.stopPropagation()">
             <button onclick="closeHelpModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main transition">
@@ -724,45 +670,40 @@
             <div class="space-y-4 text-sm font-sans text-text-main">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-xs"></i></span></div>
-                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영어 단어를 숨깁니다. 터치 시 잠시 표시됩니다.</span></div>
+                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 터치 시 임시 표시.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-align-left text-xs"></i></span></div>
-                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 터치 시 잠시 표시됩니다.</span></div>
+                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 터치 시 임시 표시.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-regular fa-eye text-xs"></i></span></div>
-                    <div><strong class="text-primary">암기된 단어 숨기기</strong><br><span class="text-text-dim text-xs">완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
+                    <div><strong class="text-primary">암기 숨기기</strong><br><span class="text-text-dim text-xs">완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-arrow-down-a-z text-xs"></i></div>
-                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">오름차순/내림차순으로 단어를 정렬합니다.</span></div>
+                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳/가나다 순으로 정렬합니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-green-500 text-xs"></i></div>
-                    <div><strong class="text-primary">암기 완료</strong><br><span class="text-text-dim text-xs">다 외운 단어를 체크하여 학습 진행률을 올립니다.</span></div>
+                    <div><strong class="text-primary">암기 완료</strong><br><span class="text-text-dim text-xs">다 외운 단어를 체크하여 진행률을 올립니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-star text-yellow-400 text-xs"></i></div>
-                    <div><strong class="text-primary">단어장 (중요)</strong><br><span class="text-text-dim text-xs">나만의 단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
+                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">나만의 단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JS Logic -->
     <script>
-        // 모바일/PC 통합: 터치하거나 마우스를 누르고 있으면 가려진 글자 임시 표시
         document.addEventListener('pointerdown', (e) => {
             const target = e.target.closest('.blur-target');
-            if (target) {
-                target.classList.add('is-revealed');
-            }
+            if (target) target.classList.add('is-revealed');
         });
         const hideRevealed = () => {
             document.querySelectorAll('.is-revealed').forEach(el => el.classList.remove('is-revealed'));
         };
-        // 손/마우스를 떼거나 영역을 벗어나면 다시 가리기
         document.addEventListener('pointerup', hideRevealed);
         document.addEventListener('pointercancel', hideRevealed);
 
@@ -781,15 +722,8 @@
         applyTheme(savedTheme);
         themeToggle.onclick = () => applyTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
 
-        // --- App Data ---
         let allWords = [];
-        let appState = { 
-            memorized: {}, 
-            notebook: [], 
-            currentIndex: 0 
-        };
-        
-        // 퀴즈 상태 객체 수정
+        let appState = { memorized: {}, notebook: [], currentIndex: 0 };
         let quizState = { asked: new Set(), currentQIndex: 0, score: 0 };
         let isQuizActive = false;
         let sortOrder = 'asc'; 
@@ -798,13 +732,12 @@
         let hideTerms = false; 
         let hideDefs = false;
 
-        // D-Day Logic
         const ddayTextEl = document.getElementById('dday-text');
         const targetDate = new Date('2026-04-08T00:00:00');
         const now = new Date();
         const diff = targetDate - now;
         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        ddayTextEl.innerText = days > 0 ? `D-${days}` : "D-?"; // 0일 이하가 되면 D-? 로 표시
+        ddayTextEl.innerText = days > 0 ? `D-${days}` : "D-?"; 
 
         window.onload = async function() {
             loadLocalData();
@@ -871,13 +804,8 @@
                     }
                 }
                 
-                if (def) {
-                    def = def.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
-                }
-                if (koDef) {
-                    koDef = koDef.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
-                }
-
+                if (def) def = def.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
+                if (koDef) koDef = koDef.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
                 if (term && def) allWords.push({ term, koTerm, def, koDef });
             }
         }
@@ -924,6 +852,18 @@
         // --- Flashcard ---
         function loadFlashcard(idx) {
             if (allWords.length === 0) return;
+            
+            const inner = document.getElementById('flashcard-inner');
+            const isFlipped = inner.classList.contains('rotate-y-180');
+            
+            // 모바일/태블릿 잔상(Glitch) 제거를 위한 임시 애니메이션 비활성화
+            if (isFlipped) {
+                inner.style.transition = 'none';
+                inner.classList.remove('rotate-y-180');
+                void inner.offsetWidth; // 강제 리플로우
+                inner.style.transition = '';
+            }
+
             if (idx < 0) idx = 0;
             if (idx >= flashcardOrder.length) idx = flashcardOrder.length - 1;
             
@@ -936,8 +876,6 @@
             document.getElementById('fc-back-term').innerText = word.term;
             document.getElementById('fc-back-koterm').innerText = word.koTerm;
             
-            document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
-            
             updateFlashcardControls(word.term);
         }
 
@@ -945,35 +883,24 @@
             const isMemorized = appState.memorized[term];
             const isSaved = appState.notebook.includes(term);
             
-            // Check Btn
             const checkBtn = document.getElementById('fc-check-btn');
-            if(isMemorized) {
-                checkBtn.classList.remove('text-green-500', 'border-green-500/50');
-                checkBtn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-            } else {
-                checkBtn.classList.add('text-green-500', 'border-green-500/50');
-                checkBtn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
-            }
+            if(isMemorized) checkBtn.classList.add('active');
+            else checkBtn.classList.remove('active');
 
-            // Star Btn
             const starBtn = document.getElementById('fc-star-btn');
             starBtn.innerHTML = isSaved ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
         }
 
         function toggleMemorizedFromCard() {
             if(allWords.length === 0) return;
-            const realIndex = flashcardOrder[appState.currentIndex];
-            const term = allWords[realIndex].term;
-            
-            const currentlyMemorized = !!appState.memorized[term];
-            toggleMemorized(term, !currentlyMemorized);
+            const term = allWords[flashcardOrder[appState.currentIndex]].term;
+            toggleMemorized(term, !appState.memorized[term]);
             updateFlashcardControls(term);
         }
 
         function toggleNotebookFromCard() {
             if(allWords.length === 0) return;
-            const realIndex = flashcardOrder[appState.currentIndex];
-            const term = allWords[realIndex].term;
+            const term = allWords[flashcardOrder[appState.currentIndex]].term;
             toggleNotebook(term);
             updateFlashcardControls(term);
         }
@@ -989,28 +916,21 @@
             }
             appState.currentIndex = 0;
             loadFlashcard(0);
-            alert("카드가 섞였습니다!");
         }
 
-        // --- Notebook (Integration) ---
+        // --- Notebook ---
         function toggleNotebook(term) {
-            if (appState.notebook.includes(term)) {
-                appState.notebook = appState.notebook.filter(t => t !== term);
-            } else {
-                appState.notebook.push(term);
-            }
+            if (appState.notebook.includes(term)) appState.notebook = appState.notebook.filter(t => t !== term);
+            else appState.notebook.push(term);
             saveData();
-            const listTab = document.getElementById('view-dashboard');
-            if(!listTab.classList.contains('hidden')) renderListTable();
+            if(!document.getElementById('view-dashboard').classList.contains('hidden')) renderListTable();
         }
 
         function renderNotebook() {
             const container = document.getElementById('notebook-container');
             const emptyState = document.getElementById('notebook-empty');
-            const countEl = document.getElementById('nb-count');
+            document.getElementById('nb-count').innerText = `(${appState.notebook.length})`;
             container.innerHTML = '';
-            
-            countEl.innerText = `(${appState.notebook.length})`;
 
             if (appState.notebook.length === 0) {
                 emptyState.classList.remove('hidden');
@@ -1052,14 +972,9 @@
 
         // --- Quiz ---
         function startQuiz() {
-            if (allWords.length < 4) { return; }
+            if (allWords.length < 4) return;
             isQuizActive = true;
-            
-            quizState = {
-                asked: new Set(),
-                currentQIndex: 0,
-                score: 0
-            };
+            quizState = { asked: new Set(), currentQIndex: 0, score: 0 };
             
             document.getElementById('quiz-active-screen').classList.remove('hidden');
             document.getElementById('quiz-end-screen').classList.add('hidden');
@@ -1073,21 +988,17 @@
         function loadQuizQuestion() {
             quizState.currentQIndex++;
             document.getElementById('quiz-progress').innerText = `${quizState.currentQIndex}`;
-            
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('quiz-actions').classList.add('hidden');
             
-            // 재출제 로직
             let unasked = allWords.filter(w => !quizState.asked.has(w.term));
             let isRepeat = false;
             let currentQ;
 
             if (unasked.length === 0) {
-                // 남은 문제가 없으면 무조건 랜덤 재출제
                 currentQ = allWords[Math.floor(Math.random() * allWords.length)];
                 isRepeat = true;
             } else {
-                // 남은 문제가 있어도 25% 확률로 기존 문제 재출제
                 if (quizState.asked.size > 0 && Math.random() < 0.25) {
                     let askedArr = Array.from(quizState.asked);
                     currentQ = allWords.find(w => w.term === askedArr[Math.floor(Math.random() * askedArr.length)]);
@@ -1098,7 +1009,6 @@
             }
             quizState.asked.add(currentQ.term);
             
-            // 재출제 안내 배지 추가
             let questionHtml = currentQ.def;
             if (isRepeat) {
                 questionHtml = `<span class="inline-block bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 tracking-widest border border-blue-500/30">REPEATED</span><br>` + questionHtml;
@@ -1117,7 +1027,6 @@
             options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-highlight)] hover:bg-[var(--glass-border)] transition-all font-medium text-text-main flex items-center gap-3";
-                // 라이트/다크 양쪽 모두에서 원 속의 원 모양을 표현하기 위한 구조 변경
                 btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70"></div></div><span class="font-sans">${opt.term}</span>`;
                 btn.onclick = () => checkAnswer(opt, currentQ, btn);
                 container.appendChild(btn);
@@ -1159,10 +1068,7 @@
             document.getElementById('quiz-actions').classList.remove('hidden');
         }
 
-        function nextQuizQuestion() {
-            loadQuizQuestion();
-        }
-
+        function nextQuizQuestion() { loadQuizQuestion(); }
         function finishQuiz() {
             isQuizActive = false;
             document.getElementById('quiz-active-screen').classList.add('hidden');
@@ -1171,32 +1077,28 @@
             document.getElementById('quiz-final-total').innerText = quizState.currentQIndex;
         }
 
-        // --- List ---
+        // --- List Controls ---
         function toggleSort() {
             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-            const btn = document.getElementById('sortBtn');
-            btn.innerHTML = sortOrder === 'asc' ? '<i class="fa-solid fa-arrow-down-a-z"></i>' : '<i class="fa-solid fa-arrow-up-a-z"></i>';
+            document.getElementById('sortBtn').innerHTML = sortOrder === 'asc' ? '<i class="fa-solid fa-arrow-down-a-z"></i>' : '<i class="fa-solid fa-arrow-up-a-z"></i>';
             renderListTable();
         }
 
         function toggleHideMemorized() {
             hideMemorized = !hideMemorized;
-            const btn = document.getElementById('hideBtn');
-            btn.classList.toggle('btn-active', hideMemorized);
+            document.getElementById('hideBtn').classList.toggle('btn-active', hideMemorized);
             renderListTable();
         }
 
         function toggleHideTerms() {
             hideTerms = !hideTerms;
-            const btn = document.getElementById('hideTermBtn');
-            btn.classList.toggle('btn-active', hideTerms);
+            document.getElementById('hideTermBtn').classList.toggle('btn-active', hideTerms);
             renderListTable();
         }
         
         function toggleHideDefs() {
             hideDefs = !hideDefs;
-            const btn = document.getElementById('hideDefBtn');
-            btn.classList.toggle('btn-active', hideDefs);
+            document.getElementById('hideDefBtn').classList.toggle('btn-active', hideDefs);
             renderListTable();
         }
 
@@ -1218,7 +1120,7 @@
             const modal = document.getElementById('helpModal');
             const content = document.getElementById('helpModalContent');
             modal.classList.remove('hidden');
-            void modal.offsetWidth; // Trigger reflow for animation
+            void modal.offsetWidth; 
             modal.classList.remove('opacity-0');
             content.classList.remove('scale-95');
             content.classList.add('scale-100');
@@ -1230,9 +1132,7 @@
             modal.classList.add('opacity-0');
             content.classList.remove('scale-100');
             content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
         function renderListTable() {
@@ -1243,29 +1143,17 @@
             
             let filtered = allWords.filter(word => {
                 if (hideMemorized && appState.memorized[word.term]) return false;
-
                 if(!query) return true;
-                return word.term.toLowerCase().includes(query) || 
-                       word.koTerm.includes(query) || 
-                       word.def.toLowerCase().includes(query);
+                return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.def.toLowerCase().includes(query);
             });
 
-            // Sort Logic: Term > Definition
             filtered.sort((a, b) => {
-                // Priority Search Sort if query exists
                 if (query) {
                     const aTermHas = a.term.toLowerCase().includes(query);
                     const bTermHas = b.term.toLowerCase().includes(query);
-                    
-                    // If a has term match and b doesn't, a comes first
                     if(aTermHas && !bTermHas) return -1;
-                    // If b has term match and a doesn't, b comes first
                     if(!aTermHas && bTermHas) return 1;
-                    
-                    // If both match term, proceed to standard sort
-                    // If neither matches term (must match def), proceed to standard sort
                 }
-                
                 const compare = a.term.localeCompare(b.term);
                 return sortOrder === 'asc' ? compare : -compare;
             });
@@ -1288,20 +1176,10 @@
                 const defClass = hideDefs ? 'blur-target' : '';
 
                 tr.innerHTML = `
-                    <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide">${idx + 1}</td>
-                    <td class="px-2 py-3 text-center pc-action-col">
-                        <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim hover:text-green-400'}">
-                            <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
-                        </button>
-                    </td>
-                    <td class="px-2 py-3 text-center cursor-pointer pc-action-col" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
-                        <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim hover:text-yellow-400 transition'}"></i>
-                    </td>
-                    
-                    <!-- Mobile Combined Actions Column -->
-                    <td class="px-2 py-3 text-center mobile-actions-col">
+                    <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
+                    <td class="px-2 py-3 text-center actions-col">
                         <div class="flex flex-col items-center gap-2">
-                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1">${idx + 1}</span>
+                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 pc-hide">${idx + 1}</span>
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
                                 <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
@@ -1310,13 +1188,11 @@
                             </div>
                         </div>
                     </td>
-
-                    <!-- PC 버전 경계선을 위해 term-col-content, def-col-content 클래스 적용, leading-[1.1]로 좁힌 줄간격 적용 -->
-                    <td class="px-2 py-3 align-top term-col-content">
-                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words leading-[1.1] ${termClass}">${highlight(word.term)}</div>
+                    <td class="px-3 py-3 align-top term-col-content">
+                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words ${termClass}" style="line-height: 0.95; padding-bottom: 0.1em;">${highlight(word.term)}</div>
                         <div class="text-xs font-bold text-blue-400 font-kor mt-1 break-words ${termClass}">${highlight(word.koTerm)}</div>
                     </td>
-                    <td class="px-2 py-3 align-top def-col-content">
+                    <td class="px-3 py-3 align-top def-col-content">
                         <div class="text-xs sm:text-[13.5px] text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass}">${highlight(word.def)}</div>
                         <div class="text-xs text-gray-500 dark:text-gray-400 font-kor opacity-80 leading-snug break-words ${defClass}">${highlight(word.koDef)}</div>
                     </td>
