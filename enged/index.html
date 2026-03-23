@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
+    <!-- PWA & iOS Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,12 +13,37 @@
     <title>Enged.</title>
     <meta name="theme-color" content="#050505" />
     
+    <!-- 기본 Favicon (데스크탑 및 일반 브라우저용 SVG) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2789' height='2789' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-102 638)'%3E%3Crect x='102' y='-638' width='2789' height='2789' fill='%23050505'/%3E%3Cpath d='M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg width='2789' height='2789' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-102 638)'%3E%3Crect x='102' y='-638' width='2789' height='2789' fill='%23050505'/%3E%3Cpath d='M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E">
+    
+    <!-- iOS Apple Touch Icon (SVG 지원이 안되므로 캔버스를 통해 PNG로 즉시 자동 변환하여 주입) -->
+    <script>
+        (function() {
+            const svgData = `<svg width="2789" height="2789" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-102 638)"><rect x="102" y="-638" width="2789" height="2789" fill="#050505"/><path d="M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z" fill="#F2F5F9" fill-rule="evenodd"/><path d="M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z" fill="#F2C14B" fill-rule="evenodd"/></g></svg>`;
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, 512, 512);
+                const link = document.createElement('link');
+                link.rel = 'apple-touch-icon';
+                link.href = canvas.toDataURL('image/png'); // iOS가 인식할 수 있는 PNG 형식으로 변환
+                document.head.appendChild(link);
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
+        })();
+    </script>
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
@@ -333,9 +359,11 @@
         <div class="blob b2"></div>
     </div>
 
+    <!-- Header -->
     <header class="no-select">
         <div class="logo" onclick="location.reload()">
             <span class="text-xl font-logo font-semibold italic tracking-tight">Enged<span class="text-highlight">.</span></span>
+            <!-- Spacing adjustment: ml-4 for enged-powered, mr-1 for powered-webhub -->
             <span class="text-[10px] text-text-sub ml-4 mr-1 opacity-70 font-sans" style="transform: translateY(1px);">powered by</span>
             <span class="text-[10px] font-logo text-text-sub opacity-90" style="transform: translateY(1px);">WebHub</span>
         </div>
@@ -358,6 +386,7 @@
     </header>
 
     <main>
+        <!-- Nav Container -->
         <div class="section-card p-1.5 mb-6">
             <nav class="chip-nav no-select">
                 <div class="chip active" onclick="switchTab('dashboard')" id="btn-dashboard">홈</div>
@@ -367,12 +396,15 @@
             </nav>
         </div>
 
+        <!-- Loading -->
         <div id="loadingState" class="section-card flex flex-col items-center justify-center py-20 text-text-sub">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-primary"></i>
             <p>데이터 로딩 중...</p>
         </div>
 
+        <!-- 1. Home -->
         <div id="view-dashboard" class="hidden fade-in-up space-y-6">
+            <!-- Progress & Stats -->
             <section class="section-card flex flex-col gap-4 p-4">
                 <div class="flex flex-col justify-center">
                     <div class="flex justify-between items-end mb-1">
@@ -414,6 +446,7 @@
                 </div>
             </section>
 
+            <!-- List -->
             <section class="section-card p-0 overflow-hidden flex flex-col h-[560px]" id="listSection">
                 <div class="p-3 border-b border-[var(--glass-border)] flex flex-col gap-2 bg-[var(--glass-highlight)] shrink-0 no-print">
                     <div class="flex items-center gap-2">
@@ -451,17 +484,22 @@
                             </tr>
                         </thead>
                         <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
-                            </tbody>
+                            <!-- JS Generated -->
+                        </tbody>
                     </table>
                 </div>
             </section>
         </div>
 
+        <!-- 2. Flashcard -->
         <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center justify-center h-full pb-10">
+            <!-- Card -->
             <div class="flashcard-container perspective-1000" onclick="flipCard()">
                 <div id="flashcard-inner" class="flashcard-inner transform-style-3d duration-500">
+                    <!-- Front (Def) -->
                     <div class="flashcard-face backface-hidden">
                         <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 font-sans shrink-0">Definition</span>
+                        <!-- Scroll Box with Visible Background -->
                         <div class="fc-scroll-box" onclick="event.stopPropagation()">
                             <div class="fc-inner-content">
                                 <h2 id="fc-front" class="text-lg md:text-xl font-bold text-text-main break-words font-sans leading-relaxed">Loading...</h2>
@@ -472,8 +510,10 @@
                             <i class="fa-solid fa-arrow-pointer"></i> 탭하여 용어 확인
                         </div>
                     </div>
+                    <!-- Back (Term) -->
                     <div class="flashcard-face back rotate-y-180 backface-hidden">
                         <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 block font-sans shrink-0">Term</span>
+                        <!-- Scroll Box with Visible Background -->
                         <div class="fc-scroll-box" onclick="event.stopPropagation()">
                             <div class="fc-inner-content">
                                 <h3 id="fc-back-term" class="text-2xl md:text-3xl font-bold text-text-main mb-2 font-sans text-center"></h3>
@@ -484,6 +524,7 @@
                 </div>
             </div>
 
+            <!-- Bottom Controls -->
             <div class="flex items-center gap-3 mt-8 justify-center">
                 <button onclick="prevCard()" class="btn btn-pri w-12 px-0 rounded-full" title="이전">
                     <i class="fa-solid fa-arrow-left"></i>
@@ -503,6 +544,7 @@
             </div>
         </div>
 
+        <!-- 3. Quiz -->
         <div id="view-quiz" class="hidden fade-in-up max-w-2xl mx-auto">
             <div id="quiz-game">
                 <div class="flex justify-between items-end mb-4 px-1">
@@ -518,7 +560,8 @@
                 </div>
 
                 <div id="quiz-options" class="grid grid-cols-1 gap-3">
-                    </div>
+                    <!-- JS Generated -->
+                </div>
 
                 <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
 
@@ -528,6 +571,7 @@
             </div>
         </div>
 
+        <!-- 4. Notebook -->
         <div id="view-notebook" class="hidden fade-in-up">
             <div class="flex justify-between items-center mb-4 px-1">
                 <h2 class="text-lg font-bold text-text-main font-kor">나만의 단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
@@ -539,7 +583,8 @@
             </div>
 
             <div id="notebook-container" class="space-y-3">
-                </div>
+                <!-- Cards -->
+            </div>
             
             <div id="notebook-empty" class="hidden flex flex-col items-center justify-center py-20 text-text-dim">
                 <i class="fa-regular fa-star text-4xl mb-3 opacity-50"></i>
@@ -557,6 +602,7 @@
 
     </main>
 
+    <!-- JS Logic -->
     <script>
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
@@ -1042,6 +1088,7 @@
                         <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim hover:text-yellow-400 transition'}"></i>
                     </td>
                     
+                    <!-- Mobile Combined Actions Column -->
                     <td class="px-2 py-3 text-center mobile-actions-col">
                         <div class="flex flex-col items-center gap-3">
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
