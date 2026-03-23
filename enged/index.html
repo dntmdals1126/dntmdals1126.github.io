@@ -101,8 +101,8 @@
             --header-bg: rgba(255, 255, 255, 0.9);
             --primary: #2563eb; 
             --text-main: #1e293b;
-            --text-sub: #475569; /* 기존 #64748b 에서 약 10% 더 어둡게 */
-            --text-dim: #64748b; /* 기존 #94a3b8 에서 약 10% 더 어둡게 */
+            --text-sub: #475569;
+            --text-dim: #64748b;
             --text-def: #111827; 
             color-scheme: light;
         }
@@ -513,7 +513,6 @@
                                 <th class="px-2 py-3 text-center w-[90px] mobile-hide">
                                     <div class="flex flex-row justify-center items-center gap-4"><i class="fa-solid fa-check"></i><i class="fa-solid fa-star"></i></div>
                                 </th>
-                                <!-- PC버전 Term 폭 20% 원복 -->
                                 <th class="px-4 py-3 term-col w-[20%]">Term</th>
                                 <th class="px-4 py-3 def-col w-auto">Definition</th>
                             </tr>
@@ -540,7 +539,7 @@
                             </div>
                         </div>
                         <div class="mt-3 text-text-dim text-xs flex items-center gap-1 animate-pulse font-sans shrink-0">
-                            <i class="fa-solid fa-arrow-pointer"></i> 탭하여 용어 확인
+                            <i class="fa-solid fa-arrow-pointer"></i> 여백 부분을 탭하여 용어 확인
                         </div>
                     </div>
                     <!-- Back (Term) -->
@@ -618,7 +617,7 @@
         <!-- 4. Notebook -->
         <div id="view-notebook" class="hidden fade-in-up">
             <div class="flex justify-between items-center mb-4 px-1">
-                <h2 class="text-lg font-bold text-text-main font-kor">나만의 단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
+                <h2 class="text-lg font-bold text-text-main font-kor">단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
                 <div class="flex gap-2">
                     <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">
                         비우기
@@ -656,19 +655,19 @@
             <div class="space-y-4 text-sm font-sans text-text-main">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-xs"></i></span></div>
-                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 마우스를 올리거나 터치 시 임시 표시.</span></div>
+                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 가려진 부분에 마우스를 올리거나 터치하는 경우 내용이 일시적으로 표시됩니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-align-left text-xs"></i></span></div>
-                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 마우스를 올리거나 터치 시 임시 표시.</span></div>
+                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 가려진 부분에 마우스를 올리거나 터치하는 경우 내용이 일시적으로 표시됩니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-regular fa-eye text-xs"></i></span></div>
-                    <div><strong class="text-primary">암기 숨기기</strong><br><span class="text-text-dim text-xs">완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
+                    <div><strong class="text-primary">암기 숨기기</strong><br><span class="text-text-dim text-xs">암기 완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-arrow-down-a-z text-xs"></i></div>
-                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳/가나다 순으로 정렬합니다.</span></div>
+                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳 순/알파벳 역순으로 정렬합니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-green-500 text-xs"></i></div>
@@ -676,7 +675,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-star text-yellow-400 text-xs"></i></div>
-                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">나만의 단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
+                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
                 </div>
             </div>
         </div>
