@@ -416,6 +416,20 @@
         @media (min-width: 481px) {
             .mobile-actions-col { display: none !important; }
             .pc-action-col { display: table-cell !important; }
+            .pc-hide { display: none !important; } /* PC 버전 숨김 클래스 추가 */
+            
+            /* PC버전 TERM / DEFINITION 사이 세로선 추가 */
+            #listContainer th.term-col {
+                border-right: 1px solid var(--glass-border) !important;
+            }
+            #listContainer td.term-col-content {
+                border-right: 1px solid var(--glass-border) !important;
+                padding-right: 16px !important;
+            }
+            #listContainer th.def-col, 
+            #listContainer td.def-col-content {
+                padding-left: 16px !important;
+            }
         }
     </style>
 </head>
@@ -534,19 +548,23 @@
                                 <span class="slash-wrapper"><i class="fa-solid fa-align-left"></i></span>
                              </button>
                              <button onclick="toggleHideMemorized()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="hideBtn" title="암기된 단어 숨기기">
-                                <span class="slash-wrapper"><i class="fa-regular fa-eye"></i></span>
-                             </button>
-                             
-                             <!-- 구분선 -->
-                             <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
-                             
-                             <button onclick="toggleSort()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="sortBtn" title="정렬">
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                             </button>
-                             <button onclick="toggleFullscreenList()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="전체화면">
-                                <i class="fa-solid fa-expand"></i>
-                             </button>
-                             <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
+                            <span class="slash-wrapper"><i class="fa-regular fa-eye"></i></span>
+                         </button>
+                         
+                         <!-- 구분선 -->
+                         <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
+                         
+                         <button onclick="toggleSort()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="sortBtn" title="정렬">
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                         </button>
+                         <!-- 모바일 사용자를 위한 도움말 버튼 추가 (pc-hide 클래스 적용) -->
+                         <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs pc-hide" title="도움말">
+                            <i class="fa-solid fa-question"></i>
+                         </button>
+                         <button onclick="toggleFullscreenList()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="전체화면">
+                            <i class="fa-solid fa-expand"></i>
+                         </button>
+                         <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
                                 <i class="fa-solid fa-print"></i>
                              </button>
                          </div>
@@ -629,27 +647,39 @@
         <!-- 3. Quiz -->
         <div id="view-quiz" class="hidden fade-in-up max-w-2xl mx-auto">
             <div id="quiz-game">
-                <div class="flex justify-between items-end mb-4 px-1">
-                    <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
-                    <span id="quiz-score" class="text-xs font-bold text-primary bg-[var(--glass-highlight)] px-2 py-1 rounded font-sans">0</span>
+                <div id="quiz-active-screen">
+                    <div class="flex justify-between items-end mb-4 px-1">
+                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">QUESTION <span id="quiz-progress" class="text-text-main ml-1"></span></span>
+                        <span id="quiz-score" class="text-xs font-bold text-primary bg-[var(--glass-highlight)] px-2 py-1 rounded font-sans">0</span>
+                    </div>
+                    
+                    <div class="section-card mb-4 min-h-[140px] flex flex-col justify-center items-center text-center">
+                        <p class="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest border-b border-primary/20 pb-1 font-sans">Definition</p>
+                        <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">
+                            문제 내용이 여기에 표시됩니다.
+                        </p>
+                    </div>
+
+                    <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                        <!-- JS Generated -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
+
+                    <div id="quiz-actions" class="hidden flex gap-2 w-full mt-4">
+                        <button onclick="finishQuiz()" class="btn btn-sec flex-[0.3] justify-center font-sans text-xs">종료</button>
+                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans">다음 문제 <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                    </div>
                 </div>
                 
-                <div class="section-card mb-4 min-h-[140px] flex flex-col justify-center items-center text-center">
-                    <p class="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest border-b border-primary/20 pb-1 font-sans">Definition</p>
-                    <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">
-                        문제 내용이 여기에 표시됩니다.
-                    </p>
+                <div id="quiz-end-screen" class="hidden section-card text-center py-10">
+                    <h2 class="text-xl font-bold text-text-main mb-2 font-sans">Quiz Completed!</h2>
+                    <p class="text-lg mb-6 font-sans">Score: <span id="quiz-final-score" class="text-primary font-bold">0</span> / <span id="quiz-final-total">0</span></p>
+                    <div class="flex justify-center gap-3">
+                        <button onclick="startQuiz()" class="btn btn-pri font-sans">Restart</button>
+                        <button onclick="switchTab('notebook')" class="btn btn-sec font-sans">Review Notebook</button>
+                    </div>
                 </div>
-
-                <div id="quiz-options" class="grid grid-cols-1 gap-3">
-                    <!-- JS Generated -->
-                </div>
-
-                <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
-
-                <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden btn btn-pri w-full mt-4 justify-center font-sans">
-                    다음 문제 <i class="fa-solid fa-arrow-right ml-2"></i>
-                </button>
             </div>
         </div>
 
@@ -682,7 +712,43 @@
             <p style="margin: 4px 0 0; opacity: 0.7;">© 2026 Seungmin Woo. All rights reserved.</p>
         </footer>
 
-    </main>
+    </main> <!-- main 태그 닫힘 (모달을 main 태그 밖으로 이동) -->
+
+    <!-- Help Modal (헤더를 덮기 위해 main 태그 밖으로 이동) -->
+    <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeHelpModal()">
+        <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300" id="helpModalContent" onclick="event.stopPropagation()">
+            <button onclick="closeHelpModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2"><i class="fa-solid fa-circle-info text-primary"></i> 기능 도움말</h3>
+            <div class="space-y-4 text-sm font-sans text-text-main">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-xs"></i></span></div>
+                    <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영어 단어를 숨깁니다. 터치 시 잠시 표시됩니다.</span></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-align-left text-xs"></i></span></div>
+                    <div><strong class="text-primary">해설 가리기</strong><br><span class="text-text-dim text-xs">리스트의 뜻/해설을 숨깁니다. 터치 시 잠시 표시됩니다.</span></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-regular fa-eye text-xs"></i></span></div>
+                    <div><strong class="text-primary">암기된 단어 숨기기</strong><br><span class="text-text-dim text-xs">완료 표시한 단어를 리스트에서 숨깁니다.</span></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-arrow-down-a-z text-xs"></i></div>
+                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">오름차순/내림차순으로 단어를 정렬합니다.</span></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-green-500 text-xs"></i></div>
+                    <div><strong class="text-primary">암기 완료</strong><br><span class="text-text-dim text-xs">다 외운 단어를 체크하여 학습 진행률을 올립니다.</span></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-star text-yellow-400 text-xs"></i></div>
+                    <div><strong class="text-primary">단어장 (중요)</strong><br><span class="text-text-dim text-xs">나만의 단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JS Logic -->
     <script>
@@ -723,7 +789,8 @@
             currentIndex: 0 
         };
         
-        let quizState = { questions: [], currentQIndex: 0, score: 0 };
+        // 퀴즈 상태 객체 수정
+        let quizState = { asked: new Set(), currentQIndex: 0, score: 0 };
         let isQuizActive = false;
         let sortOrder = 'asc'; 
         let flashcardOrder = []; 
@@ -987,29 +1054,56 @@
         function startQuiz() {
             if (allWords.length < 4) { return; }
             isQuizActive = true;
-            const shuffled = [...allWords].sort(() => 0.5 - Math.random());
-            quizState.questions = shuffled;
-            quizState.currentQIndex = 0;
-            quizState.score = 0;
             
+            quizState = {
+                asked: new Set(),
+                currentQIndex: 0,
+                score: 0
+            };
+            
+            document.getElementById('quiz-active-screen').classList.remove('hidden');
+            document.getElementById('quiz-end-screen').classList.add('hidden');
             document.getElementById('quiz-score').innerText = `0`;
-            document.getElementById('quiz-next-btn').classList.add('hidden');
+            document.getElementById('quiz-actions').classList.add('hidden');
             document.getElementById('quiz-feedback').classList.add('hidden');
             
             loadQuizQuestion();
         }
 
         function loadQuizQuestion() {
-            if (quizState.currentQIndex >= quizState.questions.length) {
-                finishQuiz();
-                return;
-            }
-            const currentQ = quizState.questions[quizState.currentQIndex];
-            document.getElementById('quiz-progress').innerText = `${quizState.currentQIndex + 1}/${quizState.questions.length}`;
-            document.getElementById('quiz-question').innerHTML = currentQ.def;
+            quizState.currentQIndex++;
+            document.getElementById('quiz-progress').innerText = `${quizState.currentQIndex}`;
             
             document.getElementById('quiz-feedback').classList.add('hidden');
-            document.getElementById('quiz-next-btn').classList.add('hidden');
+            document.getElementById('quiz-actions').classList.add('hidden');
+            
+            // 재출제 로직
+            let unasked = allWords.filter(w => !quizState.asked.has(w.term));
+            let isRepeat = false;
+            let currentQ;
+
+            if (unasked.length === 0) {
+                // 남은 문제가 없으면 무조건 랜덤 재출제
+                currentQ = allWords[Math.floor(Math.random() * allWords.length)];
+                isRepeat = true;
+            } else {
+                // 남은 문제가 있어도 25% 확률로 기존 문제 재출제
+                if (quizState.asked.size > 0 && Math.random() < 0.25) {
+                    let askedArr = Array.from(quizState.asked);
+                    currentQ = allWords.find(w => w.term === askedArr[Math.floor(Math.random() * askedArr.length)]);
+                    isRepeat = true;
+                } else {
+                    currentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                }
+            }
+            quizState.asked.add(currentQ.term);
+            
+            // 재출제 안내 배지 추가
+            let questionHtml = currentQ.def;
+            if (isRepeat) {
+                questionHtml = `<span class="inline-block bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 tracking-widest border border-blue-500/30">REPEATED</span><br>` + questionHtml;
+            }
+            document.getElementById('quiz-question').innerHTML = questionHtml;
             
             let options = [currentQ];
             while (options.length < 4) {
@@ -1023,14 +1117,15 @@
             options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-highlight)] hover:bg-[var(--glass-border)] transition-all font-medium text-text-main flex items-center gap-3";
-                btn.innerHTML = `<div class="w-6 h-6 rounded-full border border-text-dim flex items-center justify-center text-[10px] text-text-dim">●</div><span class="font-sans">${opt.term}</span>`;
+                // 라이트/다크 양쪽 모두에서 원 속의 원 모양을 표현하기 위한 구조 변경
+                btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70"></div></div><span class="font-sans">${opt.term}</span>`;
                 btn.onclick = () => checkAnswer(opt, currentQ, btn);
                 container.appendChild(btn);
             });
         }
 
         function checkAnswer(selected, correct, btnElement) {
-            if (!document.getElementById('quiz-next-btn').classList.contains('hidden')) return;
+            if (!document.getElementById('quiz-actions').classList.contains('hidden')) return;
             const feedback = document.getElementById('quiz-feedback');
             const btns = document.getElementById('quiz-options').children;
             
@@ -1039,8 +1134,9 @@
                 btn.disabled = true;
                 if (btn.innerText.includes(correct.term)) {
                     btn.classList.add('border-green-500', 'bg-green-500/10');
-                    btn.querySelector('div').classList.add('bg-green-500', 'border-transparent', 'text-white');
-                    btn.querySelector('div').innerHTML = '<i class="fa-solid fa-check"></i>';
+                    btn.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
+                    btn.querySelector('div').classList.add('bg-green-500', 'text-white');
+                    btn.querySelector('div').innerHTML = '<i class="fa-solid fa-check text-xs"></i>';
                 }
             }
 
@@ -1050,8 +1146,9 @@
                 feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
             } else {
                 btnElement.classList.add('border-red-500', 'bg-red-500/10');
-                btnElement.querySelector('div').classList.add('bg-red-500', 'border-transparent', 'text-white');
-                btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
+                btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
+                btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-xs"></i>';
                 feedback.innerHTML = `<span class="text-red-500">Wrong! Answer: <b>${correct.term}</b></span>`;
                 
                 if (!appState.notebook.includes(correct.term)) {
@@ -1059,26 +1156,19 @@
                     saveData();
                 }
             }
-            document.getElementById('quiz-next-btn').classList.remove('hidden');
+            document.getElementById('quiz-actions').classList.remove('hidden');
         }
 
         function nextQuizQuestion() {
-            quizState.currentQIndex++;
             loadQuizQuestion();
         }
 
         function finishQuiz() {
             isQuizActive = false;
-            document.getElementById('quiz-game').innerHTML = `
-                <div class="section-card text-center py-10">
-                    <h2 class="text-xl font-bold text-text-main mb-2 font-sans">Quiz Completed!</h2>
-                    <p class="text-lg mb-6 font-sans">Score: <span class="text-primary font-bold">${quizState.score}</span> / ${quizState.questions.length}</p>
-                    <div class="flex justify-center gap-3">
-                        <button onclick="window.location.reload()" class="btn btn-pri font-sans">Restart</button>
-                        <button onclick="switchTab('notebook')" class="btn btn-sec font-sans">Review Notebook</button>
-                    </div>
-                </div>
-            `;
+            document.getElementById('quiz-active-screen').classList.add('hidden');
+            document.getElementById('quiz-end-screen').classList.remove('hidden');
+            document.getElementById('quiz-final-score').innerText = quizState.score;
+            document.getElementById('quiz-final-total').innerText = quizState.currentQIndex;
         }
 
         // --- List ---
@@ -1121,6 +1211,28 @@
                 el.classList.remove('h-screen');
                 el.querySelector('#listContainer').style.maxHeight = '500px';
             }
+        }
+        
+        // Modal Help Controls
+        function openHelpModal() {
+            const modal = document.getElementById('helpModal');
+            const content = document.getElementById('helpModalContent');
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; // Trigger reflow for animation
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeHelpModal() {
+            const modal = document.getElementById('helpModal');
+            const content = document.getElementById('helpModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         function renderListTable() {
@@ -1199,12 +1311,13 @@
                         </div>
                     </td>
 
-                    <td class="px-2 py-3 align-top">
-                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words leading-tight ${termClass}">${highlight(word.term)}</div>
-                        <div class="text-xs font-bold text-blue-400 font-kor mt-0.5 break-words ${termClass}">${highlight(word.koTerm)}</div>
+                    <!-- PC 버전 경계선을 위해 term-col-content, def-col-content 클래스 적용, leading-[1.1]로 좁힌 줄간격 적용 -->
+                    <td class="px-2 py-3 align-top term-col-content">
+                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words leading-[1.1] ${termClass}">${highlight(word.term)}</div>
+                        <div class="text-xs font-bold text-blue-400 font-kor mt-1 break-words ${termClass}">${highlight(word.koTerm)}</div>
                     </td>
-                    <td class="px-2 py-3 align-top">
-                        <div class="text-xs text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass}">${highlight(word.def)}</div>
+                    <td class="px-2 py-3 align-top def-col-content">
+                        <div class="text-xs sm:text-[13.5px] text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass}">${highlight(word.def)}</div>
                         <div class="text-xs text-gray-500 dark:text-gray-400 font-kor opacity-80 leading-snug break-words ${defClass}">${highlight(word.koDef)}</div>
                     </td>
                 `;
