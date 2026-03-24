@@ -1095,11 +1095,14 @@
         function loadLocalData() {
             const saved = localStorage.getItem('engVocabState');
             if (saved) {
-                const parsed = JSON.parse(saved);
-                if (parsed.mistakes && !parsed.notebook) parsed.notebook = parsed.mistakes;
-                if (!parsed.quizState) parsed.quizState = { asked: [], score: 0 };
-                if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
-                appState = { ...appState, ...parsed };
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.mistakes && !parsed.notebook) parsed.notebook = parsed.mistakes;
+                    // 이전 버전 데이터와 충돌을 막기 위한 안전장치 추가
+                    if (!parsed.quizState || !Array.isArray(parsed.quizState.asked)) parsed.quizState = { asked: [], score: 0 };
+                    if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
+                    appState = { ...appState, ...parsed };
+                } catch(e) {}
             }
         }
         function saveData() {
@@ -1481,6 +1484,10 @@
             if (allWords.length < 4) return;
             isQuizActive = true;
             
+            if (!appState.quizState || !Array.isArray(appState.quizState.asked)) {
+                appState.quizState = { asked: [], score: 0 };
+            }
+            
             if (appState.quizState.asked.length >= allWords.length) {
                 appState.quizState = { asked: [], score: 0 };
                 saveData();
@@ -1499,23 +1506,30 @@
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('quiz-actions').classList.add('hidden');
             
+            if (!Array.isArray(appState.quizState.asked)) appState.quizState.asked = [];
+            
             let unasked = allWords.filter(w => !appState.quizState.asked.includes(w.term));
             let isRepeat = false;
 
             if (unasked.length === 0) {
                 appState.quizState.asked = []; 
                 unasked = allWords;
-                isRepeat = true;
             }
 
+            // 25% 확률로 이미 풀었던 문제를 복습(REPEATED) 출제
             if (appState.quizState.asked.length > 0 && Math.random() < 0.25) {
                 quizCurrentQ = allWords.find(w => w.term === appState.quizState.asked[Math.floor(Math.random() * appState.quizState.asked.length)]);
-                isRepeat = true;
+                if (quizCurrentQ) {
+                    isRepeat = true;
+                } else {
+                    quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                    appState.quizState.asked.push(quizCurrentQ.term);
+                }
             } else {
                 quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
                 appState.quizState.asked.push(quizCurrentQ.term);
-                saveData();
             }
+            saveData();
             
             document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
 
