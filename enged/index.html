@@ -272,6 +272,11 @@
         .fc-inner-content {
             width: 100%; margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; align-items: center; text-align: center;
         }
+        /* Front side (Definition) left align */
+        .flashcard-face.front .fc-inner-content { align-items: flex-start; text-align: left; }
+        /* Back side (Term) center align */
+        .flashcard-face.back .fc-inner-content { align-items: center; text-align: center; }
+
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
 
@@ -314,22 +319,20 @@
         thead th { position: sticky; top: 0; z-index: 10; background-color: var(--bg-dark); }
         html[data-theme="light"] thead th { background-color: #ffffff; }
 
-        /* Fullscreen Fallback for iOS Web Apps */
-        .fullscreen-fallback {
+        /* CSS Fallback for Fullscreen (Robust iOS Support) */
+        .list-fullscreen {
             position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
             height: 100dvh !important; width: 100vw !important; z-index: 9999 !important;
             margin: 0 !important; border-radius: 0 !important; max-width: none !important;
             background: var(--bg-dark) !important;
             display: flex !important; flex-direction: column !important;
         }
-        .fullscreen-fallback #listContainer {
-            flex: 1 !important; max-height: none !important; height: auto !important;
-        }
+        .list-fullscreen #listContainer { flex: 1 !important; max-height: none !important; height: auto !important; }
 
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
-            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal, #settingsModal { display: none !important; }
+            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #btn-print, #sortBtn, #fontBtn, #hideBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal, #settingsModal { display: none !important; }
             main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; }
             #view-dashboard { display: block !important; }
             #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: white !important; }
@@ -339,8 +342,6 @@
             thead th { position: static !important; border: 1px solid #ddd !important; }
             tbody tr { break-inside: avoid; display: table-row !important; }
             td { border: 1px solid #ddd !important; padding: 4px !important; color: black !important; display: table-cell !important; }
-            .text-xs { font-size: 10pt !important; }
-            .text-sm { font-size: 11pt !important; }
             .font-bold { font-weight: bold !important; }
             .mobile-hide { display: none !important; }
             
@@ -451,7 +452,6 @@
                 <i class="fa-solid fa-gear text-sm"></i>
             </button>
             <button class="tool-btn" id="themeToggle" title="테마 변경">
-                <!-- 라이트 모드 해 모양 아이콘 렌더링 최적화(Line) -->
                 <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
                 <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
                     <circle cx="12" cy="12" r="5"></circle>
@@ -552,6 +552,10 @@
                              
                              <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
                              
+                             <!-- 폰트 사이즈 조절 버튼 추가 -->
+                             <button onclick="cycleFontSize()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs font-bold font-sans" id="fontBtn" title="글자 크기 조절">
+                                A
+                             </button>
                              <button onclick="toggleSort()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" id="sortBtn" title="정렬">
                                 <i class="fa-solid fa-arrow-down-a-z"></i>
                              </button>
@@ -605,14 +609,14 @@
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
                     <div class="flashcard-face front">
-                        <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 font-sans shrink-0">Definition</span>
+                        <span class="text-xs text-primary font-bold uppercase tracking-widest mb-2 font-sans shrink-0 self-start">Definition</span>
                         <div class="fc-scroll-box" onclick="event.stopPropagation()">
                             <div class="fc-inner-content">
                                 <h2 id="fc-front" class="text-lg md:text-xl font-bold text-text-main break-words font-sans leading-relaxed">Loading...</h2>
-                                <p id="fc-front-ko" class="mt-4 text-gray-600 dark:text-gray-400 text-[11px] sm:text-xs font-kor font-light"></p>
+                                <p id="fc-front-ko" class="mt-4 text-gray-500 dark:text-gray-400 text-xs font-kor font-medium"></p>
                             </div>
                         </div>
-                        <div class="mt-3 text-text-dim text-xs flex items-center justify-center gap-2 animate-pulse font-sans shrink-0">
+                        <div class="mt-3 text-text-dim text-xs flex items-center justify-start gap-2 animate-pulse font-sans shrink-0 w-full">
                             <i class="fa-solid fa-arrow-pointer"></i> <span>여백을 탭하여 용어 확인</span>
                         </div>
                     </div>
@@ -767,6 +771,10 @@
                     <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳/가나다 순으로 정렬합니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-xs">A</div>
+                    <div><strong class="text-primary">글자 크기</strong><br><span class="text-text-dim text-xs">리스트의 글자 크기를 3단계로 조절합니다.</span></div>
+                </div>
+                <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-green-500 text-xs"></i></div>
                     <div><strong class="text-primary">암기 완료</strong><br><span class="text-text-dim text-xs">다 외운 단어를 체크하여 진행률을 올립니다.</span></div>
                 </div>
@@ -799,7 +807,6 @@
                     </button>
                 </div>
                 <hr class="border-[var(--glass-border)] my-4">
-                <!-- 라이트/다크 모두 명확하게 빨간색이 유지되는 초기화 버튼 -->
                 <button onclick="resetData()" class="btn w-full justify-between px-4" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;">
                     <span><i class="fa-solid fa-trash-can mr-2"></i> 데이터 전체 초기화</span>
                 </button>
@@ -820,7 +827,6 @@
         const badgeIcon = document.getElementById('swipe-badge-icon');
         const badgeText = document.getElementById('swipe-badge-text');
 
-        // 터치 및 마우스 드래그 시작 감지
         fcContainer.addEventListener('pointerdown', e => {
             if(e.target.closest('button') || e.target.closest('.fc-scroll-box')) return;
             isDragging = true;
@@ -830,13 +836,11 @@
             fcContainer.style.transition = 'none';
         }, {passive: true});
 
-        // 드래그 중 애니메이션 및 가로/세로 이동 판별
         fcContainer.addEventListener('pointermove', e => {
             if(!isDragging) return;
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
 
-            // 상하로 스크롤하는 경우 드래그 효과 무시
             if (!currentX && !currentY && Math.abs(dy) > Math.abs(dx)) {
                 isScrolling = true;
             }
@@ -845,11 +849,9 @@
             currentX = dx;
             currentY = dy;
             
-            // 카드 기울이기
             const rotate = currentX * 0.05;
             fcContainer.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg)`;
 
-            // 좌우 방향에 따른 중앙 배지 표시
             if (currentX > 0) {
                 badgeContainer.style.opacity = Math.min(currentX / 100, 1);
                 badge.className = "px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-green-500/80 border border-green-400/50";
@@ -863,17 +865,15 @@
             }
         }, {passive: true});
 
-        // 모바일 가로 스와이프 시 세로 네이티브 스크롤 방지
         fcContainer.addEventListener('touchmove', e => {
             if (!isDragging) return;
             const dx = e.touches[0].clientX - startX;
             const dy = e.touches[0].clientY - startY;
             if (Math.abs(dx) > Math.abs(dy)) {
-                e.preventDefault(); // 스와이프 시 상하 흔들림 완전 차단
+                e.preventDefault(); 
             }
         }, { passive: false });
 
-        // 드래그 종료 처리
         const handlePointerEnd = (e) => {
             if(!isDragging) return;
             isDragging = false;
@@ -881,14 +881,13 @@
             if (isScrolling) {
                 isScrolling = false;
                 if (Math.abs(e.clientX - startX) < 5 && Math.abs(e.clientY - startY) < 5) {
-                    flipCard(); // 제자리 터치인 경우 뒤집기
+                    flipCard(); 
                 }
                 return;
             }
 
-            const threshold = 100; // 스와이프 인정 기준 픽셀
+            const threshold = 100;
 
-            // 스와이프 성공 (카드를 날림)
             if (Math.abs(currentX) > threshold) {
                 const sign = Math.sign(currentX);
                 fcContainer.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -896,9 +895,9 @@
                 
                 if (allWords.length > 0) {
                     const term = allWords[flashcardOrder[appState.currentIndex]].term;
-                    if (currentX > 0) { // 오른쪽: 암기완료
+                    if (currentX > 0) { 
                         if(!appState.memorized[term]) toggleMemorized(term, true);
-                    } else { // 왼쪽: 단어장(별) 저장
+                    } else { 
                         if(!appState.notebook.includes(term)) toggleNotebook(term);
                     }
                     updateFlashcardControls(term);
@@ -912,12 +911,10 @@
                     nextCard();
                 }, 300);
             } else {
-                // 임계값 미달 시 제자리 복귀
                 fcContainer.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 fcContainer.style.transform = '';
                 badgeContainer.style.opacity = 0;
                 
-                // 단순 터치(탭) 시 뒤집기
                 if (Math.abs(currentX) < 5 && Math.abs(currentY) < 5) {
                     flipCard();
                 }
@@ -928,7 +925,6 @@
         window.addEventListener('pointerup', handlePointerEnd);
         window.addEventListener('pointercancel', handlePointerEnd);
 
-        // 키보드로 스와이프를 트리거하는 함수 (마우스/터치와 동일한 효과 연출)
         function triggerSwipe(direction) {
             if (allWords.length === 0) return;
             const term = allWords[flashcardOrder[appState.currentIndex]].term;
@@ -965,12 +961,11 @@
             const fcView = document.getElementById('view-flashcard');
             const quizView = document.getElementById('view-quiz');
             
-            // 플래시카드 화면
             if(!fcView.classList.contains('hidden')) {
-                if(e.key === 'ArrowRight') { stopAutoplay(); triggerSwipe('right'); } // 우측 키보드: Done
-                else if(e.key === 'ArrowLeft') { stopAutoplay(); triggerSwipe('left'); } // 좌측 키보드: Star
-                else if(e.key === 'ArrowUp') { stopAutoplay(); prevCard(); } // 위쪽 방향키: 이전 카드
-                else if(e.key === 'ArrowDown') { stopAutoplay(); nextCard(); } // 아래쪽 방향키: 패스(다음 카드)
+                if(e.key === 'ArrowRight') { stopAutoplay(); triggerSwipe('right'); } 
+                else if(e.key === 'ArrowLeft') { stopAutoplay(); triggerSwipe('left'); } 
+                else if(e.key === 'ArrowUp') { stopAutoplay(); prevCard(); } 
+                else if(e.key === 'ArrowDown') { stopAutoplay(); nextCard(); } 
                 else if(e.key === ' ' || e.key === 'Enter') { 
                     e.preventDefault(); 
                     stopAutoplay(); 
@@ -978,7 +973,6 @@
                 }
             }
             
-            // 퀴즈 화면
             if(!quizView.classList.contains('hidden')) {
                 const actionsHidden = document.getElementById('quiz-actions').classList.contains('hidden');
                 if (quizState.mode === 'multiple') {
@@ -1030,11 +1024,19 @@
             memorized: {}, 
             notebook: [], 
             currentIndex: 0,
-            quizState: { asked: [], score: 0 }
+            quizState: { asked: [], score: 0 },
+            fontSizeLevel: 0
         };
         
+        // 폰트 사이즈 (기본, 약간 크게, 크게)
+        const fontClasses = [
+            { term: "text-base lg:text-lg", koTerm: "text-xs", def: "text-xs sm:text-[13.5px]", koDef: "text-xs text-gray-500" },
+            { term: "text-lg lg:text-xl", koTerm: "text-sm", def: "text-sm sm:text-[15px]", koDef: "text-sm text-gray-500" },
+            { term: "text-xl lg:text-2xl", koTerm: "text-base", def: "text-base sm:text-[17px]", koDef: "text-base text-gray-500" }
+        ];
+        
         let isQuizActive = false;
-        let quizState = { mode: 'spelling' }; // 주관식 기본 세팅
+        let quizState = { mode: 'spelling' }; 
         let quizCurrentQ = null;
         
         let sortOrder = 'asc'; 
@@ -1054,6 +1056,7 @@
             loadLocalData();
             await fetchCSV();
             flashcardOrder = allWords.map((_, i) => i);
+            updateFontBtnUI();
             updateDashboard();
             switchTab('dashboard');
         };
@@ -1064,6 +1067,7 @@
                 const parsed = JSON.parse(saved);
                 if (parsed.mistakes && !parsed.notebook) parsed.notebook = parsed.mistakes;
                 if (!parsed.quizState) parsed.quizState = { asked: [], score: 0 };
+                if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
                 appState = { ...appState, ...parsed };
             }
         }
@@ -1254,7 +1258,7 @@
                 autoplayTimeout2 = setTimeout(() => {
                     if(!autoplayMode) return;
                     if(appState.currentIndex < flashcardOrder.length - 1) {
-                        nextCard(true); // 오토플레이시 stop 무시
+                        nextCard(true);
                         runAutoplayCycle();
                     } else {
                         stopAutoplay(); 
@@ -1406,7 +1410,7 @@
                             <span class="text-xs text-text-dim font-kor font-bold text-blue-400">${word.koTerm}</span>
                         </div>
                         <p class="text-sm text-text-sub font-sans leading-relaxed mb-1">${word.def}</p>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80">${word.koDef}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-kor leading-snug">${word.koDef}</p>
                     </div>
                     <button onclick="toggleNotebook('${nbTerm.replace(/'/g, "\\'")}'); renderNotebook();" class="w-10 h-10 rounded-full bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white transition flex items-center justify-center shrink-0" title="단어장에서 제거">
                         <i class="fa-solid fa-star"></i>
@@ -1575,7 +1579,7 @@
             const inputEl = document.getElementById('quiz-spelling-input');
             const answer = inputEl.value.trim().toLowerCase();
             
-            // 괄호 포함 무시 정답 처리
+            // 괄호 포함 무시 정답 처리 (예: apple(juice) 입력 시 apple만 입력해도 정답)
             const correctTerm = quizCurrentQ.term.toLowerCase().replace(/\s*\(.*?\)\s*/g, '').trim();
             const feedback = document.getElementById('quiz-feedback');
             
@@ -1612,6 +1616,19 @@
         }
 
         // --- List Controls ---
+        function cycleFontSize() {
+            appState.fontSizeLevel = ((appState.fontSizeLevel || 0) + 1) % 3;
+            saveData();
+            updateFontBtnUI();
+            renderListTable();
+        }
+
+        function updateFontBtnUI() {
+            const btn = document.getElementById('fontBtn');
+            const labels = ['A', 'A+', 'A++'];
+            if(btn) btn.innerText = labels[appState.fontSizeLevel || 0];
+        }
+
         function toggleSort() {
             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
             document.getElementById('sortBtn').innerHTML = sortOrder === 'asc' ? '<i class="fa-solid fa-arrow-down-a-z"></i>' : '<i class="fa-solid fa-arrow-up-a-z"></i>';
@@ -1638,28 +1655,11 @@
 
         function toggleFullscreenList() {
             const el = document.getElementById('listSection');
-            const container = el.querySelector('#listContainer');
-            
-            const isFallback = el.classList.contains('fullscreen-fallback');
-            const isNativeFs = document.fullscreenElement || document.webkitFullscreenElement;
-
-            if (!isNativeFs && !isFallback) {
-                if (el.requestFullscreen) {
-                    el.requestFullscreen().catch(() => el.classList.add('fullscreen-fallback'));
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                } else {
-                    el.classList.add('fullscreen-fallback');
-                }
-                el.classList.add('h-screen');
-                container.style.maxHeight = 'none';
+            el.classList.toggle('list-fullscreen');
+            if (el.classList.contains('list-fullscreen')) {
+                document.body.style.overflow = 'hidden';
             } else {
-                if (isNativeFs) {
-                    if (document.exitFullscreen) document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                }
-                el.classList.remove('fullscreen-fallback', 'h-screen');
-                container.style.maxHeight = '500px';
+                document.body.style.overflow = '';
             }
         }
         
@@ -1706,6 +1706,8 @@
                 return sortOrder === 'asc' ? compare : -compare;
             });
 
+            const fs = fontClasses[appState.fontSizeLevel || 0];
+
             filtered.forEach((word, idx) => {
                 const isMemorized = appState.memorized[word.term];
                 const isSaved = appState.notebook.includes(word.term);
@@ -1737,12 +1739,12 @@
                         </div>
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
-                        <div class="font-bold text-text-main font-sans text-base lg:text-lg break-words ${termClass}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                        <div class="text-xs font-bold text-blue-400 font-kor mt-1 break-words ${termClass}">${highlight(word.koTerm)}</div>
+                        <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
+                        <div class="font-bold text-blue-400 font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-3 py-3 align-top def-col-content">
-                        <div class="text-xs sm:text-[13.5px] text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass}">${highlight(word.def)}</div>
-                        <div class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80 leading-snug break-words ${defClass}">${highlight(word.koDef)}</div>
+                        <div class="text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
+                        <div class="font-kor leading-snug break-words ${defClass} ${fs.koDef}">${highlight(word.koDef)}</div>
                     </td>
                 `;
                 tbody.appendChild(tr);
