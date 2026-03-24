@@ -29,9 +29,41 @@
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   
-  <!-- Favicon (Full Data) -->
+  <!-- Favicon (PC 크롬 등 최신 브라우저용 SVG) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2354' height='2354' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-1613 -34)'%3E%3Crect x='1615.5' y='36.4999' width='2349' height='2349' stroke='%23172C51' stroke-width='4.58333' stroke-miterlimit='8' fill='%23050505'/%3E%3Cpath d='M2543.16 639.483C2566.39 638.6 2589.89 638.92 2613.59 640.497 2945.37 662.575 3207.02 923.821 3250.86 1250.89L3252 1264.39 3244.7 1255.74C3231.95 1237.4 3224.6 1220.56 3218.97 1209.88L3209.64 1192.64C3153.84 1094.32 3053.23 1025.43 2934.73 1017.54 2745.15 1004.92 2581.53 1153.28 2569.31 1348.89 2557.08 1544.52 2393.47 1692.87 2203.88 1680.25 2014.28 1667.64 1870.5 1498.83 1882.73 1303.22 1905.66 936.425 2194.68 652.723 2543.16 639.483Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2929.57 1098.16C3041 1102.07 3141.8 1179.75 3172.81 1296.48 3210.99 1440.12 3354.87 1524.66 3494.17 1485.28 3598.64 1455.76 3670.87 1364.93 3684.36 1260.74L3685.38 1229.21 3688.09 1220.05 3694.88 1261.63C3710.85 1511.98 3554.85 1747.78 3311.07 1816.68 3032.47 1895.42 2744.73 1726.35 2668.37 1439.05 2630.18 1295.4 2712.16 1147.03 2851.46 1107.66 2877.58 1100.28 2903.87 1097.25 2929.57 1098.16Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg width='2354' height='2354' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-1613 -34)'%3E%3Crect x='1615.5' y='36.4999' width='2349' height='2349' stroke='%23172C51' stroke-width='4.58333' stroke-miterlimit='8' fill='%23050505'/%3E%3Cpath d='M2543.16 639.483C2566.39 638.6 2589.89 638.92 2613.59 640.497 2945.37 662.575 3207.02 923.821 3250.86 1250.89L3252 1264.39 3244.7 1255.74C3231.95 1237.4 3224.6 1220.56 3218.97 1209.88L3209.64 1192.64C3153.84 1094.32 3053.23 1025.43 2934.73 1017.54 2745.15 1004.92 2581.53 1153.28 2569.31 1348.89 2557.08 1544.52 2393.47 1692.87 2203.88 1680.25 2014.28 1667.64 1870.5 1498.83 1882.73 1303.22 1905.66 936.425 2194.68 652.723 2543.16 639.483Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2929.57 1098.16C3041 1102.07 3141.8 1179.75 3172.81 1296.48 3210.99 1440.12 3354.87 1524.66 3494.17 1485.28 3598.64 1455.76 3670.87 1364.93 3684.36 1260.74L3685.38 1229.21 3688.09 1220.05 3694.88 1261.63C3710.85 1511.98 3554.85 1747.78 3311.07 1816.68 3032.47 1895.42 2744.73 1726.35 2668.37 1439.05 2630.18 1295.4 2712.16 1147.03 2851.46 1107.66 2877.58 1100.28 2903.87 1097.25 2929.57 1098.16Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
+  
+  <script>
+    // 모바일(iOS 등) 호환성을 위해 브라우저 단에서 실시간으로 SVG를 PNG로 변환 후 apple-touch-icon으로 삽입합니다.
+    (function() {
+      const svgStr = `<svg width="2354" height="2354" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-1613 -34)"><rect x="1615.5" y="36.4999" width="2349" height="2349" stroke="#172C51" stroke-width="4.58333" stroke-miterlimit="8" fill="#050505"/><path d="M2543.16 639.483C2566.39 638.6 2589.89 638.92 2613.59 640.497 2945.37 662.575 3207.02 923.821 3250.86 1250.89L3252 1264.39 3244.7 1255.74C3231.95 1237.4 3224.6 1220.56 3218.97 1209.88L3209.64 1192.64C3153.84 1094.32 3053.23 1025.43 2934.73 1017.54 2745.15 1004.92 2581.53 1153.28 2569.31 1348.89 2557.08 1544.52 2393.47 1692.87 2203.88 1680.25 2014.28 1667.64 1870.5 1498.83 1882.73 1303.22 1905.66 936.425 2194.68 652.723 2543.16 639.483Z" fill="#F2F5F9" fill-rule="evenodd"/><path d="M2929.57 1098.16C3041 1102.07 3141.8 1179.75 3172.81 1296.48 3210.99 1440.12 3354.87 1524.66 3494.17 1485.28 3598.64 1455.76 3670.87 1364.93 3684.36 1260.74L3685.38 1229.21 3688.09 1220.05 3694.88 1261.63C3710.85 1511.98 3554.85 1747.78 3311.07 1816.68 3032.47 1895.42 2744.73 1726.35 2668.37 1439.05 2630.18 1295.4 2712.16 1147.03 2851.46 1107.66 2877.58 1100.28 2903.87 1097.25 2929.57 1098.16Z" fill="#F2C14B" fill-rule="evenodd"/></g></svg>`;
+      const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
+      const img = new Image();
+      
+      img.onload = function() {
+          const canvas = document.createElement("canvas");
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, 512, 512);
+          
+          try {
+              const pngUrl = canvas.toDataURL("image/png");
+              
+              // 모바일 홈 화면 및 외부 공유/사파리용 apple-touch-icon 동적 추가
+              const appleIcon = document.createElement("link");
+              appleIcon.rel = "apple-touch-icon";
+              appleIcon.sizes = "512x512";
+              appleIcon.href = pngUrl;
+              document.head.appendChild(appleIcon);
+              
+              // PWA Manifest 생성을 위해 전역 변수로 전달
+              window.dynamicPngFavicon = pngUrl;
+              window.dispatchEvent(new CustomEvent('faviconReady'));
+          } catch(e) { console.error("Favicon generation failed", e); }
+      };
+      img.src = svgUrl;
+    })();
+  </script>
   
   <style>
     /* --- CSS Variables --- */
@@ -1399,23 +1431,36 @@
       };
 
       // --- PWA Manifest Dynamic Generation ---
-      const linkIcon = document.querySelector('link[rel="icon"]');
-      if (linkIcon) {
-          const pwaIcon = linkIcon.href;
-          const pwaManifest = {
-              "name": "WebHub",
-              "short_name": "WebHub",
-              "start_url": ".",
-              "display": "standalone",
-              "background_color": "#050505",
-              "theme_color": "#050505",
-              "icons": [
-                  { "src": pwaIcon, "sizes": "192x192", "type": "image/svg+xml" },
-                  { "src": pwaIcon, "sizes": "512x512", "type": "image/svg+xml" }
-              ]
-          };
-          const manifestBlob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/manifest+json'});
-          document.getElementById('pwaManifest').href = URL.createObjectURL(manifestBlob);
+      function generateManifest() {
+          const linkIcon = document.querySelector('link[rel="icon"]');
+          if (linkIcon) {
+              // Canvas 스크립트에서 생성된 PNG가 있다면 사용, 없으면 SVG 폴백
+              const finalIconUrl = window.dynamicPngFavicon || linkIcon.href;
+              const finalIconType = window.dynamicPngFavicon ? "image/png" : "image/svg+xml";
+              
+              const pwaManifest = {
+                  "name": "WebHub",
+                  "short_name": "WebHub",
+                  "start_url": ".",
+                  "display": "standalone",
+                  "background_color": "#050505",
+                  "theme_color": "#050505",
+                  "icons": [
+                      { "src": finalIconUrl, "sizes": "192x192", "type": finalIconType },
+                      { "src": finalIconUrl, "sizes": "512x512", "type": finalIconType }
+                  ]
+              };
+              const manifestBlob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/manifest+json'});
+              document.getElementById('pwaManifest').href = URL.createObjectURL(manifestBlob);
+          }
+      }
+      
+      // PNG 변환이 완료되었으면 즉시 실행, 아니면 완료 이벤트를 대기
+      if (window.dynamicPngFavicon) {
+          generateManifest();
+      } else {
+          window.addEventListener('faviconReady', generateManifest);
+          setTimeout(generateManifest, 1000); // 안전 장치: 1초 후에도 안되면 원본 SVG로 생성
       }
 
       // --- Accordion Logic ---
