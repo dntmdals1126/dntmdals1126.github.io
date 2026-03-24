@@ -219,7 +219,8 @@
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .rotate-y-180 { transform: rotateY(180deg); }
-        .flashcard-container { width: 100%; max-width: 500px; height: 350px; margin: 0 auto; position: relative; cursor: pointer; }
+        .flashcard-container { width: 100%; max-width: 500px; height: 350px; margin: 0 auto; position: relative; cursor: grab; }
+        .flashcard-container:active { cursor: grabbing; }
         .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         
         .flashcard-face { 
@@ -592,7 +593,12 @@
 
         <!-- 2. Flashcard -->
         <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center justify-center h-full pb-10">
-            <div class="flashcard-container perspective-1000" id="fc-container" onclick="flipCard()">
+            <!-- Tinder Swipe 배지가 삽입될 플래시카드 컨테이너 -->
+            <div class="flashcard-container perspective-1000" id="fc-container">
+                <!-- Swipe Badges -->
+                <div id="swipe-badge-left" class="absolute top-8 right-8 z-50 border-4 border-yellow-400 text-yellow-400 font-extrabold text-2xl px-3 py-1 rounded-xl transform rotate-12 opacity-0 pointer-events-none">STAR</div>
+                <div id="swipe-badge-right" class="absolute top-8 left-8 z-50 border-4 border-green-500 text-green-500 font-extrabold text-2xl px-3 py-1 rounded-xl transform -rotate-12 opacity-0 pointer-events-none">DONE</div>
+                
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
                     <div class="flashcard-face front">
@@ -654,7 +660,7 @@
                         <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-primary bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
                     </div>
                     
-                    <!-- 객관식 / 주관식 모드 토글 (주관식이 먼저 오도록 순서 변경) -->
+                    <!-- 객관식 / 주관식 모드 토글 -->
                     <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-4">
                         <button id="mode-spell-btn" onclick="setQuizMode('spelling')" class="flex-1 text-xs font-bold py-1.5 rounded-md bg-[var(--glass-highlight)] text-text-main transition">주관식</button>
                         <button id="mode-multi-btn" onclick="setQuizMode('multiple')" class="flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition">객관식</button>
@@ -667,9 +673,10 @@
                         </p>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 (기본 활성화) -->
+                    <!-- 주관식 스펠링 컨테이너 -->
                     <div id="quiz-spelling-container" class="w-full">
                         <div class="relative w-full">
+                            <!-- onblur 제거하여 스크롤 점프 문제 방지 -->
                             <input type="text" id="quiz-spelling-input" class="w-full bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl p-4 text-center text-xl font-bold text-text-main focus:border-blue-500/50 transition-colors placeholder-text-dim/50 outline-none" placeholder="영단어를 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition">
                                 <i class="fa-solid fa-check"></i>
@@ -764,14 +771,6 @@
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-star text-yellow-400 text-xs"></i></div>
                     <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-primary text-xs"></i></div>
-                    <div><strong class="text-primary">자동 재생</strong><br><span class="text-text-dim text-xs">플래시카드에서 단어를 자동으로 뒤집고 넘겨줍니다.</span></div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-gear text-xs"></i></div>
-                    <div><strong class="text-primary">데이터 백업 (설정)</strong><br><span class="text-text-dim text-xs">우측 상단 톱니바퀴에서 학습 데이터를 백업하고 복구합니다.</span></div>
-                </div>
             </div>
         </div>
     </div>
@@ -805,22 +804,118 @@
     </div>
 
     <script>
-        // === 플래시카드 터치 스와이프 기능 ===
-        let pointerDownX = 0;
-        let pointerDownY = 0;
+        // === 플래시카드 Tinder 스와이프 기능 ===
+        let isDragging = false;
+        let isScrolling = false;
+        let startX = 0, startY = 0;
+        let currentX = 0, currentY = 0;
+        
         const fcContainer = document.getElementById('fc-container');
+        const badgeLeft = document.getElementById('swipe-badge-left');
+        const badgeRight = document.getElementById('swipe-badge-right');
+
         fcContainer.addEventListener('pointerdown', e => {
-            pointerDownX = e.clientX;
-            pointerDownY = e.clientY;
+            // 버튼이나 스크롤 영역 터치 시 스와이프 무시
+            if(e.target.closest('button') || e.target.closest('.fc-scroll-box')) return;
+            isDragging = true;
+            isScrolling = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            fcContainer.style.transition = 'none';
         }, {passive: true});
-        fcContainer.addEventListener('pointerup', e => {
-            const deltaX = e.clientX - pointerDownX;
-            const deltaY = e.clientY - pointerDownY;
-            if(Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
-                if(deltaX < 0) { stopAutoplay(); nextCard(); } 
-                if(deltaX > 0) { stopAutoplay(); prevCard(); } 
+
+        fcContainer.addEventListener('pointermove', e => {
+            if(!isDragging) return;
+            
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            // 상하로 스크롤하는 경우 드래그 로직 무시 (브라우저 네이티브 스크롤 허용)
+            if (!currentX && !currentY && Math.abs(dy) > Math.abs(dx)) {
+                isScrolling = true;
+            }
+            if (isScrolling) return; 
+
+            currentX = dx;
+            currentY = dy;
+            
+            // 카드 기울기 및 이동
+            const rotate = currentX * 0.05;
+            fcContainer.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg)`;
+
+            // 터치 환경에서만 뱃지 보이기 로직 적용
+            const isTouch = e.pointerType === 'touch' || window.matchMedia("(pointer: coarse)").matches;
+            if (isTouch) {
+                if (currentX > 0) {
+                    badgeRight.style.opacity = Math.min(currentX / 100, 1);
+                    badgeLeft.style.opacity = 0;
+                } else {
+                    badgeLeft.style.opacity = Math.min(Math.abs(currentX) / 100, 1);
+                    badgeRight.style.opacity = 0;
+                }
             }
         }, {passive: true});
+
+        const handlePointerEnd = (e) => {
+            if(!isDragging) return;
+            isDragging = false;
+            
+            if (isScrolling) {
+                isScrolling = false;
+                if (Math.abs(e.clientX - startX) < 5 && Math.abs(e.clientY - startY) < 5) {
+                    flipCard();
+                }
+                return;
+            }
+
+            const threshold = 100;
+            const isTouch = e.pointerType === 'touch' || window.matchMedia("(pointer: coarse)").matches;
+
+            // 스와이프 판정 (100px 이상 넘겼을 때)
+            if (Math.abs(currentX) > threshold) {
+                const sign = Math.sign(currentX);
+                fcContainer.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                fcContainer.style.transform = `translate(${sign * window.innerWidth}px, ${currentY + sign * 50}px) rotate(${sign * 30}deg)`;
+                
+                // 단어 저장 및 체크 로직 처리 (터치 시에만 동작)
+                if (isTouch && allWords.length > 0) {
+                    const term = allWords[flashcardOrder[appState.currentIndex]].term;
+                    if (currentX > 0) { // Right Swipe -> Done(Check)
+                        if(!appState.memorized[term]) toggleMemorized(term, true);
+                    } else { // Left Swipe -> Star(Notebook)
+                        if(!appState.notebook.includes(term)) toggleNotebook(term);
+                    }
+                    updateFlashcardControls(term);
+                }
+
+                // 애니메이션 후 다음 카드로 넘어감
+                setTimeout(() => {
+                    fcContainer.style.transition = 'none';
+                    fcContainer.style.transform = '';
+                    badgeLeft.style.opacity = 0;
+                    badgeRight.style.opacity = 0;
+                    
+                    stopAutoplay();
+                    nextCard();
+                }, 300);
+            } else {
+                // 임계값 미달 시 제자리 복귀
+                fcContainer.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                fcContainer.style.transform = '';
+                badgeLeft.style.opacity = 0;
+                badgeRight.style.opacity = 0;
+                
+                // 이동이 없었으면 단순 탭(뒤집기) 처리
+                if (Math.abs(currentX) < 5 && Math.abs(currentY) < 5) {
+                    flipCard();
+                }
+            }
+            currentX = 0; currentY = 0;
+        };
+
+        window.addEventListener('pointerup', handlePointerEnd);
+        window.addEventListener('pointercancel', handlePointerEnd);
+
 
         // === PC 키보드 단축키 기능 ===
         document.addEventListener('keydown', (e) => {
@@ -859,16 +954,6 @@
                 }
             }
         });
-
-        // 모바일 키보드 스크롤 강제 복귀 (Focus 이벤트 제어)
-        const spellInput = document.getElementById('quiz-spelling-input');
-        if(spellInput) {
-            spellInput.addEventListener('focus', () => {
-                setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 150);
-            });
-        }
 
         document.addEventListener('pointerdown', (e) => {
             const target = e.target.closest('.blur-target');
@@ -928,6 +1013,7 @@
             switchTab('dashboard');
         };
 
+        // --- 백업 / 설정 기능 ---
         function loadLocalData() {
             const saved = localStorage.getItem('engVocabState');
             if (saved) {
@@ -1168,15 +1254,22 @@
             const isSaved = appState.notebook.includes(term);
             
             const checkBtn = document.getElementById('fc-check-btn');
-            if(isMemorized) checkBtn.classList.add('active');
-            else checkBtn.classList.remove('active');
+            if(isMemorized) {
+                checkBtn.classList.remove('btn-sec', 'text-text-sub');
+                checkBtn.classList.add('bg-green-500', 'text-white', 'border-green-500');
+            } else {
+                checkBtn.classList.add('btn-sec', 'text-text-sub');
+                checkBtn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
+            }
 
             const starBtn = document.getElementById('fc-star-btn');
             if(isSaved) {
-                starBtn.classList.add('active');
+                starBtn.classList.remove('btn-sec', 'text-text-sub');
+                starBtn.classList.add('bg-yellow-500', 'text-white', 'border-yellow-500');
                 starBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
             } else {
-                starBtn.classList.remove('active');
+                starBtn.classList.add('btn-sec', 'text-text-sub');
+                starBtn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-500');
                 starBtn.innerHTML = '<i class="fa-regular fa-star"></i>';
             }
         }
@@ -1198,6 +1291,7 @@
         }
 
         function flipCard() { 
+            // flipCard 함수는 기존과 동일하게 뒤집기만 관장
             const container = document.getElementById('fc-container');
             const inner = document.getElementById('flashcard-inner');
             inner.classList.toggle('rotate-y-180'); 
@@ -1594,8 +1688,8 @@
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
                                 <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
-                            <div class="cursor-pointer text-lg list-action-star" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
-                                <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim'} transition-colors"></i>
+                            <div class="cursor-pointer text-lg list-action-star transition-colors" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
+                                <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim'}"></i>
                             </div>
                         </div>
                     </td>
