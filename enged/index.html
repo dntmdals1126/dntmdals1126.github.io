@@ -138,7 +138,8 @@
             background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                         radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
             background-attachment: fixed;
-            transition: background 0.3s;
+            /* 테마 전환 버벅임 완화를 위해 컬러/배경만 트랜지션 적용 */
+            transition: background-color 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
         }
         
@@ -169,7 +170,7 @@
         html[data-theme="light"] .scroll-mask { background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%); }
 
         /* 데스크탑 헤더 */
-        header { position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h); z-index: 1000; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 99px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+        header { position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h); z-index: 1000; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 99px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15); transition: background-color 0.3s, border-color 0.3s; }
         .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
         .header-tools { display: flex; gap: 8px; align-items: center; }
         .tool-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid transparent; background: transparent; color: var(--text-main); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -184,6 +185,20 @@
         .btn-sec { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--glass-border); }
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
         
+        /* 플래시카드 하단 버튼 전용 호버/액티브 효과 (모바일 고착 방지) */
+        .fc-action-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        @media (hover: hover) {
+            .fc-action-btn:hover { transform: scale(1.1); }
+            .fc-action-btn.btn-check:not(.active):hover { color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+            .fc-action-btn.btn-star:not(.active):hover { color: #eab308; background: rgba(234, 179, 8, 0.1); }
+        }
+        .fc-action-btn.btn-check.active {
+            background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; box-shadow: 0 4px 14px rgba(34,197,94,0.3);
+        }
+        .fc-action-btn.btn-star.active {
+            background-color: #eab308 !important; color: white !important; border-color: #eab308 !important; box-shadow: 0 4px 14px rgba(234,179,8,0.3);
+        }
+
         .btn-active {
             background-color: rgba(59, 130, 246, 0.15) !important;
             color: var(--primary) !important;
@@ -260,6 +275,9 @@
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
 
+        /* 주관식 입력창 placeholder 폰트 크기 조정 */
+        #quiz-spelling-input::placeholder { font-size: 14px; }
+
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
         html[data-theme="light"] .progress-bar-bg { background: #e2e8f0; }
@@ -296,6 +314,14 @@
         thead th { position: sticky; top: 0; z-index: 10; background-color: var(--bg-dark); }
         html[data-theme="light"] thead th { background-color: #ffffff; }
 
+        /* Fullscreen Fallback for iOS Web Apps */
+        .fullscreen-fallback {
+            position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+            height: 100vh !important; width: 100vw !important; z-index: 9999 !important;
+            margin: 0 !important; border-radius: 0 !important; max-width: none !important;
+            background: var(--bg-dark) !important;
+        }
+
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
@@ -319,6 +345,12 @@
             th.num-col, td.num-col { display: table-cell !important; width: 40px !important; }
         }
 
+        /* List Action Buttons Hover Fix for Mobile */
+        @media (hover: hover) {
+            .list-action-check:not(.text-green-500):hover { color: #4ade80; }
+            .list-action-star:hover .text-text-dim { color: #facc15; }
+        }
+
         /* Mobile Tweaks */
         @media (max-width: 480px) {
             :root { --header-h: 60px; }
@@ -329,7 +361,7 @@
                 max-width: none; border: none; border-bottom: 1px solid var(--glass-border); 
             }
             main { padding-top: calc(90px + env(safe-area-inset-top)); }
-            
+
             .stat-box { flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px 4px; min-height: 60px; text-align: center; }
             .stat-box .flex { flex-direction: column; gap: 2px; }
             .stat-box i { font-size: 14px; margin-bottom: 2px; }
@@ -403,20 +435,31 @@
             <span class="text-[10px] font-logo text-text-sub opacity-90" style="transform: translateY(1px);">WebHub</span>
         </div>
         <div class="header-tools">
-            <div id="dday" class="hidden md:flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 text-primary px-3 py-1.5 rounded-full text-[11px] font-bold mr-4 border border-primary/20 shadow-sm backdrop-blur-sm">
+            <div id="dday" class="hidden md:flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 text-primary px-3 py-1.5 rounded-full text-[11px] font-bold mr-4 border border-blue-500/30 shadow-sm backdrop-blur-sm">
                 <i class="fa-regular fa-calendar-check"></i>
                 <span id="dday-text"></span>
             </div>
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
-            <!-- 휴지통 대신 설정 모달 열기 버튼으로 변경 -->
+            <!-- 백업/초기화 설정 버튼 -->
             <button class="tool-btn" onclick="openSettingsModal()" title="설정 및 데이터 관리">
                 <i class="fa-solid fa-gear text-sm"></i>
             </button>
             <button class="tool-btn" id="themeToggle" title="테마 변경">
+                <!-- 라이트 모드 해 모양 아이콘 안전한 Line 태그로 교체 -->
                 <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
-                <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 5.64l1.42-1.42"></path></svg>
+                <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
             </button>
         </div>
     </header>
@@ -483,7 +526,7 @@
             <section class="section-card p-0 overflow-hidden flex flex-col h-[560px]" id="listSection">
                 <div class="p-3 border-b border-[var(--glass-border)] bg-[var(--glass-highlight)] shrink-0 no-print">
                     <div class="flex flex-wrap items-center gap-2">
-                         <div class="flex-1 min-w-[140px] flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg px-3 focus-within:border-primary/50 transition-colors relative">
+                         <div class="flex-1 min-w-[140px] flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg px-3 focus-within:border-blue-500/50 transition-colors relative">
                              <i class="fa-solid fa-search text-text-dim"></i>
                              <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable(); toggleClearBtn();" 
                                 class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0 ml-2 pr-6">
@@ -514,6 +557,10 @@
                              <button onclick="window.print()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs mobile-hide" title="리스트 인쇄">
                                 <i class="fa-solid fa-print"></i>
                              </button>
+                             
+                             <!-- 출력과 도움말 사이의 구분선 -->
+                             <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5 mobile-hide"></div>
+                             
                              <button onclick="openHelpModal()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs" title="도움말">
                                 <i class="fa-solid fa-question"></i>
                              </button>
@@ -575,23 +622,23 @@
 
             <!-- Bottom Controls -->
             <div class="flex items-center gap-2 sm:gap-3 mt-8 justify-center flex-wrap">
-                <!-- 자동재생 버튼 -->
-                <button onclick="toggleAutoplay()" class="btn btn-sec w-12 px-0 rounded-full text-text-sub transition" id="fc-autoplay-btn" title="자동 재생">
-                    <i class="fa-solid fa-play"></i>
-                </button>
-                <button onclick="prevCard()" class="btn btn-pri w-12 px-0 rounded-full" title="이전">
+                <button onclick="prevCard()" class="btn btn-pri fc-action-btn w-12 px-0 rounded-full" title="이전">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <button onclick="shuffleCards()" class="btn btn-sec w-12 px-0 rounded-full text-text-sub hover:text-primary hover:bg-[var(--glass-highlight)] transition" title="섞기">
+                <button onclick="shuffleCards()" class="btn btn-sec fc-action-btn w-12 px-0 rounded-full text-text-sub transition" title="섞기">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
-                <button onclick="toggleMemorizedFromCard()" class="btn btn-sec w-14 h-14 rounded-full transition text-text-sub hover:text-green-500" id="fc-check-btn" title="완료">
+                <!-- 자동재생 버튼 위치 변경 -->
+                <button onclick="toggleAutoplay()" class="btn btn-sec fc-action-btn w-12 px-0 rounded-full text-text-sub transition" id="fc-autoplay-btn" title="자동 재생">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button onclick="toggleMemorizedFromCard()" class="btn btn-sec fc-action-btn btn-check w-14 h-14 rounded-full text-text-sub transition" id="fc-check-btn" title="완료">
                     <i class="fa-solid fa-check text-xl"></i>
                 </button>
-                <button onclick="toggleNotebookFromCard()" class="btn btn-sec w-12 px-0 rounded-full transition text-text-sub hover:text-yellow-400" id="fc-star-btn" title="중요">
+                <button onclick="toggleNotebookFromCard()" class="btn btn-sec fc-action-btn btn-star w-12 px-0 rounded-full text-text-sub transition" id="fc-star-btn" title="중요">
                     <i class="fa-regular fa-star"></i>
                 </button>
-                <button onclick="nextCard()" class="btn btn-pri w-12 px-0 rounded-full" title="다음">
+                <button onclick="nextCard()" class="btn btn-pri fc-action-btn w-12 px-0 rounded-full" title="다음">
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
@@ -613,7 +660,7 @@
                     </div>
 
                     <div class="section-card mb-4 min-h-[140px] flex flex-col justify-center items-center text-center relative">
-                        <p class="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest border-b border-primary/20 pb-1 font-sans">Definition</p>
+                        <p class="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest border-b border-blue-500/30 pb-1 font-sans">Definition</p>
                         <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">
                             문제 내용이 여기에 표시됩니다.
                         </p>
@@ -627,7 +674,8 @@
                     <!-- 주관식 스펠링 컨테이너 -->
                     <div id="quiz-spelling-container" class="hidden w-full">
                         <div class="relative w-full">
-                            <input type="text" id="quiz-spelling-input" class="w-full bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl p-4 text-center text-xl font-bold text-text-main focus:border-primary/50 transition-colors placeholder-text-dim/50 outline-none" placeholder="영단어를 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <!-- iOS 스크롤 튐 방지 onblur 탑재, text-xl(20px)로 확대방지 -->
+                            <input type="text" id="quiz-spelling-input" onblur="window.scrollTo(0,0)" class="w-full bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl p-4 text-center text-xl font-bold text-text-main focus:border-blue-500/50 transition-colors placeholder-text-dim/50 outline-none" placeholder="영단어를 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition">
                                 <i class="fa-solid fa-check"></i>
                             </button>
@@ -656,7 +704,7 @@
         <!-- 4. Notebook -->
         <div id="view-notebook" class="hidden fade-in-up">
             <div class="flex justify-between items-center mb-4 px-1">
-                <h2 class="text-lg font-bold text-text-main font-kor">단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
+                <h2 class="text-lg font-bold text-text-main font-kor">나만의 단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
                 <div class="flex gap-2">
                     <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">
                         비우기
@@ -692,7 +740,6 @@
             </button>
             <h3 class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2"><i class="fa-solid fa-circle-info text-primary"></i> 기능 도움말</h3>
             <div class="space-y-4 text-sm font-sans text-text-main">
-                <!-- 기존 6가지 설명 완벽 복구 -->
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-xs"></i></span></div>
                     <div><strong class="text-primary">단어 가리기</strong><br><span class="text-text-dim text-xs">리스트의 영단어를 숨깁니다. 숨겨진 부분을 터치하거나 마우스를 올리면 일시적으로 숨김이 해제됩니다.</span></div>
@@ -707,7 +754,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-arrow-down-a-z text-xs"></i></div>
-                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳 순으로 정렬합니다.</span></div>
+                    <div><strong class="text-primary">정렬</strong><br><span class="text-text-dim text-xs">알파벳/가나다 순으로 정렬합니다.</span></div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-green-500 text-xs"></i></div>
@@ -715,9 +762,8 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-star text-yellow-400 text-xs"></i></div>
-                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">나만의 단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
+                    <div><strong class="text-primary">단어장</strong><br><span class="text-text-dim text-xs">단어장 탭에 별도로 모아서 볼 수 있습니다.</span></div>
                 </div>
-                <!-- 추가 기능 설명 -->
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-primary text-xs"></i></div>
                     <div><strong class="text-primary">자동 재생</strong><br><span class="text-text-dim text-xs">플래시카드에서 단어를 자동으로 뒤집고 넘겨줍니다.</span></div>
@@ -751,7 +797,8 @@
                     </button>
                 </div>
                 <hr class="border-[var(--glass-border)] my-4">
-                <button onclick="resetData()" class="btn btn-sec w-full justify-between px-4 text-red-500 hover:bg-red-500/10 border-red-500/20">
+                <!-- 라이트/다크 모두 명확하게 빨간색이 유지되는 초기화 버튼 -->
+                <button onclick="resetData()" class="btn w-full justify-between px-4" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;">
                     <span><i class="fa-solid fa-trash-can mr-2"></i> 데이터 전체 초기화</span>
                 </button>
             </div>
@@ -778,7 +825,6 @@
         function handleSwipe() {
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
-            // 위아래 스크롤 오작동을 막기 위해 가로폭(X) 이동이 크고, 최소 임계값을 넘을 때 작동
             if(Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
                 if(deltaX < 0) { stopAutoplay(); nextCard(); } 
                 if(deltaX > 0) { stopAutoplay(); prevCard(); } 
@@ -940,6 +986,14 @@
                 } catch(err) { alert("파일을 읽는 중 오류가 발생했습니다."); }
             };
             reader.readAsText(file);
+        }
+        
+        function resetData() {
+            if(confirm("모든 학습 기록(암기 상태, 단어장, 퀴즈 기록)을 초기화하시겠습니까?")) {
+                localStorage.removeItem('engVocabState');
+                alert("초기화가 완료되었습니다.");
+                location.reload();
+            }
         }
 
         async function fetchCSV() {
@@ -1115,22 +1169,15 @@
             const isSaved = appState.notebook.includes(term);
             
             const checkBtn = document.getElementById('fc-check-btn');
-            if(isMemorized) {
-                checkBtn.classList.remove('btn-sec', 'text-text-sub');
-                checkBtn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-            } else {
-                checkBtn.classList.add('btn-sec', 'text-text-sub');
-                checkBtn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
-            }
+            if(isMemorized) checkBtn.classList.add('active');
+            else checkBtn.classList.remove('active');
 
             const starBtn = document.getElementById('fc-star-btn');
             if(isSaved) {
-                starBtn.classList.remove('btn-sec', 'text-text-sub');
-                starBtn.classList.add('bg-yellow-500', 'text-white', 'border-yellow-500');
+                starBtn.classList.add('active');
                 starBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
             } else {
-                starBtn.classList.add('btn-sec', 'text-text-sub');
-                starBtn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-500');
+                starBtn.classList.remove('active');
                 starBtn.innerHTML = '<i class="fa-regular fa-star"></i>';
             }
         }
@@ -1218,7 +1265,7 @@
                     <div class="flex-1 pr-4">
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
                             <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
-                            <span class="text-xs text-text-dim font-kor font-bold text-blue-400 ml-1">${word.koTerm}</span>
+                            <span class="text-xs text-text-dim font-kor font-bold text-blue-400">${word.koTerm}</span>
                         </div>
                         <p class="text-sm text-text-sub font-sans leading-relaxed mb-1">${word.def}</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80">${word.koDef}</p>
@@ -1393,7 +1440,9 @@
             if (!document.getElementById('quiz-actions').classList.contains('hidden')) return;
             const inputEl = document.getElementById('quiz-spelling-input');
             const answer = inputEl.value.trim().toLowerCase();
-            const correctTerm = quizCurrentQ.term.toLowerCase();
+            
+            // 괄호 및 괄호 안 내용 무시 (정답 처리를 관대하게)
+            const correctTerm = quizCurrentQ.term.toLowerCase().replace(/\s*\(.*?\)\s*/g, '').trim();
             const feedback = document.getElementById('quiz-feedback');
             
             if(!answer) return;
@@ -1455,14 +1504,30 @@
 
         function toggleFullscreenList() {
             const el = document.getElementById('listSection');
-            if (!document.fullscreenElement) {
-                if(el.requestFullscreen) el.requestFullscreen();
+            const container = el.querySelector('#listContainer');
+            
+            const isFallback = el.classList.contains('fullscreen-fallback');
+            const isNativeFs = document.fullscreenElement || document.webkitFullscreenElement;
+
+            if (!isNativeFs && !isFallback) {
+                // Enter fullscreen
+                if (el.requestFullscreen) {
+                    el.requestFullscreen().catch(() => el.classList.add('fullscreen-fallback'));
+                } else if (el.webkitRequestFullscreen) {
+                    el.webkitRequestFullscreen();
+                } else {
+                    el.classList.add('fullscreen-fallback');
+                }
                 el.classList.add('h-screen');
-                el.querySelector('#listContainer').style.maxHeight = 'none';
+                container.style.maxHeight = 'none';
             } else {
-                if(document.exitFullscreen) document.exitFullscreen();
-                el.classList.remove('h-screen');
-                el.querySelector('#listContainer').style.maxHeight = '500px';
+                // Exit fullscreen
+                if (isNativeFs) {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                }
+                el.classList.remove('fullscreen-fallback', 'h-screen');
+                container.style.maxHeight = '500px';
             }
         }
         
@@ -1531,11 +1596,11 @@
                     <td class="px-2 py-3 text-center actions-col">
                         <div class="flex flex-col sm:flex-row items-center gap-2">
                             <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
-                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors ${isMemorized ? 'text-green-500' : 'text-text-dim'} hover:text-green-400">
+                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
                                 <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
-                            <div class="cursor-pointer text-lg transition-colors hover:text-yellow-400" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
-                                <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim'}"></i>
+                            <div class="cursor-pointer text-lg list-action-star" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
+                                <i class="${isSaved ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-text-dim'} transition-colors"></i>
                             </div>
                         </div>
                     </td>
@@ -1557,13 +1622,6 @@
             else delete appState.memorized[term];
             saveData();
             renderListTable();
-        }
-
-        function resetData() {
-            if(confirm("모든 학습 기록(암기 상태, 단어장, 퀴즈 기록)을 초기화하시겠습니까?")) {
-                localStorage.removeItem('engVocabState');
-                location.reload();
-            }
         }
     </script>
 </body>
