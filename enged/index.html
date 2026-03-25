@@ -124,7 +124,12 @@
             -webkit-user-select: text !important; 
         }
         
-        /* html, body 묶음 속성(이중 스크롤 원인) 완전히 제거됨 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
         
         html {
             font-family: var(--font-base);
@@ -137,8 +142,6 @@
         }
         
         body {
-            margin: 0;
-            padding: 0;
             min-height: 100vh;
             background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                         radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
@@ -251,8 +254,6 @@
             transform: rotateY(180deg) translate3d(0,0,1px); 
             -webkit-transform: rotateY(180deg) translate3d(0,0,1px);
         }
-        
-        .flashcard-face * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 
         .flashcard-face.front { z-index: 2; pointer-events: auto; }
         .flashcard-face.back { z-index: 1; pointer-events: none; }
@@ -264,12 +265,10 @@
             width: 100%; height: 100%; overflow-y: auto;
             touch-action: pan-y; isolation: isolate; 
             -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; 
-            display: flex; flex-direction: column;
             user-select: text; -webkit-user-select: text;
             background-color: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            /* 상하 여백을 24px로 통일하여 스크롤 시 위아래 밸런스 유지 */
             padding: 24px;
         }
         html[data-theme="light"] .fc-scroll-box { 
@@ -277,17 +276,17 @@
             border-color: rgba(0, 0, 0, 0.06); 
         }
 
-        /* 튕김 버그 핵심 해결: margin 대신 min-height 100%와 justify-content 활용 */
+        /* 튕김 버그 핵심 해결: margin 대신 min-height 100%와 display: flex 활용 */
         .fc-inner-content {
-            width: 100%; display: flex; flex-direction: column;
+            width: 100%; min-height: 100%; display: flex; flex-direction: column;
         }
         /* Front side: Top aligned naturally */
         .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; justify-content: flex-start; 
+            align-items: flex-start; text-align: left; justify-content: flex-start; padding-bottom: 24px;
         }
         /* Back side: Center aligned securely */
         .flashcard-face.back .fc-inner-content { 
-            align-items: center; text-align: center; justify-content: center; min-height: 100%;
+            align-items: center; text-align: center; justify-content: center; 
         }
 
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
@@ -329,8 +328,19 @@
         .blur-target.is-revealed { filter: blur(0) !important; transition: filter 0.1s; }
 
         /* Sticky Header */
-        thead th { position: sticky; top: 0; z-index: 10; background-color: var(--bg-dark); }
-        html[data-theme="light"] thead th { background-color: #ffffff; }
+        #listContainer thead th { 
+            position: sticky; top: 0; z-index: 20; 
+            background-color: rgba(15, 15, 20, 0.95); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        html[data-theme="light"] #listContainer thead th { 
+            background-color: rgba(241, 245, 249, 0.95); /* slate-100 */
+            border-bottom: 1px solid #cbd5e1;
+            color: #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
 
         @media print {
             @page { margin: 1cm; size: auto; }
@@ -792,7 +802,7 @@
                         <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-primary/70 hover:text-primary font-bold px-2 py-1 rounded-md bg-primary/10 transition flex items-center gap-1.5">
                             <i class="fa-regular fa-lightbulb"></i> 힌트
                         </button>
-                        <!-- 힌트 텍스트 박스 -->
+                        <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
                         <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-primary animate-pulse"></div>
                     </div>
 
@@ -1871,6 +1881,7 @@
                 containerMulti.innerHTML = '';
                 options.forEach(opt => {
                     const btn = document.createElement('button');
+                    // 객관식 선지 폰트 크기 조절 (15~17px 수준) 및 Flex 패딩 설정
                     btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
                     btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
                     btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
@@ -1913,7 +1924,7 @@
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
                 // 피드백을 두 줄로 깔끔하게 띄움
-                feedback.innerHTML = `<span class="text-red-500 font-bold block mb-1">Wrong!</span><span class="text-text-main text-[15px] font-normal">Answer: <b class="text-red-500 font-bold">${correct.term}</b></span>`;
+                feedback.innerHTML = `<span class="text-red-500 font-bold block mb-1">Wrong!</span><span class="text-text-dim text-[15px] font-normal">Answer: <b class="text-red-500 font-bold">${correct.term}</b></span>`;
                 
                 if (!appState.notebook.includes(correct.term)) {
                     appState.notebook.push(correct.term);
@@ -1944,7 +1955,7 @@
                 saveData();
             } else {
                 // 피드백을 두 줄로 깔끔하게 띄움
-                feedback.innerHTML = `<span class="text-red-500 font-bold block mb-1">Wrong!</span><span class="text-text-main text-[15px] font-normal">Answer: <b class="text-red-500 font-bold">${quizCurrentQ.term}</b></span>`;
+                feedback.innerHTML = `<span class="text-red-500 font-bold block mb-1">Wrong!</span><span class="text-text-dim text-[15px] font-normal">Answer: <b class="text-red-500 font-bold">${quizCurrentQ.term}</b></span>`;
                 inputEl.classList.add('border-red-500', 'text-red-500');
                 
                 if (!appState.notebook.includes(quizCurrentQ.term)) {
