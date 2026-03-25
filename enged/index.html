@@ -277,6 +277,8 @@
             background-color: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
+            /* 3D 렌더링 최적화 */
+            transform: translateZ(0); -webkit-transform: translateZ(0);
         }
         html[data-theme="light"] .fc-scroll-box { 
             background-color: rgba(0, 0, 0, 0.02); 
@@ -472,6 +474,10 @@
         <div class="blob b1"></div>
         <div class="blob b2"></div>
     </div>
+    
+    <!-- 플래시카드 스와이프 시 나타나는 배경 가장자리 그라데이션 글로우 -->
+    <div id="glow-left" class="fixed inset-y-0 left-0 w-full md:w-1/2 bg-gradient-to-r from-orange-500/20 via-orange-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
+    <div id="glow-right" class="fixed inset-y-0 right-0 w-full md:w-1/2 bg-gradient-to-l from-green-500/20 via-green-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
 
     <header class="no-select">
         <div class="logo" onclick="location.reload()">
@@ -626,7 +632,6 @@
                                     <div class="flex flex-col gap-2 w-full px-4 py-2.5 text-sm text-text-main">
                                         <div class="flex items-center justify-between mb-1">
                                             <div><b class="font-sans w-5 inline-block text-center mr-2 opacity-70">A</b> <span>글자 크기</span></div>
-                                            <button onclick="cycleFontSize()" class="w-6 h-6 rounded-md bg-[var(--glass-highlight)] text-text-dim hover:text-sub-accent transition flex items-center justify-center"><i class="fa-solid fa-rotate"></i></button>
                                         </div>
                                         <div class="flex bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-lg overflow-hidden p-1 gap-1 mt-1">
                                             <button onclick="setFontSize(0)" id="font-seg-0" class="flex-1 py-2 text-[11px] font-bold rounded-md transition-colors bg-[var(--sub-accent-bg)] text-sub-accent shadow-sm border border-[var(--sub-accent-border)]">기본</button>
@@ -724,7 +729,7 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 (튕김 버그 완전 방지를 위한 Absolute 구조로 변경) -->
+            <!-- 카드 영역 디자인 개선 -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
@@ -850,7 +855,7 @@
                         <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-sub-accent"></div>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 디자인 개선 (글로우 제거 및 테두리만 강조) -->
+                    <!-- 주관식 스펠링 컨테이너 디자인 개선 -->
                     <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
                         <div class="relative w-full shadow-sm rounded-2xl">
                             <!-- 영어만 입력되도록 oninput 정규식 유지 -->
@@ -1130,8 +1135,8 @@
             startX = e.clientX;
             startY = e.clientY;
             fcContainer.style.transition = 'none';
-            glowLeft.style.transition = 'none';
-            glowRight.style.transition = 'none';
+            if (glowLeft) glowLeft.style.transition = 'none';
+            if (glowRight) glowRight.style.transition = 'none';
         }, {passive: true});
 
         fcContainer.addEventListener('pointermove', e => {
@@ -1155,8 +1160,8 @@
 
             if (currentX > 0) {
                 // 오른쪽 스와이프 (완료: 녹색)
-                glowRight.style.opacity = progress;
-                glowLeft.style.opacity = 0;
+                if (glowRight) glowRight.style.opacity = progress;
+                if (glowLeft) glowLeft.style.opacity = 0;
                 
                 badgeContainer.style.opacity = progress;
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-green-500/80 border border-green-400/50";
@@ -1164,8 +1169,8 @@
                 badgeText.innerText = "MEMORIZED";
             } else if (currentX < 0) {
                 // 왼쪽 스와이프 (저장: 주황색)
-                glowLeft.style.opacity = progress;
-                glowRight.style.opacity = 0;
+                if (glowLeft) glowLeft.style.opacity = progress;
+                if (glowRight) glowRight.style.opacity = 0;
                 
                 badgeContainer.style.opacity = progress;
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-orange-500/80 border border-orange-400/50";
@@ -1198,8 +1203,8 @@
             const threshold = 100;
             
             // 드래그가 끝나면 CSS transition 활성화하여 부드럽게 사라지도록 설정
-            glowLeft.style.transition = 'opacity 0.3s ease';
-            glowRight.style.transition = 'opacity 0.3s ease';
+            if (glowLeft) glowLeft.style.transition = 'opacity 0.3s ease';
+            if (glowRight) glowRight.style.transition = 'opacity 0.3s ease';
 
             if (Math.abs(currentX) > threshold) {
                 const sign = Math.sign(currentX);
@@ -1220,8 +1225,8 @@
                     fcContainer.style.transition = 'none';
                     fcContainer.style.transform = '';
                     badgeContainer.style.opacity = 0;
-                    glowLeft.style.opacity = 0;
-                    glowRight.style.opacity = 0;
+                    if (glowLeft) glowLeft.style.opacity = 0;
+                    if (glowRight) glowRight.style.opacity = 0;
                     stopAutoplay();
                     nextCard();
                 }, 300);
@@ -1229,8 +1234,8 @@
                 fcContainer.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 fcContainer.style.transform = '';
                 badgeContainer.style.opacity = 0;
-                glowLeft.style.opacity = 0;
-                glowRight.style.opacity = 0;
+                if (glowLeft) glowLeft.style.opacity = 0;
+                if (glowRight) glowRight.style.opacity = 0;
                 
                 if (Math.abs(currentX) < 5 && Math.abs(currentY) < 5) {
                     flipCard();
@@ -1250,8 +1255,8 @@
             fcContainer.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             fcContainer.style.transform = `translate(${sign * window.innerWidth}px, 0px) rotate(${sign * 30}deg)`;
             
-            glowLeft.style.transition = 'opacity 0.2s ease';
-            glowRight.style.transition = 'opacity 0.2s ease';
+            if (glowLeft) glowLeft.style.transition = 'opacity 0.2s ease';
+            if (glowRight) glowRight.style.transition = 'opacity 0.2s ease';
 
             if (direction === 'right') {
                 if(!appState.memorized[term]) toggleMemorized(term, true);
@@ -1260,7 +1265,7 @@
                 badgeIcon.className = "fa-solid fa-check";
                 badgeText.innerText = "MEMORIZED";
                 
-                glowRight.style.opacity = 0.8;
+                if (glowRight) glowRight.style.opacity = 0.8;
             } else {
                 if(!appState.notebook.includes(term)) toggleNotebook(term);
                 badgeContainer.style.opacity = 1;
@@ -1268,7 +1273,7 @@
                 badgeIcon.className = "fa-solid fa-bookmark";
                 badgeText.innerText = "SAVED";
                 
-                glowLeft.style.opacity = 0.8;
+                if (glowLeft) glowLeft.style.opacity = 0.8;
             }
             updateFlashcardControls(term);
 
@@ -1276,8 +1281,8 @@
                 fcContainer.style.transition = 'none';
                 fcContainer.style.transform = '';
                 badgeContainer.style.opacity = 0;
-                glowLeft.style.opacity = 0;
-                glowRight.style.opacity = 0;
+                if (glowLeft) glowLeft.style.opacity = 0;
+                if (glowRight) glowRight.style.opacity = 0;
                 nextCard();
             }, 300);
         }
@@ -1629,13 +1634,13 @@
             const span = btn.querySelector('span');
             if(fcFilterMode === 'all') {
                 span.innerText = '전체 단어';
-                btn.classList.remove('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
+                btn.classList.remove('text-primary', 'border-primary/50', 'bg-primary/5');
             } else if(fcFilterMode === 'hideMemorized') {
                 span.innerText = '암기 제외';
-                btn.classList.add('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
+                btn.classList.add('text-primary', 'border-primary/50', 'bg-primary/5');
             } else if(fcFilterMode === 'onlySaved') {
                 span.innerText = '저장 단어';
-                btn.classList.add('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
+                btn.classList.add('text-primary', 'border-primary/50', 'bg-primary/5');
             }
             updateFcFilterMenuUI();
             closeFcFilterMenu();
@@ -1750,7 +1755,7 @@
                 icon.classList.remove('fa-solid');
             }
 
-            // 앞면 뒷면 뱃지(체크/별표) 업데이트 (서브 컬러 적용)
+            // 앞면 뒷면 뱃지(체크/별표) 업데이트
             let badgesHtml = '';
             if (isMemorized) badgesHtml += `<span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-green-500/20 text-green-500 text-[10px] border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
             if (isSaved) badgesHtml += `<span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-orange-500/20 text-orange-500 text-[10px] border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
@@ -1860,7 +1865,7 @@
                     <div class="flex-1 pr-4">
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
                             <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
-                            <span class="text-xs text-text-dim font-kor font-bold text-sub-accent">${word.koTerm}</span>
+                            <span class="text-xs text-text-dim font-kor font-bold text-primary">${word.koTerm}</span>
                         </div>
                         <p class="text-sm text-text-sub font-sans leading-relaxed mb-1">${word.def}</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80">${word.koDef}</p>
@@ -1957,7 +1962,7 @@
             document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
 
             let badgesHtml = '';
-            if (isRepeat) badgesHtml += `<span class="inline-block bg-sub-accent-bg text-sub-accent text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-sub-accent-border">REPEATED</span>`;
+            if (isRepeat) badgesHtml += `<span class="inline-block bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-primary/30">REPEATED</span>`;
             if (appState.memorized[quizCurrentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
             if (appState.notebook.includes(quizCurrentQ.term)) badgesHtml += `<span class="inline-block bg-orange-500/20 text-orange-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
 
@@ -2186,7 +2191,7 @@
             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
             const ind = document.getElementById('sortIndicator');
             if (ind) {
-                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-sub-accent transition-colors' : 'fa-solid fa-caret-up text-sub-accent transition-colors';
+                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-primary transition-colors' : 'fa-solid fa-caret-up text-primary transition-colors';
             }
             renderListTable();
         }
@@ -2223,54 +2228,54 @@
             const titleBox = document.getElementById('helpModalTitle');
 
             if (type === 'list') {
-                titleBox.innerHTML = '<i class="fa-solid fa-list text-sub-accent"></i> 리스트 도움말';
+                titleBox.innerHTML = '<i class="fa-solid fa-list text-primary"></i> 리스트 도움말';
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-sub-accent">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
+                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-sub-accent">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
+                            <div><strong class="text-primary">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-sub-accent">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
+                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-sub-accent">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
+                            <div><strong class="text-primary">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-sub-accent">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
+                            <div><strong class="text-primary">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-sub-accent">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
+                            <div><strong class="text-primary">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
                         </div>
                     </div>
                 `;
             } else if (type === 'flashcard') {
-                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-sub-accent"></i> 플래시카드 도움말';
+                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-primary"></i> 플래시카드 도움말';
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-hand-pointer text-sm"></i></div>
-                            <div><strong class="text-sub-accent">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
+                            <div><strong class="text-primary">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-sub-accent">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
+                            <div><strong class="text-primary">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-sub-accent text-sm"></i></div>
-                            <div><strong class="text-sub-accent">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-primary text-sm"></i></div>
+                            <div><strong class="text-primary">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
-                            <div><strong class="text-sub-accent">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
+                            <div><strong class="text-primary">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
                         </div>
                     </div>
                 `;
@@ -2338,7 +2343,7 @@
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
                         <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                        <div class="font-bold text-sub-accent font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
+                        <div class="font-bold text-primary font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-3 py-3 align-top def-col-content">
                         <div class="text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
