@@ -368,9 +368,9 @@
             .fc-btn-shuffle:hover { color: var(--text-main); background-color: var(--glass-highlight); }
             .fc-btn-auto:not(.is-active):hover { color: var(--sub-accent); background-color: var(--sub-accent-bg); }
             
-            /* 리스트 내 단어 체크/단어장 호버 원상복구 (배경 없이 색상만) */
+            /* 리스트 내 단어 체크/단어장 호버 원상복구 */
             .list-action-check:not(.text-green-500):hover { color: #4ade80; }
-            .list-action-bookmark:not(.text-orange-400):hover { color: #fb923c; } 
+            .list-action-bookmark:hover .text-text-dim { color: #fb923c; } 
             
             /* 상단 툴바 4개 버튼 약한 호버 효과 */
             .toolbar-btn:not(.btn-active):hover { background-color: rgba(255, 255, 255, 0.12); }
@@ -2391,7 +2391,7 @@
                         <div class="flex flex-col sm:flex-row items-center gap-2">
                             <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
-                                <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check opacity-40'}"></i>
+                                <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
                             <div class="cursor-pointer text-lg list-action-bookmark transition-colors" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
                                 <i class="${isSaved ? 'fa-solid fa-bookmark text-orange-400' : 'fa-regular fa-bookmark text-text-dim'}"></i>
