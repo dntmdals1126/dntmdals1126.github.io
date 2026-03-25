@@ -89,7 +89,7 @@
             --sub-accent-bg: rgba(59, 130, 246, 0.1);
             --sub-accent-border: rgba(59, 130, 246, 0.3);
             --fc-back-grad-start: rgba(59, 130, 246, 0.1);
-            --fc-back-grad-end: rgba(99, 102, 241, 0.05); /* indigo-500/5 (기존의 예쁜 푸른빛) */
+            --fc-back-grad-end: rgba(99, 102, 241, 0.05);
 
             --text-main: #f1f5f9;
             --text-sub: #94a3b8;
@@ -203,7 +203,7 @@
         .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
         .header-tools { display: flex; gap: 8px; align-items: center; }
         .tool-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid transparent; background: transparent; color: var(--text-main); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        @media (hover: hover) { .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); } }
+        @media (hover: hover) and (pointer: fine) { .tool-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); } }
 
         main { max-width: var(--max-w); margin: 0 auto; padding: calc(100px + env(safe-area-inset-top)) 16px 60px; position: relative; z-index: 1; }
         .section-card { background: var(--glass-surface); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.2s; }
@@ -216,7 +216,7 @@
         
         /* 플래시카드 하단 메인 액션 버튼 전용 효과 */
         .fc-action-main-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        @media (hover: hover) {
+        @media (hover: hover) and (pointer: fine) {
             .fc-action-main-btn:hover { transform: scale(1.08); }
             .fc-action-main-btn.btn-check:not(.active):hover { color: #22c55e; border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
             .fc-action-main-btn.btn-saved:not(.active):hover { color: #f97316; border-color: #f97316; background: rgba(249, 115, 22, 0.1); }
@@ -238,7 +238,7 @@
         .chip-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; width: 100%; justify-content: flex-start; }
         .chip-nav::-webkit-scrollbar { display: none; }
         .chip { flex: 1; white-space: nowrap; text-align: center; padding: 10px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; background: transparent; color: var(--text-sub); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .chip:hover { background: var(--glass-highlight); }
+        @media (hover: hover) and (pointer: fine) { .chip:hover { background: var(--glass-highlight); } }
         .chip.active { background: var(--sub-accent-bg); color: var(--sub-accent); }
 
         /* Flashcard 3D & Mobile Touch Scroll Fixes */
@@ -277,7 +277,6 @@
             background-color: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            /* 3D 렌더링 최적화 */
             transform: translateZ(0); -webkit-transform: translateZ(0);
         }
         html[data-theme="light"] .fc-scroll-box { 
@@ -285,7 +284,6 @@
             border-color: rgba(0, 0, 0, 0.06); 
         }
 
-        /* 여백을 안쪽 요소에 부여하여 스크롤 맨 아래에 도착했을 때도 하단 여백 보장 */
         .fc-inner-content {
             width: 100%; display: flex; flex-direction: column;
             padding: 24px; min-height: 100%;
@@ -294,7 +292,6 @@
         .flashcard-face.front .fc-inner-content { 
             align-items: flex-start; text-align: left; justify-content: flex-start;
         }
-        /* Grid를 사용하여 모바일 튕김 현상 원천 차단 */
         .flashcard-face.back .fc-inner-content { 
             display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%;
         }
@@ -302,7 +299,6 @@
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 2px; }
 
-        /* 주관식 입력창 placeholder 커스텀 */
         #quiz-spelling-input::placeholder { font-weight: 300; font-size: 18px; opacity: 0.5; letter-spacing: -0.02em; }
 
         /* Progress & Stats */
@@ -328,16 +324,15 @@
         }
         .btn-active .slash-wrapper::after { transform: translateY(-50%) rotate(-45deg) scaleX(1); }
 
-        /* Search Clear Button Transition */
         .clear-btn-enter { opacity: 0; transform: scale(0.8); }
         .clear-btn-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
 
         /* Blur Logic */
         .blur-target { filter: blur(5px); transition: filter 0.3s ease; cursor: pointer; user-select: none; }
-        @media (hover: hover) { .blur-target:hover { filter: blur(0); } }
+        @media (hover: hover) and (pointer: fine) { .blur-target:hover { filter: blur(0); } }
         .blur-target.is-revealed { filter: blur(0) !important; transition: filter 0.1s; }
 
-        /* Sticky Header 및 디자인 차별화 */
+        /* Sticky Header */
         #listContainer thead th { 
             position: sticky; top: 0; z-index: 20; 
             background-color: rgba(15, 15, 20, 0.95); 
@@ -352,31 +347,70 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
+        /* PC styles for columns */
+        @media (min-width: 481px) {
+            .pc-hide { display: none !important; }
+
+            #listContainer th:nth-child(2), #listContainer td.actions-col { width: 70px !important; }
+            #listContainer th:nth-child(3), #listContainer td.term-col-content { width: 25% !important; }
+
+            #listContainer th, #listContainer td { position: relative; }
+            #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
+            #listContainer th:nth-child(2)::after, #listContainer td:nth-child(2)::after,
+            #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after {
+                content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background-color: var(--glass-border);
+            }
+            #listContainer td.actions-col .flex { flex-direction: row; gap: 12px; justify-content: center; }
+        }
+        
+        /* Action Buttons Hover Fix for True Pointers (PC Only) */
+        @media (hover: hover) and (pointer: fine) {
+            .fc-btn-shuffle:hover { color: var(--text-main); background-color: var(--glass-highlight); }
+            .fc-btn-auto:not(.is-active):hover { color: var(--sub-accent); background-color: var(--sub-accent-bg); }
+            
+            /* 리스트 호버 약하게 변경 */
+            .list-action-check:hover { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; }
+            .list-action-bookmark:hover { background-color: rgba(249, 115, 22, 0.15); color: #f97316; } 
+        }
+
+        /* 터치 반응 효과 (Mobile & PC 공통) */
+        .fc-btn-shuffle:active, .fc-btn-auto:active, .list-action-check:active, .list-action-bookmark:active {
+            transform: scale(0.92);
+            opacity: 0.7;
+            transition: transform 0.1s, opacity 0.1s;
+        }
+
+        .fc-btn-auto.is-active { color: var(--sub-accent) !important; background-color: var(--sub-accent-bg) !important; }
+
+        /* 인쇄 (Print) 강제 라이트 모드 설정 및 Definition 숨김 해제 */
         @media print {
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: white !important; color: black !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color: black !important; box-shadow: none !important; text-shadow: none !important; background: transparent !important; border-color: #ccc !important; }
+            
             header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #moreBtn, #moreMenu, #filterMenu, #filterBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal, #settingsModal { display: none !important; }
+            
             main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; }
             #view-dashboard { display: block !important; }
             #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: white !important; }
             #listContainer { height: auto !important; max-height: none !important; overflow: visible !important; }
-            table { width: 100% !important; display: table !important; }
-            thead { background: #f3f4f6 !important; color: black !important; display: table-header-group !important; }
-            thead th { position: static !important; border: 1px solid #ddd !important; }
-            tbody tr { break-inside: avoid; display: table-row !important; }
-            td { border: 1px solid #ddd !important; padding: 4px !important; color: black !important; display: table-cell !important; }
-            .font-bold { font-weight: bold !important; }
-            .mobile-hide { display: none !important; }
             
-            /* 인쇄 시 액션 컬럼 숨기기 */
-            th:nth-child(2), td:nth-child(2) { display: none !important; }
-            th.num-col, td.num-col { display: table-cell !important; width: 40px !important; }
-        }
+            /* 테이블 인쇄 시 강제 출력 세팅 */
+            table { width: 100% !important; display: table !important; border-collapse: collapse !important; color: black !important; }
+            thead { display: table-header-group !important; background: #f3f4f6 !important; }
+            thead th { position: static !important; border: 1px solid #000 !important; font-weight: bold !important; padding: 8px !important; color: black !important; background-color: #f3f4f6 !important; }
+            tbody tr { break-inside: avoid; display: table-row !important; border-bottom: 1px solid #000 !important; }
+            td { border: 1px solid #000 !important; padding: 8px !important; color: black !important; display: table-cell !important; }
+            .font-bold { font-weight: bold !important; }
+            
+            /* Definition 컬럼 보이도록 강제 (.mobile-hide 속성 무효화) */
+            th.num-col, td.num-col { display: table-cell !important; width: 40px !important; text-align: center !important; }
+            th.def-col, td.def-col-content { display: table-cell !important; }
+            
+            /* 액션 컬럼만 숨기기 */
+            th:nth-child(2), td:nth-child(2), td.actions-col { display: none !important; }
 
-        /* List Action Buttons Hover Fix for Mobile */
-        @media (hover: hover) {
-            .list-action-check:not(.text-green-500):hover { color: #4ade80; }
-            .list-action-bookmark:hover .text-text-dim { color: #fb923c; } 
+            .hl-text { background: none !important; color: black !important; font-weight: bold !important; }
         }
 
         /* Mobile Tweaks */
@@ -443,27 +477,6 @@
             
             /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
-        }
-        
-        /* PC styles for columns */
-        @media (min-width: 481px) {
-            .pc-hide { display: none !important; }
-
-            #listContainer th:nth-child(2), #listContainer td.actions-col {
-                width: 70px !important;
-            }
-            #listContainer th:nth-child(3), #listContainer td.term-col-content {
-                width: 25% !important;
-            }
-
-            #listContainer th, #listContainer td { position: relative; }
-            #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
-            #listContainer th:nth-child(2)::after, #listContainer td:nth-child(2)::after,
-            #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after {
-                content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background-color: var(--glass-border);
-            }
-            
-            #listContainer td.actions-col .flex { flex-direction: row; gap: 12px; justify-content: center; }
         }
     </style>
 </head>
@@ -635,8 +648,8 @@
                                         </div>
                                         <div class="flex bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-lg overflow-hidden p-1 gap-1 mt-1">
                                             <button onclick="setFontSize(0)" id="font-seg-0" class="flex-1 py-2 text-[11px] font-bold rounded-md transition-colors bg-[var(--sub-accent-bg)] text-sub-accent shadow-sm border border-[var(--sub-accent-border)]">기본</button>
-                                            <button onclick="setFontSize(1)" id="font-seg-1" class="flex-1 py-2 text-[13px] font-bold rounded-md transition-colors text-text-dim hover:text-text-main border border-transparent">조금 크게</button>
-                                            <button onclick="setFontSize(2)" id="font-seg-2" class="flex-1 py-2 text-[15px] font-bold rounded-md transition-colors text-text-dim hover:text-text-main border border-transparent">크게</button>
+                                            <button onclick="setFontSize(1)" id="font-seg-1" class="flex-1 py-2 text-[13px] font-bold rounded-md transition-colors text-text-dim border border-transparent">조금 크게</button>
+                                            <button onclick="setFontSize(2)" id="font-seg-2" class="flex-1 py-2 text-[15px] font-bold rounded-md transition-colors text-text-dim border border-transparent">크게</button>
                                         </div>
                                     </div>
 
@@ -664,14 +677,14 @@
                                 <th class="px-2 py-3 text-center w-12 mobile-hide num-col">#</th>
                                 <th class="px-2 py-3 text-center w-[70px]">
                                     <div class="flex flex-row justify-center items-center gap-3 sm:gap-4">
-                                        <i class="fa-solid fa-check cursor-pointer hover:text-green-500 transition-colors" title="현재 목록 전체 암기/해제" onclick="toggleAllVisibleMemorized()"></i>
-                                        <i class="fa-solid fa-bookmark cursor-pointer hover:text-orange-400 transition-colors" title="현재 목록 전체 저장/해제" onclick="toggleAllVisibleNotebook()"></i>
+                                        <i class="fa-solid fa-check cursor-pointer transition-colors list-action-check hover:text-green-500" title="현재 목록 전체 암기/해제" onclick="toggleAllVisibleMemorized()"></i>
+                                        <i class="fa-solid fa-bookmark cursor-pointer transition-colors list-action-bookmark hover:text-orange-400" title="현재 목록 전체 저장/해제" onclick="toggleAllVisibleNotebook()"></i>
                                     </div>
                                 </th>
-                                <th class="px-4 py-3 term-col w-[25%] cursor-pointer hover:text-sub-accent transition-colors group select-none" onclick="toggleSort()" title="알파벳 정렬">
+                                <th class="px-4 py-3 term-col w-[25%] cursor-pointer hover:text-[var(--sub-accent)] transition-colors group select-none" onclick="toggleSort()" title="알파벳 정렬">
                                     <div class="flex items-center gap-1">
                                         Term
-                                        <i id="sortIndicator" class="fa-solid fa-caret-down text-text-dim group-hover:text-sub-accent transition-colors"></i>
+                                        <i id="sortIndicator" class="fa-solid fa-caret-down text-text-dim group-hover:text-[var(--sub-accent)] transition-colors"></i>
                                     </div>
                                 </th>
                                 <th class="px-4 py-3 def-col w-auto mobile-hide">Definition</th>
@@ -786,12 +799,12 @@
                 <!-- 1. 보조 알약 버튼 그룹 (Shuffle & Auto) -->
                 <div class="flex items-center justify-center">
                     <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-full p-1 gap-1 shadow-sm">
-                        <button onclick="shuffleCards()" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition group" title="섞기">
+                        <button onclick="shuffleCards()" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim transition group fc-btn-shuffle" title="섞기">
                             <i class="fa-solid fa-shuffle text-[13px]"></i>
                             <span class="text-[11px] font-bold tracking-wider">SHUFFLE</span>
                         </button>
                         <div class="w-[1px] bg-[var(--glass-border)] my-2"></div>
-                        <button onclick="toggleAutoplay()" id="fc-autoplay-btn" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim hover:text-sub-accent hover:bg-[var(--sub-accent-bg)] transition group" title="자동 재생">
+                        <button onclick="toggleAutoplay()" id="fc-autoplay-btn" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim transition group fc-btn-auto" title="자동 재생">
                             <i id="fc-autoplay-icon" class="fa-solid fa-play text-[13px]"></i>
                             <span class="text-[11px] font-bold tracking-wider">AUTO</span>
                         </button>
@@ -1613,14 +1626,12 @@
             const icon = document.getElementById('fc-autoplay-icon');
 
             if (autoplayMode) {
-                // 디자인 적용
-                btn.classList.add('text-sub-accent', 'bg-[var(--sub-accent-bg)]');
+                btn.classList.add('is-active');
                 btn.classList.remove('text-text-dim');
                 icon.className = 'fa-solid fa-pause text-[13px]';
                 runAutoplayCycle();
             } else {
-                // 디자인 복원
-                btn.classList.remove('text-sub-accent', 'bg-[var(--sub-accent-bg)]');
+                btn.classList.remove('is-active');
                 btn.classList.add('text-text-dim');
                 icon.className = 'fa-solid fa-play text-[13px]';
                 clearTimeout(autoplayTimeout1);
@@ -2373,14 +2384,14 @@
                 tr.innerHTML = `
                     <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
                     <td class="px-2 py-3 text-center actions-col">
-                        <div class="flex flex-col sm:flex-row items-center gap-2">
+                        <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                             <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
-                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
-                                <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
+                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
+                                <i class="text-lg ${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check opacity-40'}"></i>
                             </button>
-                            <div class="cursor-pointer text-lg list-action-bookmark transition-colors" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
-                                <i class="${isSaved ? 'fa-solid fa-bookmark text-orange-400' : 'fa-regular fa-bookmark text-text-dim'}"></i>
-                            </div>
+                            <button onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-bookmark ${isSaved ? 'text-orange-400' : 'text-text-dim'}">
+                                <i class="text-lg ${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
+                            </button>
                         </div>
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
