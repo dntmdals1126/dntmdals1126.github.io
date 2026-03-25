@@ -816,6 +816,17 @@
                         <i class="fa-solid fa-chevron-right text-base"></i>
                     </button>
                 </div>
+                
+                <!-- 3. 저장 자동 해제 토글 (플래시카드 하단으로 이동) -->
+                <div class="flex items-center justify-center mt-1 mb-2">
+                    <label class="flex items-center gap-2 px-3 py-1 cursor-pointer group">
+                        <span class="text-[11px] font-bold text-text-dim group-hover:text-text-main transition-colors">암기 완료 시 저장 자동 해제</span>
+                        <div class="relative inline-flex items-center shrink-0">
+                            <input type="checkbox" id="setting-auto-remove" class="sr-only peer" onchange="toggleAutoRemoveSetting(this)">
+                            <div class="w-7 h-4 bg-gray-600/50 rounded-full peer peer-checked:bg-sub-accent transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-[12px]"></div>
+                        </div>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -944,20 +955,6 @@
             <h3 class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2"><i class="fa-solid fa-gear text-primary"></i> 설정 및 데이터 관리</h3>
             
             <div class="space-y-3 mt-6">
-                <!-- 새 설정 추가 -->
-                <div class="flex items-center justify-between px-4 py-3 bg-[var(--glass-surface)] rounded-xl border border-[var(--glass-border)] shadow-sm">
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold text-text-main">암기 시 단어장 자동 해제</span>
-                        <span class="text-[11px] text-text-dim mt-0.5">플래시카드 스와이프(완료) 시 적용</span>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input type="checkbox" id="setting-auto-remove" class="sr-only peer" onchange="toggleAutoRemoveSetting(this)">
-                        <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-[20px] peer-checked:after:border-white"></div>
-                    </label>
-                </div>
-                
-                <hr class="border-[var(--glass-border)] my-4">
-
                 <button onclick="exportData()" class="btn btn-sec w-full justify-between px-4 text-sm">
                     <span><i class="fa-solid fa-download mr-2"></i> 학습 데이터 백업</span>
                     <span class="text-[10px] text-text-dim bg-[var(--glass-highlight)] px-2 py-1 rounded-md">.json</span>
@@ -1391,27 +1388,11 @@
             currentIndex: 0,
             quizState: { asked: [], score: 0 },
             fontSizeLevel: 0,
-            autoRemoveSaved: false // ★ 설정 초기값
+            autoRemoveSaved: true // ★ 설정 초기값을 true(기본 켜짐)로 변경
         };
         
         let listFilterMode = 'all'; 
         let fcFilterMode = 'all';
-
-        // 폰트 사이즈 3단계
-        const fontClasses = [
-            { term: "text-[16px] lg:text-[18px]", koTerm: "text-[12px]", def: "text-[12px] sm:text-[13.5px]", koDef: "text-[12px] text-gray-500" },
-            { term: "text-[17px] lg:text-[19px]", koTerm: "text-[13px]", def: "text-[13px] sm:text-[14.5px]", koDef: "text-[13px] text-gray-500" },
-            { term: "text-[18px] lg:text-[20px]", koTerm: "text-[14px]", def: "text-[14px] sm:text-[15.5px]", koDef: "text-[14px] text-gray-500" }
-        ];
-        
-        let isQuizActive = false;
-        let quizState = { mode: 'spelling' }; 
-        let quizCurrentQ = null;
-        
-        let sortOrder = 'asc'; 
-        let flashcardOrder = []; 
-        let hideTerms = false; 
-        let hideDefs = false;
 
         let searchTimeout = null; 
 
@@ -1424,6 +1405,11 @@
 
         window.onload = async function() {
             loadLocalData();
+            
+            // ★ 플래시카드 하단에 위치한 토글 스위치 초기 상태 동기화
+            const autoRemoveToggle = document.getElementById('setting-auto-remove');
+            if (autoRemoveToggle) autoRemoveToggle.checked = appState.autoRemoveSaved;
+            
             await fetchCSV();
             buildFlashcardOrder();
             updateMoreMenuUI();
@@ -1442,7 +1428,7 @@
                     if (!parsed.quizState || !Array.isArray(parsed.quizState.asked)) parsed.quizState = { asked: [], score: 0 };
                     if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
                     if (parsed.fontSizeLevel > 2) parsed.fontSizeLevel = 0; 
-                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = false; // ★ 추가
+                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = true; // ★ undefined일 경우 true로 기본 적용
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
             }
@@ -1455,9 +1441,6 @@
         function openSettingsModal() {
             const modal = document.getElementById('settingsModal');
             const content = document.getElementById('settingsModalContent');
-            
-            // ★ 모달 열 때 스위치 상태 반영
-            document.getElementById('setting-auto-remove').checked = appState.autoRemoveSaved;
             
             modal.classList.remove('hidden');
             void modal.offsetWidth; 
@@ -2301,6 +2284,10 @@
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
                             <div><strong class="text-sub-accent">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-toggle-on text-sm"></i></div>
+                            <div><strong class="text-sub-accent">저장 자동 해제</strong><br><span class="text-text-dim text-sm">하단의 스위치를 켜두면, 카드를 '암기 완료'로 처리할 때 단어장에서도 자동으로 지워집니다.</span></div>
                         </div>
                     </div>
                 `;
