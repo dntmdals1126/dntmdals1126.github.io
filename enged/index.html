@@ -269,15 +269,15 @@
         }
 
         .fc-inner-content {
-            width: 100%; min-height: 100%; display: flex; flex-direction: column;
+            width: 100%; display: flex; flex-direction: column;
         }
         /* Front side (Definition) left align & ALWAYS TOP */
         .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; justify-content: flex-start; 
+            align-items: flex-start; text-align: left; margin-top: 0; margin-bottom: auto; 
         }
-        /* Back side (Term) center align */
+        /* Back side (Term) center align (Prevent jumping down bug) */
         .flashcard-face.back .fc-inner-content { 
-            align-items: center; text-align: center; justify-content: center; 
+            align-items: center; text-align: center; margin-top: auto; margin-bottom: auto; 
         }
 
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
@@ -519,35 +519,35 @@
 
             <!-- List -->
             <section class="section-card p-0 overflow-hidden flex flex-col h-[560px]" id="listSection">
-                <div class="p-3 border-b border-[var(--glass-border)] bg-[var(--glass-highlight)] shrink-0 no-print">
-                    <div class="flex flex-wrap items-center gap-2">
-                         <div class="flex-1 min-w-[140px] flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-[14px] px-3 focus-within:border-blue-500/50 transition-colors relative">
-                             <i class="fa-solid fa-search text-text-dim"></i>
+                <div class="p-2 sm:p-3 border-b border-[var(--glass-border)] bg-[var(--glass-highlight)] shrink-0 no-print">
+                    <div class="flex items-center gap-1.5 sm:gap-2 w-full">
+                         <div class="flex-1 min-w-0 flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-[14px] px-2 sm:px-3 focus-within:border-blue-500/50 transition-colors relative">
+                             <i class="fa-solid fa-search text-text-dim text-[13px] sm:text-sm"></i>
                              <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable(); toggleClearBtn();" 
-                                class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-sm font-medium p-0 ml-2 pr-6">
+                                class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-[13.5px] sm:text-sm font-medium p-0 ml-1.5 sm:ml-2 pr-6">
                              <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2 w-6 h-6 flex items-center justify-center text-text-dim hover:text-text-main">
                                  <i class="fa-solid fa-xmark"></i>
                              </button>
                          </div>
                          
-                         <div class="flex items-center gap-1.5 shrink-0">
+                         <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
                              <!-- 1. 단어/해설 가리기 -->
-                             <button onclick="toggleHideTerms()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs !rounded-[14px]" id="hideTermBtn" title="단어 가리기">
+                             <button onclick="toggleHideTerms()" class="btn btn-sec h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="hideTermBtn" title="단어 가리기">
                                 <span class="slash-wrapper"><i class="fa-solid fa-font"></i></span>
                              </button>
-                             <button onclick="toggleHideDefs()" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs !rounded-[14px]" id="hideDefBtn" title="해설 가리기">
+                             <button onclick="toggleHideDefs()" class="btn btn-sec h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="hideDefBtn" title="해설 가리기">
                                 <span class="slash-wrapper"><i class="fa-solid fa-align-left"></i></span>
                              </button>
                              
-                             <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
+                             <div class="w-[1px] h-5 sm:h-6 bg-[var(--glass-border)] mx-0.5"></div>
                              
                              <!-- 2. 필터 드롭다운 -->
                              <div class="relative">
-                                 <button onclick="toggleFilterMenu(event)" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs !rounded-[14px]" id="filterBtn" title="단어 필터링">
+                                 <button onclick="toggleFilterMenu(event)" class="btn btn-sec h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="filterBtn" title="단어 필터링">
                                     <i class="fa-solid fa-filter"></i>
                                  </button>
                                  <div id="filterMenu" class="hidden absolute right-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200">
-                                    <button onclick="setListFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-list w-5 text-center mr-2 opacity-70"></i> 전체 단어</span>
                                         <i id="filter-check-all" class="fa-solid fa-check text-primary"></i>
                                     </button>
@@ -570,8 +570,8 @@
                              
                              <!-- 3. 더보기 드롭다운 -->
                              <div class="relative">
-                                 <button onclick="toggleMoreMenu(event)" class="btn btn-sec h-9 w-10 sm:h-10 px-0 flex items-center justify-center text-xs !rounded-[14px]" id="moreBtn" title="더보기">
-                                    <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                                 <button onclick="toggleMoreMenu(event)" class="btn btn-sec h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="moreBtn" title="더보기">
+                                    <i class="fa-solid fa-ellipsis-vertical text-[13px] sm:text-[14.5px]"></i>
                                  </button>
                                  <div id="moreMenu" class="hidden absolute right-0 top-full mt-2 w-64 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200">
                                     
@@ -782,15 +782,15 @@
                     <!-- 주관식 스펠링 컨테이너 여백 확보 및 애니메이션 -->
                     <div id="quiz-spelling-container" class="w-full mt-8 mb-10 anim-fade-in">
                         <div class="relative w-full">
-                            <input type="text" id="quiz-spelling-input" class="w-full bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl p-4 text-center text-xl font-bold text-text-main focus:border-blue-500/50 transition-colors placeholder-text-dim/50 outline-none" placeholder="영단어를 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <input type="text" id="quiz-spelling-input" class="w-full bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl p-4 text-center text-[22px] font-bold text-text-main focus:border-blue-500/50 transition-colors placeholder-text-dim/50 outline-none" placeholder="영단어를 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- 다중선택 객관식 여백 확보 및 애니메이션 -->
-                    <div id="quiz-options" class="hidden grid-cols-1 gap-3 mt-6 mb-10 anim-fade-in">
+                    <!-- 다중선택 객관식 여백 확보 및 애니메이션 (grid 속성 복구) -->
+                    <div id="quiz-options" class="hidden grid grid-cols-1 gap-3 mt-6 mb-10 anim-fade-in">
                         <!-- JS Generated -->
                     </div>
 
@@ -1843,7 +1843,8 @@
                 containerMulti.innerHTML = '';
                 options.forEach(opt => {
                     const btn = document.createElement('button');
-                    btn.className = "w-full text-left p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-4 text-[17px] md:text-[19px]";
+                    // 객관식 선지 폰트 크기 및 패딩 수정 (15~17px)
+                    btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
                     btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
                     btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
                     containerMulti.appendChild(btn);
