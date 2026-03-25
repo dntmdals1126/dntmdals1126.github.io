@@ -84,12 +84,12 @@
             --primary: #3b82f6; 
             --primary-glow: rgba(59, 130, 246, 0.3);
             
-            /* Dark Mode Sub-Accent: 롤백 (다시 파란색 톤으로 통일) */
+            /* Dark Mode Sub-Accent: Blue (Rollback) */
             --sub-accent: var(--primary); 
             --sub-accent-bg: rgba(59, 130, 246, 0.1);
             --sub-accent-border: rgba(59, 130, 246, 0.3);
             --fc-back-grad-start: rgba(59, 130, 246, 0.1);
-            --fc-back-grad-end: rgba(99, 102, 241, 0.05); /* indigo-500/5 (기존의 예쁜 푸른빛) */
+            --fc-back-grad-end: rgba(99, 102, 241, 0.05);
 
             --text-main: #f1f5f9;
             --text-sub: #94a3b8;
@@ -188,7 +188,6 @@
         .fade-in-up { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         
-        /* 애니메이션 */
         @keyframes fadeScaleIn {
             0% { opacity: 0; transform: translateY(8px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -198,7 +197,6 @@
         .scroll-mask { position: fixed; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to bottom, var(--bg-dark) 0%, rgba(5,5,5,0.8) 30%, transparent 100%); pointer-events: none; z-index: 900; }
         html[data-theme="light"] .scroll-mask { background: linear-gradient(to bottom, #f2f4f7 0%, rgba(242, 244, 247, 0.8) 30%, transparent 100%); }
 
-        /* 데스크탑 헤더 */
         header { position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h); z-index: 1000; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 99px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15); transition: background-color 0.3s, border-color 0.3s; }
         .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
         .header-tools { display: flex; gap: 8px; align-items: center; }
@@ -214,26 +212,16 @@
         .btn-sec { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--glass-border); }
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
         
-        /* 플래시카드 하단 메인 액션 버튼 전용 효과 */
         .fc-action-main-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         @media (hover: hover) {
             .fc-action-main-btn:hover { transform: scale(1.08); }
             .fc-action-main-btn.btn-check:not(.active):hover { color: #22c55e; border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
             .fc-action-main-btn.btn-saved:not(.active):hover { color: #f97316; border-color: #f97316; background: rgba(249, 115, 22, 0.1); }
         }
-        .fc-action-main-btn.btn-check.active {
-            background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; box-shadow: 0 4px 14px rgba(34,197,94,0.3);
-        }
-        .fc-action-main-btn.btn-saved.active {
-            background-color: #f97316 !important; color: white !important; border-color: #f97316 !important; box-shadow: 0 4px 14px rgba(249,115,22,0.3);
-        }
+        .fc-action-main-btn.btn-check.active { background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; box-shadow: 0 4px 14px rgba(34,197,94,0.3); }
+        .fc-action-main-btn.btn-saved.active { background-color: #f97316 !important; color: white !important; border-color: #f97316 !important; box-shadow: 0 4px 14px rgba(249,115,22,0.3); }
 
-        /* 활성 버튼 서브 컬러로 매핑 */
-        .btn-active {
-            background-color: var(--sub-accent-bg) !important;
-            color: var(--sub-accent) !important;
-            border-color: var(--sub-accent-border) !important;
-        }
+        .btn-active { background-color: var(--sub-accent-bg) !important; color: var(--sub-accent) !important; border-color: var(--sub-accent-border) !important; }
 
         .chip-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; width: 100%; justify-content: flex-start; }
         .chip-nav::-webkit-scrollbar { display: none; }
@@ -241,7 +229,7 @@
         .chip:hover { background: var(--glass-highlight); }
         .chip.active { background: var(--sub-accent-bg); color: var(--sub-accent); }
 
-        /* Flashcard 3D & Mobile Touch Scroll Fixes */
+        /* Flashcard 3D Fixes */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .rotate-y-180 { transform: rotateY(180deg); }
@@ -254,8 +242,6 @@
             -webkit-backface-visibility: hidden; backface-visibility: hidden; 
             transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 24px; 
-            display: flex; flex-direction: column; 
-            padding: 0; 
             overflow: hidden; 
         }
         
@@ -277,80 +263,42 @@
             background-color: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            /* 3D 렌더링 최적화 */
             transform: translateZ(0); -webkit-transform: translateZ(0);
         }
-        html[data-theme="light"] .fc-scroll-box { 
-            background-color: rgba(0, 0, 0, 0.02); 
-            border-color: rgba(0, 0, 0, 0.06); 
-        }
+        html[data-theme="light"] .fc-scroll-box { background-color: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.06); }
 
-        /* 여백을 안쪽 요소에 부여하여 스크롤 맨 아래에 도착했을 때도 하단 여백 보장 */
-        .fc-inner-content {
-            width: 100%; display: flex; flex-direction: column;
-            padding: 24px; min-height: 100%;
-        }
-        
-        .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; justify-content: flex-start;
-        }
-        /* Grid를 사용하여 모바일 튕김 현상 원천 차단 */
-        .flashcard-face.back .fc-inner-content { 
-            display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%;
-        }
+        .fc-inner-content { width: 100%; display: flex; flex-direction: column; padding: 24px; min-height: 100%; }
+        .flashcard-face.front .fc-inner-content { align-items: flex-start; text-align: left; justify-content: flex-start; }
+        .flashcard-face.back .fc-inner-content { display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%; }
 
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 2px; }
 
-        /* 주관식 입력창 placeholder 커스텀 */
+        /* Quiz */
         #quiz-spelling-input::placeholder { font-weight: 300; font-size: 18px; opacity: 0.5; letter-spacing: -0.02em; }
 
-        /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
         html[data-theme="light"] .progress-bar-bg { background: #e2e8f0; }
         .progress-bar-fill { background: var(--primary); height: 100%; transition: width 0.5s ease; }
         
-        .stat-box { 
-            background: var(--glass-highlight); border-radius: 12px; padding: 12px 14px; 
-            display: flex; flex-direction: row; align-items: center; justify-content: space-between; 
-            border: 1px solid var(--glass-border); height: 100%; 
-        }
+        .stat-box { background: var(--glass-highlight); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; border: 1px solid var(--glass-border); height: 100%; }
 
         .hl-text { background-color: rgba(251, 191, 36, 0.3); color: #fcd34d; border-radius: 2px; padding: 0 2px; }
         html[data-theme="light"] .hl-text { background-color: rgba(251, 191, 36, 0.4); color: #92400e; }
 
-        /* Icon Slash Animation */
         .slash-wrapper { position: relative; display: inline-flex; justify-content: center; align-items: center; }
-        .slash-wrapper::after {
-            content: ''; position: absolute; top: 50%; left: -20%; width: 140%; height: 2px;
-            background-color: currentColor; transform: translateY(-50%) rotate(-45deg) scaleX(0); 
-            transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
-        }
+        .slash-wrapper::after { content: ''; position: absolute; top: 50%; left: -20%; width: 140%; height: 2px; background-color: currentColor; transform: translateY(-50%) rotate(-45deg) scaleX(0); transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
         .btn-active .slash-wrapper::after { transform: translateY(-50%) rotate(-45deg) scaleX(1); }
 
-        /* Search Clear Button Transition */
         .clear-btn-enter { opacity: 0; transform: scale(0.8); }
         .clear-btn-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
 
-        /* Blur Logic */
         .blur-target { filter: blur(5px); transition: filter 0.3s ease; cursor: pointer; user-select: none; }
         @media (hover: hover) { .blur-target:hover { filter: blur(0); } }
         .blur-target.is-revealed { filter: blur(0) !important; transition: filter 0.1s; }
 
-        /* Sticky Header 및 디자인 차별화 */
-        #listContainer thead th { 
-            position: sticky; top: 0; z-index: 20; 
-            background-color: rgba(15, 15, 20, 0.95); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-        }
-        html[data-theme="light"] #listContainer thead th { 
-            background-color: rgba(241, 245, 249, 0.95); 
-            border-bottom: 1px solid #cbd5e1;
-            color: #334155;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
+        #listContainer thead th { position: sticky; top: 0; z-index: 20; background-color: rgba(15, 15, 20, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); }
+        html[data-theme="light"] #listContainer thead th { background-color: rgba(241, 245, 249, 0.95); border-bottom: 1px solid #cbd5e1; color: #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
 
         @media print {
             @page { margin: 1cm; size: auto; }
@@ -367,102 +315,53 @@
             td { border: 1px solid #ddd !important; padding: 4px !important; color: black !important; display: table-cell !important; }
             .font-bold { font-weight: bold !important; }
             .mobile-hide { display: none !important; }
-            
-            /* 인쇄 시 액션 컬럼 숨기기 */
             th:nth-child(2), td:nth-child(2) { display: none !important; }
             th.num-col, td.num-col { display: table-cell !important; width: 40px !important; }
         }
 
-        /* List Action Buttons Hover Fix for Mobile */
         @media (hover: hover) {
             .list-action-check:not(.text-green-500):hover { color: #4ade80; }
             .list-action-bookmark:hover .text-text-dim { color: #fb923c; } 
         }
 
-        /* Mobile Tweaks */
         @media (max-width: 480px) {
             :root { --header-h: 60px; }
-            header { 
-                top: 0; width: 100%; border-radius: 0; 
-                padding: env(safe-area-inset-top) 16px 0; 
-                height: calc(var(--header-h) + env(safe-area-inset-top)); 
-                max-width: none; border: none; border-bottom: 1px solid var(--glass-border); 
-            }
+            header { top: 0; width: 100%; border-radius: 0; padding: env(safe-area-inset-top) 16px 0; height: calc(var(--header-h) + env(safe-area-inset-top)); max-width: none; border: none; border-bottom: 1px solid var(--glass-border); }
             main { padding-top: calc(90px + env(safe-area-inset-top)); }
-
             .stat-box { flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px 4px; min-height: 60px; text-align: center; }
             .stat-box .flex { flex-direction: column; gap: 2px; }
             .stat-box i { margin-bottom: 2px; }
             .stat-box span.uppercase { font-size: 9px; }
             .stat-box span.text-lg { margin-top: 0; }
-            
             .mobile-hide { display: none !important; }
-            
-            /* Vertical Mobile Table Layout */
             #listContainer table, #listContainer tbody, #listContainer tr { display: block; width: 100%; }
             #listContainer thead { display: block; position: sticky; top: 0; z-index: 20; width: 100%; }
-            
-            /* 모바일 헤더(Thead) 레이아웃 재배치 */
-            #listContainer thead tr { 
-                display: flex; align-items: center; width: 100%;
-                background-color: rgba(15, 15, 20, 0.95); 
-                backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-                border-bottom: 1px solid var(--glass-border);
-                padding: 10px 16px;
-                min-height: auto;
-            }
-            html[data-theme="light"] #listContainer thead tr {
-                background-color: rgba(241, 245, 249, 0.95); 
-                border-bottom: 1px solid #cbd5e1;
-            }
+            #listContainer thead tr { display: flex; align-items: center; width: 100%; background-color: rgba(15, 15, 20, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border); padding: 10px 16px; min-height: auto; }
+            html[data-theme="light"] #listContainer thead tr { background-color: rgba(241, 245, 249, 0.95); border-bottom: 1px solid #cbd5e1; }
             #listContainer thead tr::before { display: none; }
             #listContainer th { background-color: transparent !important; backdrop-filter: none !important; border-bottom: none !important; box-shadow: none !important; padding: 0 !important; }
-            
             #listContainer th.num-col { display: none !important; }
             #listContainer th:nth-child(2) { width: auto !important; display: flex; justify-content: flex-start; margin-right: 16px; }
             #listContainer th:nth-child(3) { flex: 1; display: flex; align-items: center; justify-content: flex-start; }
             #listContainer th:nth-child(4) { display: none !important; }
-            
-            #listContainer tbody tr {
-                position: relative;
-                padding: 12px 12px 12px 56px; 
-                border-bottom: 1px solid var(--glass-border);
-                min-height: 90px;
-            }
-            
-            /* 모바일 액션과 단어 사이의 세로 구분선 */
-            #listContainer tr::before {
-                content: ''; position: absolute; left: 44px; top: 15px; bottom: 15px; width: 1px; background-color: var(--glass-border);
-            }
-            
+            #listContainer tbody tr { position: relative; padding: 12px 12px 12px 56px; border-bottom: 1px solid var(--glass-border); min-height: 90px; }
+            #listContainer tr::before { content: ''; position: absolute; left: 44px; top: 15px; bottom: 15px; width: 1px; background-color: var(--glass-border); }
             #listContainer td { display: block; border: none !important; padding: 0 !important; text-align: left; }
-            
-            /* 좌측에 고정되는 액션버튼 그룹 */
             #listContainer td.actions-col { position: absolute; left: 8px; top: 14px; width: 32px !important; }
             #listContainer td.actions-col .flex { flex-direction: column; gap: 10px; align-items: center; }
-            
-            /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
         }
         
-        /* PC styles for columns */
         @media (min-width: 481px) {
             .pc-hide { display: none !important; }
-
-            #listContainer th:nth-child(2), #listContainer td.actions-col {
-                width: 70px !important;
-            }
-            #listContainer th:nth-child(3), #listContainer td.term-col-content {
-                width: 25% !important;
-            }
-
+            #listContainer th:nth-child(2), #listContainer td.actions-col { width: 70px !important; }
+            #listContainer th:nth-child(3), #listContainer td.term-col-content { width: 25% !important; }
             #listContainer th, #listContainer td { position: relative; }
             #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
             #listContainer th:nth-child(2)::after, #listContainer td:nth-child(2)::after,
             #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after {
                 content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background-color: var(--glass-border);
             }
-            
             #listContainer td.actions-col .flex { flex-direction: row; gap: 12px; justify-content: center; }
         }
     </style>
@@ -475,7 +374,7 @@
         <div class="blob b2"></div>
     </div>
     
-    <!-- 플래시카드 스와이프 시 나타나는 배경 가장자리 그라데이션 글로우 -->
+    <!-- 배경 글로우 -->
     <div id="glow-left" class="fixed inset-y-0 left-0 w-full md:w-1/2 bg-gradient-to-r from-orange-500/20 via-orange-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
     <div id="glow-right" class="fixed inset-y-0 right-0 w-full md:w-1/2 bg-gradient-to-l from-green-500/20 via-green-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
 
@@ -493,7 +392,6 @@
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
-            <!-- 설정 모달 열기 버튼 -->
             <button class="tool-btn" onclick="openSettingsModal()" title="설정 및 데이터 관리">
                 <i class="fa-solid fa-gear text-sm"></i>
             </button>
@@ -585,7 +483,6 @@
                              </button>
                          </div>
                          
-                         <!-- 리스트 툴바 -->
                          <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
                              <button onclick="toggleHideTerms()" class="btn btn-sec h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="hideTermBtn" title="단어 가리기">
                                 <span class="slash-wrapper"><i class="fa-solid fa-font"></i></span>
@@ -628,7 +525,6 @@
                                  </button>
                                  <div id="moreMenu" class="hidden absolute right-0 top-full mt-2 w-64 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200">
                                     
-                                    <!-- 3단계 글자 크기 조정 -->
                                     <div class="flex flex-col gap-2 w-full px-4 py-2.5 text-sm text-text-main">
                                         <div class="flex items-center justify-between mb-1">
                                             <div><b class="font-sans w-5 inline-block text-center mr-2 opacity-70">A</b> <span>글자 크기</span></div>
@@ -678,7 +574,6 @@
                             </tr>
                         </thead>
                         <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
-                            <!-- JS Generated -->
                         </tbody>
                     </table>
                 </div>
@@ -687,14 +582,11 @@
 
         <!-- 2. Flashcard -->
         <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center justify-center pb-6 pt-2">
-            <!-- 플래시카드 상단 바 -->
             <div class="w-full max-w-[500px] mx-auto flex justify-between items-center mb-4 px-2">
                 <span class="text-xs font-bold text-text-dim tracking-widest bg-[var(--glass-highlight)] px-3 py-1.5 rounded-lg border border-[var(--glass-border)]">
                     <i class="fa-solid fa-layer-group mr-1"></i> <span id="fc-progress">0 / 0</span>
                 </span>
-                
                 <div class="flex items-center gap-2">
-                    <!-- 드롭다운 필터 -->
                     <div class="relative">
                         <button onclick="toggleFcFilterMenu(event)" class="h-9 text-xs font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-4 rounded-xl text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-2" id="fc-filter-btn">
                             <i class="fa-solid fa-filter"></i> <span>전체 단어</span>
@@ -714,14 +606,12 @@
                             </button>
                         </div>
                     </div>
-                    <!-- 도움말 버튼 -->
                     <button onclick="openHelpModal('flashcard')" class="h-9 w-9 bg-[var(--glass-surface)] border border-[var(--glass-border)] shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center justify-center text-xs rounded-xl text-text-main" title="도움말">
                         <i class="fa-solid fa-question"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Swipe Badges -->
             <div id="swipe-badge-container" class="absolute top-12 left-0 right-0 flex justify-center z-50 pointer-events-none opacity-0 transition-opacity duration-200">
                 <div id="swipe-badge" class="px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white">
                     <i id="swipe-badge-icon" class="fa-solid fa-check"></i>
@@ -729,10 +619,9 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
-                    <!-- Front (Def) -->
+                    <!-- Front -->
                     <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)]">
                         <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
                             <div class="flex items-center gap-2">
@@ -740,7 +629,6 @@
                                 <div id="fc-front-badges" class="flex items-center gap-1.5"></div>
                             </div>
                         </div>
-                        
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
                             <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
                                 <div class="fc-inner-content">
@@ -750,12 +638,11 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="absolute bottom-4 left-0 right-0 text-text-dim/60 text-xs flex items-center justify-center gap-2 animate-pulse font-sans">
                             <i class="fa-solid fa-rotate"></i> <span>탭하여 단어 확인</span>
                         </div>
                     </div>
-                    <!-- Back (Term) -->
+                    <!-- Back -->
                     <div class="flashcard-face back bg-gradient-to-br from-[var(--fc-back-grad-start)] to-[var(--fc-back-grad-end)] backdrop-blur-xl shadow-xl border border-sub-accent-border">
                         <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
                             <div class="flex items-center gap-2">
@@ -763,7 +650,6 @@
                                 <div id="fc-back-badges" class="flex items-center gap-1.5"></div>
                             </div>
                         </div>
-                        
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
                             <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
                                 <div class="fc-inner-content justify-center min-h-full">
@@ -772,7 +658,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="absolute bottom-4 left-0 right-0 text-primary/50 text-xs flex items-center justify-center gap-2 animate-pulse font-sans">
                             <i class="fa-solid fa-rotate"></i> <span>탭하여 뜻 확인</span>
                         </div>
@@ -780,10 +665,7 @@
                 </div>
             </div>
 
-            <!-- Bottom Controls -->
             <div class="w-full max-w-[500px] mx-auto mt-6 flex flex-col gap-5">
-                
-                <!-- 1. 보조 알약 버튼 그룹 (Shuffle & Auto) -->
                 <div class="flex items-center justify-center">
                     <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-full p-1 gap-1 shadow-sm">
                         <button onclick="shuffleCards()" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition group" title="섞기">
@@ -798,23 +680,29 @@
                     </div>
                 </div>
 
-                <!-- 2. 메인 액션 버튼 묶음 -->
                 <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-2">
                     <button onclick="stopAutoplay(); prevCard();" class="btn btn-sec w-12 h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main" title="이전">
                         <i class="fa-solid fa-chevron-left text-base"></i>
                     </button>
-
                     <button onclick="toggleNotebookFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-saved w-16 h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-star-btn" title="저장">
                         <i class="fa-regular fa-bookmark text-xl md:text-2xl"></i>
                     </button>
-
                     <button onclick="toggleMemorizedFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-check w-16 h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-check-btn" title="완료">
                         <i class="fa-solid fa-check text-2xl md:text-3xl"></i>
                     </button>
-
                     <button onclick="stopAutoplay(); nextCard();" class="btn btn-sec w-12 h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main" title="다음">
                         <i class="fa-solid fa-chevron-right text-base"></i>
                     </button>
+                </div>
+                
+                <div class="flex items-center justify-center mt-1 mb-2">
+                    <label class="flex items-center gap-2 px-3 py-1 cursor-pointer group">
+                        <span class="text-[11px] font-bold text-text-dim group-hover:text-text-main transition-colors">암기 완료 시 저장 자동 해제</span>
+                        <div class="relative inline-flex items-center shrink-0">
+                            <input type="checkbox" id="setting-auto-remove" class="sr-only peer" onchange="toggleAutoRemoveSetting(this)">
+                            <div class="w-7 h-4 bg-gray-600/50 rounded-full peer peer-checked:bg-sub-accent transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-[12px]"></div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -833,30 +721,22 @@
                         <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
                     </div>
                     
-                    <!-- 객관식 / 주관식 모드 토글 -->
                     <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-4">
                         <button id="mode-spell-btn" onclick="setQuizMode('spelling')" class="flex-1 text-xs font-bold py-1.5 rounded-md bg-[var(--glass-highlight)] text-text-main transition-all duration-300">주관식</button>
                         <button id="mode-multi-btn" onclick="setQuizMode('multiple')" class="flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300">객관식</button>
                     </div>
 
-                    <!-- 문제 영역 -->
                     <div class="section-card mb-3 min-h-[140px] flex flex-col justify-center items-center text-center relative">
                         <p class="text-[10px] text-sub-accent font-bold mb-3 uppercase tracking-widest border-b border-sub-accent-border pb-1 font-sans">Definition</p>
-                        <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">
-                            문제 내용이 여기에 표시됩니다.
-                        </p>
-                        <!-- 힌트 버튼 -->
+                        <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">문제 내용이 여기에 표시됩니다.</p>
                         <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-sub-accent opacity-80 hover:opacity-100 font-bold px-2 py-1 rounded-md bg-sub-accent-bg transition flex items-center gap-1.5">
                             <i class="fa-regular fa-lightbulb"></i> 힌트
                         </button>
-                        <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
                         <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-sub-accent"></div>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 디자인 개선 -->
                     <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
                         <div class="relative w-full shadow-sm rounded-2xl">
-                            <!-- 영어만 입력되도록 oninput 정규식 유지 -->
                             <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/40 focus:bg-[var(--glass-highlight)] transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
                                 <i class="fa-solid fa-check"></i>
@@ -864,14 +744,10 @@
                         </div>
                     </div>
 
-                    <!-- 다중선택 객관식 -->
-                    <div id="quiz-options" class="hidden grid grid-cols-1 gap-3.5 mt-4 mb-6 anim-fade-in">
-                        <!-- JS Generated -->
-                    </div>
+                    <div id="quiz-options" class="hidden grid grid-cols-1 gap-3.5 mt-4 mb-6 anim-fade-in"></div>
 
                     <div id="quiz-feedback" class="hidden mt-2 mb-2 p-3 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
 
-                    <!-- 하단 액션버튼 여백 넉넉하게 -->
                     <div id="quiz-actions" class="hidden flex justify-center gap-3 w-full max-w-[240px] mx-auto mt-4 anim-fade-in">
                         <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-10">END</button>
                         <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-10">NEXT</button>
@@ -894,15 +770,11 @@
             <div class="flex justify-between items-center mb-4 px-1">
                 <h2 class="text-lg font-bold text-text-main font-kor">단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
                 <div class="flex gap-2">
-                    <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">
-                        비우기
-                    </button>
+                    <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">비우기</button>
                 </div>
             </div>
 
-            <div id="notebook-container" class="space-y-3">
-                <!-- Cards -->
-            </div>
+            <div id="notebook-container" class="space-y-3"></div>
             
             <div id="notebook-empty" class="hidden flex flex-col items-center justify-center py-20 text-text-dim">
                 <i class="fa-regular fa-bookmark text-4xl mb-3 opacity-50"></i>
@@ -920,7 +792,7 @@
 
     </main>
 
-    <!-- Help Modal (Dynamic Content) -->
+    <!-- Help Modal -->
     <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeHelpModal()">
         <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]" id="helpModalContent" onclick="event.stopPropagation()">
             <button onclick="closeHelpModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main transition z-10">
@@ -929,9 +801,7 @@
             <h3 id="helpModalTitle" class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2 shrink-0">
                 <i class="fa-solid fa-circle-info text-sub-accent"></i> 도움말
             </h3>
-            <div id="helpModalDynamicContent" class="overflow-y-auto pr-2 text-sm font-sans text-text-main" style="scrollbar-width: none;">
-                <!-- JS Generated -->
-            </div>
+            <div id="helpModalDynamicContent" class="overflow-y-auto pr-2 text-sm font-sans text-text-main" style="scrollbar-width: none;"></div>
         </div>
     </div>
 
@@ -944,20 +814,6 @@
             <h3 class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2"><i class="fa-solid fa-gear text-primary"></i> 설정 및 데이터 관리</h3>
             
             <div class="space-y-3 mt-6">
-                <!-- 새 설정 추가 -->
-                <div class="flex items-center justify-between px-4 py-3 bg-[var(--glass-surface)] rounded-xl border border-[var(--glass-border)] shadow-sm">
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold text-text-main">암기 시 단어장 자동 해제</span>
-                        <span class="text-[11px] text-text-dim mt-0.5">플래시카드 스와이프(완료) 시 적용</span>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input type="checkbox" id="setting-auto-remove" class="sr-only peer" onchange="toggleAutoRemoveSetting(this)">
-                        <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-[20px] peer-checked:after:border-white"></div>
-                    </label>
-                </div>
-                
-                <hr class="border-[var(--glass-border)] my-4">
-
                 <button onclick="exportData()" class="btn btn-sec w-full justify-between px-4 text-sm">
                     <span><i class="fa-solid fa-download mr-2"></i> 학습 데이터 백업</span>
                     <span class="text-[10px] text-text-dim bg-[var(--glass-highlight)] px-2 py-1 rounded-md">.json</span>
@@ -978,7 +834,6 @@
     </div>
 
     <script>
-        // === 더보기 메뉴(드롭다운) 기능 ===
         function toggleMoreMenu(e) {
             if(e) e.stopPropagation();
             closeFilterMenu(); 
@@ -1002,7 +857,6 @@
             }
         }
         
-        // === 필터 메뉴(드롭다운) 기능 ===
         function toggleFilterMenu(e) {
             if(e) e.stopPropagation();
             closeMoreMenu(); 
@@ -1026,7 +880,6 @@
             }
         }
 
-        // === 플래시카드 전용 필터 메뉴 ===
         function toggleFcFilterMenu(e) {
             if(e) e.stopPropagation();
             const menu = document.getElementById('fcFilterMenu');
@@ -1122,13 +975,11 @@
             if(checks[fcFilterMode]) checks[fcFilterMode].classList.remove('hidden');
         }
 
-        // === 설정 관련 스크립트 ===
         function toggleAutoRemoveSetting(el) {
             appState.autoRemoveSaved = el.checked;
             saveData();
         }
 
-        // === 플래시카드 Tinder 스와이프 기능 ===
         let isDragging = false;
         let isScrolling = false;
         let startX = 0, startY = 0;
@@ -1229,7 +1080,6 @@
                         if(!appState.memorized[term]) {
                             toggleMemorized(term, true);
                         }
-                        // ★ 단어장 자동 해제 설정 로직
                         if(appState.autoRemoveSaved && appState.notebook.includes(term)) {
                             appState.notebook = appState.notebook.filter(t => t !== term);
                             saveData();
@@ -1281,7 +1131,6 @@
                 if(!appState.memorized[term]) {
                     toggleMemorized(term, true);
                 }
-                // ★ 단어장 자동 해제 설정 로직
                 if(appState.autoRemoveSaved && appState.notebook.includes(term)) {
                     appState.notebook = appState.notebook.filter(t => t !== term);
                     saveData();
@@ -1314,7 +1163,6 @@
             }, 300);
         }
 
-        // === PC 키보드 단축키 ===
         document.addEventListener('keydown', (e) => {
             const fcView = document.getElementById('view-flashcard');
             const quizView = document.getElementById('view-quiz');
@@ -1352,7 +1200,6 @@
             }
         });
 
-        // 주관식 스크롤 튐 방지
         const spellInput = document.getElementById('quiz-spelling-input');
         if (spellInput) {
             spellInput.addEventListener('touchstart', function(e) {
@@ -1391,27 +1238,11 @@
             currentIndex: 0,
             quizState: { asked: [], score: 0 },
             fontSizeLevel: 0,
-            autoRemoveSaved: false // ★ 설정 초기값
+            autoRemoveSaved: true
         };
         
         let listFilterMode = 'all'; 
         let fcFilterMode = 'all';
-
-        // 폰트 사이즈 3단계
-        const fontClasses = [
-            { term: "text-[16px] lg:text-[18px]", koTerm: "text-[12px]", def: "text-[12px] sm:text-[13.5px]", koDef: "text-[12px] text-gray-500" },
-            { term: "text-[17px] lg:text-[19px]", koTerm: "text-[13px]", def: "text-[13px] sm:text-[14.5px]", koDef: "text-[13px] text-gray-500" },
-            { term: "text-[18px] lg:text-[20px]", koTerm: "text-[14px]", def: "text-[14px] sm:text-[15.5px]", koDef: "text-[14px] text-gray-500" }
-        ];
-        
-        let isQuizActive = false;
-        let quizState = { mode: 'spelling' }; 
-        let quizCurrentQ = null;
-        
-        let sortOrder = 'asc'; 
-        let flashcardOrder = []; 
-        let hideTerms = false; 
-        let hideDefs = false;
 
         let searchTimeout = null; 
 
@@ -1424,6 +1255,10 @@
 
         window.onload = async function() {
             loadLocalData();
+            
+            const autoRemoveToggle = document.getElementById('setting-auto-remove');
+            if (autoRemoveToggle) autoRemoveToggle.checked = appState.autoRemoveSaved;
+            
             await fetchCSV();
             buildFlashcardOrder();
             updateMoreMenuUI();
@@ -1442,7 +1277,7 @@
                     if (!parsed.quizState || !Array.isArray(parsed.quizState.asked)) parsed.quizState = { asked: [], score: 0 };
                     if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
                     if (parsed.fontSizeLevel > 2) parsed.fontSizeLevel = 0; 
-                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = false; // ★ 추가
+                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = true; 
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
             }
@@ -1455,9 +1290,6 @@
         function openSettingsModal() {
             const modal = document.getElementById('settingsModal');
             const content = document.getElementById('settingsModalContent');
-            
-            // ★ 모달 열 때 스위치 상태 반영
-            document.getElementById('setting-auto-remove').checked = appState.autoRemoveSaved;
             
             modal.classList.remove('hidden');
             void modal.offsetWidth; 
@@ -1606,7 +1438,6 @@
         }
         function updateDashboard() { updateProgress(); }
 
-        // --- Flashcard & Autoplay ---
         let autoplayMode = false;
         let autoplayTimeout1 = null;
         let autoplayTimeout2 = null;
@@ -1804,7 +1635,6 @@
             const isNowMemorized = !appState.memorized[term];
             toggleMemorized(term, isNowMemorized);
             
-            // ★ 버튼으로 암기 처리 시 단어장 자동 해제 설정 로직
             if(isNowMemorized && appState.autoRemoveSaved && appState.notebook.includes(term)) {
                 appState.notebook = appState.notebook.filter(t => t !== term);
                 saveData();
@@ -1839,7 +1669,6 @@
             if (appState.currentIndex > 0) loadFlashcard(appState.currentIndex - 1); 
         }
 
-        // --- Search Clear & Debounce ---
         function handleSearchInput() {
             toggleClearBtn(); 
             clearTimeout(searchTimeout);
@@ -1864,7 +1693,6 @@
             input.focus();
         }
 
-        // --- Notebook ---
         function toggleNotebook(term) {
             if (appState.notebook.includes(term)) appState.notebook = appState.notebook.filter(t => t !== term);
             else appState.notebook.push(term);
@@ -1916,7 +1744,6 @@
             }
         }
 
-        // --- Quiz ---
         function setQuizMode(mode) {
             quizState.mode = mode;
             const multiBtn = document.getElementById('mode-multi-btn');
@@ -2116,7 +1943,6 @@
             document.getElementById('quiz-final-total').innerText = appState.quizState.asked.length;
         }
 
-        // --- List Controls ---
         function getCurrentlyFilteredWords() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             let filtered = allWords.filter(word => {
@@ -2246,7 +2072,6 @@
             }
         }
 
-        // === 맞춤형 도움말 모달(팝업) 기능 ===
         function openHelpModal(type) {
             const modal = document.getElementById('helpModal');
             const contentBox = document.getElementById('helpModalDynamicContent');
@@ -2301,6 +2126,10 @@
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
                             <div><strong class="text-sub-accent">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-toggle-on text-sm"></i></div>
+                            <div><strong class="text-sub-accent">저장 자동 해제</strong><br><span class="text-text-dim text-sm">하단의 스위치를 켜두면, 카드를 '암기 완료'로 처리할 때 단어장에서도 자동으로 지워집니다.</span></div>
                         </div>
                     </div>
                 `;
