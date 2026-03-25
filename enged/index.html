@@ -557,7 +557,7 @@
                     <div class="flex items-center gap-1.5 sm:gap-2 w-full">
                          <div class="flex-1 min-w-0 flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-[14px] px-2 sm:px-3 focus-within:border-blue-500/50 transition-colors relative">
                              <i class="fa-solid fa-search text-text-dim text-[13px] sm:text-sm"></i>
-                             <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="renderListTable(); toggleClearBtn();" 
+                             <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="handleSearchInput()" 
                                 class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-[13.5px] sm:text-sm font-medium p-0 ml-1.5 sm:ml-2 pr-6">
                              <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2 w-6 h-6 flex items-center justify-center text-text-dim hover:text-text-main">
                                  <i class="fa-solid fa-xmark"></i>
@@ -1326,6 +1326,8 @@
         let hideTerms = false; 
         let hideDefs = false;
 
+        let searchTimeout = null; // 검색 디바운싱용 타이머 변수
+
         const ddayTextEl = document.getElementById('dday-text');
         const targetDate = new Date('2026-04-08T00:00:00');
         const now = new Date();
@@ -1748,7 +1750,15 @@
             loadFlashcard(0);
         }
 
-        // --- Search Clear ---
+        // --- Search Clear & Debounce ---
+        function handleSearchInput() {
+            toggleClearBtn(); // X 버튼은 즉시 표시/숨김
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderListTable(); // 0.25초 대기 후 렌더링 (디바운싱)
+            }, 250); 
+        }
+
         function toggleClearBtn() {
             const input = document.getElementById('searchInput');
             const btn = document.getElementById('clearSearchBtn');
@@ -1760,6 +1770,7 @@
             const input = document.getElementById('searchInput');
             input.value = '';
             toggleClearBtn();
+            clearTimeout(searchTimeout); // 혹시 남아있는 렌더링 예약 취소
             renderListTable();
             input.focus();
         }
