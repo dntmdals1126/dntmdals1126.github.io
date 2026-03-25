@@ -1117,6 +1117,10 @@
         const badge = document.getElementById('swipe-badge');
         const badgeIcon = document.getElementById('swipe-badge-icon');
         const badgeText = document.getElementById('swipe-badge-text');
+        
+        // 배경 글로우 요소
+        const glowLeft = document.getElementById('glow-left');
+        const glowRight = document.getElementById('glow-right');
 
         fcContainer.addEventListener('pointerdown', e => {
             if(e.target.closest('button')) return; 
@@ -1126,6 +1130,8 @@
             startX = e.clientX;
             startY = e.clientY;
             fcContainer.style.transition = 'none';
+            glowLeft.style.transition = 'none';
+            glowRight.style.transition = 'none';
         }, {passive: true});
 
         fcContainer.addEventListener('pointermove', e => {
@@ -1144,13 +1150,24 @@
             const rotate = currentX * 0.05;
             fcContainer.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg)`;
 
+            // 스와이프 거리에 비례하여 배경 글로우 투명도 부드럽게 증가
+            const progress = Math.min(Math.abs(currentX) / 120, 1);
+
             if (currentX > 0) {
-                badgeContainer.style.opacity = Math.min(currentX / 100, 1);
+                // 오른쪽 스와이프 (완료: 녹색)
+                glowRight.style.opacity = progress;
+                glowLeft.style.opacity = 0;
+                
+                badgeContainer.style.opacity = progress;
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-green-500/80 border border-green-400/50";
                 badgeIcon.className = "fa-solid fa-check";
                 badgeText.innerText = "MEMORIZED";
             } else if (currentX < 0) {
-                badgeContainer.style.opacity = Math.min(Math.abs(currentX) / 100, 1);
+                // 왼쪽 스와이프 (저장: 주황색)
+                glowLeft.style.opacity = progress;
+                glowRight.style.opacity = 0;
+                
+                badgeContainer.style.opacity = progress;
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-orange-500/80 border border-orange-400/50";
                 badgeIcon.className = "fa-solid fa-bookmark";
                 badgeText.innerText = "SAVED";
@@ -1179,6 +1196,10 @@
             }
 
             const threshold = 100;
+            
+            // 드래그가 끝나면 CSS transition 활성화하여 부드럽게 사라지도록 설정
+            glowLeft.style.transition = 'opacity 0.3s ease';
+            glowRight.style.transition = 'opacity 0.3s ease';
 
             if (Math.abs(currentX) > threshold) {
                 const sign = Math.sign(currentX);
@@ -1199,6 +1220,8 @@
                     fcContainer.style.transition = 'none';
                     fcContainer.style.transform = '';
                     badgeContainer.style.opacity = 0;
+                    glowLeft.style.opacity = 0;
+                    glowRight.style.opacity = 0;
                     stopAutoplay();
                     nextCard();
                 }, 300);
@@ -1206,6 +1229,8 @@
                 fcContainer.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 fcContainer.style.transform = '';
                 badgeContainer.style.opacity = 0;
+                glowLeft.style.opacity = 0;
+                glowRight.style.opacity = 0;
                 
                 if (Math.abs(currentX) < 5 && Math.abs(currentY) < 5) {
                     flipCard();
@@ -1224,6 +1249,9 @@
             
             fcContainer.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             fcContainer.style.transform = `translate(${sign * window.innerWidth}px, 0px) rotate(${sign * 30}deg)`;
+            
+            glowLeft.style.transition = 'opacity 0.2s ease';
+            glowRight.style.transition = 'opacity 0.2s ease';
 
             if (direction === 'right') {
                 if(!appState.memorized[term]) toggleMemorized(term, true);
@@ -1231,12 +1259,16 @@
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-green-500/80 border border-green-400/50";
                 badgeIcon.className = "fa-solid fa-check";
                 badgeText.innerText = "MEMORIZED";
+                
+                glowRight.style.opacity = 0.8;
             } else {
                 if(!appState.notebook.includes(term)) toggleNotebook(term);
                 badgeContainer.style.opacity = 1;
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-orange-500/80 border border-orange-400/50";
                 badgeIcon.className = "fa-solid fa-bookmark";
                 badgeText.innerText = "SAVED";
+                
+                glowLeft.style.opacity = 0.8;
             }
             updateFlashcardControls(term);
 
@@ -1244,6 +1276,8 @@
                 fcContainer.style.transition = 'none';
                 fcContainer.style.transform = '';
                 badgeContainer.style.opacity = 0;
+                glowLeft.style.opacity = 0;
+                glowRight.style.opacity = 0;
                 nextCard();
             }, 300);
         }
