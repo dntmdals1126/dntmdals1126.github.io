@@ -124,25 +124,20 @@
             -webkit-user-select: text !important; 
         }
         
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-        }
-        
+        /* html, body 묶음 속성을 지워 이중 스크롤 및 레이아웃 덜컹거림 방지 */
         html {
             font-family: var(--font-base);
             background: var(--bg-dark);
             color: var(--text-main);
-            /* 탭 전환 시 레이아웃 덜컹거림 방지 및 이중 스크롤 원천 차단 */
-            overflow-y: scroll; 
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
         
         body {
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
+            overflow-x: hidden;
             background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                         radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
             background-attachment: fixed;
@@ -154,12 +149,12 @@
             background-attachment: fixed;
         }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        html[data-theme="light"] ::-webkit-scrollbar-track { background: #e5e7eb; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        /* 전역 스크롤바 디자인 (플래시카드 내부 기본 스크롤바 적용을 위해 브라우저 표준 스타일로 일괄 적용) */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 3px; }
         html[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(150,150,150,0.5); }
 
         button { font-family: inherit; cursor: pointer; }
 
@@ -243,11 +238,8 @@
             transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 24px; 
             display: flex; flex-direction: column; 
-            padding: 20px 16px; 
+            padding: 0; 
             overflow: hidden; 
-        }
-        @media (min-width: 640px) {
-            .flashcard-face { padding: 24px 20px; }
         }
         
         .flashcard-face.back { 
@@ -260,7 +252,7 @@
         .flashcard-container.is-flipped .flashcard-face.front { pointer-events: none; z-index: 1; }
         .flashcard-container.is-flipped .flashcard-face.back { pointer-events: auto; z-index: 2; }
 
-        /* Inner Scroll Box Logic - 튕김 버그 완벽 차단을 위한 Flex 레이아웃 적용 */
+        /* 튕김 버그 완전 해결 및 자연스러운 스크롤 바 적용 */
         .fc-scroll-box {
             width: 100%; height: 100%; overflow-y: auto;
             touch-action: pan-y; isolation: isolate; 
@@ -269,31 +261,28 @@
             background-color: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            padding: 24px;
         }
         html[data-theme="light"] .fc-scroll-box { 
             background-color: rgba(0, 0, 0, 0.02); 
             border-color: rgba(0, 0, 0, 0.06); 
         }
 
-        /* 튕김 버그 핵심 해결: margin 대신 min-height 100%와 display: flex 활용 */
+        /* 여백을 안쪽 요소에 부여하여 스크롤 맨 아래에 도착했을 때도 하단 여백 보장 */
         .fc-inner-content {
-            width: 100%; min-height: 100%; display: flex; flex-direction: column;
+            width: 100%; display: flex; flex-direction: column;
+            padding: 24px; /* 스크롤 되어도 상하 여백 안전하게 유지 */
         }
-        /* Front side: Top aligned naturally */
+        
         .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; justify-content: flex-start; padding-bottom: 24px;
+            align-items: flex-start; text-align: left; justify-content: flex-start; min-height: 100%;
         }
-        /* Back side: Center aligned securely */
+        /* Grid를 사용하여 모바일 튕김 현상 원천 차단 */
         .flashcard-face.back .fc-inner-content { 
-            align-items: center; text-align: center; justify-content: center; 
+            display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%;
         }
 
-        .fc-scroll-box::-webkit-scrollbar { width: 4px; }
-        .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 2px; }
-
-        /* 주관식 입력창 placeholder 커스텀 */
-        #quiz-spelling-input::placeholder { font-weight: 400; font-size: 16px; opacity: 0.5; }
+        /* 주관식 입력창 placeholder 커스텀 (얇고 부드럽게) */
+        #quiz-spelling-input::placeholder { font-weight: 300; font-size: 17px; opacity: 0.6; letter-spacing: -0.02em; }
 
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
@@ -327,16 +316,16 @@
         @media (hover: hover) { .blur-target:hover { filter: blur(0); } }
         .blur-target.is-revealed { filter: blur(0) !important; transition: filter 0.1s; }
 
-        /* Sticky Header */
+        /* Sticky Header 및 디자인 차별화 */
         #listContainer thead th { 
             position: sticky; top: 0; z-index: 20; 
             background-color: rgba(15, 15, 20, 0.95); 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
         html[data-theme="light"] #listContainer thead th { 
-            background-color: rgba(241, 245, 249, 0.95); /* slate-100 */
+            background-color: rgba(241, 245, 249, 0.95); 
             border-bottom: 1px solid #cbd5e1;
             color: #334155;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -593,7 +582,7 @@
                                  </button>
                                  <div id="moreMenu" class="hidden absolute right-0 top-full mt-2 w-64 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200">
                                     
-                                    <!-- 3단계 글자 크기 조정 (새로고침 버튼 제거) -->
+                                    <!-- 3단계 글자 크기 조정 (직관적인 폰트 사이즈 반영) -->
                                     <div class="flex flex-col gap-2 w-full px-4 py-2.5 text-sm text-text-main">
                                         <div class="flex items-center justify-between mb-1">
                                             <div><b class="font-sans w-5 inline-block text-center mr-2 opacity-70">A</b> <span>글자 크기</span></div>
@@ -694,8 +683,7 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 (비율 및 높이 확장, 내부 테두리 제거) -->
-            <!-- 튕김 버그 완전 방지를 위한 레이아웃 재설계 -->
+            <!-- 카드 영역 -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
@@ -706,8 +694,8 @@
                             <div class="fc-scroll-box flex-1 h-full w-full" onclick="event.stopPropagation()">
                                 <div class="fc-inner-content w-full h-full">
                                     <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
-                                    <!-- 명확한 가로 구분선 추가 (shrink-0 로 잘림 방지) -->
-                                    <div class="w-full max-w-[200px] h-[1px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
+                                    <!-- 가로 구분선 (잘림 방지) -->
+                                    <div class="w-16 h-[2px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
                                     <p id="fc-front-ko" class="text-text-dim text-[14.5px] font-kor font-medium text-left w-full"></p>
                                 </div>
                             </div>
@@ -718,7 +706,6 @@
                         </div>
                     </div>
                     <!-- Back (Term) -->
-                    <!-- 옅은 푸른빛 테마로 개선 -->
                     <div class="flashcard-face back bg-gradient-to-br from-blue-500/5 to-transparent backdrop-blur-xl shadow-xl border border-primary/20 flex flex-col p-5 sm:p-6 relative">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary tracking-wider uppercase">Term</div>
                         
@@ -741,7 +728,7 @@
             <!-- Bottom Controls -->
             <div class="w-full max-w-[500px] mx-auto mt-6 flex flex-col gap-5">
                 
-                <!-- 1. 보조 알약 버튼 그룹 (Shuffle & Auto) -> 위로 이동 -->
+                <!-- 1. 보조 알약 버튼 그룹 (Shuffle & Auto) -->
                 <div class="flex items-center justify-center">
                     <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-full p-1 gap-1 shadow-sm">
                         <button onclick="shuffleCards()" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition group" title="섞기">
@@ -756,7 +743,7 @@
                     </div>
                 </div>
 
-                <!-- 2. 메인 액션 버튼 묶음 -> 아래로 이동 -->
+                <!-- 2. 메인 액션 버튼 묶음 -->
                 <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-2">
                     <button onclick="stopAutoplay(); prevCard();" class="btn btn-sec w-12 h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main" title="이전">
                         <i class="fa-solid fa-chevron-left text-base"></i>
@@ -792,42 +779,42 @@
                         <button id="mode-multi-btn" onclick="setQuizMode('multiple')" class="flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300">객관식</button>
                     </div>
 
-                    <!-- 문제 영역 여백 조절 -->
+                    <!-- 문제 영역 -->
                     <div class="section-card mb-3 min-h-[140px] flex flex-col justify-center items-center text-center relative">
                         <p class="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest border-b border-blue-500/30 pb-1 font-sans">Definition</p>
                         <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">
                             문제 내용이 여기에 표시됩니다.
                         </p>
-                        <!-- 힌트 버튼 추가 -->
+                        <!-- 힌트 버튼 -->
                         <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-primary/70 hover:text-primary font-bold px-2 py-1 rounded-md bg-primary/10 transition flex items-center gap-1.5">
                             <i class="fa-regular fa-lightbulb"></i> 힌트
                         </button>
                         <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
-                        <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-primary animate-pulse"></div>
+                        <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-primary"></div>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 디자인 개선 및 여백 확보 -->
-                    <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
+                    <!-- 주관식 스펠링 컨테이너 -->
+                    <div id="quiz-spelling-container" class="w-full mt-6 mb-6 anim-fade-in">
                         <div class="relative w-full shadow-md rounded-xl">
                             <!-- 영어만 입력되도록 oninput 정규식 추가 -->
-                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--bg-dark)] border-2 border-[var(--glass-border)] rounded-xl py-3.5 px-4 text-center text-[18px] font-bold text-text-main focus:border-primary/60 focus:bg-[var(--glass-surface)] focus:ring-4 focus:ring-primary/10 shadow-inner transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--bg-dark)] border-2 border-[var(--glass-border)] rounded-xl py-3.5 px-4 text-center text-[19px] font-bold text-text-main focus:border-primary/60 focus:bg-[var(--glass-surface)] focus:ring-4 focus:ring-primary/10 shadow-inner transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition shadow-sm">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- 다중선택 객관식 여백 확보 및 애니메이션 -->
-                    <div id="quiz-options" class="hidden grid grid-cols-1 gap-3 mt-4 mb-6 anim-fade-in">
+                    <!-- 다중선택 객관식 -->
+                    <div id="quiz-options" class="hidden grid grid-cols-1 gap-3.5 mt-4 mb-6 anim-fade-in">
                         <!-- JS Generated -->
                     </div>
 
-                    <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
+                    <div id="quiz-feedback" class="hidden mt-2 mb-2 p-3 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
 
-                    <!-- 하단 버튼 크기 통일 및 예쁘게 줄이기 -->
-                    <div id="quiz-actions" class="hidden flex justify-center gap-3 w-full max-w-[280px] mx-auto mt-6 anim-fade-in">
-                        <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-11">END</button>
-                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-11">NEXT</button>
+                    <!-- 하단 액션버튼 여백 넉넉하게 -->
+                    <div id="quiz-actions" class="hidden flex gap-3 w-full max-w-[240px] mx-auto mt-4 anim-fade-in">
+                        <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-10">END</button>
+                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-10">NEXT</button>
                     </div>
                 </div>
                 
@@ -1794,9 +1781,9 @@
 
         function showQuizHint() {
             const hintBox = document.getElementById('quiz-hint-box');
-            // 한글 용어(koTerm) 대신 해설(koDef)을 보여주도록 수정
             hintBox.innerHTML = quizCurrentQ.koDef;
             hintBox.classList.remove('hidden');
+            hintBox.classList.add('anim-fade-in');
         }
 
         function startQuiz() {
@@ -1825,6 +1812,7 @@
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('quiz-actions').classList.add('hidden');
             document.getElementById('quiz-hint-box').classList.add('hidden');
+            document.getElementById('quiz-hint-box').classList.remove('anim-fade-in');
             
             if (!Array.isArray(appState.quizState.asked)) appState.quizState.asked = [];
             
@@ -1881,7 +1869,6 @@
                 containerMulti.innerHTML = '';
                 options.forEach(opt => {
                     const btn = document.createElement('button');
-                    // 객관식 선지 폰트 크기 조절 (15~17px 수준) 및 Flex 패딩 설정
                     btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
                     btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
                     btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
@@ -1923,8 +1910,9 @@
                 btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
-                // 피드백을 두 줄로 깔끔하게 띄움
-                feedback.innerHTML = `<span class="text-red-500 font-bold block mb-1">Wrong!</span><span class="text-text-dim text-[15px] font-normal">Answer: <b class="text-red-500 font-bold">${correct.term}</b></span>`;
+                
+                // 오답 메시지 줄바꿈 적용
+                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${correct.term}</span></div>`;
                 
                 if (!appState.notebook.includes(correct.term)) {
                     appState.notebook.push(correct.term);
@@ -1954,8 +1942,8 @@
                 inputEl.classList.add('border-green-500', 'text-green-500');
                 saveData();
             } else {
-                // 피드백을 두 줄로 깔끔하게 띄움
-                feedback.innerHTML = `<span class="text-red-500 font-bold block mb-1">Wrong!</span><span class="text-text-dim text-[15px] font-normal">Answer: <b class="text-red-500 font-bold">${quizCurrentQ.term}</b></span>`;
+                // 오답 메시지 줄바꿈 적용
+                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${quizCurrentQ.term}</span></div>`;
                 inputEl.classList.add('border-red-500', 'text-red-500');
                 
                 if (!appState.notebook.includes(quizCurrentQ.term)) {
@@ -2118,27 +2106,27 @@
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어나 뜻, 혹은 (DST)와 같은 약어를 입력해 원하는 단어를 빠르게 찾습니다.</span></div>
+                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어(예: DST)를 입력해 원하는 항목을 즉시 필터링합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-primary">가리기 모드 (깜지)</strong><br><span class="text-text-dim text-sm">상단의 단어(A) 또는 해설(줄바꿈) 아이콘을 눌러 목록을 가린 뒤, 셀프 테스트를 진행하세요. 가려진 부분을 터치하면 일시적으로 보입니다.</span></div>
+                            <div><strong class="text-primary">가리기 모드 (셀프 테스트)</strong><br><span class="text-text-dim text-sm">목록의 단어나 해설을 가려 자가 학습을 진행합니다. 숨겨진 영역을 터치하면 일시적으로 내용이 표시됩니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-sm">암기를 완료한 단어를 숨기거나, 단어장에 저장한 단어만 모아서 집중적으로 볼 수 있습니다.</span></div>
+                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-sm">암기가 완료된 단어를 숨기거나, 저장된 단어만 선택적으로 모아서 확인합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-primary">알파벳 정렬</strong><br><span class="text-text-dim text-sm">표 상단의 'Term' 헤더를 눌러 A-Z, Z-A 순서로 정렬이 변경됩니다.</span></div>
+                            <div><strong class="text-primary">알파벳 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순/내림차순으로 정렬합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-primary">일괄 암기 / 저장</strong><br><span class="text-text-dim text-sm">표 상단의 목차에 있는 체크(✔)나 책갈피(🔖) 아이콘을 누르면, 현재 화면에 필터링되어 보이는 모든 단어들을 한 번에 일괄 처리합니다.</span></div>
+                            <div><strong class="text-primary">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 체크(✔) 또는 책갈피(🔖) 아이콘을 눌러, 현재 화면에 표시된 단어들을 일괄 적용하거나 해제합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-primary">글자 크기 & 부가 기능</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기를 3단계로 조절하거나, 전체화면 및 인쇄 기능을 사용할 수 있습니다.</span></div>
+                            <div><strong class="text-primary">글자 크기 및 부가 기능</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기를 3단계로 변경하거나 전체화면, 인쇄 기능을 활용할 수 있습니다.</span></div>
                         </div>
                     </div>
                 `;
