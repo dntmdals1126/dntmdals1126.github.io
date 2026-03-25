@@ -756,7 +756,6 @@
                         </div>
                     </div>
                     <!-- Back (Term) -->
-                    <!-- 옅은 푸른빛 테마 복구 & 외곽선 자연스럽게 -->
                     <div class="flashcard-face back bg-gradient-to-br from-[var(--fc-back-grad-start)] to-[var(--fc-back-grad-end)] backdrop-blur-xl shadow-xl border border-sub-accent-border">
                         <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
                             <div class="flex items-center gap-2">
@@ -827,7 +826,6 @@
                     <div class="flex justify-between items-end mb-5 px-1">
                         <div class="flex items-center gap-3">
                             <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
-                            <!-- 진행상황 초기화(리셋) 버튼 추가 -->
                             <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1">
                                 <i class="fa-solid fa-rotate-right"></i> 리셋
                             </button>
@@ -946,6 +944,20 @@
             <h3 class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2"><i class="fa-solid fa-gear text-primary"></i> 설정 및 데이터 관리</h3>
             
             <div class="space-y-3 mt-6">
+                <!-- 새 설정 추가 -->
+                <div class="flex items-center justify-between px-4 py-3 bg-[var(--glass-surface)] rounded-xl border border-[var(--glass-border)] shadow-sm">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-bold text-text-main">암기 시 단어장 자동 해제</span>
+                        <span class="text-[11px] text-text-dim mt-0.5">플래시카드 스와이프(완료) 시 적용</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" id="setting-auto-remove" class="sr-only peer" onchange="toggleAutoRemoveSetting(this)">
+                        <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-[20px] peer-checked:after:border-white"></div>
+                    </label>
+                </div>
+                
+                <hr class="border-[var(--glass-border)] my-4">
+
                 <button onclick="exportData()" class="btn btn-sec w-full justify-between px-4 text-sm">
                     <span><i class="fa-solid fa-download mr-2"></i> 학습 데이터 백업</span>
                     <span class="text-[10px] text-text-dim bg-[var(--glass-highlight)] px-2 py-1 rounded-md">.json</span>
@@ -1056,7 +1068,6 @@
             }
         });
 
-        // 폰트 조절 UI 렌더링
         function setFontSize(level) {
             appState.fontSizeLevel = level;
             saveData();
@@ -1111,6 +1122,12 @@
             if(checks[fcFilterMode]) checks[fcFilterMode].classList.remove('hidden');
         }
 
+        // === 설정 관련 스크립트 ===
+        function toggleAutoRemoveSetting(el) {
+            appState.autoRemoveSaved = el.checked;
+            saveData();
+        }
+
         // === 플래시카드 Tinder 스와이프 기능 ===
         let isDragging = false;
         let isScrolling = false;
@@ -1123,13 +1140,12 @@
         const badgeIcon = document.getElementById('swipe-badge-icon');
         const badgeText = document.getElementById('swipe-badge-text');
         
-        // 배경 글로우 요소
         const glowLeft = document.getElementById('glow-left');
         const glowRight = document.getElementById('glow-right');
 
         fcContainer.addEventListener('pointerdown', e => {
             if(e.target.closest('button')) return; 
-            if(flashcardOrder.length === 0) return; // 빈 카드는 드래그 무시
+            if(flashcardOrder.length === 0) return; 
             isDragging = true;
             isScrolling = false;
             startX = e.clientX;
@@ -1155,11 +1171,9 @@
             const rotate = currentX * 0.05;
             fcContainer.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg)`;
 
-            // 스와이프 거리에 비례하여 배경 글로우 투명도 부드럽게 증가
             const progress = Math.min(Math.abs(currentX) / 120, 1);
 
             if (currentX > 0) {
-                // 오른쪽 스와이프 (완료: 녹색)
                 if (glowRight) glowRight.style.opacity = progress;
                 if (glowLeft) glowLeft.style.opacity = 0;
                 
@@ -1168,7 +1182,6 @@
                 badgeIcon.className = "fa-solid fa-check";
                 badgeText.innerText = "MEMORIZED";
             } else if (currentX < 0) {
-                // 왼쪽 스와이프 (저장: 주황색)
                 if (glowLeft) glowLeft.style.opacity = progress;
                 if (glowRight) glowRight.style.opacity = 0;
                 
@@ -1202,7 +1215,6 @@
 
             const threshold = 100;
             
-            // 드래그가 끝나면 CSS transition 활성화하여 부드럽게 사라지도록 설정
             if (glowLeft) glowLeft.style.transition = 'opacity 0.3s ease';
             if (glowRight) glowRight.style.transition = 'opacity 0.3s ease';
 
@@ -1214,7 +1226,14 @@
                 if (allWords.length > 0) {
                     const term = allWords[flashcardOrder[appState.currentIndex]].term;
                     if (currentX > 0) { 
-                        if(!appState.memorized[term]) toggleMemorized(term, true);
+                        if(!appState.memorized[term]) {
+                            toggleMemorized(term, true);
+                        }
+                        // ★ 단어장 자동 해제 설정 로직
+                        if(appState.autoRemoveSaved && appState.notebook.includes(term)) {
+                            appState.notebook = appState.notebook.filter(t => t !== term);
+                            saveData();
+                        }
                     } else { 
                         if(!appState.notebook.includes(term)) toggleNotebook(term);
                     }
@@ -1259,7 +1278,15 @@
             if (glowRight) glowRight.style.transition = 'opacity 0.2s ease';
 
             if (direction === 'right') {
-                if(!appState.memorized[term]) toggleMemorized(term, true);
+                if(!appState.memorized[term]) {
+                    toggleMemorized(term, true);
+                }
+                // ★ 단어장 자동 해제 설정 로직
+                if(appState.autoRemoveSaved && appState.notebook.includes(term)) {
+                    appState.notebook = appState.notebook.filter(t => t !== term);
+                    saveData();
+                }
+                
                 badgeContainer.style.opacity = 1;
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-green-500/80 border border-green-400/50";
                 badgeIcon.className = "fa-solid fa-check";
@@ -1363,7 +1390,8 @@
             notebook: [], 
             currentIndex: 0,
             quizState: { asked: [], score: 0 },
-            fontSizeLevel: 0
+            fontSizeLevel: 0,
+            autoRemoveSaved: false // ★ 설정 초기값
         };
         
         let listFilterMode = 'all'; 
@@ -1385,7 +1413,7 @@
         let hideTerms = false; 
         let hideDefs = false;
 
-        let searchTimeout = null; // 검색 디바운싱용 타이머 변수
+        let searchTimeout = null; 
 
         const ddayTextEl = document.getElementById('dday-text');
         const targetDate = new Date('2026-04-08T00:00:00');
@@ -1414,6 +1442,7 @@
                     if (!parsed.quizState || !Array.isArray(parsed.quizState.asked)) parsed.quizState = { asked: [], score: 0 };
                     if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
                     if (parsed.fontSizeLevel > 2) parsed.fontSizeLevel = 0; 
+                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = false; // ★ 추가
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
             }
@@ -1426,6 +1455,10 @@
         function openSettingsModal() {
             const modal = document.getElementById('settingsModal');
             const content = document.getElementById('settingsModalContent');
+            
+            // ★ 모달 열 때 스위치 상태 반영
+            document.getElementById('setting-auto-remove').checked = appState.autoRemoveSaved;
+            
             modal.classList.remove('hidden');
             void modal.offsetWidth; 
             modal.classList.remove('opacity-0');
@@ -1634,13 +1667,13 @@
             const span = btn.querySelector('span');
             if(fcFilterMode === 'all') {
                 span.innerText = '전체 단어';
-                btn.classList.remove('text-primary', 'border-primary/50', 'bg-primary/5');
+                btn.classList.remove('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
             } else if(fcFilterMode === 'hideMemorized') {
                 span.innerText = '암기 제외';
-                btn.classList.add('text-primary', 'border-primary/50', 'bg-primary/5');
+                btn.classList.add('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
             } else if(fcFilterMode === 'onlySaved') {
                 span.innerText = '저장 단어';
-                btn.classList.add('text-primary', 'border-primary/50', 'bg-primary/5');
+                btn.classList.add('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
             }
             updateFcFilterMenuUI();
             closeFcFilterMenu();
@@ -1755,7 +1788,6 @@
                 icon.classList.remove('fa-solid');
             }
 
-            // 앞면 뒷면 뱃지(체크/별표) 업데이트
             let badgesHtml = '';
             if (isMemorized) badgesHtml += `<span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-green-500/20 text-green-500 text-[10px] border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
             if (isSaved) badgesHtml += `<span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-orange-500/20 text-orange-500 text-[10px] border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
@@ -1768,7 +1800,16 @@
             stopAutoplay();
             if(flashcardOrder.length === 0) return;
             const term = allWords[flashcardOrder[appState.currentIndex]].term;
-            toggleMemorized(term, !appState.memorized[term]);
+            
+            const isNowMemorized = !appState.memorized[term];
+            toggleMemorized(term, isNowMemorized);
+            
+            // ★ 버튼으로 암기 처리 시 단어장 자동 해제 설정 로직
+            if(isNowMemorized && appState.autoRemoveSaved && appState.notebook.includes(term)) {
+                appState.notebook = appState.notebook.filter(t => t !== term);
+                saveData();
+            }
+            
             updateFlashcardControls(term);
         }
 
@@ -1797,24 +1838,13 @@
             if(flashcardOrder.length === 0) return;
             if (appState.currentIndex > 0) loadFlashcard(appState.currentIndex - 1); 
         }
-        
-        function shuffleCards() {
-            stopAutoplay();
-            if(flashcardOrder.length === 0) return;
-            for (let i = flashcardOrder.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
-            }
-            appState.currentIndex = 0;
-            loadFlashcard(0);
-        }
 
         // --- Search Clear & Debounce ---
         function handleSearchInput() {
-            toggleClearBtn(); // X 버튼은 즉시 표시/숨김
+            toggleClearBtn(); 
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
-                renderListTable(); // 0.25초 대기 후 렌더링 (디바운싱)
+                renderListTable(); 
             }, 250); 
         }
 
@@ -1829,7 +1859,7 @@
             const input = document.getElementById('searchInput');
             input.value = '';
             toggleClearBtn();
-            clearTimeout(searchTimeout); // 혹시 남아있는 렌더링 예약 취소
+            clearTimeout(searchTimeout); 
             renderListTable();
             input.focus();
         }
@@ -1865,7 +1895,7 @@
                     <div class="flex-1 pr-4">
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
                             <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
-                            <span class="text-xs text-text-dim font-kor font-bold text-primary">${word.koTerm}</span>
+                            <span class="text-xs text-text-dim font-kor font-bold text-sub-accent">${word.koTerm}</span>
                         </div>
                         <p class="text-sm text-text-sub font-sans leading-relaxed mb-1">${word.def}</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80">${word.koDef}</p>
@@ -1906,7 +1936,6 @@
 
         function showQuizHint() {
             const hintBox = document.getElementById('quiz-hint-box');
-            // 한글 용어(koTerm) 대신 해설(koDef)을 보여주도록 수정
             hintBox.innerHTML = quizCurrentQ.koDef;
             hintBox.classList.remove('hidden');
             hintBox.classList.add('anim-fade-in');
@@ -1962,7 +1991,7 @@
             document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
 
             let badgesHtml = '';
-            if (isRepeat) badgesHtml += `<span class="inline-block bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-primary/30">REPEATED</span>`;
+            if (isRepeat) badgesHtml += `<span class="inline-block bg-sub-accent-bg text-sub-accent text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-sub-accent-border">REPEATED</span>`;
             if (appState.memorized[quizCurrentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
             if (appState.notebook.includes(quizCurrentQ.term)) badgesHtml += `<span class="inline-block bg-orange-500/20 text-orange-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
 
@@ -1995,7 +2024,6 @@
                 containerMulti.innerHTML = '';
                 options.forEach(opt => {
                     const btn = document.createElement('button');
-                    // 객관식 선지 폰트 크기 및 패딩 수정 (15~17px 수준)
                     btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
                     btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
                     btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
@@ -2038,7 +2066,6 @@
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
                 
-                // 오답 메시지 줄바꿈 적용
                 feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${correct.term}</span></div>`;
                 
                 if (!appState.notebook.includes(correct.term)) {
@@ -2069,7 +2096,6 @@
                 inputEl.classList.add('border-green-500', 'text-green-500');
                 saveData();
             } else {
-                // 오답 메시지 줄바꿈 적용
                 feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${quizCurrentQ.term}</span></div>`;
                 inputEl.classList.add('border-red-500', 'text-red-500');
                 
@@ -2104,7 +2130,6 @@
             filtered.sort((a, b) => {
                 if (query) {
                     const qLower = query;
-                    // 검색어와 일치하는 (약어) 형태를 우선순위 최상단으로 올리는 로직
                     const isAcronymA = a.term.toLowerCase().includes(`(${qLower})`) || a.term.toLowerCase().includes(`${qLower})`) || a.term.toLowerCase().includes(`(${qLower}`);
                     const isAcronymB = b.term.toLowerCase().includes(`(${qLower})`) || b.term.toLowerCase().includes(`${qLower})`) || b.term.toLowerCase().includes(`(${qLower}`);
                     
@@ -2191,7 +2216,7 @@
             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
             const ind = document.getElementById('sortIndicator');
             if (ind) {
-                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-primary transition-colors' : 'fa-solid fa-caret-up text-primary transition-colors';
+                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-sub-accent transition-colors' : 'fa-solid fa-caret-up text-sub-accent transition-colors';
             }
             renderListTable();
         }
@@ -2228,54 +2253,54 @@
             const titleBox = document.getElementById('helpModalTitle');
 
             if (type === 'list') {
-                titleBox.innerHTML = '<i class="fa-solid fa-list text-primary"></i> 리스트 도움말';
+                titleBox.innerHTML = '<i class="fa-solid fa-list text-sub-accent"></i> 리스트 도움말';
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
+                            <div><strong class="text-sub-accent">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-primary">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
+                            <div><strong class="text-sub-accent">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
+                            <div><strong class="text-sub-accent">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-primary">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
+                            <div><strong class="text-sub-accent">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-primary">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
+                            <div><strong class="text-sub-accent">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-primary">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
+                            <div><strong class="text-sub-accent">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
                         </div>
                     </div>
                 `;
             } else if (type === 'flashcard') {
-                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-primary"></i> 플래시카드 도움말';
+                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-sub-accent"></i> 플래시카드 도움말';
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-hand-pointer text-sm"></i></div>
-                            <div><strong class="text-primary">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
+                            <div><strong class="text-sub-accent">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-primary">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
+                            <div><strong class="text-sub-accent">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-primary text-sm"></i></div>
-                            <div><strong class="text-primary">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-sub-accent text-sm"></i></div>
+                            <div><strong class="text-sub-accent">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
-                            <div><strong class="text-primary">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
+                            <div><strong class="text-sub-accent">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
                         </div>
                     </div>
                 `;
@@ -2343,7 +2368,7 @@
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
                         <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                        <div class="font-bold text-primary font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
+                        <div class="font-bold text-sub-accent font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-3 py-3 align-top def-col-content">
                         <div class="text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
