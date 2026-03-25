@@ -124,20 +124,23 @@
             -webkit-user-select: text !important; 
         }
         
-        /* html, body 묶음 속성을 지워 이중 스크롤 및 레이아웃 덜컹거림 방지 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+        
         html {
             font-family: var(--font-base);
             background: var(--bg-dark);
             color: var(--text-main);
+            overflow-y: scroll; 
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
         
         body {
-            margin: 0;
-            padding: 0;
             min-height: 100vh;
-            overflow-x: hidden;
             background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                         radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
             background-attachment: fixed;
@@ -640,7 +643,7 @@
         </div>
 
         <!-- 2. Flashcard -->
-        <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center justify-center h-full pb-6 pt-2">
+        <div id="view-flashcard" class="hidden fade-in-up flex flex-col items-center justify-center pb-6 pt-2">
             <!-- 플래시카드 상단 바 -->
             <div class="w-full max-w-[500px] mx-auto flex justify-between items-center mb-4 px-2">
                 <span class="text-xs font-bold text-text-dim tracking-widest bg-[var(--glass-highlight)] px-3 py-1.5 rounded-lg border border-[var(--glass-border)]">
@@ -682,12 +685,12 @@
                     <span id="swipe-badge-text">MEMORIZED</span>
                 </div>
             </div>
-
-            <!-- 카드 영역 -->
+            <!-- 카드 영역 디자인 개선 (비율 및 높이 확장, 내부 테두리 제거) -->
+            <!-- 튕김 버그 완전 방지를 위한 레이아웃 재설계 -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
-                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col p-5 sm:p-6 relative">
+                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col p-5 sm:p-6">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[10px] font-bold text-text-dim tracking-wider uppercase">Definition</div>
                         
                         <div class="absolute top-16 bottom-14 left-7 right-7 sm:left-9 sm:right-9 flex flex-col">
@@ -706,7 +709,8 @@
                         </div>
                     </div>
                     <!-- Back (Term) -->
-                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/5 to-transparent backdrop-blur-xl shadow-xl border border-primary/20 flex flex-col p-5 sm:p-6 relative">
+                    <!-- 옅은 푸른빛 테마로 개선 -->
+                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/5 to-transparent backdrop-blur-xl shadow-xl border border-primary/20 flex flex-col p-5 sm:p-6">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary tracking-wider uppercase">Term</div>
                         
                         <div class="absolute top-16 bottom-14 left-7 right-7 sm:left-9 sm:right-9 flex flex-col">
