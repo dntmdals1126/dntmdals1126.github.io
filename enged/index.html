@@ -124,22 +124,28 @@
             -webkit-user-select: text !important; 
         }
         
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
         html {
             font-family: var(--font-base);
             background: var(--bg-dark);
             color: var(--text-main);
-            overflow-y: scroll; 
+            overflow-y: auto; /* 이중 스크롤바 제거 */
+            scrollbar-gutter: stable; /* 탭 전환 시 화면 너비가 덜컹거리는 현상 완벽 방지 */
             scroll-behavior: smooth;
         }
         
         body {
-            margin: 0; 
             min-height: 100vh;
             background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                         radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
             background-attachment: fixed;
             transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
         }
         
         html[data-theme="light"] body {
@@ -236,7 +242,7 @@
             transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 24px; 
             display: flex; flex-direction: column; 
-            padding: 0; 
+            padding: 20px 16px; /* 전체 카드 패딩을 줄이고 내부 구조를 Flex로 변경하여 튕김 현상 제거 */
             overflow: hidden; 
         }
         .flashcard-face.back { 
@@ -269,22 +275,19 @@
         }
 
         .fc-inner-content {
-            width: 100%; display: flex; flex-direction: column;
+            width: 100%; min-height: 100%; display: flex; flex-direction: column;
         }
         /* Front side (Definition) left align & ALWAYS TOP */
         .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; margin-top: 0; margin-bottom: auto; 
+            align-items: flex-start; text-align: left; justify-content: flex-start; 
         }
-        /* Back side (Term) center align (Prevent jumping down bug) */
+        /* Back side (Term) center align (Prevent jumping down bug by robust Flex) */
         .flashcard-face.back .fc-inner-content { 
-            align-items: center; text-align: center; margin-top: auto; margin-bottom: auto; 
+            align-items: center; text-align: center; justify-content: center; 
         }
 
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 2px; }
-
-        /* 주관식 입력창 placeholder 폰트 크기 조정 */
-        #quiz-spelling-input::placeholder { font-size: 14px; }
 
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
@@ -551,22 +554,22 @@
                                         <span><i class="fa-solid fa-list w-5 text-center mr-2 opacity-70"></i> 전체 단어</span>
                                         <i id="filter-check-all" class="fa-solid fa-check text-primary"></i>
                                     </button>
-                                    <button onclick="setListFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                        <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
+                                    <button onclick="setListFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10.5px]"></i></span> 암기 제외</span>
                                         <i id="filter-check-hide" class="fa-solid fa-check text-primary hidden"></i>
                                     </button>
-                                    <button onclick="setListFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
                                         <i id="filter-check-saved" class="fa-solid fa-check text-primary hidden"></i>
                                     </button>
-                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
                                         <i id="filter-check-memo" class="fa-solid fa-check text-primary hidden"></i>
                                     </button>
                                  </div>
                              </div>
                              
-                             <div class="w-[1px] h-6 bg-[var(--glass-border)] mx-0.5"></div>
+                             <div class="w-[1px] h-5 sm:h-6 bg-[var(--glass-border)] mx-0.5"></div>
                              
                              <!-- 3. 더보기 드롭다운 -->
                              <div class="relative">
@@ -677,20 +680,18 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 -->
+            <!-- 카드 영역 디자인 (비율 및 높이 확장) -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
-                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] !p-0 relative">
+                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col pt-16 pb-12 px-6 sm:px-8 relative">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[10px] font-bold text-text-dim tracking-wider uppercase">Definition</div>
                         
-                        <div class="absolute top-16 bottom-14 left-7 right-7 sm:left-9 sm:right-9 flex flex-col">
-                            <div class="fc-scroll-box flex-1 h-full w-full" onclick="event.stopPropagation()">
-                                <div class="fc-inner-content w-full">
-                                    <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
-                                    <div class="w-12 h-[2px] bg-primary/30 rounded-full my-4"></div>
-                                    <p id="fc-front-ko" class="text-text-dim text-[14.5px] font-kor font-medium text-left w-full"></p>
-                                </div>
+                        <div class="fc-scroll-box flex-1 w-full" onclick="event.stopPropagation()">
+                            <div class="fc-inner-content w-full h-full">
+                                <h2 id="fc-front" class="text-[17px] md:text-[19px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
+                                <div class="w-12 h-[2px] bg-primary/30 rounded-full my-4"></div>
+                                <p id="fc-front-ko" class="text-text-dim text-[14.5px] font-kor font-medium text-left w-full"></p>
                             </div>
                         </div>
                         
@@ -700,15 +701,13 @@
                     </div>
                     <!-- Back (Term) -->
                     <!-- 옅은 푸른빛 테마로 개선 -->
-                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/5 to-transparent backdrop-blur-xl shadow-xl border border-primary/20 !p-0 relative">
+                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/5 to-transparent backdrop-blur-xl shadow-xl border border-primary/20 flex flex-col pt-16 pb-12 px-6 sm:px-8 relative">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary tracking-wider uppercase">Term</div>
                         
-                        <div class="absolute top-16 bottom-14 left-7 right-7 sm:left-9 sm:right-9 flex flex-col">
-                            <div class="fc-scroll-box flex-1 h-full w-full" onclick="event.stopPropagation()">
-                                <div class="fc-inner-content w-full">
-                                    <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
-                                    <p id="fc-back-koterm" class="text-primary text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
-                                </div>
+                        <div class="fc-scroll-box flex-1 w-full" onclick="event.stopPropagation()">
+                            <div class="fc-inner-content w-full h-full">
+                                <h3 id="fc-back-term" class="text-[26px] md:text-[32px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
+                                <p id="fc-back-koterm" class="text-primary text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
                             </div>
                         </div>
                         
@@ -1871,7 +1870,7 @@
                     btn.classList.add('border-green-500', 'bg-green-500/10');
                     btn.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                     btn.querySelector('div').classList.add('bg-green-500', 'text-white');
-                    btn.querySelector('div').innerHTML = '<i class="fa-solid fa-check text-[13px]"></i>';
+                    btn.querySelector('div').innerHTML = '<i class="fa-solid fa-check text-xs"></i>';
                 }
             }
 
@@ -1884,7 +1883,7 @@
                 btnElement.classList.add('border-red-500', 'bg-red-500/10');
                 btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
-                btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
+                btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-xs"></i>';
                 feedback.innerHTML = `<span class="text-red-500">Wrong! Answer: <b>${correct.term}</b></span>`;
                 
                 if (!appState.notebook.includes(correct.term)) {
