@@ -382,22 +382,29 @@
 
         /* 인쇄 (Print) 전용: 동적 생성 테이블만 표시되도록 철저히 차단 */
         @media print {
-            @page { margin: 1.5cm; }
-            body { background: white !important; }
+            @page { margin: 1.2cm; }
+            body { background: white !important; font-family: 'Pretendard', 'Google Sans Flex', sans-serif !important; }
             
             /* 기존 앱 화면의 모든 요소를 강제 숨김 */
             .scroll-mask, .blobs, header, main, footer, #helpModal, #settingsModal, #glow-left, #glow-right { display: none !important; }
             
             /* 자바스크립트로 생성한 프린트 전용 영역만 표시 */
-            #print-area { display: block !important; width: 100%; background: white; color: black; font-family: sans-serif; }
-            #print-area table { width: 100%; border-collapse: collapse; }
-            #print-area th, #print-area td { border: 1px solid #000 !important; padding: 10px !important; text-align: left; font-size: 12pt; vertical-align: top; color: black !important; background: transparent !important; }
-            #print-area th { background-color: #f3f4f6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-bottom: 2px solid #000 !important; }
-            #print-area .num-col { width: 50px; text-align: center; }
-            #print-area .term-col { width: 30%; }
-            #print-area .term-text { font-weight: bold; font-size: 1.1em; margin-bottom: 4px; }
-            #print-area .ko-text { color: #444 !important; font-size: 0.9em; font-weight: normal; }
-            #print-area .def-text { font-weight: bold; margin-bottom: 4px; }
+            #print-area { display: block !important; width: 100%; background: white; color: black; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            #print-area h2 { text-align: center; font-size: 16pt; margin-bottom: 15px; color: #000; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 10px; display: inline-block; width: 100%; }
+            #print-area table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+            #print-area th, #print-area td { border: 1px solid #d1d5db !important; padding: 8px 10px !important; text-align: left; vertical-align: top; color: #000 !important; background: transparent !important; }
+            #print-area th { background-color: #f8fafc !important; border-bottom: 2px solid #94a3b8 !important; font-weight: bold; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #334155 !important; }
+            
+            /* 열 너비 및 정렬 */
+            #print-area .print-num { width: 40px; text-align: center; color: #64748b !important; font-size: 9pt; }
+            #print-area .print-term { width: 28%; }
+            
+            /* 영어/한국어 디자인 명확한 구분 */
+            #print-area .en-term { font-weight: 700; font-size: 11pt; color: #000 !important; display: block; margin-bottom: 3px; word-break: break-word; }
+            #print-area .ko-term { color: #475569 !important; font-size: 9pt; font-weight: 500; display: block; word-break: break-word; }
+            
+            #print-area .en-def { font-weight: 600; font-size: 10pt; color: #1e293b !important; display: block; margin-bottom: 3px; line-height: 1.4; word-break: break-word; }
+            #print-area .ko-def { color: #475569 !important; font-size: 9pt; font-weight: 400; display: block; line-height: 1.4; word-break: break-word; }
         }
 
         /* Mobile Tweaks */
@@ -1047,9 +1054,9 @@
                 return;
             }
 
-            // 인쇄용 HTML (어떠한 Tailwind 다크모드 클래스 영향도 받지 않는 순수 HTML 테이블)
+            // 인쇄용 HTML 구조 재설계 (영어/한국어 분리 및 클래스 기반 렌더링)
             let html = `
-                <h2 style="text-align: center; font-size: 24px; margin-bottom: 20px; color: #000;">Vocabulary List</h2>
+                <h2>Vocabulary List</h2>
                 <table>
                     <thead>
                         <tr>
@@ -1064,14 +1071,14 @@
             wordsToPrint.forEach((word, index) => {
                 html += `
                     <tr>
-                        <td class="print-num" style="text-align:center;">${index + 1}</td>
+                        <td class="print-num">${index + 1}</td>
                         <td class="print-term">
-                            ${word.term}
-                            <span class="ko-text">${word.koTerm}</span>
+                            <div class="en-term">${word.term}</div>
+                            ${word.koTerm ? `<div class="ko-term">${word.koTerm}</div>` : ''}
                         </td>
                         <td class="print-def">
-                            <strong>${word.def}</strong>
-                            <span class="ko-text">${word.koDef}</span>
+                            ${word.def ? `<div class="en-def">${word.def}</div>` : ''}
+                            ${word.koDef ? `<div class="ko-def">${word.koDef}</div>` : ''}
                         </td>
                     </tr>
                 `;
