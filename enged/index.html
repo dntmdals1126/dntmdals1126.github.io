@@ -791,7 +791,7 @@
                             <span class="text-[11px] font-bold tracking-wider">SHUFFLE</span>
                         </button>
                         <div class="w-[1px] bg-[var(--glass-border)] my-2"></div>
-                        <button onclick="toggleAutoplay()" id="fc-autoplay-btn" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim hover:text-sub-accent hover:bg-sub-accent-bg transition group" title="자동 재생">
+                        <button onclick="toggleAutoplay()" id="fc-autoplay-btn" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim hover:text-sub-accent hover:bg-[var(--sub-accent-bg)] transition group" title="자동 재생">
                             <i id="fc-autoplay-icon" class="fa-solid fa-play text-[13px]"></i>
                             <span class="text-[11px] font-bold tracking-wider">AUTO</span>
                         </button>
@@ -1611,23 +1611,23 @@
         let autoplayTimeout1 = null;
         let autoplayTimeout2 = null;
 
+        // ★ [수정됨] 자동 재생 기능 오류 수정
         function toggleAutoplay() {
             autoplayMode = !autoplayMode;
             const btn = document.getElementById('fc-autoplay-btn');
-            const iconContainer = document.getElementById('fc-autoplay-icon-container');
             const icon = document.getElementById('fc-autoplay-icon');
 
             if (autoplayMode) {
-                btn.classList.add('text-primary');
+                // 디자인 적용
+                btn.classList.add('text-sub-accent', 'bg-[var(--sub-accent-bg)]');
                 btn.classList.remove('text-text-dim');
-                iconContainer.classList.add('bg-primary/20', 'border-primary/50');
-                icon.className = 'fa-solid fa-pause text-xs';
+                icon.className = 'fa-solid fa-pause text-[13px]';
                 runAutoplayCycle();
             } else {
-                btn.classList.remove('text-primary');
+                // 디자인 복원
+                btn.classList.remove('text-sub-accent', 'bg-[var(--sub-accent-bg)]');
                 btn.classList.add('text-text-dim');
-                iconContainer.classList.remove('bg-primary/20', 'border-primary/50');
-                icon.className = 'fa-solid fa-play text-xs';
+                icon.className = 'fa-solid fa-play text-[13px]';
                 clearTimeout(autoplayTimeout1);
                 clearTimeout(autoplayTimeout2);
             }
@@ -1637,28 +1637,50 @@
             if(autoplayMode) toggleAutoplay();
         }
 
+        // ★ [수정됨] 부드러운 자동재생 로직
         function runAutoplayCycle() {
             if(!autoplayMode) return;
             clearTimeout(autoplayTimeout1);
             clearTimeout(autoplayTimeout2);
             
-            const container = document.getElementById('fc-container');
-            if(container.classList.contains('is-flipped')) { flipCard(); }
-            
             autoplayTimeout1 = setTimeout(() => {
                 if(!autoplayMode) return;
+                
                 flipCard(); 
                 
                 autoplayTimeout2 = setTimeout(() => {
                     if(!autoplayMode) return;
                     if(appState.currentIndex < flashcardOrder.length - 1) {
-                        nextCard(true);
+                        nextCard(true); // isAuto 플래그 적용 (autoplay 멈춤 방지)
                         runAutoplayCycle();
                     } else {
                         stopAutoplay(); 
                     }
                 }, 2500); 
-            }, 3500); 
+            }, 3000); 
+        }
+
+        // ★ [추가됨] 섞기(Shuffle) 기능 구현
+        function shuffleCards() {
+            stopAutoplay();
+            if (flashcardOrder.length <= 1) return;
+
+            // 시각적 피드백 효과
+            const btn = document.querySelector('button[title="섞기"]');
+            if(btn) {
+                btn.classList.add('bg-[var(--glass-highlight)]');
+                setTimeout(() => btn.classList.remove('bg-[var(--glass-highlight)]'), 200);
+            }
+
+            // Fisher-Yates shuffle 알고리즘으로 현재 필터링된 배열 섞기
+            for (let i = flashcardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
+            }
+
+            // 첫 번째 카드로 이동하여 다시 렌더링
+            appState.currentIndex = 0;
+            loadFlashcard(0);
         }
         
         function setFcFilter(mode) {
@@ -1667,13 +1689,13 @@
             const span = btn.querySelector('span');
             if(fcFilterMode === 'all') {
                 span.innerText = '전체 단어';
-                btn.classList.remove('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
+                btn.classList.remove('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
             } else if(fcFilterMode === 'hideMemorized') {
                 span.innerText = '암기 제외';
-                btn.classList.add('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
+                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
             } else if(fcFilterMode === 'onlySaved') {
                 span.innerText = '저장 단어';
-                btn.classList.add('text-sub-accent', 'border-sub-accent-border', 'bg-sub-accent-bg');
+                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
             }
             updateFcFilterMenuUI();
             closeFcFilterMenu();
@@ -1991,7 +2013,7 @@
             document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
 
             let badgesHtml = '';
-            if (isRepeat) badgesHtml += `<span class="inline-block bg-sub-accent-bg text-sub-accent text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-sub-accent-border">REPEATED</span>`;
+            if (isRepeat) badgesHtml += `<span class="inline-block bg-[var(--sub-accent-bg)] text-[var(--sub-accent)] text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-[var(--sub-accent-border)]">REPEATED</span>`;
             if (appState.memorized[quizCurrentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
             if (appState.notebook.includes(quizCurrentQ.term)) badgesHtml += `<span class="inline-block bg-orange-500/20 text-orange-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
 
@@ -2216,7 +2238,7 @@
             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
             const ind = document.getElementById('sortIndicator');
             if (ind) {
-                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-sub-accent transition-colors' : 'fa-solid fa-caret-up text-sub-accent transition-colors';
+                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-[var(--sub-accent)] transition-colors' : 'fa-solid fa-caret-up text-[var(--sub-accent)] transition-colors';
             }
             renderListTable();
         }
@@ -2253,54 +2275,54 @@
             const titleBox = document.getElementById('helpModalTitle');
 
             if (type === 'list') {
-                titleBox.innerHTML = '<i class="fa-solid fa-list text-sub-accent"></i> 리스트 도움말';
+                titleBox.innerHTML = '<i class="fa-solid fa-list text-[var(--sub-accent)]"></i> 리스트 도움말';
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-sub-accent">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-sub-accent">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-sub-accent">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-sub-accent">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-sub-accent">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-sub-accent">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
                         </div>
                     </div>
                 `;
             } else if (type === 'flashcard') {
-                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-sub-accent"></i> 플래시카드 도움말';
+                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-[var(--sub-accent)]"></i> 플래시카드 도움말';
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-hand-pointer text-sm"></i></div>
-                            <div><strong class="text-sub-accent">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-sub-accent">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-sub-accent text-sm"></i></div>
-                            <div><strong class="text-sub-accent">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-[var(--sub-accent)] text-sm"></i></div>
+                            <div><strong class="text-[var(--sub-accent)]">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
-                            <div><strong class="text-sub-accent">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
+                            <div><strong class="text-[var(--sub-accent)]">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
                         </div>
                     </div>
                 `;
@@ -2368,10 +2390,10 @@
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
                         <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                        <div class="font-bold text-sub-accent font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
+                        <div class="font-bold text-[var(--sub-accent)] font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
                     </td>
                     <td class="px-3 py-3 align-top def-col-content">
-                        <div class="text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
+                        <div class="text-[var(--text-def)] font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
                         <div class="font-kor leading-snug break-words ${defClass} ${fs.koDef}">${highlight(word.koDef)}</div>
                     </td>
                 `;
