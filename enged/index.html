@@ -358,7 +358,6 @@
             
             /* 리스트 내 단어 체크/단어장 호버 원상복구 - 투명도 오류 완벽 수정 */
             .list-action-check:not(.text-green-500):hover { color: #22c55e !important; }
-            .list-action-check:not(.text-green-500):hover i { opacity: 1 !important; }
             .list-action-bookmark:not(.text-orange-400):hover { color: #f97316 !important; } 
             
             /* 상단 툴바 4개 버튼 약한 호버 효과 */
@@ -2433,7 +2432,7 @@
                         <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                             <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
                             <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
-                                <i class="text-lg ${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check opacity-40'}"></i>
+                                <i class="text-lg fa-solid fa-check"></i>
                             </button>
                             <button onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-bookmark ${isSaved ? 'text-orange-400' : 'text-text-dim'}">
                                 <i class="text-lg ${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
