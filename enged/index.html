@@ -734,13 +734,13 @@
                     </div>
                     <!-- Back (Term) -->
                     <!-- 옅은 푸른빛 테마 복구 & 외곽선 자연스럽게 -->
-                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/10 to-indigo-500/5 backdrop-blur-xl shadow-xl border border-blue-500/20">
+                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/10 to-indigo-500/5 backdrop-blur-xl shadow-xl border border-blue-500/20 flex flex-col p-5 sm:p-6 relative">
                         <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
-                            <span class="px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-[10px] font-bold text-primary tracking-wider uppercase">Term</span>
+                            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-500 tracking-wider uppercase">Term</span>
                             <div id="fc-back-badges" class="flex items-center gap-1.5"></div>
                         </div>
                         
-                        <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
+                        <div class="absolute top-16 bottom-14 left-7 right-7 sm:left-9 sm:right-9 flex flex-col">
                             <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
                                 <div class="fc-inner-content justify-center min-h-full">
                                     <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
@@ -2158,27 +2158,27 @@
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어나 뜻, 혹은 (DST)와 같은 약어를 입력해 원하는 단어를 빠르게 찾습니다.</span></div>
+                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-primary">가리기 모드 (셀프 테스트)</strong><br><span class="text-text-dim text-sm">상단의 단어(A) 또는 해설(줄바꿈) 아이콘을 눌러 목록을 가린 뒤 자가 학습을 진행하세요. 가려진 영역을 터치하면 일시적으로 내용이 표시됩니다.</span></div>
+                            <div><strong class="text-primary">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-sm">암기가 완료된 단어를 숨기거나, 저장된 단어만 선택적으로 모아서 집중적으로 볼 수 있습니다.</span></div>
+                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-primary">알파벳 정렬</strong><br><span class="text-text-dim text-sm">표 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순/내림차순으로 정렬합니다.</span></div>
+                            <div><strong class="text-primary">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-primary">일괄 처리 (암기/저장)</strong><br><span class="text-text-dim text-sm">표 상단의 체크(✔) 또는 책갈피(🔖) 아이콘을 눌러, 현재 화면에 표시된 단어들을 일괄 적용하거나 해제합니다.</span></div>
+                            <div><strong class="text-primary">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-primary">글자 크기 & 부가 기능</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기를 3단계로 변경하거나 전체화면, 인쇄 기능을 활용할 수 있습니다.</span></div>
+                            <div><strong class="text-primary">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
                         </div>
                     </div>
                 `;
