@@ -240,8 +240,11 @@
             transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 24px; 
             display: flex; flex-direction: column; 
-            padding: 0; 
+            padding: 20px 16px; 
             overflow: hidden; 
+        }
+        @media (min-width: 640px) {
+            .flashcard-face { padding: 24px 20px; }
         }
         
         .flashcard-face.back { 
@@ -710,7 +713,7 @@
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
-                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col p-5 sm:p-6">
+                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col p-5 sm:p-6 relative">
                         <div class="shrink-0 mb-3 flex items-center gap-2 w-full justify-start">
                             <span class="px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[10px] font-bold text-text-dim tracking-wider uppercase">Definition</span>
                             <div id="fc-front-badges" class="flex items-center gap-1.5"></div>
@@ -730,9 +733,10 @@
                         </div>
                     </div>
                     <!-- Back (Term) -->
-                    <div class="flashcard-face back bg-gradient-to-br from-[var(--glass-surface)] to-[var(--glass-highlight)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col p-5 sm:p-6">
+                    <!-- 옅은 푸른빛 테마로 개선 & 외곽선 자연스럽게 -->
+                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/10 to-indigo-500/5 backdrop-blur-xl shadow-xl border border-blue-500/30 flex flex-col p-5 sm:p-6 relative">
                         <div class="shrink-0 mb-3 flex items-center gap-2 w-full justify-start">
-                            <span class="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary tracking-wider uppercase">Term</span>
+                            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-[10px] font-bold text-blue-500 tracking-wider uppercase">Term</span>
                             <div id="fc-back-badges" class="flex items-center gap-1.5"></div>
                         </div>
                         
@@ -794,7 +798,13 @@
             <div id="quiz-game">
                 <div id="quiz-active-screen">
                     <div class="flex justify-between items-end mb-5 px-1">
-                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
+                            <!-- 진행상황 초기화(리셋) 버튼 추가 -->
+                            <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right"></i> 리셋
+                            </button>
+                        </div>
                         <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-primary bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
                     </div>
                     
@@ -814,15 +824,15 @@
                         <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-primary/70 hover:text-primary font-bold px-2 py-1 rounded-md bg-primary/10 transition flex items-center gap-1.5">
                             <i class="fa-regular fa-lightbulb"></i> 힌트
                         </button>
-                        <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
+                        <!-- 힌트 텍스트 박스 -->
                         <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-primary"></div>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 -->
-                    <div id="quiz-spelling-container" class="w-full mt-6 mb-6 anim-fade-in">
+                    <!-- 주관식 스펠링 컨테이너 디자인 개선 (글씨 얇게, 글로우 효과 세련되게) -->
+                    <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
                         <div class="relative w-full shadow-md rounded-xl">
-                            <!-- 영어만 입력되도록 oninput 정규식 추가 -->
-                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/50 focus:bg-[var(--glass-highlight)] shadow-sm transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <!-- 영어만 입력되도록 oninput 정규식 유지 -->
+                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary focus:ring-4 focus:ring-primary/20 shadow-sm transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
                                 <i class="fa-solid fa-check"></i>
                             </button>
@@ -1402,6 +1412,14 @@
                 location.reload();
             }
         }
+        
+        function resetQuizProgress() {
+            if (confirm("현재 퀴즈 진행 상황과 점수를 처음부터 다시 시작하시겠습니까?")) {
+                appState.quizState = { asked: [], score: 0 };
+                saveData();
+                startQuiz();
+            }
+        }
 
         async function fetchCSV() {
             try {
@@ -1606,6 +1624,8 @@
                 document.getElementById('fc-back-term').innerHTML = "<div class='text-text-dim text-xl'>Empty</div>";
                 document.getElementById('fc-back-koterm').innerText = "";
                 document.getElementById('fc-progress').innerText = `0 / 0`;
+                document.getElementById('fc-front-badges').innerHTML = '';
+                document.getElementById('fc-back-badges').innerHTML = '';
                 
                 document.querySelectorAll('.fc-action-btn, .fc-action-main-btn').forEach(btn => btn.style.opacity = '0.3');
                 if(container.classList.contains('is-flipped')) {
