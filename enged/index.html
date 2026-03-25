@@ -375,6 +375,11 @@
             /* 상단 툴바 4개 버튼 약한 호버 효과 */
             .toolbar-btn:not(.btn-active):hover { background-color: rgba(255, 255, 255, 0.12); }
             html[data-theme="light"] .toolbar-btn:not(.btn-active):hover { background-color: #e2e8f0; }
+
+            /* 설정 모달 버튼 호버 효과 */
+            .settings-action-btn:hover, input.import-input:hover + .settings-action-btn { background-color: var(--glass-highlight); }
+            html[data-theme="light"] .settings-action-btn:hover, html[data-theme="light"] input.import-input:hover + .settings-action-btn { background-color: #e2e8f0; }
+            .settings-danger-btn:hover { background-color: rgba(239, 68, 68, 0.2) !important; border-color: rgba(239, 68, 68, 0.4) !important; }
         }
 
         /* 터치 반응 효과 (Mobile & PC 공통) */
@@ -951,7 +956,7 @@
     <!-- Help Modal (Dynamic Content) -->
     <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeHelpModal()">
         <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]" id="helpModalContent" onclick="event.stopPropagation()">
-            <button onclick="closeHelpModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main transition z-10">
+            <button onclick="closeHelpModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main hover:bg-[var(--glass-border)] transition z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <h3 id="helpModalTitle" class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2 shrink-0">
@@ -966,25 +971,25 @@
     <!-- Settings / Backup Modal -->
     <div id="settingsModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeSettingsModal()">
         <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300" id="settingsModalContent" onclick="event.stopPropagation()">
-            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main transition">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main hover:bg-[var(--glass-border)] transition z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <h3 class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2"><i class="fa-solid fa-gear text-primary"></i> 설정 및 데이터 관리</h3>
             
             <div class="space-y-3 mt-6">
-                <button onclick="exportData()" class="btn btn-sec w-full justify-between px-4 text-sm">
+                <button onclick="exportData()" class="btn btn-sec settings-action-btn w-full justify-between px-4 text-sm transition-colors">
                     <span><i class="fa-solid fa-download mr-2"></i> 학습 데이터 백업</span>
                     <span class="text-[10px] text-text-dim bg-[var(--glass-highlight)] px-2 py-1 rounded-md">.json</span>
                 </button>
                 <div class="relative w-full">
-                    <input type="file" id="importFile" accept=".json" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="importData(event)">
-                    <button class="btn btn-sec w-full justify-between px-4 pointer-events-none text-sm">
+                    <input type="file" id="importFile" accept=".json" class="import-input absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="importData(event)">
+                    <button class="btn btn-sec settings-action-btn w-full justify-between px-4 pointer-events-none text-sm transition-colors">
                         <span><i class="fa-solid fa-upload mr-2"></i> 학습 데이터 복원</span>
                         <span class="text-[10px] text-text-dim">파일 선택</span>
                     </button>
                 </div>
                 <hr class="border-[var(--glass-border)] my-4">
-                <button onclick="resetData()" class="btn w-full justify-between px-4 text-sm" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;">
+                <button onclick="resetData()" class="btn settings-danger-btn w-full justify-between px-4 text-sm transition-colors" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;">
                     <span><i class="fa-solid fa-trash-can mr-2"></i> 데이터 전체 초기화</span>
                 </button>
             </div>
