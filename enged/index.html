@@ -391,6 +391,42 @@
 
         .fc-btn-auto.is-active { color: var(--sub-accent) !important; background-color: var(--sub-accent-bg) !important; }
 
+        /* 인쇄 (Print) 강제 라이트 모드 설정 및 Definition 숨김 해제 */
+        @media print {
+            @page { margin: 1cm; size: auto; }
+            html, body { height: auto !important; overflow: visible !important; background: #ffffff !important; color: #000000 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
+            
+            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #moreBtn, #moreMenu, #filterMenu, #filterBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal, #settingsModal { display: none !important; }
+            
+            main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; background: transparent !important; }
+            #view-dashboard { display: block !important; }
+            #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
+            #listContainer { height: auto !important; max-height: none !important; overflow: visible !important; border: none !important; }
+            
+            /* 가짜 구분선 제거 */
+            #listContainer th::after, #listContainer td::after { display: none !important; }
+            
+            /* 테이블 인쇄 시 강제 출력 세팅 (검은 테두리 제거 및 연한 회색 적용) */
+            table { width: 100% !important; display: table !important; border-collapse: collapse !important; color: #0f172a !important; border: none !important; }
+            thead { display: table-header-group !important; background-color: #f8fafc !important; }
+            thead th { position: static !important; border: 1px solid #cbd5e1 !important; font-weight: bold !important; padding: 10px 8px !important; color: #1e293b !important; background-color: #f8fafc !important; text-align: left; }
+            tbody tr { break-inside: avoid; display: table-row !important; border-bottom: 1px solid #e2e8f0 !important; }
+            td { border: 1px solid #e2e8f0 !important; padding: 10px 8px !important; color: #0f172a !important; display: table-cell !important; background-color: #ffffff !important; }
+            
+            /* 다크모드 텍스트 색상 무효화 및 강제 지정 */
+            .text-text-main, .text-text-def, .text-text-sub, .text-text-dim, .text-sub-accent, .font-bold { color: #0f172a !important; }
+            
+            /* Definition 컬럼 보이도록 강제 (.mobile-hide 속성 무효화) */
+            th.num-col, td.num-col { display: table-cell !important; width: 40px !important; text-align: center !important; }
+            th.def-col, td.def-col-content { display: table-cell !important; }
+            
+            /* 액션 컬럼만 숨기기 */
+            th:nth-child(2), td:nth-child(2), td.actions-col { display: none !important; }
+
+            .hl-text { background: none !important; color: #000 !important; font-weight: bold !important; }
+        }
+
         /* Mobile Tweaks */
         @media (max-width: 480px) {
             :root { --header-h: 60px; }
@@ -455,59 +491,6 @@
             
             /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
-        }
-        
-        /* 인쇄 (Print) 강제 라이트 모드 설정 및 완벽 최적화 (가장 하단에 위치하여 모바일/PC 설정 모두 확실히 덮어씀) */
-        @media print {
-            :root {
-                --bg-dark: #ffffff !important; 
-                --glass-surface: #ffffff !important; 
-                --glass-border: #cbd5e1 !important; 
-                --text-main: #000000 !important;
-                --text-sub: #333333 !important; 
-                --text-dim: #555555 !important; 
-                --text-def: #000000 !important; 
-                --sub-accent: #000000 !important;
-            }
-            @page { margin: 1.5cm; size: auto; }
-            html, body { height: auto !important; overflow: visible !important; background: #ffffff !important; color: #000000 !important; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
-            
-            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #moreBtn, #moreMenu, #filterMenu, #filterBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal, #settingsModal { display: none !important; }
-            
-            main { padding: 0 !important; margin: 0 !important; max-width: none !important; overflow: visible !important; background: transparent !important; }
-            #view-dashboard { display: block !important; }
-            #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-            #listContainer { height: auto !important; max-height: none !important; overflow: visible !important; border: none !important; }
-            
-            /* 가짜 구분선 및 모바일용 요소 완전 제거 */
-            #listContainer th::after, #listContainer td::after, #listContainer tr::before, #listContainer thead tr::before { display: none !important; content: none !important; }
-            
-            /* 테이블 인쇄 시 강제 데스크탑 출력 세팅 (모바일뷰 완벽 오버라이드) */
-            #listContainer table { width: 100% !important; display: table !important; border-collapse: collapse !important; color: #000000 !important; border: none !important; margin-bottom: 20px !important; }
-            #listContainer thead { display: table-header-group !important; }
-            #listContainer tbody { display: table-row-group !important; }
-            #listContainer tr { display: table-row !important; border: none !important; background-color: #ffffff !important; page-break-inside: avoid !important; }
-            #listContainer thead tr { background-color: #ffffff !important; border-bottom: 2px solid #94a3b8 !important; padding: 0 !important; }
-            
-            #listContainer th { position: static !important; border-bottom: 2px solid #94a3b8 !important; font-weight: bold !important; padding: 12px 10px !important; color: #000000 !important; background-color: #ffffff !important; text-align: left !important; display: table-cell !important; }
-            #listContainer td { border-bottom: 1px solid #e2e8f0 !important; padding: 12px 10px !important; color: #000000 !important; display: table-cell !important; background-color: #ffffff !important; text-align: left !important; vertical-align: top !important; }
-            
-            /* 다크모드 텍스트 색상 강제 지정 */
-            .text-text-main, .text-text-def, .text-text-sub, .text-text-dim, .text-sub-accent, .font-bold { color: #000000 !important; }
-            #listContainer div, #listContainer span, #listContainer p { color: #000000 !important; }
-            
-            /* Definition 컬럼 보이도록 강제 (.mobile-hide 속성 무효화) */
-            th.num-col, td.num-col { display: table-cell !important; width: 40px !important; text-align: center !important; }
-            th.def-col, td.def-col-content { display: table-cell !important; }
-            
-            /* 액션 컬럼 완전히 숨기기 */
-            th.action-col, td.actions-col, .list-action-check, .list-action-bookmark { display: none !important; width: 0 !important; height: 0 !important; padding: 0 !important; border: none !important; opacity: 0 !important; overflow: hidden !important; }
-
-            .hl-text { background: transparent !important; color: #000 !important; font-weight: bold !important; text-decoration: underline !important; }
-            
-            /* 모바일 전용 여백 리셋 */
-            #listContainer td.term-col-content, #listContainer td.def-col-content { margin: 0 !important; }
         }
     </style>
 </head>
@@ -641,7 +624,7 @@
                              <div class="w-[1px] h-5 sm:h-6 bg-[var(--glass-border)] mx-0.5"></div>
                              
                              <div class="relative">
-                                 <button onclick="toggleMenu('filterMenu', event)" class="btn btn-sec toolbar-btn dropdown-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="filterBtn" title="단어 필터링">
+                                 <button onclick="toggleFilterMenu(event)" class="btn btn-sec toolbar-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="filterBtn" title="단어 필터링">
                                     <i class="fa-solid fa-filter"></i>
                                  </button>
                                  <div id="filterMenu" class="hidden absolute right-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200">
@@ -667,7 +650,7 @@
                              <div class="w-[1px] h-5 sm:h-6 bg-[var(--glass-border)] mx-0.5"></div>
                              
                              <div class="relative">
-                                 <button onclick="toggleMenu('moreMenu', event)" class="btn btn-sec toolbar-btn dropdown-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="moreBtn" title="더보기">
+                                 <button onclick="toggleMoreMenu(event)" class="btn btn-sec toolbar-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="moreBtn" title="더보기">
                                     <i class="fa-solid fa-ellipsis-vertical text-[13px] sm:text-[14.5px]"></i>
                                  </button>
                                  <div id="moreMenu" class="hidden absolute right-0 top-full mt-2 w-64 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200">
@@ -685,14 +668,14 @@
                                     </div>
 
                                     <div class="h-[1px] bg-[var(--glass-border)] my-1.5 mx-3 mobile-hide"></div>
-                                    <button onclick="toggleFullscreenList(); closeMenu('moreMenu');" class="flex items-center justify-start w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors mobile-hide">
+                                    <button onclick="toggleFullscreenList(); closeMoreMenu();" class="flex items-center justify-start w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors mobile-hide">
                                         <i class="fa-solid fa-expand w-5 text-center mr-2 opacity-70"></i> 전체화면
                                     </button>
-                                    <button onclick="window.print(); closeMenu('moreMenu');" class="flex items-center justify-start w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors mobile-hide">
+                                    <button onclick="window.print(); closeMoreMenu();" class="flex items-center justify-start w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors mobile-hide">
                                         <i class="fa-solid fa-print w-5 text-center mr-2 opacity-70"></i> 인쇄
                                     </button>
                                     <div class="h-[1px] bg-[var(--glass-border)] my-1.5 mx-3"></div>
-                                    <button onclick="closeMenu('moreMenu'); setTimeout(() => openHelpModal('list'), 50);" class="flex items-center justify-start w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="closeMoreMenu(); setTimeout(() => openHelpModal('list'), 50);" class="flex items-center justify-start w-full px-4 py-2.5 text-sm text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <i class="fa-solid fa-question w-5 text-center mr-2 opacity-70"></i> 도움말
                                     </button>
                                  </div>
@@ -706,7 +689,7 @@
                         <thead class="text-xs uppercase text-text-dim font-bold shadow-sm">
                             <tr>
                                 <th class="px-2 py-3 text-center w-12 mobile-hide num-col">#</th>
-                                <th class="px-2 py-3 text-center w-[70px] action-col">
+                                <th class="px-2 py-3 text-center w-[70px]">
                                     <div class="flex flex-row justify-center items-center gap-3 sm:gap-4">
                                         <i class="fa-solid fa-check cursor-pointer transition-colors list-action-check hover:text-green-500" title="현재 목록 전체 암기/해제" onclick="toggleAllVisibleMemorized()"></i>
                                         <i class="fa-solid fa-bookmark cursor-pointer transition-colors list-action-bookmark hover:text-orange-400" title="현재 목록 전체 저장/해제" onclick="toggleAllVisibleNotebook()"></i>
@@ -740,7 +723,7 @@
                 <div class="flex items-center gap-2">
                     <!-- 드롭다운 필터 -->
                     <div class="relative">
-                        <button onclick="toggleMenu('fcFilterMenu', event)" class="h-9 text-xs font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-4 rounded-xl text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-2 dropdown-btn" id="fc-filter-btn">
+                        <button onclick="toggleFcFilterMenu(event)" class="h-9 text-xs font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-4 rounded-xl text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-2" id="fc-filter-btn">
                             <i class="fa-solid fa-filter"></i> <span>전체 단어</span>
                         </button>
                         <div id="fcFilterMenu" class="hidden absolute right-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200 text-sm">
@@ -1019,59 +1002,94 @@
     </div>
 
     <script>
-        // === 드롭다운 메뉴 공통 통합 함수 ===
-        const dropdownIds = ['moreMenu', 'filterMenu', 'fcFilterMenu'];
-
-        function toggleMenu(menuId, e) {
+        // === 더보기 메뉴(드롭다운) 기능 ===
+        function toggleMoreMenu(e) {
             if(e) e.stopPropagation();
-            
-            // 다른 메뉴는 모두 닫기
-            dropdownIds.forEach(id => {
-                if (id !== menuId) closeMenu(id);
-            });
-
-            const menu = document.getElementById(menuId);
-            if (menu && menu.classList.contains('hidden')) {
+            closeFilterMenu(); 
+            const menu = document.getElementById('moreMenu');
+            if (menu.classList.contains('hidden')) {
                 menu.classList.remove('hidden');
-                
-                // 메뉴별 UI 업데이트 연결
-                if (menuId === 'moreMenu') updateMoreMenuUI();
-                if (menuId === 'filterMenu') updateFilterMenuUI();
-                if (menuId === 'fcFilterMenu') updateFcFilterMenuUI();
-                
-                void menu.offsetWidth; // 애니메이션 트리거
+                updateMoreMenuUI(); 
+                void menu.offsetWidth;
                 menu.classList.remove('scale-95', 'opacity-0');
                 menu.classList.add('scale-100', 'opacity-100');
             } else {
-                closeMenu(menuId);
+                closeMoreMenu();
             }
         }
-
-        function closeMenu(menuId) {
-            const menu = document.getElementById(menuId);
-            if (menu && !menu.classList.contains('hidden')) {
+        function closeMoreMenu() {
+            const menu = document.getElementById('moreMenu');
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.remove('scale-100', 'opacity-100');
+                menu.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { menu.classList.add('hidden'); }, 200);
+            }
+        }
+        
+        // === 필터 메뉴(드롭다운) 기능 ===
+        function toggleFilterMenu(e) {
+            if(e) e.stopPropagation();
+            closeMoreMenu(); 
+            const menu = document.getElementById('filterMenu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                updateFilterMenuUI();
+                void menu.offsetWidth;
+                menu.classList.remove('scale-95', 'opacity-0');
+                menu.classList.add('scale-100', 'opacity-100');
+            } else {
+                closeFilterMenu();
+            }
+        }
+        function closeFilterMenu() {
+            const menu = document.getElementById('filterMenu');
+            if (!menu.classList.contains('hidden')) {
                 menu.classList.remove('scale-100', 'opacity-100');
                 menu.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => { menu.classList.add('hidden'); }, 200);
             }
         }
 
-        // 글로벌 클릭 감지 (바탕 클릭 시 드롭다운 닫기)
+        // === 플래시카드 전용 필터 메뉴 ===
+        function toggleFcFilterMenu(e) {
+            if(e) e.stopPropagation();
+            const menu = document.getElementById('fcFilterMenu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                updateFcFilterMenuUI();
+                void menu.offsetWidth;
+                menu.classList.remove('scale-95', 'opacity-0');
+                menu.classList.add('scale-100', 'opacity-100');
+            } else {
+                closeFcFilterMenu();
+            }
+        }
+        function closeFcFilterMenu() {
+            const menu = document.getElementById('fcFilterMenu');
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.remove('scale-100', 'opacity-100');
+                menu.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { menu.classList.add('hidden'); }, 200);
+            }
+        }
+
         document.addEventListener('click', (e) => {
-            const menus = [
-                { menu: 'moreMenu', btn: 'moreBtn' },
-                { menu: 'filterMenu', btn: 'filterBtn' },
-                { menu: 'fcFilterMenu', btn: 'fc-filter-btn' }
-            ];
+            const moreMenu = document.getElementById('moreMenu');
+            const moreBtn = document.getElementById('moreBtn');
+            const filterMenu = document.getElementById('filterMenu');
+            const filterBtn = document.getElementById('filterBtn');
+            const fcFilterMenu = document.getElementById('fcFilterMenu');
+            const fcFilterBtn = document.getElementById('fc-filter-btn');
             
-            menus.forEach(({menu, btn}) => {
-                const menuEl = document.getElementById(menu);
-                const btnEl = document.getElementById(btn);
-                
-                if (menuEl && !menuEl.classList.contains('hidden') && !menuEl.contains(e.target) && e.target !== btnEl && !btnEl.contains(e.target)) {
-                    closeMenu(menu);
-                }
-            });
+            if (moreMenu && !moreMenu.classList.contains('hidden') && !moreMenu.contains(e.target) && e.target !== moreBtn && !moreBtn.contains(e.target)) {
+                closeMoreMenu();
+            }
+            if (filterMenu && !filterMenu.classList.contains('hidden') && !filterMenu.contains(e.target) && e.target !== filterBtn && !filterBtn.contains(e.target)) {
+                closeFilterMenu();
+            }
+            if (fcFilterMenu && !fcFilterMenu.classList.contains('hidden') && !fcFilterMenu.contains(e.target) && e.target !== fcFilterBtn && !fcFilterBtn.contains(e.target)) {
+                closeFcFilterMenu();
+            }
         });
 
         function setFontSize(level) {
@@ -1235,6 +1253,7 @@
                         if(!appState.memorized[term]) {
                             toggleMemorized(term, true);
                         }
+                        // ★ 단어장 자동 해제 설정 로직
                         if(appState.autoRemoveSaved && appState.notebook.includes(term)) {
                             appState.notebook = appState.notebook.filter(t => t !== term);
                             saveData();
@@ -1286,6 +1305,7 @@
                 if(!appState.memorized[term]) {
                     toggleMemorized(term, true);
                 }
+                // ★ 단어장 자동 해제 설정 로직
                 if(appState.autoRemoveSaved && appState.notebook.includes(term)) {
                     appState.notebook = appState.notebook.filter(t => t !== term);
                     saveData();
@@ -1395,7 +1415,7 @@
             currentIndex: 0,
             quizState: { asked: [], score: 0 },
             fontSizeLevel: 0,
-            autoRemoveSaved: true
+            autoRemoveSaved: true // ★ 설정 기본값 켜짐
         };
         
         let listFilterMode = 'all'; 
@@ -1447,7 +1467,7 @@
                     if (!parsed.quizState || !Array.isArray(parsed.quizState.asked)) parsed.quizState = { asked: [], score: 0 };
                     if (parsed.fontSizeLevel === undefined) parsed.fontSizeLevel = 0;
                     if (parsed.fontSizeLevel > 2) parsed.fontSizeLevel = 0; 
-                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = true; 
+                    if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = true; // ★ 기본값 켜짐
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
             }
@@ -1613,6 +1633,7 @@
         let autoplayTimeout1 = null;
         let autoplayTimeout2 = null;
 
+        // ★ [수정됨] 자동 재생 기능 오류 수정
         function toggleAutoplay() {
             autoplayMode = !autoplayMode;
             const btn = document.getElementById('fc-autoplay-btn');
@@ -1636,6 +1657,7 @@
             if(autoplayMode) toggleAutoplay();
         }
 
+        // ★ [수정됨] 부드러운 자동재생 로직
         function runAutoplayCycle() {
             if(!autoplayMode) return;
             clearTimeout(autoplayTimeout1);
@@ -1658,6 +1680,7 @@
             }, 3000); 
         }
 
+        // ★ [추가됨] 섞기(Shuffle) 기능 구현
         function shuffleCards() {
             stopAutoplay();
             if (flashcardOrder.length <= 1) return;
@@ -1669,12 +1692,13 @@
                 setTimeout(() => btn.classList.remove('bg-[var(--glass-highlight)]'), 200);
             }
 
-            // Fisher-Yates shuffle
+            // Fisher-Yates shuffle 알고리즘으로 현재 필터링된 배열 섞기
             for (let i = flashcardOrder.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
             }
 
+            // 첫 번째 카드로 이동하여 다시 렌더링
             appState.currentIndex = 0;
             loadFlashcard(0);
         }
@@ -1694,7 +1718,7 @@
                 btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
             }
             updateFcFilterMenuUI();
-            closeMenu('fcFilterMenu');
+            closeFcFilterMenu();
             buildFlashcardOrder(false); 
         }
 
@@ -1822,6 +1846,7 @@
             const isNowMemorized = !appState.memorized[term];
             toggleMemorized(term, isNowMemorized);
             
+            // ★ 버튼으로 암기 처리 시 단어장 자동 해제 설정 로직
             if(isNowMemorized && appState.autoRemoveSaved && appState.notebook.includes(term)) {
                 appState.notebook = appState.notebook.filter(t => t !== term);
                 saveData();
@@ -2056,23 +2081,6 @@
             }
         }
 
-        // --- 퀴즈 정답 피드백 처리 통합 함수 ---
-        function processQuizResult(isCorrect, termForFeedback, termToSave) {
-            const feedback = document.getElementById('quiz-feedback');
-            if (isCorrect) {
-                appState.quizState.score++;
-                document.getElementById('quiz-score').innerText = appState.quizState.score;
-                feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
-                saveData();
-            } else {
-                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
-                if (!appState.notebook.includes(termToSave)) {
-                    appState.notebook.push(termToSave);
-                    saveData();
-                }
-            }
-        }
-
         function checkAnswer(selected, correct, btnElement) {
             if (!document.getElementById('quiz-actions').classList.contains('hidden')) return;
             const feedback = document.getElementById('quiz-feedback');
@@ -2090,13 +2098,22 @@
             }
 
             if (selected.term === correct.term) {
-                processQuizResult(true, correct.term, correct.term);
+                appState.quizState.score++;
+                document.getElementById('quiz-score').innerText = appState.quizState.score;
+                feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
+                saveData();
             } else {
                 btnElement.classList.add('border-red-500', 'bg-red-500/10');
                 btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
-                processQuizResult(false, correct.term, correct.term);
+                
+                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${correct.term}</span></div>`;
+                
+                if (!appState.notebook.includes(correct.term)) {
+                    appState.notebook.push(correct.term);
+                    saveData();
+                }
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
         }
@@ -2115,11 +2132,19 @@
             feedback.classList.remove('hidden');
             
             if (answer === correctTerm) {
+                appState.quizState.score++;
+                document.getElementById('quiz-score').innerText = appState.quizState.score;
+                feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
                 inputEl.classList.add('border-green-500', 'text-green-500');
-                processQuizResult(true, quizCurrentQ.term, quizCurrentQ.term);
+                saveData();
             } else {
+                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${quizCurrentQ.term}</span></div>`;
                 inputEl.classList.add('border-red-500', 'text-red-500');
-                processQuizResult(false, quizCurrentQ.term, quizCurrentQ.term);
+                
+                if (!appState.notebook.includes(quizCurrentQ.term)) {
+                    appState.notebook.push(quizCurrentQ.term);
+                    saveData();
+                }
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
         }
@@ -2213,7 +2238,7 @@
                 btn.title = "필터링 (암기 완료)";
             }
             updateFilterMenuUI();
-            closeMenu('filterMenu');
+            closeFilterMenu();
             renderListTable();
         }
 
@@ -2373,14 +2398,14 @@
                 tr.innerHTML = `
                     <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
                     <td class="px-2 py-3 text-center actions-col">
-                        <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
                             <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
-                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
-                                <i class="text-lg ${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check opacity-40'}"></i>
+                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-lg focus:outline-none transition-colors list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
+                                <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
                             </button>
-                            <button onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-bookmark ${isSaved ? 'text-orange-400' : 'text-text-dim'}">
-                                <i class="text-lg ${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
-                            </button>
+                            <div class="cursor-pointer text-lg list-action-bookmark transition-colors" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
+                                <i class="${isSaved ? 'fa-solid fa-bookmark text-orange-400' : 'fa-regular fa-bookmark text-text-dim'}"></i>
+                            </div>
                         </div>
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
