@@ -393,6 +393,16 @@
 
         /* 인쇄 (Print) 강제 라이트 모드 설정 및 Definition 숨김 해제 */
         @media print {
+            :root {
+                --bg-dark: #ffffff !important; 
+                --glass-surface: #ffffff !important; 
+                --glass-border: #cbd5e1 !important; 
+                --text-main: #000000 !important;
+                --text-sub: #333333 !important; 
+                --text-dim: #555555 !important; 
+                --text-def: #000000 !important; 
+                --sub-accent: #000000 !important;
+            }
             @page { margin: 1cm; size: auto; }
             html, body { height: auto !important; overflow: visible !important; background: #ffffff !important; color: #000000 !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
@@ -404,18 +414,22 @@
             #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
             #listContainer { height: auto !important; max-height: none !important; overflow: visible !important; border: none !important; }
             
-            /* 가짜 구분선 제거 */
-            #listContainer th::after, #listContainer td::after { display: none !important; }
+            /* 가짜 구분선 및 모바일용 요소 완전 제거 (검은 테두리/줄 원인) */
+            #listContainer th::after, #listContainer td::after, #listContainer tr::before, #listContainer thead tr::before { display: none !important; }
             
-            /* 테이블 인쇄 시 강제 출력 세팅 (검은 테두리 제거 및 연한 회색 적용) */
-            table { width: 100% !important; display: table !important; border-collapse: collapse !important; color: #0f172a !important; border: none !important; }
-            thead { display: table-header-group !important; background-color: #f8fafc !important; }
-            thead th { position: static !important; border: 1px solid #cbd5e1 !important; font-weight: bold !important; padding: 10px 8px !important; color: #1e293b !important; background-color: #f8fafc !important; text-align: left; }
-            tbody tr { break-inside: avoid; display: table-row !important; border-bottom: 1px solid #e2e8f0 !important; }
-            td { border: 1px solid #e2e8f0 !important; padding: 10px 8px !important; color: #0f172a !important; display: table-cell !important; background-color: #ffffff !important; }
+            /* 테이블 인쇄 시 강제 데스크탑 출력 세팅 (모바일뷰 완벽 오버라이드) */
+            #listContainer table { width: 100% !important; display: table !important; border-collapse: collapse !important; color: #000000 !important; border: 1px solid #cbd5e1 !important; }
+            #listContainer thead { display: table-header-group !important; background-color: #f8fafc !important; }
+            #listContainer tbody { display: table-row-group !important; }
+            #listContainer tr { display: table-row !important; border-bottom: 1px solid #e2e8f0 !important; background-color: #ffffff !important; }
+            #listContainer thead tr { background-color: #f8fafc !important; border-bottom: 2px solid #cbd5e1 !important; padding: 0 !important; }
             
-            /* 다크모드 텍스트 색상 무효화 및 강제 지정 */
-            .text-text-main, .text-text-def, .text-text-sub, .text-text-dim, .text-sub-accent, .font-bold { color: #0f172a !important; }
+            #listContainer th { position: static !important; border: 1px solid #cbd5e1 !important; font-weight: bold !important; padding: 12px 10px !important; color: #000000 !important; background-color: #f8fafc !important; text-align: left !important; display: table-cell !important; }
+            #listContainer td { border: 1px solid #e2e8f0 !important; padding: 12px 10px !important; color: #000000 !important; display: table-cell !important; background-color: #ffffff !important; text-align: left !important; }
+            
+            /* 다크모드 텍스트 색상 및 Tailwind 변수 무효화 강제 지정 */
+            .text-text-main, .text-text-def, .text-text-sub, .text-text-dim, .text-sub-accent, .font-bold { color: #000000 !important; }
+            #listContainer div, #listContainer span, #listContainer p { color: #000000 !important; }
             
             /* Definition 컬럼 보이도록 강제 (.mobile-hide 속성 무효화) */
             th.num-col, td.num-col { display: table-cell !important; width: 40px !important; text-align: center !important; }
@@ -425,6 +439,9 @@
             th:nth-child(2), td:nth-child(2), td.actions-col { display: none !important; }
 
             .hl-text { background: none !important; color: #000 !important; font-weight: bold !important; }
+            
+            /* 모바일 전용 여백 리셋 */
+            #listContainer td.term-col-content, #listContainer td.def-col-content { margin: 0 !important; padding: 12px 10px !important; }
         }
 
         /* Mobile Tweaks */
