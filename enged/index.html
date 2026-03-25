@@ -406,6 +406,23 @@
             
             #print-area .en-def { font-weight: 600; font-size: 10pt; color: #1e293b !important; display: block; margin-bottom: 3px; line-height: 1.4; word-break: break-word; }
             #print-area .ko-def { color: #475569 !important; font-size: 9pt; font-weight: 400; display: block; line-height: 1.4; word-break: break-word; }
+            
+            /* 워터마크 스타일 */
+            .print-watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-35deg);
+                font-size: 38pt;
+                font-family: 'Cal Sans', 'Pretendard', sans-serif;
+                font-weight: 800;
+                color: rgba(150, 150, 150, 0.15) !important;
+                z-index: 9999;
+                pointer-events: none;
+                white-space: nowrap;
+                text-align: center;
+                user-select: none;
+            }
         }
 
         /* Mobile Tweaks */
@@ -1055,8 +1072,20 @@
                 return;
             }
 
+            // 현재 시간 구하기 (워터마크용)
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+            const watermarkText = `Enged. ⓒ SM Woo / ${timeString}`;
+
             // 인쇄용 HTML 구조 재설계 (영어/한국어 분리 및 클래스 기반 렌더링)
             let html = `
+                <div class="print-watermark">${watermarkText}</div>
                 <h2>Vocabulary List</h2>
                 <table>
                     <thead>
