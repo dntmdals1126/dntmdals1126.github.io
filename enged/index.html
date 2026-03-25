@@ -252,8 +252,25 @@
             -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; 
             display: flex; flex-direction: column;
             user-select: text; -webkit-user-select: text;
-            padding: 0 10px;
+            /* 옅은 배경과 둥근 테두리로 터치 스크롤 영역 명확화 */
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 16px;
         }
+        html[data-theme="light"] .fc-scroll-box { 
+            background-color: rgba(0, 0, 0, 0.02); 
+            border-color: rgba(0, 0, 0, 0.06); 
+        }
+
+        .fc-inner-content {
+            width: 100%; margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        /* Front side (Definition) left align for inner box */
+        .flashcard-face.front .fc-inner-content { align-items: flex-start; text-align: left; }
+        /* Back side (Term) center align */
+        .flashcard-face.back .fc-inner-content { align-items: center; text-align: center; }
+
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
         .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 2px; }
 
@@ -279,6 +296,10 @@
             transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
         }
         .btn-active .slash-wrapper::after { transform: translateY(-50%) rotate(-45deg) scaleX(1); }
+
+        /* Search Clear Button Transition */
+        .clear-btn-enter { opacity: 0; transform: scale(0.8); }
+        .clear-btn-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
 
         /* Blur Logic */
         .blur-target { filter: blur(5px); transition: filter 0.3s ease; cursor: pointer; user-select: none; }
@@ -329,8 +350,8 @@
 
             .stat-box { flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px 4px; min-height: 60px; text-align: center; }
             .stat-box .flex { flex-direction: column; gap: 2px; }
-            .stat-box i { font-size: 15px; margin-bottom: 2px; }
-            .stat-box span.uppercase { font-size: 9px; }
+            .stat-box i { font-size: 14.5px; margin-bottom: 2px; }
+            .stat-box span.uppercase { font-size: 8.5px; }
             .stat-box span.text-lg { margin-top: 0; }
             
             .mobile-hide { display: none !important; }
@@ -426,7 +447,7 @@
         </div>
     </header>
 
-    <!-- 글씨 크기 전체 105% 확대를 위해 main 내부를 감싸는 div 추가 혹은 폰트 클래스 적용 -->
+    <!-- 글씨 크기 전체 105% 확대를 위해 main에 클래스 적용 -->
     <main class="text-[105%]">
         <div class="section-card p-1.5 mb-6">
             <nav class="chip-nav no-select">
@@ -635,15 +656,14 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 (비율 및 높이 확장, 내부 테두리 제거) -->
+            <!-- 카드 영역 디자인 개선 -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
                     <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] !p-0">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[11px] font-bold text-text-dim tracking-wider uppercase">Definition</div>
                         
-                        <!-- Seamless inner layout, left aligned meaning -->
-                        <div class="fc-scroll-box mt-14 mb-10 px-6 sm:px-8" onclick="event.stopPropagation()">
+                        <div class="fc-scroll-box mt-16 mb-12 px-6 sm:px-8" onclick="event.stopPropagation()">
                             <div class="fc-inner-content h-full flex flex-col justify-center items-start w-full">
                                 <h2 id="fc-front" class="text-[21px] md:text-[25px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
                                 <div class="w-12 h-[2px] bg-primary/30 rounded-full my-4"></div>
@@ -659,7 +679,7 @@
                     <div class="flashcard-face back bg-gradient-to-br from-blue-500/5 to-indigo-500/10 backdrop-blur-xl shadow-xl border border-primary/30 !p-0">
                         <div class="absolute top-5 left-5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-bold text-primary tracking-wider uppercase">Term</div>
                         
-                        <div class="fc-scroll-box mt-14 mb-10 px-6 sm:px-8" onclick="event.stopPropagation()">
+                        <div class="fc-scroll-box mt-16 mb-12 px-6 sm:px-8" onclick="event.stopPropagation()">
                             <div class="fc-inner-content h-full flex flex-col justify-center items-center w-full">
                                 <h3 id="fc-back-term" class="text-[34px] md:text-[44px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
                                 <p id="fc-back-koterm" class="text-primary text-[19px] md:text-[21px] font-kor font-bold text-center w-full"></p>
@@ -673,9 +693,8 @@
                 </div>
             </div>
 
-            <!-- Bottom Controls (디자인 및 레이아웃 개선) -->
+            <!-- Bottom Controls -->
             <div class="w-full max-w-[500px] mx-auto mt-8 flex flex-col gap-4">
-                <!-- 메인 액션 버튼 묶음 -->
                 <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-2">
                     <button onclick="stopAutoplay(); prevCard();" class="btn btn-sec w-12 h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main" title="이전">
                         <i class="fa-solid fa-chevron-left text-[17px]"></i>
@@ -694,7 +713,6 @@
                     </button>
                 </div>
 
-                <!-- 보조 액션 (유틸리티) -->
                 <div class="flex items-center justify-center gap-8 mt-2">
                     <button onclick="shuffleCards()" class="flex flex-col items-center gap-1.5 text-text-dim hover:text-text-main transition group" title="섞기">
                         <div class="w-10 h-10 rounded-full bg-[var(--glass-surface)] border border-[var(--glass-border)] flex items-center justify-center group-hover:bg-[var(--glass-highlight)] transition">
@@ -978,8 +996,8 @@
         const badgeText = document.getElementById('swipe-badge-text');
 
         fcContainer.addEventListener('pointerdown', e => {
-            if(e.target.closest('button') || e.target.closest('.fc-scroll-box')) return;
-            if(flashcardOrder.length === 0) return; 
+            if(e.target.closest('button')) return; // 버튼 클릭 시에만 스와이프 차단
+            if(flashcardOrder.length === 0) return; // 빈 카드에서는 스와이프 차단
             isDragging = true;
             isScrolling = false;
             startX = e.clientX;
@@ -1495,7 +1513,7 @@
                 document.getElementById('fc-back-koterm').innerText = "";
                 document.getElementById('fc-progress').innerText = `0 / 0`;
                 
-                document.querySelectorAll('.fc-action-btn').forEach(btn => btn.style.opacity = '0.3');
+                document.querySelectorAll('.fc-action-btn, .fc-action-main-btn').forEach(btn => btn.style.opacity = '0.3');
                 if(container.classList.contains('is-flipped')) {
                     inner.style.transition = 'none';
                     inner.classList.remove('rotate-y-180');
@@ -1505,7 +1523,7 @@
                 }
                 return;
             } else {
-                document.querySelectorAll('.fc-action-btn').forEach(btn => btn.style.opacity = '1');
+                document.querySelectorAll('.fc-action-btn, .fc-action-main-btn').forEach(btn => btn.style.opacity = '1');
             }
             
             const isFlipped = container.classList.contains('is-flipped');
@@ -1540,7 +1558,7 @@
             const checkBtn = document.getElementById('fc-check-btn');
             if(isMemorized) {
                 checkBtn.classList.remove('bg-[var(--glass-surface)]', 'text-text-sub');
-                checkBtn.classList.add('active'); // active class in CSS handles the rest
+                checkBtn.classList.add('active'); 
             } else {
                 checkBtn.classList.add('bg-[var(--glass-surface)]', 'text-text-sub');
                 checkBtn.classList.remove('active');
@@ -1862,6 +1880,276 @@
             document.getElementById('quiz-end-screen').classList.remove('hidden');
             document.getElementById('quiz-final-score').innerText = appState.quizState.score;
             document.getElementById('quiz-final-total').innerText = appState.quizState.asked.length;
+        }
+
+        // --- List Controls ---
+        function getCurrentlyFilteredWords() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            let filtered = allWords.filter(word => {
+                if (listFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
+                if (listFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
+                if (listFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
+                if(!query) return true;
+                return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.def.toLowerCase().includes(query);
+            });
+
+            filtered.sort((a, b) => {
+                if (query) {
+                    const aTermHas = a.term.toLowerCase().includes(query);
+                    const bTermHas = b.term.toLowerCase().includes(query);
+                    if(aTermHas && !bTermHas) return -1;
+                    if(!aTermHas && bTermHas) return 1;
+                }
+                const compare = a.term.localeCompare(b.term);
+                return sortOrder === 'asc' ? compare : -compare;
+            });
+            
+            return filtered;
+        }
+
+        function toggleAllVisibleMemorized() {
+            const filtered = getCurrentlyFilteredWords();
+            if (filtered.length === 0) return;
+            const allMemorized = filtered.every(w => appState.memorized[w.term]);
+            filtered.forEach(w => {
+                if (allMemorized) delete appState.memorized[w.term];
+                else appState.memorized[w.term] = true;
+            });
+            saveData();
+            renderListTable();
+        }
+
+        function toggleAllVisibleNotebook() {
+            const filtered = getCurrentlyFilteredWords();
+            if (filtered.length === 0) return;
+            const allSaved = filtered.every(w => appState.notebook.includes(w.term));
+            filtered.forEach(w => {
+                if (allSaved) {
+                    appState.notebook = appState.notebook.filter(t => t !== w.term);
+                } else {
+                    if (!appState.notebook.includes(w.term)) appState.notebook.push(w.term);
+                }
+            });
+            saveData();
+            renderListTable();
+        }
+
+        function setListFilter(mode) {
+            listFilterMode = mode;
+            const btn = document.getElementById('filterBtn');
+            if(listFilterMode === 'all') {
+                btn.innerHTML = '<i class="fa-solid fa-filter"></i>';
+                btn.classList.remove('btn-active');
+                btn.title = "필터링 (전체)";
+            } else if(listFilterMode === 'hideMemorized') {
+                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10.5px]"></i></span>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (암기 제외)";
+            } else if(listFilterMode === 'onlySaved') {
+                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-400"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (저장 단어)";
+            } else if(listFilterMode === 'onlyMemorized') {
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (암기 완료)";
+            }
+            updateFilterMenuUI();
+            closeFilterMenu();
+            renderListTable();
+        }
+
+        function toggleHideTerms() {
+            hideTerms = !hideTerms;
+            document.getElementById('hideTermBtn').classList.toggle('btn-active', hideTerms);
+            renderListTable();
+        }
+        
+        function toggleHideDefs() {
+            hideDefs = !hideDefs;
+            document.getElementById('hideDefBtn').classList.toggle('btn-active', hideDefs);
+            renderListTable();
+        }
+
+        function cycleFontSize() {
+            appState.fontSizeLevel = ((appState.fontSizeLevel || 0) + 1) % 2; 
+            saveData();
+            updateMoreMenuUI();
+            renderListTable();
+        }
+
+        function toggleSort() {
+            sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+            const ind = document.getElementById('sortIndicator');
+            if (ind) {
+                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-primary transition-colors' : 'fa-solid fa-caret-up text-primary transition-colors';
+            }
+            renderListTable();
+        }
+
+        function toggleFullscreenList() {
+            const el = document.getElementById('listSection');
+            const container = el.querySelector('#listContainer');
+            
+            const isNativeFs = document.fullscreenElement || document.webkitFullscreenElement;
+
+            if (!isNativeFs) {
+                if (el.requestFullscreen) {
+                    el.requestFullscreen();
+                } else if (el.webkitRequestFullscreen) {
+                    el.webkitRequestFullscreen();
+                }
+                el.classList.add('h-screen');
+                container.style.maxHeight = 'none';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                el.classList.remove('h-screen');
+                container.style.maxHeight = '500px';
+            }
+        }
+
+        // === 맞춤형 도움말 모달(팝업) 기능 ===
+        function openHelpModal(type) {
+            const modal = document.getElementById('helpModal');
+            const contentBox = document.getElementById('helpModalDynamicContent');
+            const titleBox = document.getElementById('helpModalTitle');
+
+            if (type === 'list') {
+                titleBox.innerHTML = '<i class="fa-solid fa-list text-primary"></i> 리스트 도움말';
+                contentBox.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-[13px]"></i></div>
+                            <div><strong class="text-primary">검색</strong><br><span class="text-text-dim text-[13px]">단어나 뜻의 일부만 입력해도 즉시 결과를 필터링합니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-font text-[13px]"></i></span></div>
+                            <div><strong class="text-primary">가리기 모드 (셀프 테스트)</strong><br><span class="text-text-dim text-[13px]">단어나 해설을 가리고 외웠는지 테스트합니다. 가려진 부분을 터치하면 일시적으로 보입니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-[13px]"></i></div>
+                            <div><strong class="text-primary">단어 필터링</strong><br><span class="text-text-dim text-[13px]">전체, 암기 제외, 저장된 단어, 암기 완료 단어만 모아서 볼 수 있습니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-[13px]"></i></div>
+                            <div><strong class="text-primary">알파벳 정렬</strong><br><span class="text-text-dim text-[13px]">표 상단의 'Term'을 클릭해 단어들을 알파벳 순서 또는 역순으로 정렬합니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-[13px]"></i></div>
+                            <div><strong class="text-primary">일괄 선택 (전체 체크/저장)</strong><br><span class="text-text-dim text-[13px]">리스트 표 상단의 체크(✔)나 책갈피(🔖) 아이콘을 누르면, 화면에 보이는 단어를 한 번에 일괄 처리합니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-[13px]">A</div>
+                            <div><strong class="text-primary">글자 크기 (더보기 ⋮)</strong><br><span class="text-text-dim text-[13px]">리스트의 글자 크기를 기본/크게 2단계로 조절합니다.</span></div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'flashcard') {
+                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-primary"></i> 플래시카드 도움말';
+                contentBox.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-hand-pointer text-[13px]"></i></div>
+                            <div><strong class="text-primary">스와이프(Swipe) 제스처</strong><br><span class="text-text-dim text-[13px]">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-[13px]"></i></div>
+                            <div><strong class="text-primary">카드 필터링</strong><br><span class="text-text-dim text-[13px]">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-primary text-[13px]"></i></div>
+                            <div><strong class="text-primary">자동 재생 모드</strong><br><span class="text-text-dim text-[13px]">자동으로 카드를 뒤집고 다음 카드로 넘겨주어, 터치 없이 편하게 단어를 훑어볼 수 있습니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-[13px]"></i></div>
+                            <div><strong class="text-primary">섞기 기능</strong><br><span class="text-text-dim text-[13px]">현재 필터링된 카드들의 순서를 무작위로 섞습니다. 랜덤 퀴즈처럼 활용하기 좋습니다.</span></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (modal && contentBox) {
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; 
+                modal.classList.remove('opacity-0');
+                document.getElementById('helpModalContent').classList.remove('scale-95');
+                document.getElementById('helpModalContent').classList.add('scale-100');
+            }
+        }
+
+        function closeHelpModal() {
+            const modal = document.getElementById('helpModal');
+            const content = document.getElementById('helpModalContent');
+            if (modal && content) {
+                modal.classList.add('opacity-0');
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        function renderListTable() {
+            const tbody = document.getElementById('wordListBody');
+            if(!tbody) return;
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            tbody.innerHTML = '';
+            
+            let filtered = getCurrentlyFilteredWords();
+
+            const fs = fontClasses[appState.fontSizeLevel || 0];
+
+            filtered.forEach((word, idx) => {
+                const isMemorized = appState.memorized[word.term];
+                const isSaved = appState.notebook.includes(word.term);
+                const tr = document.createElement('tr');
+                
+                if(isMemorized) tr.className = "bg-green-500/5";
+                else if(isSaved) tr.className = "bg-orange-500/5";
+                
+                const highlight = (text) => {
+                    if (!query || !text) return text;
+                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                    return text.replace(regex, '<span class="hl-text">$1</span>');
+                };
+
+                const termClass = hideTerms ? 'blur-target' : '';
+                const defClass = hideDefs ? 'blur-target' : '';
+
+                tr.innerHTML = `
+                    <td class="px-2 py-3 text-center text-text-dim text-[13px] font-sans mobile-hide num-col">${idx + 1}</td>
+                    <td class="px-2 py-3 text-center actions-col">
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
+                            <span class="text-[11px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
+                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="text-[20px] focus:outline-none transition-colors list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
+                                <i class="${isMemorized ? 'fa-solid fa-check' : 'fa-solid fa-check text-opacity-20'}"></i>
+                            </button>
+                            <div class="cursor-pointer text-[20px] list-action-bookmark transition-colors" onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')">
+                                <i class="${isSaved ? 'fa-solid fa-bookmark text-orange-400' : 'fa-regular fa-bookmark text-text-dim'}"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-3 py-3 align-top term-col-content">
+                        <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
+                        <div class="font-bold text-blue-400 font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
+                    </td>
+                    <td class="px-3 py-3 align-top def-col-content">
+                        <div class="text-text-def font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
+                        <div class="font-kor leading-snug break-words ${defClass} ${fs.koDef}">${highlight(word.koDef)}</div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        function toggleMemorized(term, setMemorized) {
+            if (setMemorized) appState.memorized[term] = true;
+            else delete appState.memorized[term];
+            saveData();
+            renderListTable();
         }
     </script>
 </body>
