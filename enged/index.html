@@ -380,58 +380,71 @@
 
         .fc-btn-auto.is-active { color: var(--sub-accent) !important; background-color: var(--sub-accent-bg) !important; }
 
-        /* 인쇄 (Print) 전용: 동적 생성 테이블만 표시되도록 철저히 차단 */
+        /* 인쇄 (Print) 강제 라이트 모드 설정 및 완벽 최적화 */
         @media print {
-            @page { margin: 10mm; size: auto; }
-            body, html { background: white !important; font-family: 'Google Sans Flex', 'Pretendard', sans-serif !important; -webkit-text-size-adjust: none !important; text-size-adjust: none !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            @page { margin: 1cm; size: A4 portrait; }
             
             /* 기존 앱 화면의 모든 요소를 강제 숨김 */
-            .scroll-mask, .blobs, header, main, footer, #helpModal, #settingsModal, #glow-left, #glow-right { display: none !important; }
+            body > *:not(#print-area) { display: none !important; }
             
-            /* 자바스크립트로 생성한 프린트 전용 영역만 표시 */
-            #print-area { display: block !important; width: 100%; max-width: 100%; background: white; color: black; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            /* 자바스크립트로 생성한 프린트 전용 영역만 노출 */
+            #print-area { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
             
-            /* 제목 스타일링 */
-            #print-area h2.print-title { text-align: center; font-size: 20px; margin-bottom: 20px; color: #000; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 10px; display: block; font-family: 'Google Sans Flex', 'Pretendard', sans-serif; }
-            #print-area .print-logo { font-family: 'Cal Sans', sans-serif !important; font-weight: 600 !important; font-style: italic !important; letter-spacing: -0.025em; }
-            #print-area .print-highlight { color: #fbbf24 !important; }
-            
-            /* iOS 확대 방지를 위해 table-layout: auto 및 절대 픽셀(px) 단위 적용 */
-            #print-area table { width: 100%; border-collapse: collapse; table-layout: auto; }
-            
-            /* iOS Safari의 페이지 잘림(Page Break) 방지 속성 총동원 */
-            #print-area tr { page-break-inside: avoid !important; break-inside: avoid !important; -webkit-page-break-inside: avoid !important; -webkit-column-break-inside: avoid !important; }
-            #print-area th, #print-area td { border: 1px solid #cbd5e1 !important; padding: 12px 10px !important; text-align: left; vertical-align: top; color: #000 !important; background: transparent !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-page-break-inside: avoid !important; -webkit-column-break-inside: avoid !important; }
-            
-            #print-area th { background-color: #f8fafc !important; border-bottom: 2px solid #94a3b8 !important; font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #334155 !important; }
-            
-            /* 열 너비 지정 */
-            #print-area .print-num { width: 5%; text-align: center; color: #64748b !important; font-size: 12px; }
-            #print-area .print-term { width: 35%; }
-            #print-area .print-def { width: 60%; }
-            
-            /* 절대 픽셀(px) 단위로 강제 지정하여 브라우저의 임의 비율 조정 차단 */
-            #print-area .en-term { font-weight: 700; font-size: 15px; color: #000 !important; display: block; margin-bottom: 4px; word-break: break-word; }
-            #print-area .ko-term { color: #475569 !important; font-size: 13px; font-weight: 500; display: block; word-break: break-word; }
-            
-            #print-area .en-def { font-weight: 600; font-size: 14px; color: #1e293b !important; display: block; margin-bottom: 4px; line-height: 1.4; word-break: break-word; }
-            #print-area .ko-def { color: #475569 !important; font-size: 13px; font-weight: 400; display: block; line-height: 1.4; word-break: break-word; }
-            
-            /* 워터마크 스타일 - vh/vw를 이용해 페이지 중심 고정 */
-            .print-watermark {
-                position: fixed;
-                top: 50vh;
-                left: 50vw;
-                transform: translate(-50%, -50%) rotate(-35deg);
-                font-size: 14px !important;
-                font-family: 'Google Sans Flex', 'Pretendard', sans-serif !important;
-                font-weight: 400;
-                color: #d1d5db !important; /* solid light gray */
-                z-index: -1;
-                pointer-events: none;
-                white-space: nowrap;
-                text-align: center;
+            html, body {
+                background: white !important;
+                -webkit-text-size-adjust: 100% !important;
+                text-size-adjust: 100% !important;
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
+
+            /* 워터마크 (고정 위치로 매 페이지 중앙 표출) */
+            .print-watermark {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) rotate(-35deg) !important;
+                font-size: 11pt !important;
+                font-family: 'Google Sans Flex', 'Pretendard', sans-serif !important;
+                color: #d1d5db !important;
+                z-index: -1 !important;
+                pointer-events: none !important;
+            }
+
+            /* 표 및 레이아웃 (iOS 폰트 뻥튀기 및 잘림 방지) */
+            #print-area table { display: table !important; width: 100% !important; table-layout: fixed !important; border-collapse: collapse !important; }
+            #print-area thead { display: table-header-group !important; }
+            #print-area tbody { display: table-row-group !important; }
+            #print-area tr { display: table-row !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-column-break-inside: avoid !important; }
+            #print-area th, #print-area td { 
+                display: table-cell !important; 
+                border: 1px solid #cbd5e1 !important; 
+                padding: 8pt !important; 
+                word-wrap: break-word !important; 
+                vertical-align: top !important;
+                page-break-inside: avoid !important; 
+                break-inside: avoid !important;
+            }
+
+            /* 폰트 및 디자인 - pt 단위 사용 (iOS 대응) */
+            #print-area h2.print-title { text-align: center !important; font-size: 16pt !important; border-bottom: 2pt solid #000 !important; padding-bottom: 10pt !important; margin-bottom: 15pt !important; font-weight: 700 !important; color: #000 !important; display: block !important; font-family: 'Google Sans Flex', 'Pretendard', sans-serif !important; }
+            .print-logo { font-family: 'Cal Sans', sans-serif !important; font-style: italic !important; }
+            .print-highlight { color: #fbbf24 !important; }
+
+            #print-area th { background-color: #f8fafc !important; border-bottom: 2pt solid #94a3b8 !important; font-size: 10pt !important; color: #334155 !important; font-weight: bold !important; text-transform: uppercase !important; }
+            
+            .print-num { width: 6% !important; text-align: center !important; color: #64748b !important; font-size: 9pt !important; }
+            .print-term { width: 34% !important; }
+            .print-def { width: 60% !important; }
+
+            .en-term { display: block !important; font-weight: 700 !important; font-size: 11pt !important; color: #000 !important; margin-bottom: 3pt !important; }
+            .ko-term { display: block !important; font-weight: 500 !important; font-size: 10pt !important; color: #475569 !important; }
+            .en-def { display: block !important; font-weight: 600 !important; font-size: 10.5pt !important; color: #1e293b !important; margin-bottom: 3pt !important; line-height: 1.4 !important; }
+            .ko-def { display: block !important; font-weight: 400 !important; font-size: 10pt !important; color: #475569 !important; line-height: 1.4 !important; }
         }
 
         /* Mobile Tweaks */
@@ -1094,14 +1107,10 @@
 
             // 인쇄용 HTML 구조 재설계 (영어/한국어 분리 및 클래스 기반 렌더링)
             let html = `
+                <div class="print-watermark">${watermarkText}</div>
                 <h2 class="print-title"><span class="print-logo">Enged<span class="print-highlight">.</span></span> Vocabulary List</h2>
                 <table>
                     <thead>
-                        <tr style="height: 0; border: none !important;">
-                            <th colspan="3" style="height: 0; border: none !important; padding: 0 !important; overflow: visible;">
-                                <div class="print-watermark">${watermarkText}</div>
-                            </th>
-                        </tr>
                         <tr>
                             <th class="print-num">#</th>
                             <th class="print-term">TERM</th>
@@ -1133,7 +1142,6 @@
             window.print();
         }
         // ==========================
-
 
         function setFontSize(level) {
             appState.fontSizeLevel = level;
