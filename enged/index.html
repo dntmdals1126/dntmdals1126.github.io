@@ -234,17 +234,13 @@
         .flashcard-container:active { cursor: grabbing; }
         .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         
+        /* 튕김 버그 완전 방지를 위한 절대(Absolute) 기반 레이아웃 */
         .flashcard-face { 
             position: absolute; width: 100%; height: 100%; 
             -webkit-backface-visibility: hidden; backface-visibility: hidden; 
             transform: translate3d(0,0,1px); -webkit-transform: translate3d(0,0,1px);
             border-radius: 24px; 
-            display: flex; flex-direction: column; 
-            padding: 20px 16px; 
             overflow: hidden; 
-        }
-        @media (min-width: 640px) {
-            .flashcard-face { padding: 24px 20px; }
         }
         
         .flashcard-face.back { 
@@ -265,28 +261,32 @@
             background-color: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
+            /* 3D 렌더링 최적화 */
+            transform: translateZ(0); -webkit-transform: translateZ(0);
         }
         html[data-theme="light"] .fc-scroll-box { 
             background-color: rgba(0, 0, 0, 0.02); 
             border-color: rgba(0, 0, 0, 0.06); 
         }
 
-        /* 여백을 안쪽 요소에 부여하여 스크롤 맨 아래에 도착했을 때도 하단 여백 보장 */
+        /* 여백을 안쪽 요소에 부여하여 스크롤 하단 여백 보장 */
         .fc-inner-content {
             width: 100%; display: flex; flex-direction: column;
-            padding: 24px; /* 스크롤 되어도 상하 여백 안전하게 유지 */
+            padding: 24px; min-height: 100%;
         }
         
         .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; justify-content: flex-start; min-height: 100%;
+            align-items: flex-start; text-align: left; justify-content: flex-start;
         }
-        /* Grid를 사용하여 모바일 튕김 현상 원천 차단 */
         .flashcard-face.back .fc-inner-content { 
-            display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%;
+            align-items: center; text-align: center; justify-content: center; 
         }
 
-        /* 주관식 입력창 placeholder 커스텀 (얇고 부드럽게) */
-        #quiz-spelling-input::placeholder { font-weight: 300; font-size: 17px; opacity: 0.6; letter-spacing: -0.02em; }
+        .fc-scroll-box::-webkit-scrollbar { width: 4px; }
+        .fc-scroll-box::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 2px; }
+
+        /* 주관식 입력창 placeholder 커스텀 */
+        #quiz-spelling-input::placeholder { font-weight: 300; font-size: 18px; opacity: 0.5; letter-spacing: -0.02em; }
 
         /* Progress & Stats */
         .progress-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
@@ -708,46 +708,48 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 (비율 및 높이 확장) -->
-            <!-- 튕김 버그 완전 방지를 위해 absolute 제거 및 Grid 레이아웃 재설계 -->
+            <!-- 카드 영역 디자인 개선 (튕김 버그 완전 방지를 위한 Absolute 구조로 변경) -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
-                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)] flex flex-col p-5 sm:p-6 relative">
-                        <div class="shrink-0 mb-3 flex items-center gap-2 w-full justify-start">
+                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)]">
+                        <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
                             <span class="px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[10px] font-bold text-text-dim tracking-wider uppercase">Definition</span>
                             <div id="fc-front-badges" class="flex items-center gap-1.5"></div>
                         </div>
                         
-                        <div class="fc-scroll-box flex-1 w-full" onclick="event.stopPropagation()">
-                            <div class="fc-inner-content w-full h-full">
-                                <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
-                                <!-- 가로 구분선 (잘림 방지) -->
-                                <div class="w-16 h-[2px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
-                                <p id="fc-front-ko" class="text-text-dim text-[14.5px] font-kor font-medium text-left w-full"></p>
+                        <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
+                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
+                                <div class="fc-inner-content">
+                                    <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
+                                    <div class="w-16 h-[2px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
+                                    <p id="fc-front-ko" class="text-text-dim text-[14.5px] font-kor font-medium text-left w-full"></p>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="shrink-0 mt-4 text-text-dim/60 text-xs flex items-center justify-center gap-2 animate-pulse font-sans w-full">
+                        <div class="absolute bottom-4 left-0 right-0 text-text-dim/60 text-xs flex items-center justify-center gap-2 animate-pulse font-sans">
                             <i class="fa-solid fa-rotate"></i> <span>탭하여 단어 확인</span>
                         </div>
                     </div>
                     <!-- Back (Term) -->
-                    <!-- 옅은 푸른빛 테마로 개선 & 외곽선 자연스럽게 -->
-                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/10 to-indigo-500/5 backdrop-blur-xl shadow-xl border border-blue-500/30 flex flex-col p-5 sm:p-6 relative">
-                        <div class="shrink-0 mb-3 flex items-center gap-2 w-full justify-start">
-                            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-[10px] font-bold text-blue-500 tracking-wider uppercase">Term</span>
+                    <!-- 옅은 푸른빛 테마 복구 & 외곽선 자연스럽게 -->
+                    <div class="flashcard-face back bg-gradient-to-br from-blue-500/10 to-indigo-500/5 backdrop-blur-xl shadow-xl border border-blue-500/20">
+                        <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-[10px] font-bold text-primary tracking-wider uppercase">Term</span>
                             <div id="fc-back-badges" class="flex items-center gap-1.5"></div>
                         </div>
                         
-                        <div class="fc-scroll-box flex-1 w-full" onclick="event.stopPropagation()">
-                            <div class="fc-inner-content w-full h-full">
-                                <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
-                                <p id="fc-back-koterm" class="text-primary text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
+                        <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
+                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
+                                <div class="fc-inner-content justify-center min-h-full">
+                                    <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
+                                    <p id="fc-back-koterm" class="text-primary text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="shrink-0 mt-4 text-primary/50 text-xs flex items-center justify-center gap-2 animate-pulse font-sans w-full">
+                        <div class="absolute bottom-4 left-0 right-0 text-primary/50 text-xs flex items-center justify-center gap-2 animate-pulse font-sans">
                             <i class="fa-solid fa-rotate"></i> <span>탭하여 뜻 확인</span>
                         </div>
                     </div>
@@ -824,15 +826,15 @@
                         <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-primary/70 hover:text-primary font-bold px-2 py-1 rounded-md bg-primary/10 transition flex items-center gap-1.5">
                             <i class="fa-regular fa-lightbulb"></i> 힌트
                         </button>
-                        <!-- 힌트 텍스트 박스 -->
+                        <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
                         <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-primary"></div>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 디자인 개선 (글씨 얇게, 글로우 효과 세련되게) -->
+                    <!-- 주관식 스펠링 컨테이너 디자인 개선 (글로우 제거 및 테두리만 강조) -->
                     <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
-                        <div class="relative w-full shadow-md rounded-xl">
+                        <div class="relative w-full shadow-sm rounded-2xl">
                             <!-- 영어만 입력되도록 oninput 정규식 유지 -->
-                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary focus:ring-4 focus:ring-primary/20 shadow-sm transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/40 focus:bg-[var(--glass-highlight)] transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
                                 <i class="fa-solid fa-check"></i>
                             </button>
@@ -2155,8 +2157,12 @@
                 contentBox.innerHTML = `
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
+                            <div><strong class="text-primary">단어 검색</strong><br><span class="text-text-dim text-sm">단어나 뜻, 혹은 (DST)와 같은 약어를 입력해 원하는 단어를 빠르게 찾습니다.</span></div>
+                        </div>
+                        <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-primary">가리기 모드 (셀프 테스트)</strong><br><span class="text-text-dim text-sm">목록 상단의 단어(A) 또는 해설(줄바꿈) 아이콘을 눌러 목록을 가린 뒤 자가 학습을 진행하세요. 가려진 영역을 터치하면 일시적으로 내용이 표시됩니다.</span></div>
+                            <div><strong class="text-primary">가리기 모드 (셀프 테스트)</strong><br><span class="text-text-dim text-sm">상단의 단어(A) 또는 해설(줄바꿈) 아이콘을 눌러 목록을 가린 뒤 자가 학습을 진행하세요. 가려진 영역을 터치하면 일시적으로 내용이 표시됩니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
@@ -2171,8 +2177,8 @@
                             <div><strong class="text-primary">일괄 처리 (암기/저장)</strong><br><span class="text-text-dim text-sm">표 상단의 체크(✔) 또는 책갈피(🔖) 아이콘을 눌러, 현재 화면에 표시된 단어들을 일괄 적용하거나 해제합니다.</span></div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-ellipsis-vertical text-sm"></i></div>
-                            <div><strong class="text-primary">부가 기능 (크기/인쇄)</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기를 3단계로 변경하거나 전체화면, 인쇄 기능을 활용할 수 있습니다.</span></div>
+                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
+                            <div><strong class="text-primary">글자 크기 & 부가 기능</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기를 3단계로 변경하거나 전체화면, 인쇄 기능을 활용할 수 있습니다.</span></div>
                         </div>
                     </div>
                 `;
