@@ -509,6 +509,75 @@
             /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
         }
+        
+        /* PC styles for columns */
+        @media (min-width: 481px) {
+            .pc-hide { display: none !important; }
+
+            #listContainer th:nth-child(2), #listContainer td.actions-col { width: 70px !important; }
+            #listContainer th:nth-child(3), #listContainer td.term-col-content { width: 25% !important; }
+
+            #listContainer th, #listContainer td { position: relative; }
+            #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
+            #listContainer th:nth-child(2)::after, #listContainer td:nth-child(2)::after,
+            #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after {
+                content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background-color: var(--glass-border);
+            }
+            #listContainer td.actions-col .flex { flex-direction: row; gap: 12px; justify-content: center; }
+        }
+        
+        /* 인쇄 (Print) 강제 라이트 모드 설정 및 완벽 최적화 (가장 하단에 위치하여 모바일/PC 설정 모두 확실히 덮어씀) */
+        @media print {
+            :root {
+                --bg-dark: #ffffff !important; 
+                --glass-surface: #ffffff !important; 
+                --glass-border: #cbd5e1 !important; 
+                --text-main: #000000 !important;
+                --text-sub: #333333 !important; 
+                --text-dim: #555555 !important; 
+                --text-def: #000000 !important; 
+                --sub-accent: #000000 !important;
+            }
+            @page { margin: 1.5cm; size: auto; }
+            html, body { height: auto !important; overflow: visible !important; background: #ffffff !important; color: #000000 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
+            
+            header, footer, .header-tools, .chip-nav, .scroll-mask, .blobs, #moreBtn, #moreMenu, #filterMenu, #filterBtn, #hideTermBtn, #hideDefBtn, #searchInput, .fa-search, #clearSearchBtn, .no-print, #view-flashcard, #view-quiz, #view-notebook, #view-dashboard > section:first-child, #loadingState, #helpModal, #settingsModal { display: none !important; }
+            
+            main { padding: 0 !important; margin: 0 !important; max-width: none !important; overflow: visible !important; background: transparent !important; }
+            #view-dashboard { display: block !important; }
+            #listSection { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+            #listContainer { height: auto !important; max-height: none !important; overflow: visible !important; border: none !important; }
+            
+            /* 가짜 구분선 및 모바일용 요소 완전 제거 */
+            #listContainer th::after, #listContainer td::after, #listContainer tr::before, #listContainer thead tr::before { display: none !important; content: none !important; }
+            
+            /* 테이블 인쇄 시 강제 데스크탑 출력 세팅 (모바일뷰 완벽 오버라이드) */
+            #listContainer table { width: 100% !important; display: table !important; border-collapse: collapse !important; color: #000000 !important; border: none !important; margin-bottom: 20px !important; }
+            #listContainer thead { display: table-header-group !important; }
+            #listContainer tbody { display: table-row-group !important; }
+            #listContainer tr { display: table-row !important; border: none !important; background-color: #ffffff !important; page-break-inside: avoid !important; }
+            #listContainer thead tr { background-color: #ffffff !important; border-bottom: 2px solid #94a3b8 !important; padding: 0 !important; }
+            
+            #listContainer th { position: static !important; border-bottom: 2px solid #94a3b8 !important; font-weight: bold !important; padding: 12px 10px !important; color: #000000 !important; background-color: #ffffff !important; text-align: left !important; display: table-cell !important; }
+            #listContainer td { border-bottom: 1px solid #e2e8f0 !important; padding: 12px 10px !important; color: #000000 !important; display: table-cell !important; background-color: #ffffff !important; text-align: left !important; vertical-align: top !important; }
+            
+            /* 다크모드 텍스트 색상 강제 지정 */
+            .text-text-main, .text-text-def, .text-text-sub, .text-text-dim, .text-sub-accent, .font-bold { color: #000000 !important; }
+            #listContainer div, #listContainer span, #listContainer p { color: #000000 !important; }
+            
+            /* Definition 컬럼 보이도록 강제 (.mobile-hide 속성 무효화) */
+            th.num-col, td.num-col { display: table-cell !important; width: 40px !important; text-align: center !important; }
+            th.def-col, td.def-col-content { display: table-cell !important; }
+            
+            /* 액션 컬럼 완전히 숨기기 */
+            th.action-col, td.actions-col, .list-action-check, .list-action-bookmark { display: none !important; width: 0 !important; height: 0 !important; padding: 0 !important; border: none !important; opacity: 0 !important; overflow: hidden !important; }
+
+            .hl-text { background: transparent !important; color: #000 !important; font-weight: bold !important; text-decoration: underline !important; }
+            
+            /* 모바일 전용 여백 리셋 */
+            #listContainer td.term-col-content, #listContainer td.def-col-content { margin: 0 !important; }
+        }
     </style>
 </head>
 <body>
@@ -706,7 +775,7 @@
                         <thead class="text-xs uppercase text-text-dim font-bold shadow-sm">
                             <tr>
                                 <th class="px-2 py-3 text-center w-12 mobile-hide num-col">#</th>
-                                <th class="px-2 py-3 text-center w-[70px]">
+                                <th class="px-2 py-3 text-center w-[70px] action-col">
                                     <div class="flex flex-row justify-center items-center gap-3 sm:gap-4">
                                         <i class="fa-solid fa-check cursor-pointer transition-colors list-action-check hover:text-green-500" title="현재 목록 전체 암기/해제" onclick="toggleAllVisibleMemorized()"></i>
                                         <i class="fa-solid fa-bookmark cursor-pointer transition-colors list-action-bookmark hover:text-orange-400" title="현재 목록 전체 저장/해제" onclick="toggleAllVisibleNotebook()"></i>
