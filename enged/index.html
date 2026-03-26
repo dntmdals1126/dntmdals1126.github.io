@@ -1010,7 +1010,7 @@
                     <i class="fa-solid fa-cloud text-primary"></i> 기기 간 동기화
                 </div>
                 
-                <p class="text-[10px] text-text-dim mb-3 break-keep">회원가입 없이 익명으로 6자리 코드를 통해 여러 기기(PC, 태블릿)와 학습 데이터를 안전하게 공유합니다.</p>
+                <p class="text-[10px] text-text-dim mb-3 break-keep">회원가입 없이 6자리 코드를 통해 여러 기기(PC, 태블릿)와 학습 데이터를 안전하게 공유합니다.</p>
                 
                 <div class="flex items-center justify-between bg-[var(--glass-highlight)] px-3 py-2 rounded-lg border border-[var(--glass-border)] mb-3">
                     <span class="text-xs text-text-main font-semibold">내 코드: <span id="current-sync-code" class="text-primary font-bold tracking-widest ml-1">없음</span></span>
@@ -1128,16 +1128,19 @@
             }
         }
 
-        // --- 📊 동기화 횟수 제한 시스템 (150회 / 500회) ---
+        // --- 📊 동기화 횟수 제한 시스템 (클라우드 상태 기반 공유) ---
         function getSyncUsage() {
-            let usage = JSON.parse(localStorage.getItem('engedSyncUsage') || '{"date":"","count":0,"premiumExpiry":0}');
+            const state = window.getAppState();
+            let usage = state.syncUsage || { date: "", count: 0, premiumExpiry: 0 };
             const today = new Date().toISOString().split('T')[0];
+            
+            // 날짜가 바뀌면 횟수만 0으로 초기화 (프리미엄 상태는 유지)
             if (usage.date !== today) {
                 usage.date = today;
                 usage.count = 0;
             }
             
-            // 기존 VIP 사용자 마이그레이션 (오늘부터 30일 부여)
+            // 기존 구버전 VIP 기록 마이그레이션 호환 처리
             if (usage.isVIP !== undefined) {
                 if (usage.isVIP === true) {
                     usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
@@ -1146,22 +1149,18 @@
                 delete usage.vipExpiry;
             }
             
-            // 만료 기한 지났는지 체크 (지났으면 0으로 초기화)
+            // 만료일이 지났다면 혜택 소멸
             if (usage.premiumExpiry && Date.now() > usage.premiumExpiry) {
                 usage.premiumExpiry = 0;
             }
             
-            // 나머지 로직들이 정상 작동하도록 임시 프로퍼티 계산
+            // 실시간 프리미엄 여부 계산
             usage.isPremium = (usage.premiumExpiry > Date.now());
             
+            state.syncUsage = usage;
             return usage;
         }
         
-        function saveSyncUsage(usage) {
-            localStorage.setItem('engedSyncUsage', JSON.stringify(usage));
-            window.updateSyncCodeUI();
-        }
-
         window.verifyAccessCode = async () => {
             const code = prompt("Access Code를 입력하세요:");
             if(!code) return;
@@ -1180,22 +1179,48 @@
                     // 30일 후 만료 타임스탬프 저장 (밀리초 단위)
                     usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
                     usage.isPremium = true;
-                    saveSyncUsage(usage);
-                    alert("인증 완료! 등록일로부터 30일간 일일 500회 동기화가 가능합니다.");
+                    
+                    const state = window.getAppState();
+                    state.syncUsage = usage;
+                    window.updateLocalState(state, true);
+                    
+                    // Access Code 혜택을 다른 기기와 즉시 공유하기 위해 클라우드에 Push
+                    if (state.syncCode) {
+                        state.lastModified = Date.now();
+                        await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                            appState: state,
+                            lastUpdated: new Date().toISOString()
+                        }, { merge: true });
+                    }
+                    window.updateSyncCodeUI();
+                    alert("인증 완료! 등록일로부터 30일간 한도가 일일 500회로 증가합니다.");
                 } else {
-                    alert("서버에 등록되지 않은 보안 코드입니다.");
+                    alert("서버에 등록되지 않은 접근 코드입니다.");
                 }
             } catch(e) {
                 alert("코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.");
             }
         }
         
-        window.removeAccessCode = () => {
-            if(confirm("입력된 Access Code 혜택을 삭제하시겠습니까?\n한도가 기본 150회로 즉시 복구됩니다.")) {
+        window.removeAccessCode = async () => {
+            if(confirm("입력된 Access Code 혜택을 삭제하시겠습니까?\n모든 연결된 기기의 한도가 150회로 즉시 복구됩니다.")) {
                 const usage = getSyncUsage();
                 usage.premiumExpiry = 0;
                 usage.isPremium = false;
-                saveSyncUsage(usage);
+                
+                const state = window.getAppState();
+                state.syncUsage = usage;
+                window.updateLocalState(state, true);
+                
+                // 혜택 해제 내역을 클라우드에도 즉시 공유
+                if (state.syncCode) {
+                    state.lastModified = Date.now();
+                    await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                        appState: state,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                }
+                window.updateSyncCodeUI();
                 alert("삭제되었습니다.");
             }
         }
@@ -1237,7 +1262,6 @@
             if(usageText) {
                 const usage = getSyncUsage();
                 if(usage.isPremium) {
-                    // 남은 만료일 계산
                     const diffDays = Math.ceil((usage.premiumExpiry - Date.now()) / (1000 * 60 * 60 * 24));
                     usageText.innerHTML = `${usage.count} / 500회 <span class="text-highlight text-[9px] ml-1">(D-${diffDays})</span>`;
                     if(accessCodeBtn) accessCodeBtn.classList.add('hidden');
@@ -1315,12 +1339,13 @@
                     const cloudMod = cloudState.lastModified || 0;
                     const localMod = localState.lastModified || 0;
 
-                    // 클라우드 데이터가 내 폰보다 최신일 때만 덮어쓰기 (해제 내역 보존)
+                    // 클라우드 데이터가 내 폰보다 최신일 때만 덮어쓰기
                     if (cloudMod > localMod) {
                         cloudState.syncCode = code; 
                         cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
                         
                         window.updateLocalState(cloudState, true);
+                        window.updateSyncCodeUI(); // 사용량 UI도 같이 갱신
                         window.setDirty(false);
                         
                         if (snap.data().lastUpdated) {
@@ -1347,12 +1372,15 @@
             
             const code = Math.random().toString(36).substring(2, 8).toUpperCase();
             state.syncCode = code;
+            
+            // 새 코드를 팠을 때 사용량도 1회 선차감 후 기록
+            usage.count++;
+            state.syncUsage = usage;
             state.lastModified = Date.now(); 
             
             window.updateLocalState(state, true);
             window.updateSyncCodeUI();
             
-            // 최초 기록이 없는 경우에도 연결이 원활하도록 강제 업로드 보장
             try {
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
                 await setDoc(docRef, {
@@ -1360,10 +1388,6 @@
                     lastUpdated: new Date().toISOString()
                 });
                 window.setDirty(false);
-                
-                usage.count++;
-                saveSyncUsage(usage);
-                
             } catch(e) {
                 console.error("Initial sync creation failed", e);
             }
@@ -1389,7 +1413,6 @@
                     cloudState.syncCode = codeInput; 
                     cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
                     
-                    // 가장 최신의 클라우드 데이터로 완전히 덮어씌움 (단어 삭제/해제 기록 유지)
                     window.updateLocalState(cloudState, true);
                     window.updateSyncCodeUI();
                     window.setDirty(false);
@@ -1414,7 +1437,6 @@
             if(!currentUser || !state.syncCode) return;
             if(manualSyncCooldown && !isBackground) return;
 
-            // 제한 횟수 체크 (Push 할 때만 제한을 깎습니다)
             const usage = getSyncUsage();
             const limit = usage.isPremium ? 500 : 150;
             if (isDirty && usage.count >= limit) {
@@ -1436,8 +1458,14 @@
             }
 
             try {
-                // 이 기기에서 변경한 내역이 있다면 업로드 (Push)
                 if (isDirty || !isBackground) {
+                    // 서버로 보내기 전에 내 폰에서 변경한 게 있으면 카운트를 1 깎아서 클라우드 데이터에 합체시킵니다.
+                    let wasDirty = isDirty;
+                    if (wasDirty) {
+                        usage.count++;
+                        state.syncUsage = usage;
+                    }
+                    
                     state.lastModified = Date.now(); 
                     const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
                     await setDoc(docRef, {
@@ -1446,12 +1474,7 @@
                     }, { merge: true });
                     
                     window.setDirty(false);
-                    
-                    // 사용량 1 증가 (실제 업로드 시에만)
-                    if (isDirty) {
-                        usage.count++;
-                        saveSyncUsage(usage);
-                    }
+                    if (wasDirty) window.updateSyncCodeUI(); // UI에 횟수 바로 갱신
                     
                     updateSyncUI(isBackground ? "자동 동기화 완료" : "업로드 완료");
                 }
@@ -1491,15 +1514,16 @@
             const usage = getSyncUsage();
             const limit = usage.isPremium ? 500 : 150;
             if (document.visibilityState === 'hidden' && isDirty && currentUser && state.syncCode) {
-                if(usage.count >= limit) return; // 한도 초과 시 종료 백업도 방어
+                if(usage.count >= limit) return; 
                 
+                usage.count++;
+                state.syncUsage = usage;
                 state.lastModified = Date.now();
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
                 try {
                     await setDoc(docRef, { appState: state, lastUpdated: new Date().toISOString() }, { merge: true });
                     window.setDirty(false);
-                    usage.count++;
-                    saveSyncUsage(usage);
+                    window.updateSyncCodeUI();
                 } catch(e) {}
             }
         });
@@ -2030,6 +2054,15 @@
                     if (parsed.autoSyncEnabled === undefined) parsed.autoSyncEnabled = false;
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
+            }
+            
+            // 로컬 스토리지에 남아있던 구버전 사용량 기록을 클라우드 동기화용(appState)으로 완전 이전
+            const oldUsageStr = localStorage.getItem('engedSyncUsage');
+            if (oldUsageStr && !appState.syncUsage) {
+                try {
+                    appState.syncUsage = JSON.parse(oldUsageStr);
+                } catch(e) {}
+                localStorage.removeItem('engedSyncUsage'); 
             }
         }
 
