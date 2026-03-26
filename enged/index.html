@@ -528,8 +528,8 @@
                 <span id="dday-text"></span>
             </div>
             
-            <!-- 수동 동기화 버튼 (코드가 발급/연결되었을 때만 표시됨) -->
-            <!-- 변경사항이 있을 때만 JS를 통해 text-highlight(노란색)로 클래스가 변경됩니다 -->
+            <!-- 수동 동기화 버튼 (코드가 연결/발급되었을 때만 표시) -->
+            <!-- 기본은 흰색(text-text-main), 변경사항이 있으면 노란색(text-highlight)으로 변합니다 -->
             <button class="tool-btn hidden transition-colors text-text-main hover:text-text-main/80" id="headerSyncBtn" onclick="manualCloudSync()" title="수동 동기화">
                 <i class="fa-solid fa-rotate"></i>
             </button>
@@ -1025,13 +1025,13 @@
                     <button onclick="connectSyncCode()" class="btn btn-pri h-9 px-3 text-[11px] font-bold shrink-0 !rounded-md">연결하기</button>
                 </div>
 
-                <!-- 3분 자동 동기화 토글 영역 추가 -->
+                <!-- 2분 자동 동기화 토글 영역 -->
                 <div class="flex items-center justify-between mt-4 px-1 border-t border-[var(--glass-border)] pt-3">
                     <div>
                         <span class="text-[12px] font-medium text-text-main flex items-center gap-1.5">
-                            <i class="fa-solid fa-clock-rotate-left"></i> 3분 자동 동기화
+                            <i class="fa-solid fa-clock-rotate-left"></i> 2분 자동 동기화
                         </span>
-                        <p class="text-[10px] text-text-dim mt-0.5">켜면 3분마다 변경사항을 백업합니다.</p>
+                        <p class="text-[10px] text-text-dim mt-0.5">변경사항이 생기면 2분마다 백업합니다.</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer shrink-0">
                         <input type="checkbox" id="setting-auto-sync" class="sr-only peer" onchange="toggleAutoSyncSetting(this)">
@@ -1039,7 +1039,15 @@
                     </label>
                 </div>
 
-                <div class="flex justify-between items-center mt-3 px-1">
+                <!-- 동기화 횟수 현황 & VIP 입력 -->
+                <div class="flex justify-between items-center mt-3 px-1 mb-1">
+                    <span class="text-[10px] text-text-dim font-medium flex items-center gap-1">
+                        사용량: <span id="sync-usage-text" class="text-text-main font-bold ml-0.5">0 / 150회</span>
+                    </span>
+                    <button onclick="verifyVIP()" class="text-[10px] text-sub-accent underline hover:text-primary transition-colors">무제한 코드 입력</button>
+                </div>
+
+                <div class="flex justify-between items-center mt-1 px-1">
                     <span class="text-[10px] text-text-dim font-medium flex items-center gap-1.5">
                         <i class="fa-solid fa-cloud-arrow-up"></i> <span class="sync-time-display">마지막 동기화: 없음</span>
                     </span>
@@ -1115,6 +1123,49 @@
             }
         }
 
+        // --- 📊 동기화 횟수 제한 시스템 (150회 / VIP) ---
+        function getSyncUsage() {
+            let usage = JSON.parse(localStorage.getItem('engedSyncUsage') || '{"date":"","count":0,"isVIP":false}');
+            const today = new Date().toISOString().split('T')[0];
+            if (usage.date !== today) {
+                usage.date = today;
+                usage.count = 0;
+            }
+            return usage;
+        }
+        
+        function saveSyncUsage(usage) {
+            localStorage.setItem('engedSyncUsage', JSON.stringify(usage));
+            window.updateSyncCodeUI();
+        }
+
+        window.verifyVIP = async () => {
+            const code = prompt("무제한 Access Code를 입력하세요:");
+            if(!code) return;
+            
+            // 1차 프론트엔드 방어 (입력값 Base64 암호화 후 대조 -> F12에서 원본 글자 유출 방지)
+            if(btoa(code) !== "ZG50bWRhbHM=") {
+                return alert("유효하지 않은 코드입니다.");
+            }
+            
+            // 2차 백엔드(Firebase) 방어 (서버에 해당 문서가 존재하는지 이중 검증)
+            try {
+                const docRef = doc(db, "access_codes", code);
+                const snap = await getDoc(docRef);
+                if(snap.exists()) {
+                    const usage = getSyncUsage();
+                    usage.isVIP = true;
+                    saveSyncUsage(usage);
+                    alert("VIP 인증 완료! 이제 무제한 동기화가 가능합니다.");
+                } else {
+                    alert("서버에 등록되지 않은 보안 코드입니다.");
+                }
+            } catch(e) {
+                alert("코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.");
+            }
+        }
+        // ------------------------------------------------
+
         window.setDirty = (state) => {
             isDirty = state;
             const headerBtn = document.querySelector('#headerSyncBtn');
@@ -1134,6 +1185,7 @@
             const codeSpan = document.getElementById('current-sync-code');
             const headerBtn = document.getElementById('headerSyncBtn');
             const disconnectBtn = document.getElementById('btn-disconnect-sync');
+            const usageText = document.getElementById('sync-usage-text');
             
             if(codeSpan) codeSpan.innerText = state.syncCode || '없음';
             if(headerBtn) {
@@ -1144,9 +1196,15 @@
                 if(state.syncCode) disconnectBtn.classList.remove('hidden');
                 else disconnectBtn.classList.add('hidden');
             }
+            
+            if(usageText) {
+                const usage = getSyncUsage();
+                if(usage.isVIP) usageText.innerHTML = '<span class="text-highlight">VIP 무제한</span>';
+                else usageText.innerText = `${usage.count} / 150회`;
+            }
         };
 
-        // 3분 자동 동기화 타이머 설정
+        // 2분 자동 동기화 타이머 설정
         window.startAutoSync = () => {
             if (autoSyncInterval) clearInterval(autoSyncInterval);
             autoSyncInterval = setInterval(() => {
@@ -1154,7 +1212,7 @@
                 if (state.autoSyncEnabled && isDirty && currentUser && state.syncCode) {
                     window.manualCloudSync(true); // background 모드로 무음 동기화
                 }
-            }, 3 * 60 * 1000); // 3분
+            }, 2 * 60 * 1000); // 2분 간격
         };
 
         window.toggleAutoSyncSetting = (el) => {
@@ -1163,14 +1221,14 @@
             window.updateLocalState(state, true); // 설정 변경만으로는 dirty 플래그를 세우지 않음
             if(el.checked) {
                 window.startAutoSync();
-                alert("자동 동기화가 켜졌습니다.\n앱 사용 중 변경사항이 생기면 3분마다 클라우드에 백업됩니다.");
+                alert("자동 동기화가 켜졌습니다.\n앱 사용 중 변경사항이 생기면 2분마다 클라우드에 백업됩니다.");
             } else {
                 if(autoSyncInterval) clearInterval(autoSyncInterval);
             }
         };
 
         window.disconnectSync = () => {
-            if(confirm("기기 간 동기화를 해제하시겠습니까?\n해제해도 기기에 저장된 데이터는 그대로 유지됩니다.")) {
+            if(confirm("기기 간 동기화를 해제하시겠습니까?\n해제해도 서버의 사용량이나 기기에 저장된 데이터는 안전하게 유지됩니다.")) {
                 const state = window.getAppState();
                 state.syncCode = null;
                 state.autoSyncEnabled = false;
@@ -1199,7 +1257,7 @@
             });
         }
 
-        // 다른 기기에서 동기화(Push)를 누르면 내 폰에 즉시(Pull) 반영
+        // 다른 기기에서 동기화(Push)를 누르면 내 폰에 즉시(Pull) 반영 (이건 카운트 소진 안됨)
         function setupRealtimeListener(code) {
             if(unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
             const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
@@ -1231,6 +1289,12 @@
 
         window.generateSyncCode = async () => {
             if(!currentUser) return alert("서버에 연결 중입니다. 잠시 후 다시 시도해주세요.");
+            
+            const usage = getSyncUsage();
+            if (!usage.isVIP && usage.count >= 150) {
+                return alert("일일 동기화 한도(150회)를 초과하여 오늘은 새 코드를 발급받을 수 없습니다.\n내일 다시 시도하거나 무제한 코드를 입력해주세요.");
+            }
+            
             const state = window.getAppState();
             if(state.syncCode && !confirm("새 코드를 발급하면 기존 기기들과의 연결이 해제됩니다. 계속하시겠습니까?")) return;
             
@@ -1249,6 +1313,10 @@
                     lastUpdated: new Date().toISOString()
                 });
                 window.setDirty(false);
+                
+                usage.count++;
+                saveSyncUsage(usage);
+                
             } catch(e) {
                 console.error("Initial sync creation failed", e);
             }
@@ -1293,11 +1361,20 @@
             }
         };
 
-        // 타임스탬프 기반 수동 동기화 (버튼 누를 때 OR 3분 타이머 동작 시)
+        // 타임스탬프 기반 수동 동기화 (버튼 누를 때 OR 2분 타이머 동작 시)
         window.manualCloudSync = async (isBackground = false) => {
             const state = window.getAppState();
             if(!currentUser || !state.syncCode) return;
             if(manualSyncCooldown && !isBackground) return;
+
+            // 제한 횟수 체크 (Push 할 때만 제한을 깎습니다)
+            const usage = getSyncUsage();
+            if (isDirty && !usage.isVIP && usage.count >= 150) {
+                updateSyncUI("일일 한도 초과");
+                window.setDirty(false); // 더 이상 노란불 띄우지 않음
+                if(!isBackground) alert("일일 동기화 한도(150회)를 모두 소진했습니다. 내일 다시 시도하거나 무제한 코드를 입력하세요.");
+                return;
+            }
 
             if(!isBackground) {
                 manualSyncCooldown = true;
@@ -1311,7 +1388,7 @@
             }
 
             try {
-                // 이 기기에서 변경한 내역이 있다면, 현재 시간을 새겨서 무조건 업로드 (Push)
+                // 이 기기에서 변경한 내역이 있다면 업로드 (Push)
                 if (isDirty || !isBackground) {
                     state.lastModified = Date.now(); 
                     const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
@@ -1319,7 +1396,15 @@
                         appState: state,
                         lastUpdated: new Date().toISOString()
                     }, { merge: true });
+                    
                     window.setDirty(false);
+                    
+                    // 사용량 1 증가 (실제 업로드 시에만)
+                    if (isDirty) {
+                        usage.count++;
+                        saveSyncUsage(usage);
+                    }
+                    
                     updateSyncUI(isBackground ? "자동 동기화 완료" : "업로드 완료");
                 }
             } catch(e) {
@@ -1338,9 +1423,9 @@
                         manualSyncCooldown = false;
                         settingsBtn.classList.remove('opacity-50', 'pointer-events-none');
                         settingsBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> 수동 백업';
-                    }, 5000); 
+                    }, 3000); 
                 } else {
-                    setTimeout(() => { manualSyncCooldown = false; }, 5000);
+                    setTimeout(() => { manualSyncCooldown = false; }, 3000);
                 }
             }
         };
@@ -1355,12 +1440,17 @@
         // 안전장치: 앱을 끄거나 바탕화면으로 나갈 때 변경사항이 있다면 1회 자동 푸시
         document.addEventListener('visibilitychange', async () => {
             const state = window.getAppState();
+            const usage = getSyncUsage();
             if (document.visibilityState === 'hidden' && isDirty && currentUser && state.syncCode) {
+                if(!usage.isVIP && usage.count >= 150) return; // 한도 초과 시 종료 백업도 방어
+                
                 state.lastModified = Date.now();
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
                 try {
                     await setDoc(docRef, { appState: state, lastUpdated: new Date().toISOString() }, { merge: true });
                     window.setDirty(false);
+                    usage.count++;
+                    saveSyncUsage(usage);
                 } catch(e) {}
             }
         });
