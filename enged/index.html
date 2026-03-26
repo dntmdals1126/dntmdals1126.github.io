@@ -356,7 +356,7 @@
             .fc-btn-shuffle:hover { color: var(--text-main); background-color: var(--glass-highlight); }
             .fc-btn-auto:not(.is-active):hover { color: var(--sub-accent); background-color: var(--sub-accent-bg); }
             
-            /* 리스트 내 단어 체크/단어장 호버 원상복구 - 투명도 오류 완벽 수정 */
+            /* 리스트 내 단어 체크/단어장 호버 원상복구 - 투명도 오류 완 동 수정 */
             .list-action-check:not(.text-green-500):hover { color: #22c55e !important; }
             .list-action-check:not(.text-green-500):hover i { opacity: 1 !important; }
             .list-action-bookmark:not(.text-orange-400):hover { color: #f97316 !important; } 
@@ -527,6 +527,12 @@
                 <i class="fa-regular fa-calendar-check"></i>
                 <span id="dday-text"></span>
             </div>
+            
+            <!-- 수동 동기화 전용 버튼 (코드가 발급되었을 때만 표시됨) -->
+            <button class="tool-btn hidden transition-colors" id="headerSyncBtn" onclick="manualCloudSync()" title="수동 동기화">
+                <i class="fa-solid fa-rotate"></i>
+            </button>
+            
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
@@ -1003,7 +1009,7 @@
                     <i class="fa-solid fa-cloud text-primary"></i> 기기 간 동기화 (익명)
                 </div>
                 
-                <p class="text-[10px] text-text-dim mb-3 break-keep">회원가입 없이 6자리 코드를 통해 여러 기기(PC, 태블릿)와 학습 데이터를 안전하게 실시간 공유합니다.</p>
+                <p class="text-[10px] text-text-dim mb-3 break-keep">회원가입 없이 6자리 코드를 통해 여러 기기(PC, 태블릿)와 학습 데이터를 안전하게 수동으로 공유합니다.</p>
                 
                 <div class="flex items-center justify-between bg-[var(--glass-highlight)] px-3 py-2 rounded-lg border border-[var(--glass-border)] mb-3">
                     <span class="text-xs text-text-main font-semibold">내 코드: <span id="current-sync-code" class="text-primary font-bold tracking-widest ml-1">없음</span></span>
@@ -1017,7 +1023,7 @@
 
                 <div class="flex justify-between items-center mt-4 px-1">
                     <span class="text-[10px] text-text-dim font-medium flex items-center gap-1.5">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> <span id="last-sync-time">마지막 동기화: 없음</span>
+                        <i class="fa-solid fa-cloud-arrow-up"></i> <span class="sync-time-display">마지막 동기화: 없음</span>
                     </span>
                     <button onclick="manualCloudSync()" id="manual-sync-btn" class="text-[10px] font-bold text-primary hover:text-blue-400 px-2.5 py-1.5 bg-primary/10 rounded-md transition-colors flex items-center gap-1.5">
                         <i class="fa-solid fa-rotate"></i> 지금 동기화
@@ -1049,11 +1055,10 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // 빠릿한 실시간 연동을 위해 onSnapshot 추가!
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // 실시간 연동(onSnapshot) 제거 완료
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // 💡 [STEP 5] 봇 스캐너(GitHub 자동 메일) 방지 처리 완료 ---
-        // 문자열을 쪼개두어서 GitHub 봇이 이 키를 민감 정보로 착각하여 이메일을 보내지 않습니다!
         const firebaseConfig = {
             apiKey: "AIzaSy" + "AMIOz-KgddriL" + "rsn8Pr0Nfq64lX13UWfU",
             authDomain: "enged-vocab.firebaseapp.com",
@@ -1074,9 +1079,7 @@
         let app, auth, db;
         let currentUser = null;
         let isDirty = false;
-        let saveTimer = null;
         let manualSyncCooldown = false;
-        let unsubSnapshot = null; // 실시간 리스너 해제용
 
         // 설정값이 정상적으로 들어왔을 때만 초기화 진행
         if (configToUse.apiKey && configToUse.apiKey.includes("AIzaSy")) {
@@ -1088,7 +1091,7 @@
                 // 설정 경고창 숨기기
                 document.getElementById('firebase-setup-warning').classList.add('hidden');
 
-                // 익명 로그인 무조건 실행 (Google 로그인 대체)
+                // 익명 로그인 무조건 실행
                 const initAuth = async () => {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(auth, __initial_auth_token);
@@ -1097,74 +1100,41 @@
                     }
                 };
                 initAuth();
-
             } catch(e) {
                 console.error("Firebase 초기화 에러:", e);
             }
         }
 
+        // 동기화 안 된 변경사항이 있는지 표시하는 헬퍼 함수
+        window.setDirty = (state) => {
+            isDirty = state;
+            const headerBtnIcon = document.querySelector('#headerSyncBtn i');
+            if (headerBtnIcon) {
+                if (state) headerBtnIcon.classList.add('text-orange-400');
+                else headerBtnIcon.classList.remove('text-orange-400');
+            }
+        };
+
         // UI 갱신 헬퍼 함수
         window.updateSyncCodeUI = () => {
             const state = window.getAppState();
             const codeSpan = document.getElementById('current-sync-code');
-            if(codeSpan) {
-                codeSpan.innerText = state.syncCode || '없음';
+            const headerBtn = document.getElementById('headerSyncBtn');
+            
+            if(codeSpan) codeSpan.innerText = state.syncCode || '없음';
+            if(headerBtn) {
+                if(state.syncCode) headerBtn.classList.remove('hidden');
+                else headerBtn.classList.add('hidden');
             }
         };
 
-        // 로그인 상태 변경 감지 (익명 로그인 완료 시)
+        // 로그인 상태 변경 감지
         if (auth && db) {
             onAuthStateChanged(auth, async (user) => {
                 currentUser = user;
                 if (user) {
                     window.updateSyncCodeUI();
-                    // 앱 켤 때 동기화 코드가 이미 있으면 최신 데이터를 바로 리스닝 시작!
-                    const state = window.getAppState();
-                    if(state.syncCode) {
-                        setupRealtimeListener(state.syncCode);
-                    }
                 }
-            });
-        }
-
-        // 🔥 실시간 동기화(WebSockets) 리스너 세팅 🔥
-        function setupRealtimeListener(code) {
-            if(unsubSnapshot) {
-                unsubSnapshot(); // 기존 리스너가 있다면 끊기
-                unsubSnapshot = null;
-            }
-            
-            const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
-            
-            // onSnapshot을 통해 클라우드의 데이터가 변하면 즉시(0.1초 내) 이 함수가 실행됩니다!
-            unsubSnapshot = onSnapshot(docRef, (snap) => {
-                if(snap.exists() && snap.data().appState) {
-                    const cloudState = snap.data().appState;
-                    const localState = window.getAppState();
-                    
-                    // 로컬 데이터와 클라우드 데이터 병합 (Merge)
-                    const mergedState = { ...localState };
-                    mergedState.memorized = { ...(cloudState.memorized || {}), ...(localState.memorized || {}) };
-                    const combinedNotebook = [...(cloudState.notebook || []), ...(localState.notebook || [])];
-                    mergedState.notebook = [...new Set(combinedNotebook)];
-                    if(cloudState.quizState) {
-                        mergedState.quizState.score = Math.max(cloudState.quizState.score || 0, localState.quizState.score || 0);
-                    }
-                    mergedState.syncCode = code;
-                    
-                    // 클라우드에서 받은 데이터를 로컬에 조용히 덮어쓰기 (무한루프 방지를 위해 skipCloud = true 설정)
-                    window.updateLocalState(mergedState, true);
-                    window.updateSyncCodeUI();
-                    
-                    // 시간 업데이트
-                    if (snap.data().lastUpdated) {
-                        const date = new Date(snap.data().lastUpdated);
-                        const timeStr = date.getHours().toString().padStart(2,'0') + ":" + date.getMinutes().toString().padStart(2,'0') + ":" + date.getSeconds().toString().padStart(2,'0');
-                        updateSyncUI("실시간 동기화됨: " + timeStr);
-                    }
-                }
-            }, (error) => {
-                console.error("실시간 동기화 에러:", error);
             });
         }
 
@@ -1174,17 +1144,17 @@
             const state = window.getAppState();
             if(state.syncCode && !confirm("새 코드를 발급하면 기존 기기들과의 연결이 해제됩니다. 계속하시겠습니까?")) return;
             
-            // 6자리 랜덤 코드 생성 (예: A9K3M2)
             const code = Math.random().toString(36).substring(2, 8).toUpperCase();
             state.syncCode = code;
-            window.updateLocalState(state, true); // 로컬 저장 (무한루프 방지)
+            state.lastModified = Date.now(); // 강제 업데이트
             
+            window.updateLocalState(state, true); // 로컬 저장
             window.updateSyncCodeUI();
-            alert(`새 동기화 코드 [${code}]가 발급되었습니다!\n아이패드나 PC에서 이 코드를 입력하면 실시간 연동됩니다.`);
             
-            // 클라우드에 빈 방 개설 및 내 데이터 업로드
-            await uploadToCloud(true);
-            setupRealtimeListener(code); // 리스너 시작!
+            alert(`새 동기화 코드 [${code}]가 발급되었습니다!\n아이패드나 PC에서 이 코드를 입력하면 연동됩니다.`);
+            
+            // 발급 직후 클라우드에 내 데이터 최초 밀어넣기
+            await window.manualCloudSync(); 
         };
 
         // 2. 동기화 코드 연결 (다른 기기에서 불러오기)
@@ -1194,33 +1164,35 @@
             
             if(codeInput.length !== 6) return alert("6자리 코드를 정확히 입력해주세요.");
             
-            updateSyncUI("코드 확인 및 실시간 연결 중...");
+            updateSyncUI("코드 확인 및 데이터 덮어쓰는 중...");
             
-            // 코드를 저장하고 실시간 리스너를 즉시 붙입니다. (데이터도 알아서 최초 1회 당겨옴)
-            const state = window.getAppState();
-            state.syncCode = codeInput;
-            window.updateLocalState(state, true);
-            window.updateSyncCodeUI();
-            
-            setupRealtimeListener(codeInput);
-            
-            alert("동기화 채널에 연결되었습니다! 이제 양방향으로 실시간 공유됩니다.");
-            document.getElementById('sync-code-input').value = '';
+            try {
+                const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", codeInput);
+                const snap = await getDoc(docRef);
+                
+                if(snap.exists() && snap.data().appState) {
+                    const cloudState = snap.data().appState;
+                    cloudState.syncCode = codeInput; // 코드 보존
+                    
+                    // Merge(병합) 로직 완전 제거. 가장 최근 데이터로 완전히 덮어씌움 (삭제 기록 보존)
+                    window.updateLocalState(cloudState, true);
+                    window.updateSyncCodeUI();
+                    window.setDirty(false);
+                    
+                    updateSyncUI("연결 및 덮어쓰기 완료!");
+                    alert("성공적으로 연결되었습니다!\n지금부터 우측 상단 '동기화' 버튼을 눌러 양방향 통신이 가능합니다.");
+                    document.getElementById('sync-code-input').value = '';
+                } else {
+                    updateSyncUI("동기화 대기 중");
+                    alert("해당 코드로 저장된 클라우드 데이터가 없습니다. 코드를 확인해주세요.");
+                }
+            } catch(e) {
+                console.error(e);
+                alert("불러오기 중 오류가 발생했습니다.");
+            }
         };
 
-        // 3. 자동 동기화 트리거 (디바운스를 5초 -> 2초로 극단적 단축!)
-        window.triggerCloudSave = () => {
-            if(!currentUser || !window.getAppState().syncCode) return;
-            isDirty = true;
-            updateSyncUI("저장 대기 중...");
-            
-            clearTimeout(saveTimer);
-            saveTimer = setTimeout(() => {
-                uploadToCloud();
-            }, 2000); // 사용자가 단어를 넘기고 딱 2초만 쉬면 바로 클라우드로 쏩니다! (훨씬 빠릿해짐)
-        };
-
-        // 4. 수동 동기화 (15초 쿨타임 제한)
+        // 3. 가장 핵심이 되는 수동 동기화 로직 (타임스탬프 기반 덮어쓰기)
         window.manualCloudSync = async () => {
             const state = window.getAppState();
             if(!currentUser) return alert("Firebase가 연결되지 않았습니다.");
@@ -1228,54 +1200,87 @@
             if(manualSyncCooldown) return;
             
             manualSyncCooldown = true;
-            const btn = document.getElementById('manual-sync-btn');
-            btn.classList.add('opacity-50', 'pointer-events-none');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 동기화 중';
+            const headerBtn = document.getElementById('headerSyncBtn');
+            const settingsBtn = document.getElementById('manual-sync-btn');
             
-            await uploadToCloud(true); 
-            
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> 완료';
-            setTimeout(() => {
-                manualSyncCooldown = false;
-                btn.classList.remove('opacity-50', 'pointer-events-none');
-                btn.innerHTML = '<i class="fa-solid fa-rotate"></i> 지금 동기화';
-            }, 15000); // 15초 뒤 버튼 활성화
-        };
-
-        // ☁️ 클라우드로 내보내기 (통째로 덮어쓰기)
-        async function uploadToCloud(force = false) {
-            const state = window.getAppState();
-            if(!currentUser || !state.syncCode) return;
-            // 변경사항이 없거나 강제 저장이 아니면 무시 (API 호출 절약)
-            if(!isDirty && !force) return;
+            if(headerBtn) headerBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            if(settingsBtn) {
+                settingsBtn.classList.add('opacity-50', 'pointer-events-none');
+                settingsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 동기화 중';
+            }
 
             try {
-                // Rule 1: Public Document access based on Sync Code
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
-                await setDoc(docRef, {
-                    appState: state, 
-                    lastUpdated: new Date().toISOString()
-                }, { merge: true });
-                
-                isDirty = false;
-                const now = new Date();
-                const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0') + ":" + now.getSeconds().toString().padStart(2,'0');
-                updateSyncUI("마지막 동기화: " + timeStr);
+                const snap = await getDoc(docRef);
+
+                let cloudState = null;
+                if (snap.exists()) {
+                    cloudState = snap.data().appState;
+                }
+
+                const localModified = state.lastModified || 0;
+                const cloudModified = cloudState ? (cloudState.lastModified || 0) : 0;
+
+                // 조건 1: 내 폰에서 변경한 게 있거나, 내 폰 데이터가 클라우드보다 더 최신일 때 -> 클라우드에 밀어넣기
+                if (isDirty || localModified > cloudModified || !cloudState) {
+                    state.lastModified = Date.now(); // 시간 최신화
+                    await setDoc(docRef, {
+                        appState: state,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                    window.setDirty(false);
+                    updateSyncUI("업로드 완료");
+                }
+                // 조건 2: 다른 기기(클라우드) 데이터가 내 폰보다 더 최신일 때 -> 클라우드 데이터를 그대로 덮어쓰기 (가져오기)
+                else if (cloudModified > localModified) {
+                    cloudState.syncCode = state.syncCode; // 코드 보존
+                    window.updateLocalState(cloudState, true);
+                    window.setDirty(false);
+                    updateSyncUI("다운로드 완료");
+                } 
+                // 조건 3: 똑같을 때
+                else {
+                    window.setDirty(false);
+                    updateSyncUI("최신 상태입니다");
+                }
+
             } catch(e) {
-                console.error("Cloud Save Error:", e);
-                updateSyncUI("동기화 실패 (네트워크 확인)");
+                console.error("Sync Error:", e);
+                updateSyncUI("동기화 실패");
+                alert("동기화 중 오류가 발생했습니다.");
             }
-        }
+
+            // UI 쿨타임 복구
+            if(headerBtn) headerBtn.innerHTML = '<i class="fa-solid fa-rotate"></i>';
+            if(settingsBtn) {
+                settingsBtn.innerHTML = '<i class="fa-solid fa-check"></i> 완료';
+                setTimeout(() => {
+                    manualSyncCooldown = false;
+                    settingsBtn.classList.remove('opacity-50', 'pointer-events-none');
+                    settingsBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> 지금 동기화';
+                }, 5000); // 쾌적한 수동 사용을 위해 쿨타임을 5초로 줄임
+            } else {
+                setTimeout(() => { manualSyncCooldown = false; }, 5000);
+            }
+        };
 
         function updateSyncUI(text) {
-            const el = document.getElementById('last-sync-time');
-            if(el) el.innerText = text;
+            const displays = document.querySelectorAll('.sync-time-display');
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0') + ":" + now.getSeconds().toString().padStart(2,'0');
+            displays.forEach(el => el.innerText = `${text} (${timeStr})`);
         }
 
-        // [안전장치] 화면 끄거나 백그라운드로 전환 시 즉시 저장
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden' && isDirty && currentUser && window.getAppState().syncCode) {
-                uploadToCloud();
+        // 4. 안전장치: 화면을 끄거나 다른 앱으로 넘어갈 때 (자동 푸시)
+        document.addEventListener('visibilitychange', async () => {
+            const state = window.getAppState();
+            if (document.visibilityState === 'hidden' && isDirty && currentUser && state.syncCode) {
+                state.lastModified = Date.now();
+                const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
+                try {
+                    await setDoc(docRef, { appState: state, lastUpdated: new Date().toISOString() }, { merge: true });
+                    window.setDirty(false);
+                } catch(e) {}
             }
         });
     </script>
@@ -1721,7 +1726,8 @@
             currentIndex: 0,
             quizState: { asked: [], score: 0 },
             fontSizeLevel: 0,
-            autoRemoveSaved: true
+            autoRemoveSaved: true,
+            lastModified: 0 // 타임스탬프 기록용
         };
         
         let listFilterMode = 'all'; 
@@ -1755,8 +1761,7 @@
         // 💡 클라우드 통신을 위해 전역 변수와 업데이트 함수 노출
         window.getAppState = () => appState;
         
-        // skipCloud 플래그가 true면 화면 갱신 및 로컬 저장만 하고, 무한 반복(메아리) 방지를 위해 서버에 다시 쏘지 않음
-        window.updateLocalState = (newState, skipCloud = false) => {
+        window.updateLocalState = (newState, skipDirty = false) => {
             appState = newState;
             localStorage.setItem('engVocabState', JSON.stringify(appState));
             updateProgress();
@@ -1770,7 +1775,7 @@
                 if (tabId === 'btn-notebook') renderNotebook();
             }
             
-            if(!skipCloud && window.triggerCloudSave) window.triggerCloudSave();
+            if(!skipDirty) window.setDirty(true);
         };
 
         window.onload = async function() {
@@ -1800,11 +1805,15 @@
             }
         }
 
-        // 데이터가 저장될 때마다 클라우드 동기화 트리거를 호출하도록 수정
-        function saveData(skipCloud = false) {
+        // 로컬에 데이터가 저장될 때마다 타임스탬프를 갱신하고 '더티(Dirty)' 상태로 만듭니다.
+        function saveData(skipDirty = false) {
+            appState.lastModified = Date.now();
             localStorage.setItem('engVocabState', JSON.stringify(appState));
             updateProgress();
-            if(!skipCloud && window.triggerCloudSave) window.triggerCloudSave(); 
+            
+            if (!skipDirty) {
+                window.setDirty(true); // 동기화 버튼 색상 변경 등
+            }
         }
         
         function openSettingsModal() {
@@ -1844,8 +1853,7 @@
                     const parsed = JSON.parse(e.target.result);
                     if(parsed.memorized !== undefined || parsed.notebook !== undefined) {
                         appState = { ...appState, ...parsed };
-                        saveData(true); // 외부 파일에서 복원 시 즉시 저장 (클라우드에도)
-                        if(window.triggerCloudSave) window.triggerCloudSave();
+                        saveData(true); 
                         alert("데이터가 성공적으로 복원되었습니다.");
                         location.reload();
                     } else { alert("유효하지 않은 백업 파일 형식입니다."); }
