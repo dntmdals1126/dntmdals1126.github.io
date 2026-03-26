@@ -1007,15 +1007,15 @@
                 </div>
 
                 <div class="flex items-center gap-2 mb-3 text-text-main font-bold text-sm">
-                    <i class="fa-solid fa-cloud text-primary"></i> 기기 간 동기화 (익명)
+                    <i class="fa-solid fa-cloud text-primary"></i> 기기 간 동기화
                 </div>
                 
-                <p class="text-[10px] text-text-dim mb-3 break-keep">회원가입 없이 6자리 코드를 통해 여러 기기(PC, 태블릿)와 학습 데이터를 안전하게 공유합니다.</p>
+                <p class="text-[10px] text-text-dim mb-3 break-keep">회원가입 없이 익명으로 6자리 코드를 통해 여러 기기(PC, 태블릿)와 학습 데이터를 안전하게 공유합니다.</p>
                 
                 <div class="flex items-center justify-between bg-[var(--glass-highlight)] px-3 py-2 rounded-lg border border-[var(--glass-border)] mb-3">
                     <span class="text-xs text-text-main font-semibold">내 코드: <span id="current-sync-code" class="text-primary font-bold tracking-widest ml-1">없음</span></span>
                     <div class="flex gap-1" id="sync-code-actions">
-                        <button onclick="generateSyncCode()" class="text-[10px] bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main px-2 py-1 rounded shadow-sm hover:bg-[var(--glass-highlight)] transition-colors">새 발급</button>
+                        <button onclick="generateSyncCode()" class="text-[10px] bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main px-2 py-1 rounded shadow-sm hover:bg-[var(--glass-highlight)] transition-colors">새 코드 발급</button>
                         <button onclick="disconnectSync()" id="btn-disconnect-sync" class="hidden text-[10px] bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-1 rounded shadow-sm hover:bg-red-500/20 transition-colors">해제</button>
                     </div>
                 </div>
@@ -1039,12 +1039,15 @@
                     </label>
                 </div>
 
-                <!-- 동기화 횟수 현황 & VIP 입력 -->
+                <!-- 동기화 횟수 현황 & Access Code 입력 -->
                 <div class="flex justify-between items-center mt-3 px-1 mb-1">
                     <span class="text-[10px] text-text-dim font-medium flex items-center gap-1">
                         사용량: <span id="sync-usage-text" class="text-text-main font-bold ml-0.5">0 / 150회</span>
                     </span>
-                    <button onclick="verifyVIP()" class="text-[10px] text-sub-accent underline hover:text-primary transition-colors">무제한 코드 입력</button>
+                    <div class="flex gap-2 items-center">
+                        <button onclick="verifyAccessCode()" id="btn-access-code" class="text-[10px] text-sub-accent underline hover:text-primary transition-colors">Access Code 입력</button>
+                        <button onclick="removeAccessCode()" id="btn-remove-code" class="hidden text-[10px] text-red-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark"></i> 삭제</button>
+                    </div>
                 </div>
 
                 <div class="flex justify-between items-center mt-1 px-1">
@@ -1056,6 +1059,8 @@
                     </button>
                 </div>
             </div>
+
+            <hr class="border-[var(--glass-border)] my-5">
 
             <div class="space-y-3 mt-2">
                 <button onclick="exportData()" class="btn btn-sec settings-action-btn w-full justify-between px-4 text-sm transition-colors">
@@ -1123,14 +1128,32 @@
             }
         }
 
-        // --- 📊 동기화 횟수 제한 시스템 (150회 / VIP) ---
+        // --- 📊 동기화 횟수 제한 시스템 (150회 / 500회) ---
         function getSyncUsage() {
-            let usage = JSON.parse(localStorage.getItem('engedSyncUsage') || '{"date":"","count":0,"isVIP":false}');
+            let usage = JSON.parse(localStorage.getItem('engedSyncUsage') || '{"date":"","count":0,"premiumExpiry":0}');
             const today = new Date().toISOString().split('T')[0];
             if (usage.date !== today) {
                 usage.date = today;
                 usage.count = 0;
             }
+            
+            // 기존 VIP 사용자 마이그레이션 (오늘부터 30일 부여)
+            if (usage.isVIP !== undefined) {
+                if (usage.isVIP === true) {
+                    usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                }
+                delete usage.isVIP;
+                delete usage.vipExpiry;
+            }
+            
+            // 만료 기한 지났는지 체크 (지났으면 0으로 초기화)
+            if (usage.premiumExpiry && Date.now() > usage.premiumExpiry) {
+                usage.premiumExpiry = 0;
+            }
+            
+            // 나머지 로직들이 정상 작동하도록 임시 프로퍼티 계산
+            usage.isPremium = (usage.premiumExpiry > Date.now());
+            
             return usage;
         }
         
@@ -1139,8 +1162,8 @@
             window.updateSyncCodeUI();
         }
 
-        window.verifyVIP = async () => {
-            const code = prompt("무제한 Access Code를 입력하세요:");
+        window.verifyAccessCode = async () => {
+            const code = prompt("Access Code를 입력하세요:");
             if(!code) return;
             
             // 1차 프론트엔드 방어 (입력값 Base64 암호화 후 대조 -> F12에서 원본 글자 유출 방지)
@@ -1154,14 +1177,26 @@
                 const snap = await getDoc(docRef);
                 if(snap.exists()) {
                     const usage = getSyncUsage();
-                    usage.isVIP = true;
+                    // 30일 후 만료 타임스탬프 저장 (밀리초 단위)
+                    usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                    usage.isPremium = true;
                     saveSyncUsage(usage);
-                    alert("VIP 인증 완료! 이제 무제한 동기화가 가능합니다.");
+                    alert("인증 완료! 등록일로부터 30일간 일일 500회 동기화가 가능합니다.");
                 } else {
                     alert("서버에 등록되지 않은 보안 코드입니다.");
                 }
             } catch(e) {
                 alert("코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.");
+            }
+        }
+        
+        window.removeAccessCode = () => {
+            if(confirm("입력된 Access Code 혜택을 삭제하시겠습니까?\n한도가 기본 150회로 즉시 복구됩니다.")) {
+                const usage = getSyncUsage();
+                usage.premiumExpiry = 0;
+                usage.isPremium = false;
+                saveSyncUsage(usage);
+                alert("삭제되었습니다.");
             }
         }
         // ------------------------------------------------
@@ -1186,6 +1221,8 @@
             const headerBtn = document.getElementById('headerSyncBtn');
             const disconnectBtn = document.getElementById('btn-disconnect-sync');
             const usageText = document.getElementById('sync-usage-text');
+            const accessCodeBtn = document.getElementById('btn-access-code');
+            const removeCodeBtn = document.getElementById('btn-remove-code');
             
             if(codeSpan) codeSpan.innerText = state.syncCode || '없음';
             if(headerBtn) {
@@ -1199,8 +1236,17 @@
             
             if(usageText) {
                 const usage = getSyncUsage();
-                if(usage.isVIP) usageText.innerHTML = '<span class="text-highlight">VIP 무제한</span>';
-                else usageText.innerText = `${usage.count} / 150회`;
+                if(usage.isPremium) {
+                    // 남은 만료일 계산
+                    const diffDays = Math.ceil((usage.premiumExpiry - Date.now()) / (1000 * 60 * 60 * 24));
+                    usageText.innerHTML = `${usage.count} / 500회 <span class="text-highlight text-[9px] ml-1">(D-${diffDays})</span>`;
+                    if(accessCodeBtn) accessCodeBtn.classList.add('hidden');
+                    if(removeCodeBtn) removeCodeBtn.classList.remove('hidden');
+                } else {
+                    usageText.innerText = `${usage.count} / 150회`;
+                    if(accessCodeBtn) accessCodeBtn.classList.remove('hidden');
+                    if(removeCodeBtn) removeCodeBtn.classList.add('hidden');
+                }
             }
         };
 
@@ -1291,8 +1337,9 @@
             if(!currentUser) return alert("서버에 연결 중입니다. 잠시 후 다시 시도해주세요.");
             
             const usage = getSyncUsage();
-            if (!usage.isVIP && usage.count >= 150) {
-                return alert("일일 동기화 한도(150회)를 초과하여 오늘은 새 코드를 발급받을 수 없습니다.\n내일 다시 시도하거나 무제한 코드를 입력해주세요.");
+            const limit = usage.isPremium ? 500 : 150;
+            if (usage.count >= limit) {
+                return alert(`일일 동기화 한도(${limit}회)를 초과하여 오늘은 새 코드를 발급받을 수 없습니다.\n내일 다시 시도하거나 Access Code를 확인해주세요.`);
             }
             
             const state = window.getAppState();
@@ -1369,10 +1416,11 @@
 
             // 제한 횟수 체크 (Push 할 때만 제한을 깎습니다)
             const usage = getSyncUsage();
-            if (isDirty && !usage.isVIP && usage.count >= 150) {
+            const limit = usage.isPremium ? 500 : 150;
+            if (isDirty && usage.count >= limit) {
                 updateSyncUI("일일 한도 초과");
                 window.setDirty(false); // 더 이상 노란불 띄우지 않음
-                if(!isBackground) alert("일일 동기화 한도(150회)를 모두 소진했습니다. 내일 다시 시도하거나 무제한 코드를 입력하세요.");
+                if(!isBackground) alert(`일일 동기화 한도(${limit}회)를 모두 소진했습니다. 내일 다시 시도해주세요.`);
                 return;
             }
 
@@ -1441,8 +1489,9 @@
         document.addEventListener('visibilitychange', async () => {
             const state = window.getAppState();
             const usage = getSyncUsage();
+            const limit = usage.isPremium ? 500 : 150;
             if (document.visibilityState === 'hidden' && isDirty && currentUser && state.syncCode) {
-                if(!usage.isVIP && usage.count >= 150) return; // 한도 초과 시 종료 백업도 방어
+                if(usage.count >= limit) return; // 한도 초과 시 종료 백업도 방어
                 
                 state.lastModified = Date.now();
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
