@@ -537,6 +537,10 @@
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
+            <!-- 하위 페이지 이동 링크 -->
+            <a href="https://www.v1ctorym1n.kro.kr/enged/voca" class="tool-btn" title="Voca로 이동">
+                <i class="fa-solid fa-v text-sm"></i>
+            </a>
             <!-- 설정 모달 열기 버튼 -->
             <button class="tool-btn" onclick="openSettingsModal()" title="설정 및 데이터 관리">
                 <i class="fa-solid fa-gear text-sm"></i>
@@ -878,13 +882,39 @@
         <div id="view-quiz" class="hidden fade-in-up max-w-2xl mx-auto">
             <div id="quiz-game">
                 <div id="quiz-active-screen">
-                    <div class="flex justify-between items-end mb-5 px-1">
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
-                            <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1">
-                                <i class="fa-solid fa-rotate-right"></i> 리셋
+                    
+                    <!-- 퀴즈 상단 컨트롤 (필터 및 리셋) -->
+                    <div class="flex justify-between items-center mb-3 px-1">
+                        <div class="relative">
+                            <button onclick="toggleMenu('quizFilterMenu', event)" class="h-8 text-[11px] font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-3 rounded-md text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-1.5 dropdown-btn" id="quiz-filter-btn">
+                                <i class="fa-solid fa-filter"></i> <span>전체 단어</span>
                             </button>
+                            <div id="quizFilterMenu" class="hidden absolute left-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-left transform scale-95 opacity-0 transition-all duration-200 text-sm">
+                                <button onclick="setQuizFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <span><i class="fa-solid fa-list w-5 text-center mr-2 opacity-70"></i> 전체 단어</span>
+                                    <i id="quiz-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
+                                </button>
+                                <button onclick="setQuizFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
+                                    <i id="quiz-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                </button>
+                                <button onclick="setQuizFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
+                                    <i id="quiz-filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                </button>
+                                <button onclick="setQuizFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
+                                    <i id="quiz-filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                </button>
+                            </div>
                         </div>
+                        <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate-right"></i> 리셋
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-end mb-4 px-1">
+                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
                         <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
                     </div>
                     
@@ -1531,7 +1561,7 @@
 
     <script>
         // === 드롭다운 메뉴 공통 통합 함수 ===
-        const dropdownIds = ['moreMenu', 'filterMenu', 'fcFilterMenu'];
+        const dropdownIds = ['moreMenu', 'filterMenu', 'fcFilterMenu', 'quizFilterMenu'];
 
         function toggleMenu(menuId, e) {
             if(e) e.stopPropagation();
@@ -1549,6 +1579,7 @@
                 if (menuId === 'moreMenu') updateMoreMenuUI();
                 if (menuId === 'filterMenu') updateFilterMenuUI();
                 if (menuId === 'fcFilterMenu') updateFcFilterMenuUI();
+                if (menuId === 'quizFilterMenu') updateQuizFilterMenuUI();
                 
                 void menu.offsetWidth; // 애니메이션 트리거
                 menu.classList.remove('scale-95', 'opacity-0');
@@ -1572,7 +1603,8 @@
             const menus = [
                 { menu: 'moreMenu', btn: 'moreBtn' },
                 { menu: 'filterMenu', btn: 'filterBtn' },
-                { menu: 'fcFilterMenu', btn: 'fc-filter-btn' }
+                { menu: 'fcFilterMenu', btn: 'fc-filter-btn' },
+                { menu: 'quizFilterMenu', btn: 'quiz-filter-btn' }
             ];
             
             menus.forEach(({menu, btn}) => {
@@ -1977,6 +2009,7 @@
         
         let listFilterMode = 'all'; 
         let fcFilterMode = 'all';
+        let quizFilterMode = 'all'; // 퀴즈용 필터 모드 상태
 
         // 폰트 사이즈 3단계
         const fontClasses = [
@@ -2037,6 +2070,7 @@
             updateMoreMenuUI();
             updateFilterMenuUI();
             updateFcFilterMenuUI();
+            updateQuizFilterMenuUI(); // 퀴즈 필터 UI 초기화
             updateDashboard();
             switchTab('dashboard');
         };
@@ -2554,6 +2588,56 @@
         }
 
         // --- Quiz ---
+        
+        function updateQuizFilterMenuUI() {
+            const checks = {
+                'all': document.getElementById('quiz-filter-check-all'),
+                'hideMemorized': document.getElementById('quiz-filter-check-hide'),
+                'onlySaved': document.getElementById('quiz-filter-check-saved'),
+                'onlyMemorized': document.getElementById('quiz-filter-check-memo')
+            };
+            for(let key in checks) {
+                if(checks[key]) checks[key].classList.add('hidden');
+            }
+            if(checks[quizFilterMode]) checks[quizFilterMode].classList.remove('hidden');
+        }
+
+        function setQuizFilter(mode) {
+            quizFilterMode = mode;
+            const btn = document.getElementById('quiz-filter-btn');
+            const span = btn.querySelector('span');
+            if(quizFilterMode === 'all') {
+                span.innerText = '전체 단어';
+                btn.classList.remove('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+            } else if(quizFilterMode === 'hideMemorized') {
+                span.innerText = '암기 제외';
+                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+            } else if(quizFilterMode === 'onlySaved') {
+                span.innerText = '저장 단어';
+                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+            } else if(quizFilterMode === 'onlyMemorized') {
+                span.innerText = '암기 완료';
+                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+            }
+            updateQuizFilterMenuUI();
+            closeMenu('quizFilterMenu');
+
+            if(isQuizActive) {
+                appState.quizState = { asked: [], score: 0 };
+                saveData();
+                startQuiz();
+            }
+        }
+
+        function getQuizFilteredWords() {
+            return allWords.filter(word => {
+                if (quizFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
+                if (quizFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
+                if (quizFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
+                return true;
+            });
+        }
+
         function setQuizMode(mode) {
             quizState.mode = mode;
             const multiBtn = document.getElementById('mode-multi-btn');
@@ -2579,14 +2663,21 @@
         }
 
         function startQuiz() {
-            if (allWords.length < 4) return;
+            let filteredWords = getQuizFilteredWords();
+            if (filteredWords.length < 4) {
+                alert("해당 조건으로 퀴즈를 진행하기엔 단어가 부족합니다 (최소 4개). 조건을 변경하거나 단어를 추가해주세요.");
+                document.getElementById('quiz-active-screen').classList.add('hidden');
+                document.getElementById('quiz-end-screen').classList.add('hidden');
+                return;
+            }
+            
             isQuizActive = true;
             
             if (!Array.isArray(appState.quizState.asked)) {
                 appState.quizState = { asked: [], score: 0 };
             }
             
-            if (appState.quizState.asked.length >= allWords.length) {
+            if (appState.quizState.asked.length >= filteredWords.length) {
                 appState.quizState = { asked: [], score: 0 };
                 saveData();
             }
@@ -2608,24 +2699,33 @@
             
             if (!Array.isArray(appState.quizState.asked)) appState.quizState.asked = [];
             
-            let unasked = allWords.filter(w => !appState.quizState.asked.includes(w.term));
+            let filteredWords = getQuizFilteredWords();
+            let unasked = filteredWords.filter(w => !appState.quizState.asked.includes(w.term));
             let isRepeat = false;
 
             if (unasked.length === 0) {
                 appState.quizState.asked = []; 
-                unasked = allWords;
+                unasked = filteredWords;
+                if (unasked.length === 0) return;
             }
 
             if (appState.quizState.asked.length > 0 && Math.random() < 0.25) {
-                quizCurrentQ = allWords.find(w => w.term === appState.quizState.asked[Math.floor(Math.random() * appState.quizState.asked.length)]);
-                isRepeat = true;
+                let askedInFilter = appState.quizState.asked.filter(term => filteredWords.some(w => w.term === term));
+                if (askedInFilter.length > 0) {
+                    quizCurrentQ = allWords.find(w => w.term === askedInFilter[Math.floor(Math.random() * askedInFilter.length)]);
+                    isRepeat = true;
+                } else {
+                    quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                    appState.quizState.asked.push(quizCurrentQ.term);
+                    saveData();
+                }
             } else {
                 quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
                 appState.quizState.asked.push(quizCurrentQ.term);
                 saveData();
             }
             
-            document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
+            document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${filteredWords.length}`;
 
             let badgesHtml = '';
             if (isRepeat) badgesHtml += `<span class="inline-block bg-[var(--sub-accent-bg)] text-[var(--sub-accent)] text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-[var(--sub-accent-border)]">REPEATED</span>`;
@@ -2652,8 +2752,11 @@
                 containerSpell.classList.add('hidden');
                 
                 let options = [quizCurrentQ];
+                let filteredWords = getQuizFilteredWords();
+                let pool = filteredWords.length >= 4 ? filteredWords : allWords;
+
                 while (options.length < 4) {
-                    const r = allWords[Math.floor(Math.random() * allWords.length)];
+                    const r = pool[Math.floor(Math.random() * pool.length)];
                     if (!options.includes(r)) options.push(r);
                 }
                 options.sort(() => 0.5 - Math.random());
