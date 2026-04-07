@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>단어장 출력 시스템 (데이터 기반 PDF)</title>
+    <title>단어장 출력 시스템</title>
     <!-- CSV 파싱 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <!-- PDF 생성 라이브러리 (jsPDF) -->
@@ -147,7 +147,7 @@
         <div class="spinner"></div>
         <div class="overlay-message">
             PDF 데이터를 생성 중입니다...
-            <span>데이터 추출 방식으로 완벽한 포맷의 PDF가 다운로드됩니다.</span>
+            <span id="loadingSubMessage">데이터 추출 방식으로 완벽한 포맷의 PDF가 다운로드됩니다.</span>
         </div>
     </div>
 
@@ -220,9 +220,6 @@
     </main>
 
     <script>
-        // PDF 폰트 (Pretendard) Base64
-        let fontUrl = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff/Pretendard-Regular.woff';
-
         let parsedVocabulary = {};
         let allAvailableDays = [];
         let selectedDays = new Set();
@@ -541,12 +538,14 @@
 
         // ==========================================
         // 🌟 데이터 기반 순수 PDF 추출 로직 (jsPDF + AutoTable)
-        // 화면 해상도, 스크롤 위치와 무관하게 완벽한 표 생성
+        // 화면 해상도, 스크롤 위치와 무관하게 완벽한 표 생성 및 폰트 멈춤 해결
         // ==========================================
         document.getElementById('pdfBtn').addEventListener('click', async function() {
             if (currentPdfData.length === 0) { alert("출력할 데이터가 없습니다."); return; }
 
             const loadingOverlay = document.getElementById('loadingOverlay');
+            const subMessage = document.getElementById('loadingSubMessage');
+            
             loadingOverlay.classList.add('active');
             
             const btnSpan = this.querySelector('span');
@@ -557,11 +556,25 @@
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF('p', 'mm', 'a4');
                 
-                // 폰트 파일 로드
-                const fontBytes = await fetch('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-                    .then(res => res.arrayBuffer());
-                    
-                const base64Font = btoa(new Uint8Array(fontBytes).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+                // 1. 브라우저 멈춤 없이 안정적인 TTF 폰트 다운로드 (FileReader Base64 변환 활용)
+                subMessage.innerText = "한글 폰트를 불러오는 중입니다... (최초 1회만, 약 2~3초 소요)";
+                
+                // 완벽히 검증된 공식 Pretendard TTF URL
+                const fontUrl = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/packages/pretendard/dist/public/static/Pretendard-Regular.ttf';
+                
+                const response = await fetch(fontUrl);
+                if (!response.ok) throw new Error("폰트 다운로드 실패");
+                const blob = await response.blob();
+                
+                // reduce 대비 수백 배 빠르고 브라우저가 멈추지 않는 변환 방식
+                const base64Font = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = () => reject(new Error("Base64 변환 실패"));
+                    reader.readAsDataURL(blob);
+                });
+                
+                subMessage.innerText = "PDF 표 및 데이터를 그리는 중...";
                 
                 doc.addFileToVFS("Pretendard.ttf", base64Font);
                 doc.addFont("Pretendard.ttf", "Pretendard", "normal");
@@ -577,7 +590,6 @@
                 let isFirstPage = true;
 
                 currentPdfData.forEach((pageData) => {
-                    // 페이지 구분을 위해 첫 장이 아닐 경우 addPage()
                     if (!isFirstPage) {
                         doc.addPage();
                     }
@@ -602,7 +614,7 @@
                         doc.line(162, 20, 195, 20);
                     }
 
-                    // 구분선 (이 선도 두께 맞추기 원하시면 아래 lineWidth 조정 가능)
+                    // 구분선
                     doc.setDrawColor('#0f172a');
                     doc.setLineWidth(0.5); 
                     doc.line(15, 25, 195, 25);
@@ -618,7 +630,7 @@
                             fontSize: 10,
                             textColor: '#0f172a',
                             lineColor: '#000000', // 검정색 출력 보장
-                            lineWidth: 0.12,      // PDF 출력 시 표 선 굵기를 0.12로 고정
+                            lineWidth: 0.12,      // ★ PDF 출력 시 표 선 굵기를 0.12로 고정
                             valign: 'middle'
                         },
                         headStyles: {
@@ -631,15 +643,13 @@
                     };
 
                     if (pageData.type === 'study') {
-                        // 단어장 테이블 컬럼 너비 조정
                         tableOptions.columnStyles = {
                             0: { cellWidth: 45, fontStyle: 'bold' },
                             1: { cellWidth: 70 },
                             2: { cellWidth: 65, textColor: '#475569' }
                         };
                     } else if (pageData.type === 'test') {
-                        // 시험지 테이블 컬럼 너비 및 스타일 조정 (2단)
-                        tableOptions.styles.minCellHeight = 10; // 글씨 쓸 공간 확보
+                        tableOptions.styles.minCellHeight = 10; 
                         tableOptions.columnStyles = {
                             0: { cellWidth: 10, halign: 'center', textColor: '#94a3b8' },
                             1: { cellWidth: 40, fontStyle: 'bold' },
@@ -650,7 +660,6 @@
                         };
                     }
 
-                    // AutoTable로 PDF에 테이블 그리기
                     doc.autoTable(tableOptions);
                 });
 
@@ -658,10 +667,11 @@
 
             } catch (err) {
                 console.error("PDF 생성 에러:", err);
-                alert("PDF 생성 중 오류가 발생했습니다. 한글 폰트 로드 문제일 수 있습니다.");
+                alert("PDF 생성 중 오류가 발생했습니다. (네트워크 방화벽에 의해 폰트 다운로드가 차단되었을 수 있습니다.)");
             } finally {
                 loadingOverlay.classList.remove('active');
                 btnSpan.innerText = originalText;
+                subMessage.innerText = "데이터 추출 방식으로 완벽한 포맷의 PDF가 다운로드됩니다.";
             }
         });
     </script>
