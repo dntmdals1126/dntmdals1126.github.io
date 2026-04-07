@@ -884,21 +884,20 @@
                 
                 <!-- 항상 보이는 퀴즈 헤더 -->
                 <div id="quiz-header" class="mb-4">
-                    <div class="flex justify-between items-start mb-4 px-1">
+                    <div class="flex justify-between items-center mb-4 px-1">
                         <!-- 좌측: Progress & 리셋 -->
-                        <div class="flex flex-col items-start gap-2.5">
+                        <div class="flex items-center gap-3">
                             <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1">0 / 0</span></span>
-                            <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2.5 py-1.5 rounded-md transition-colors shadow-sm flex items-center gap-1.5">
-                                <i class="fa-solid fa-rotate-right"></i> 리셋
+                            <button onclick="resetQuizProgress()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-dim hover:text-red-500 hover:bg-red-500/10 transition-colors shadow-sm" title="초기화">
+                                <i class="fa-solid fa-rotate-right"></i>
                             </button>
                         </div>
                         
-                        <!-- 우측: Score & 필터 -->
-                        <div class="flex flex-col items-end gap-2.5">
-                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2.5 py-1 rounded ml-1">0</span></span>
+                        <!-- 우측: 필터 & Score -->
+                        <div class="flex items-center gap-3">
                             <div class="relative">
-                                <button onclick="toggleMenu('quizFilterMenu', event)" class="h-8 text-[11px] font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-3 rounded-md text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-1.5 dropdown-btn" id="quiz-filter-btn">
-                                    <i class="fa-solid fa-filter"></i> <span>전체 단어</span>
+                                <button onclick="toggleMenu('quizFilterMenu', event)" class="w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-dim hover:bg-[var(--glass-highlight)] hover:text-text-main transition-colors shadow-sm dropdown-btn" id="quiz-filter-btn" title="필터링 (전체)">
+                                    <i class="fa-solid fa-filter"></i>
                                 </button>
                                 <div id="quizFilterMenu" class="hidden absolute right-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200 text-sm">
                                     <button onclick="setQuizFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
@@ -2618,19 +2617,22 @@
         function setQuizFilter(mode) {
             quizFilterMode = mode;
             const btn = document.getElementById('quiz-filter-btn');
-            const span = btn.querySelector('span');
             if(quizFilterMode === 'all') {
-                span.innerText = '전체 단어';
-                btn.classList.remove('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+                btn.innerHTML = '<i class="fa-solid fa-filter"></i>';
+                btn.classList.remove('btn-active');
+                btn.title = "필터링 (전체)";
             } else if(quizFilterMode === 'hideMemorized') {
-                span.innerText = '암기 제외';
-                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10px]"></i></span>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (암기 제외)";
             } else if(quizFilterMode === 'onlySaved') {
-                span.innerText = '저장 단어';
-                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-400"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (저장 단어)";
             } else if(quizFilterMode === 'onlyMemorized') {
-                span.innerText = '암기 완료';
-                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (암기 완료)";
             }
             updateQuizFilterMenuUI();
             closeMenu('quizFilterMenu');
