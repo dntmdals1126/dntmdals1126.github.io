@@ -339,16 +339,13 @@
             .fc-btn-shuffle:hover { color: var(--text-main); background-color: var(--glass-highlight); }
             .fc-btn-auto:not(.is-active):hover { color: var(--sub-accent); background-color: var(--sub-accent-bg); }
             
-            /* 리스트 내 단어 체크/단어장 호버 원상복구 - 투명도 오류 완 동 수정 */
             .list-action-check:not(.text-green-500):hover { color: #22c55e !important; }
             .list-action-check:not(.text-green-500):hover i { opacity: 1 !important; }
             .list-action-bookmark:not(.text-orange-400):hover { color: #f97316 !important; } 
             
-            /* 상단 툴바 4개 버튼 약한 호버 효과 */
             .toolbar-btn:not(.btn-active):hover { background-color: rgba(255, 255, 255, 0.12); }
             html[data-theme="light"] .toolbar-btn:not(.btn-active):hover { background-color: #e2e8f0; }
 
-            /* 설정 모달 버튼 호버 효과 */
             .settings-action-btn:hover, input.import-input:hover + .settings-action-btn { background-color: var(--glass-highlight); }
             html[data-theme="light"] .settings-action-btn:hover, html[data-theme="light"] input.import-input:hover + .settings-action-btn { background-color: #e2e8f0; }
             .settings-danger-btn:hover { background-color: rgba(239, 68, 68, 0.2) !important; border-color: rgba(239, 68, 68, 0.4) !important; }
@@ -363,44 +360,37 @@
 
         .fc-btn-auto.is-active { color: var(--sub-accent) !important; background-color: var(--sub-accent-bg) !important; }
 
-        /* 인쇄 (Print) 전용: 동적 생성 테이블만 표시되도록 철저히 차단 */
+        /* 인쇄 (Print) 전용 */
         @media print {
             @page { margin: 1.2cm; }
             body { background: white !important; font-family: 'Google Sans Flex', 'Pretendard', sans-serif !important; -webkit-text-size-adjust: 100% !important; }
             html { -webkit-text-size-adjust: 100% !important; }
             
-            /* 기존 앱 화면의 모든 요소를 강제 숨김 */
             .scroll-mask, .blobs, header, main, footer, #helpModal, #settingsModal, #glow-left, #glow-right { display: none !important; }
             
-            /* 자바스크립트로 생성한 프린트 전용 영역만 표시 */
             #print-area { display: block !important; width: 100%; max-width: 100%; background: white; color: black; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             #print-area h2.print-title { text-align: center; font-size: 16pt; margin-bottom: 15px; color: #000; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 10px; display: inline-block; width: 100%; font-family: 'Google Sans Flex', 'Pretendard', sans-serif; }
             #print-area .print-logo { font-family: 'Cal Sans', sans-serif !important; font-weight: 600 !important; font-style: italic !important; letter-spacing: -0.025em; }
             #print-area .print-highlight { color: #fbbf24 !important; }
             
-            /* table-layout: fixed 를 사용하여 iOS에서 표 크기와 글씨가 맘대로 커지는 현상 방지 */
             #print-area table { width: 100%; border-collapse: collapse; font-size: 10pt; table-layout: fixed; word-wrap: break-word; }
             
-            /* iOS Safari의 페이지 잘림(Page Break) 방지 속성 총동원 */
             #print-area tr { page-break-inside: avoid !important; break-inside: avoid !important; -webkit-column-break-inside: avoid !important; }
             #print-area th, #print-area td { border: 1px solid #d1d5db !important; padding: 8px 10px !important; text-align: left; vertical-align: top; color: #000 !important; background: transparent !important; page-break-inside: avoid !important; break-inside: avoid !important; }
             
             #print-area th { background-color: #f8fafc !important; border-bottom: 2px solid #94a3b8 !important; font-weight: bold; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #334155 !important; }
             
-            /* 열 너비 비율 고정 (총합 100%) */
             #print-area .print-num { width: 8%; text-align: center; color: #64748b !important; font-size: 9pt; }
             #print-area .print-day { width: 10%; text-align: center; }
             #print-area .print-term { width: 25%; }
             #print-area .print-def { width: 57%; }
             
-            /* 영어/한국어 디자인 명확한 구분 */
             #print-area .en-term { font-weight: 700; font-size: 11pt; color: #000 !important; display: block; margin-bottom: 3px; word-break: break-word; }
             #print-area .ko-term { color: #475569 !important; font-size: 9pt; font-weight: 500; display: block; word-break: break-word; }
             
             #print-area .en-def { font-weight: 600; font-size: 10pt; color: #1e293b !important; display: block; margin-bottom: 3px; line-height: 1.4; word-break: break-word; }
             #print-area .ko-def { color: #475569 !important; font-size: 9pt; font-weight: 400; display: block; line-height: 1.4; word-break: break-word; }
             
-            /* 워터마크 스타일 */
             .print-watermark {
                 position: fixed;
                 top: 50%;
@@ -438,7 +428,7 @@
             .mobile-hide { display: none !important; }
             
             /* Vertical Mobile Table Layout */
-            #listContainer table, #listContainer tbody:not(.day-header), #listContainer tr { display: block; width: 100%; }
+            #listContainer table, #listContainer tbody, #listContainer tr { display: block; width: 100%; }
             #listContainer thead { display: block; position: sticky; top: 0; z-index: 20; width: 100%; }
             
             /* 모바일 헤더(Thead) 레이아웃 재배치 */
@@ -463,7 +453,8 @@
             #listContainer th:nth-child(4) { flex: 1; display: flex; align-items: center; justify-content: flex-start; }
             #listContainer th:nth-child(5) { display: none !important; }
             
-            #listContainer tbody:not(.day-header) tr {
+            /* 단어 내용 (아코디언 본문) */
+            #listContainer tr.word-row {
                 position: relative;
                 padding: 12px 12px 12px 56px; 
                 border-bottom: 1px solid var(--glass-border);
@@ -471,7 +462,7 @@
             }
             
             /* 모바일 액션과 단어 사이의 세로 구분선 */
-            #listContainer tbody:not(.day-header) tr::before {
+            #listContainer tr.word-row::before {
                 content: ''; position: absolute; left: 44px; top: 15px; bottom: 15px; width: 1px; background-color: var(--glass-border);
             }
             
@@ -482,9 +473,18 @@
             #listContainer td.actions-col .flex { flex-direction: column; gap: 10px; align-items: center; }
             
             #listContainer td.day-col { display: none !important; }
-
-            /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
+
+            /* 아코디언 헤더(Day n)를 위한 모바일 전용 CSS 복원 */
+            #listContainer tr.day-header {
+                display: block;
+                width: 100%;
+            }
+            #listContainer tr.day-header td {
+                display: block;
+                width: 100%;
+                padding: 12px 16px !important;
+            }
         }
     </style>
 </head>
@@ -515,8 +515,6 @@
                 <span id="dday-text"></span>
             </div>
             
-            <!-- 수동 동기화 버튼 (코드가 연결/발급되었을 때만 표시) -->
-            <!-- 기본은 흰색(text-text-main), 변경사항이 있으면 노란색(text-highlight)으로 변합니다 -->
             <button class="tool-btn hidden transition-colors text-text-main hover:text-text-main/80" id="headerSyncBtn" onclick="manualCloudSync()" title="수동 동기화">
                 <i class="fa-solid fa-rotate"></i>
             </button>
@@ -525,7 +523,7 @@
             <a href="https://www.v1ctorym1n.kro.kr/enged" class="tool-btn" title="Enged 메인 페이지">
                 <i class="fa-solid fa-e text-sm"></i>
             </a>
-            <!-- 설정 모달 열기 버튼 -->
+            
             <button class="tool-btn" onclick="openSettingsModal()" title="설정 및 데이터 관리">
                 <i class="fa-solid fa-gear text-sm"></i>
             </button>
@@ -645,7 +643,7 @@
                                         <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
                                         <i id="filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
-                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
                                         <i id="filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
@@ -872,7 +870,7 @@
                             </button>
                         </div>
                         
-                        <!-- 우측: 필터 & Score -->
+                        <!-- 우측: Score & 필터 -->
                         <div class="flex items-center gap-3">
                             <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
                             <div class="relative">
@@ -915,6 +913,12 @@
                         <p id="quiz-question" class="text-2xl font-black text-text-main leading-relaxed font-sans px-2 break-words w-full">
                             Loading...
                         </p>
+                        <!-- 힌트 버튼 -->
+                        <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-sub-accent opacity-80 hover:opacity-100 font-bold px-2 py-1 rounded-md bg-sub-accent-bg transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-lightbulb"></i> 힌트
+                        </button>
+                        <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
+                        <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-sub-accent"></div>
                     </div>
 
                     <!-- 주관식 스펠링 컨테이너 디자인 개선 -->
@@ -2029,7 +2033,7 @@
         let searchTimeout = null; 
         
         // Day별 접기/펼치기 상태 추적 (Lazy Loading)
-        let expandedDays = new Set([1]); 
+        let expandedDays = new Set([]); 
 
         const ddayTextEl = document.getElementById('dday-text');
         const targetDate = new Date('2026-04-08T00:00:00');
@@ -2166,12 +2170,19 @@
                 if (!response.ok) throw new Error("CSV not found");
                 const text = await response.text();
                 parseCSV(text);
+                
+                // 데이터가 비어있지 않으면 가장 낮은 Day를 찾아 기본으로 펼침
+                if (allWords.length > 0) {
+                    const firstDay = Math.min(...allWords.map(w => w.day));
+                    expandedDays = new Set([firstDay]);
+                }
+
                 document.getElementById('loadingState').classList.add('hidden');
                 updateProgress();
                 renderListTable(); 
             } catch (error) {
                 console.error(error);
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-500">데이터 로드 실패</p>`;
+                document.getElementById('loadingState').innerHTML = `<p class="text-red-500 text-center">데이터 로드 실패<br>${error.message}</p>`;
             }
         }
 
@@ -2194,8 +2205,9 @@
                 }
                 matches.push(cleanCSVField(match));
                 
-                let dayStr = matches[0];
-                // Skip header or non-number rows explicitly
+                // BOM 및 띄어쓰기 등 불순물 제거 후 숫자만 체크
+                let dayStr = matches[0] ? matches[0].replace(/^\uFEFF/, '').trim() : "";
+                
                 if (!/^\d+$/.test(dayStr)) continue;
 
                 let day = parseInt(dayStr, 10);
@@ -2933,6 +2945,11 @@
             tbody.innerHTML = '';
             
             let filtered = getCurrentlyFilteredWords();
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-text-dim border-b border-[var(--glass-border)]">조건에 해당하는 단어가 없습니다.</td></tr>`;
+                return;
+            }
+
             const isSearching = query.length > 0;
             const fs = fontClasses[appState.fontSizeLevel || 0];
 
@@ -2975,9 +2992,9 @@
                         const isSaved = appState.notebook.includes(word.term);
                         const tr = document.createElement('tr');
                         
-                        if(isMemorized) tr.className = "bg-green-500/5 border-b border-[var(--glass-border)]";
-                        else if(isSaved) tr.className = "bg-orange-500/5 border-b border-[var(--glass-border)]";
-                        else tr.className = "border-b border-[var(--glass-border)]";
+                        if(isMemorized) tr.className = "word-row bg-green-500/5 border-b border-[var(--glass-border)]";
+                        else if(isSaved) tr.className = "word-row bg-orange-500/5 border-b border-[var(--glass-border)]";
+                        else tr.className = "word-row border-b border-[var(--glass-border)]";
                         
                         const highlight = (text) => {
                             if (!query || !text) return text;
