@@ -321,12 +321,14 @@
             .pc-hide { display: none !important; }
 
             #listContainer th:nth-child(2), #listContainer td.actions-col { width: 70px !important; }
-            #listContainer th:nth-child(3), #listContainer td.term-col-content { width: 30% !important; }
+            #listContainer th.day-col, #listContainer td.day-col { width: 70px !important; text-align: center; }
+            #listContainer th.term-col, #listContainer td.term-col-content { width: 25% !important; }
 
             #listContainer th, #listContainer td { position: relative; }
             #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
             #listContainer th:nth-child(2)::after, #listContainer td:nth-child(2)::after,
-            #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after {
+            #listContainer th:nth-child(3)::after, #listContainer td:nth-child(3)::after,
+            #listContainer th:nth-child(4)::after, #listContainer td:nth-child(4)::after {
                 content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background-color: var(--glass-border);
             }
             #listContainer td.actions-col .flex { flex-direction: row; gap: 12px; justify-content: center; }
@@ -387,7 +389,8 @@
             
             /* 열 너비 비율 고정 (총합 100%) */
             #print-area .print-num { width: 8%; text-align: center; color: #64748b !important; font-size: 9pt; }
-            #print-area .print-term { width: 35%; }
+            #print-area .print-day { width: 10%; text-align: center; }
+            #print-area .print-term { width: 25%; }
             #print-area .print-def { width: 57%; }
             
             /* 영어/한국어 디자인 명확한 구분 */
@@ -435,7 +438,7 @@
             .mobile-hide { display: none !important; }
             
             /* Vertical Mobile Table Layout */
-            #listContainer table, #listContainer tbody, #listContainer tr { display: block; width: 100%; }
+            #listContainer table, #listContainer tbody:not(.day-header), #listContainer tr { display: block; width: 100%; }
             #listContainer thead { display: block; position: sticky; top: 0; z-index: 20; width: 100%; }
             
             /* 모바일 헤더(Thead) 레이아웃 재배치 */
@@ -455,11 +458,12 @@
             #listContainer th { background-color: transparent !important; backdrop-filter: none !important; border-bottom: none !important; box-shadow: none !important; padding: 0 !important; }
             
             #listContainer th.num-col { display: none !important; }
+            #listContainer th.day-col { display: none !important; }
             #listContainer th:nth-child(2) { width: auto !important; display: flex; justify-content: flex-start; margin-right: 16px; }
-            #listContainer th:nth-child(3) { flex: 1; display: flex; align-items: center; justify-content: flex-start; }
-            #listContainer th:nth-child(4) { display: none !important; }
+            #listContainer th:nth-child(4) { flex: 1; display: flex; align-items: center; justify-content: flex-start; }
+            #listContainer th:nth-child(5) { display: none !important; }
             
-            #listContainer tbody tr {
+            #listContainer tbody:not(.day-header) tr {
                 position: relative;
                 padding: 12px 12px 12px 56px; 
                 border-bottom: 1px solid var(--glass-border);
@@ -467,7 +471,7 @@
             }
             
             /* 모바일 액션과 단어 사이의 세로 구분선 */
-            #listContainer tr::before {
+            #listContainer tbody:not(.day-header) tr::before {
                 content: ''; position: absolute; left: 44px; top: 15px; bottom: 15px; width: 1px; background-color: var(--glass-border);
             }
             
@@ -477,6 +481,8 @@
             #listContainer td.actions-col { position: absolute; left: 8px; top: 14px; width: 32px !important; }
             #listContainer td.actions-col .flex { flex-direction: column; gap: 10px; align-items: center; }
             
+            #listContainer td.day-col { display: none !important; }
+
             /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
         }
@@ -515,11 +521,8 @@
                 <i class="fa-solid fa-rotate"></i>
             </button>
             
-            <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
-                <i class="fa-solid fa-house text-sm"></i>
-            </a>
             <!-- 상위 페이지 이동 링크 -->
-            <a href="https://www.v1ctorym1n.kro.kr/enged" class="tool-btn" title="Enged 페이지">
+            <a href="https://www.v1ctorym1n.kro.kr/enged" class="tool-btn" title="Enged 메인 페이지">
                 <i class="fa-solid fa-e text-sm"></i>
             </a>
             <!-- 설정 모달 열기 버튼 -->
@@ -638,11 +641,11 @@
                                         <span><span class="slash-wrapper slash-always text-red-500 w-5 text-center mr-2"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span> 암기 제외</span>
                                         <i id="filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
-                                    <button onclick="setListFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
                                         <i id="filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
-                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
                                         <i id="filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
@@ -697,17 +700,17 @@
                                         <i class="fa-solid fa-bookmark cursor-pointer transition-colors list-action-bookmark hover:text-orange-400" title="현재 목록 전체 저장/해제" onclick="toggleAllVisibleNotebook()"></i>
                                     </div>
                                 </th>
-                                <th class="px-4 py-3 term-col w-[30%] cursor-pointer hover:text-[var(--sub-accent)] transition-colors group select-none" onclick="toggleSort()" title="알파벳 정렬">
-                                    <div class="flex items-center gap-1">
-                                        Term
-                                        <i id="sortIndicator" class="fa-solid fa-caret-down text-text-dim group-hover:text-[var(--sub-accent)] transition-colors"></i>
-                                    </div>
+                                <th class="px-3 py-3 text-center w-[60px] day-col mobile-hide">
+                                    Day
+                                </th>
+                                <th class="px-4 py-3 term-col w-[25%]">
+                                    Term
                                 </th>
                                 <th class="px-4 py-3 def-col w-auto mobile-hide">Meaning & Synonyms</th>
                             </tr>
                         </thead>
-                        <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
-                            <!-- JS Generated -->
+                        <tbody id="wordListBody" class="text-sm text-text-main">
+                            <!-- JS Generated (Accordion Groups) -->
                         </tbody>
                     </table>
                 </div>
@@ -1117,7 +1120,9 @@
 
         const isCanvasEnv = typeof __firebase_config !== 'undefined';
         const configToUse = isCanvasEnv ? JSON.parse(__firebase_config) : firebaseConfig;
-        const fallbackAppId = typeof __app_id !== 'undefined' ? __app_id : 'enged-vocab';
+        
+        // 💡 하위 페이지(Voca)용 분리된 Firestore App ID 사용
+        const fallbackAppId = typeof __app_id !== 'undefined' ? __app_id : 'enged-vocab-sub';
 
         let app, auth, db;
         let currentUser = null;
@@ -1989,11 +1994,12 @@
         let allWords = []; 
         let allQuizItems = []; // Contains individual synonyms for specific testing
 
+        // 💡 로컬 스토리지 분리: 메인 페이지와 충돌하지 않도록 새로운 key 사용
         let appState = { 
             memorized: {}, 
             notebook: [], 
             currentIndex: 0,
-            quizState: { asked: [], score: 0 }, // asked contains item.id
+            quizState: { asked: [], score: 0 },
             fontSizeLevel: 0,
             autoRemoveSaved: true,
             lastModified: 0, 
@@ -2021,6 +2027,9 @@
         let hideDefs = false;
 
         let searchTimeout = null; 
+        
+        // Day별 접기/펼치기 상태 추적 (Lazy Loading)
+        let expandedDays = new Set([1]); 
 
         const ddayTextEl = document.getElementById('dday-text');
         const targetDate = new Date('2026-04-08T00:00:00');
@@ -2033,7 +2042,7 @@
         
         window.updateLocalState = (newState, skipDirty = false) => {
             appState = newState;
-            localStorage.setItem('engVocabState', JSON.stringify(appState));
+            localStorage.setItem('engVocabState_voca', JSON.stringify(appState));
             updateProgress();
             
             const activeTab = document.querySelector('.chip.active');
@@ -2066,7 +2075,7 @@
         };
 
         function loadLocalData() {
-            const saved = localStorage.getItem('engVocabState');
+            const saved = localStorage.getItem('engVocabState_voca');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -2079,19 +2088,11 @@
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
             }
-            
-            const oldUsageStr = localStorage.getItem('engedSyncUsage');
-            if (oldUsageStr && !appState.syncUsage) {
-                try {
-                    appState.syncUsage = JSON.parse(oldUsageStr);
-                } catch(e) {}
-                localStorage.removeItem('engedSyncUsage'); 
-            }
         }
 
         function saveData(skipDirty = false) {
             appState.lastModified = Date.now();
-            localStorage.setItem('engVocabState', JSON.stringify(appState));
+            localStorage.setItem('engVocabState_voca', JSON.stringify(appState));
             updateProgress();
             
             if (!skipDirty) window.setDirty(true);
@@ -2145,7 +2146,7 @@
         
         function resetData() {
             if(confirm("모든 학습 기록(암기 상태, 단어장, 퀴즈 기록)을 초기화하시겠습니까?")) {
-                localStorage.removeItem('engVocabState');
+                localStorage.removeItem('engVocabState_voca');
                 alert("초기화가 완료되었습니다.");
                 location.reload();
             }
@@ -2180,7 +2181,7 @@
             allWords = [];
             allQuizItems = [];
             
-            for (let i = 1; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
                 let matches = [];
@@ -2193,7 +2194,11 @@
                 }
                 matches.push(cleanCSVField(match));
                 
-                let day = matches[0];
+                let dayStr = matches[0];
+                // Skip header or non-number rows explicitly
+                if (!/^\d+$/.test(dayStr)) continue;
+
+                let day = parseInt(dayStr, 10);
                 let word = matches[1];
                 let koTerm = matches[2];
                 let synonyms = matches[3] || "";
@@ -2443,14 +2448,16 @@
             document.getElementById('fc-front-term').innerText = word.term;
             
             // Back = Meanings + Synonyms
-            let backHtml = '';
+            let backHtml = '<div class="flex flex-col gap-3 w-full">';
             for (let i = 0; i < word.meaningsList.length; i++) {
-                backHtml += `<div class="mb-3.5"><span class="font-kor font-bold text-[18px] md:text-[20px] text-text-main">${word.meaningsList[i]}</span>`;
-                if (word.synGroupsList[i]) {
-                    backHtml += `<br><span class="text-[14px] md:text-[15px] font-medium text-primary mt-1 inline-block opacity-90">${word.synGroupsList[i]}</span>`;
+                backHtml += `<div class="bg-[var(--glass-highlight)] p-3.5 rounded-xl border border-[var(--glass-border)]">`;
+                backHtml += `<div class="font-kor font-bold text-[18px] md:text-[20px] text-text-main">${word.meaningsList[i]}</div>`;
+                if (word.synGroupsList[i] && word.synGroupsList[i].trim() !== '') {
+                    backHtml += `<div class="text-[14px] md:text-[15px] font-sans font-medium text-primary mt-2 opacity-90 leading-tight">${word.synGroupsList[i]}</div>`;
                 }
                 backHtml += `</div>`;
             }
+            backHtml += '</div>';
             document.getElementById('fc-back-content').innerHTML = backHtml;
             
             document.getElementById('fc-progress').innerText = `${idx + 1} / ${flashcardOrder.length}`;
@@ -2590,6 +2597,7 @@
                 card.innerHTML = `
                     <div class="flex-1 pr-4">
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
+                            <span class="px-2 py-0.5 bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] text-sub-accent text-[10px] font-bold rounded-md whitespace-nowrap">Day ${word.day}</span>
                             <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
                         </div>
                         <p class="text-sm font-kor text-text-main leading-relaxed mb-1">${word.koTerm}</p>
@@ -2911,128 +2919,11 @@
             document.getElementById('quiz-final-total').innerText = appState.quizState.asked.length;
         }
 
-        // --- List Controls ---
-        function getCurrentlyFilteredWords() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            let filtered = allWords.filter(word => {
-                if (listFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
-                if (listFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
-                if (listFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
-                if(!query) return true;
-                return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.synonyms.toLowerCase().includes(query);
-            });
-
-            filtered.sort((a, b) => {
-                if (query) {
-                    const qLower = query;
-                    const aTermHas = a.term.toLowerCase().includes(qLower);
-                    const bTermHas = b.term.toLowerCase().includes(qLower);
-                    if(aTermHas && !bTermHas) return -1;
-                    if(!aTermHas && bTermHas) return 1;
-                }
-                const compare = a.term.localeCompare(b.term);
-                return sortOrder === 'asc' ? compare : -compare;
-            });
-            
-            return filtered;
-        }
-
-        function toggleAllVisibleMemorized() {
-            const filtered = getCurrentlyFilteredWords();
-            if (filtered.length === 0) return;
-            const allMemorized = filtered.every(w => appState.memorized[w.term]);
-            filtered.forEach(w => {
-                if (allMemorized) delete appState.memorized[w.term];
-                else appState.memorized[w.term] = true;
-            });
-            saveData();
-            renderListTable();
-        }
-
-        function toggleAllVisibleNotebook() {
-            const filtered = getCurrentlyFilteredWords();
-            if (filtered.length === 0) return;
-            const allSaved = filtered.every(w => appState.notebook.includes(w.term));
-            filtered.forEach(w => {
-                if (allSaved) {
-                    appState.notebook = appState.notebook.filter(t => t !== w.term);
-                } else {
-                    if (!appState.notebook.includes(w.term)) appState.notebook.push(w.term);
-                }
-            });
-            saveData();
-            renderListTable();
-        }
-
-        function setListFilter(mode) {
-            listFilterMode = mode;
-            const btn = document.getElementById('filterBtn');
-            if(listFilterMode === 'all') {
-                btn.innerHTML = '<i class="fa-solid fa-filter"></i>';
-                btn.classList.remove('btn-active');
-                btn.title = "필터링 (전체)";
-            } else if(listFilterMode === 'hideMemorized') {
-                btn.innerHTML = '<span class="slash-wrapper slash-always text-red-500"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (암기 제외)";
-            } else if(listFilterMode === 'onlySaved') {
-                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-400"></i>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (저장 단어)";
-            } else if(listFilterMode === 'onlyMemorized') {
-                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (암기 완료)";
-            }
-            updateFilterMenuUI();
-            closeMenu('filterMenu');
-            renderListTable();
-        }
-
-        function toggleHideTerms() {
-            hideTerms = !hideTerms;
-            document.getElementById('hideTermBtn').classList.toggle('btn-active', hideTerms);
-            renderListTable();
-        }
-        
-        function toggleHideDefs() {
-            hideDefs = !hideDefs;
-            document.getElementById('hideDefBtn').classList.toggle('btn-active', hideDefs);
-            renderListTable();
-        }
-
-        function toggleSort() {
-            sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-            const ind = document.getElementById('sortIndicator');
-            if (ind) {
-                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-[var(--sub-accent)] transition-colors' : 'fa-solid fa-caret-up text-[var(--sub-accent)] transition-colors';
-            }
-            renderListTable();
-        }
-
-        function toggleFullscreenList() {
-            const el = document.getElementById('listSection');
-            const container = el.querySelector('#listContainer');
-            
-            const isNativeFs = document.fullscreenElement || document.webkitFullscreenElement;
-
-            if (!isNativeFs) {
-                if (el.requestFullscreen) {
-                    el.requestFullscreen();
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                }
-                el.classList.add('h-screen');
-                container.style.maxHeight = 'none';
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-                el.classList.remove('h-screen');
-                container.style.maxHeight = '500px';
-            }
+        // --- List Controls (Accordion & Lazy Render) ---
+        window.toggleDay = function(day) {
+            if(expandedDays.has(day)) expandedDays.delete(day);
+            else expandedDays.add(day);
+            renderListTable(); // Accordion을 열 때만 하위 항목이 그려집니다 (DOM 최적화)
         }
 
         function renderListTable() {
@@ -3042,60 +2933,100 @@
             tbody.innerHTML = '';
             
             let filtered = getCurrentlyFilteredWords();
+            const isSearching = query.length > 0;
             const fs = fontClasses[appState.fontSizeLevel || 0];
 
-            filtered.forEach((word, idx) => {
-                const isMemorized = appState.memorized[word.term];
-                const isSaved = appState.notebook.includes(word.term);
-                const tr = document.createElement('tr');
-                
-                if(isMemorized) tr.className = "bg-green-500/5";
-                else if(isSaved) tr.className = "bg-orange-500/5";
-                
-                const highlight = (text) => {
-                    if (!query || !text) return text;
-                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-                    return text.replace(regex, '<span class="hl-text">$1</span>');
-                };
+            // 1. Group by Day
+            const grouped = {};
+            filtered.forEach(w => {
+                if(!grouped[w.day]) grouped[w.day] = [];
+                grouped[w.day].push(w);
+            });
 
-                const termClass = hideTerms ? 'blur-target' : '';
-                const defClass = hideDefs ? 'blur-target' : '';
+            // 2. Sort Keys (Days) by numerical value
+            const sortedDays = Object.keys(grouped).map(Number).sort((a,b) => sortOrder === 'asc' ? a - b : b - a);
 
-                // Meaning & Synonyms List Layout
-                let meaningHtml = '';
-                for (let i = 0; i < word.meaningsList.length; i++) {
-                    meaningHtml += `<div style="margin-top: ${i > 0 ? '6px' : '0'};">`;
-                    meaningHtml += `<span class="font-kor font-bold text-text-main ${fs.koTerm}">${highlight(word.meaningsList[i])}</span>`;
-                    if (word.synGroupsList[i]) {
-                        meaningHtml += `<br><span class="font-sans font-medium text-primary inline-block opacity-90 ${fs.def}">${highlight(word.synGroupsList[i])}</span>`;
-                    }
-                    meaningHtml += `</div>`;
-                }
+            let globalIdx = 1;
 
-                tr.innerHTML = `
-                    <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
-                    <td class="px-2 py-3 text-center actions-col">
-                        <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
-                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
-                                <i class="text-lg fa-solid fa-check"></i>
-                            </button>
-                            <button onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-bookmark ${isSaved ? 'text-orange-400' : 'text-text-dim'}">
-                                <i class="text-lg ${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
-                            </button>
+            sortedDays.forEach(day => {
+                // If searching, auto-expand all matched days
+                const isExpanded = isSearching || expandedDays.has(day);
+
+                // --- Render Day Accordion Header ---
+                const dayHeader = document.createElement('tr');
+                dayHeader.className = "day-header bg-[var(--glass-highlight)] cursor-pointer hover:bg-[var(--glass-border)] transition-colors border-b border-[var(--glass-border)]";
+                dayHeader.innerHTML = `
+                    <td colspan="5" class="py-3.5 px-4 font-bold text-primary font-sans select-none" onclick="toggleDay(${day})">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-[var(--sub-accent-bg)] text-sub-accent px-2 py-0.5 rounded-md text-sm border border-[var(--sub-accent-border)]">Day ${day}</span>
+                                <span class="text-text-dim text-xs font-normal opacity-80">(${grouped[day].length} Words)</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-${isExpanded ? 'up' : 'down'} text-text-dim transition-transform"></i>
                         </div>
-                    </td>
-                    <td class="px-3 py-3 align-top term-col-content">
-                        <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                            <span class="px-2 py-0.5 bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] text-sub-accent text-[10px] font-bold rounded-md whitespace-nowrap">Day ${word.day}</span>
-                        </div>
-                        <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.1; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                    </td>
-                    <td class="px-3 py-3 align-top def-col-content ${defClass}">
-                        ${meaningHtml}
                     </td>
                 `;
-                tbody.appendChild(tr);
+                tbody.appendChild(dayHeader);
+
+                // --- Lazy Render Content Rows ---
+                if (isExpanded) {
+                    grouped[day].forEach((word) => {
+                        const isMemorized = appState.memorized[word.term];
+                        const isSaved = appState.notebook.includes(word.term);
+                        const tr = document.createElement('tr');
+                        
+                        if(isMemorized) tr.className = "bg-green-500/5 border-b border-[var(--glass-border)]";
+                        else if(isSaved) tr.className = "bg-orange-500/5 border-b border-[var(--glass-border)]";
+                        else tr.className = "border-b border-[var(--glass-border)]";
+                        
+                        const highlight = (text) => {
+                            if (!query || !text) return text;
+                            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                            return text.replace(regex, '<span class="hl-text">$1</span>');
+                        };
+
+                        const termClass = hideTerms ? 'blur-target' : '';
+                        const defClass = hideDefs ? 'blur-target' : '';
+
+                        // Meaning & Synonyms List Layout (Explicit separation via loop)
+                        let meaningHtml = '<div class="flex flex-col gap-3 py-1">';
+                        for (let i = 0; i < word.meaningsList.length; i++) {
+                            meaningHtml += `<div>`;
+                            meaningHtml += `<div class="font-kor font-bold text-text-main ${fs.koTerm}">${highlight(word.meaningsList[i])}</div>`;
+                            if (word.synGroupsList[i] && word.synGroupsList[i].trim() !== '') {
+                                meaningHtml += `<div class="font-sans font-medium text-[var(--sub-accent)] mt-1 opacity-90 ${fs.def}">${highlight(word.synGroupsList[i])}</div>`;
+                            }
+                            meaningHtml += `</div>`;
+                        }
+                        meaningHtml += '</div>';
+
+                        tr.innerHTML = `
+                            <td class="px-2 py-4 text-center text-text-dim text-xs font-sans mobile-hide num-col">${globalIdx++}</td>
+                            <td class="px-2 py-4 text-center actions-col">
+                                <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                                    <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${globalIdx - 1}</span>
+                                    <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
+                                        <i class="text-lg fa-solid fa-check"></i>
+                                    </button>
+                                    <button onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-bookmark ${isSaved ? 'text-orange-400' : 'text-text-dim'}">
+                                        <i class="text-lg ${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="px-3 py-4 text-center font-bold text-text-dim font-sans mobile-hide day-col">${word.day}</td>
+                            <td class="px-3 py-4 align-top term-col-content">
+                                <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.1; padding-bottom: 0.1em; padding-top: 0.25rem;">${highlight(word.term)}</div>
+                            </td>
+                            <td class="px-3 py-3 align-top def-col-content ${defClass}">
+                                ${meaningHtml}
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    // Update globalIdx even if skipped to keep numbering consistent
+                    globalIdx += grouped[day].length;
+                }
             });
         }
         
