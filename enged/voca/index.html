@@ -6,11 +6,8 @@
     <title>단어장 출력 시스템</title>
     <!-- CSV 파싱 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <!-- PDF 생성 라이브러리 (jsPDF) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- jsPDF 표 생성 플러그인 (AutoTable) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    
+    <!-- PDF 추출 라이브러리 (HTML-to-Canvas 기반) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
     <style>
         :root {
@@ -20,30 +17,22 @@
             --text-secondary: #475569;
             --text-tertiary: #94a3b8;
             --border-light: #e2e8f0;
-            --border-strong: #94a3b8; 
             --accent: #0f172a; 
-            --accent-hover: #334155;
             --primary: #2563eb; 
-            --primary-hover: #1d4ed8;
             --radius-md: 12px;
             --radius-sm: 8px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
         body {
-            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-primary);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding-bottom: 60px;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding-bottom: 60px;
         }
 
+        /* --- 상단 컨트롤 영역 --- */
         .header-container {
             width: 100%; position: sticky; top: 0; z-index: 1000;
             background: rgba(241, 245, 249, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -51,629 +40,309 @@
             border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 30px;
         }
 
-        .toolbar { display: flex; gap: 12px; align-items: center; background: var(--bg-paper); padding: 12px 24px; border-radius: 100px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .toolbar { display: flex; gap: 12px; align-items: center; background: var(--bg-paper); padding: 12px 24px; border-radius: 100px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-light); }
         input[type="file"] { display: none; }
         .btn { font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 100px; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; }
-        .btn-upload { background-color: var(--bg-paper); color: var(--text-primary); border: 1px solid var(--border-strong); }
-        .btn-upload:hover { background-color: #f8fafc; transform: translateY(-1px); }
+        .btn-upload { background-color: var(--bg-paper); color: var(--text-primary); border: 1px solid #94a3b8; }
         .btn-print { background-color: var(--accent); color: white; display: none; }
-        .btn-print:hover { background-color: var(--accent-hover); box-shadow: var(--shadow-sm); }
         .btn-pdf { background-color: var(--primary); color: white; display: none; }
-        .btn-pdf:hover { background-color: var(--primary-hover); box-shadow: var(--shadow-sm); }
-        .btn-back { background-color: transparent; color: var(--text-secondary); text-decoration: none; border: 1px solid transparent; padding: 10px 16px; }
-        .btn-back:hover { background-color: var(--border-light); color: var(--text-primary); }
+        .btn-back { background-color: transparent; color: var(--text-secondary); text-decoration: none; padding: 10px 16px; }
+        .btn-back:hover { background-color: var(--border-light); border-radius: 100px; }
 
-        .control-panel { width: 100%; max-width: 900px; background: var(--bg-paper); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); margin-top: 16px; display: none; box-sizing: border-box; }
+        .control-panel { width: 100%; max-width: 900px; background: var(--bg-paper); padding: 20px; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-light); margin-top: 16px; display: none; box-sizing: border-box; }
         .panel-section { border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 16px; }
         .panel-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
         .section-title { font-weight: 700; color: var(--text-primary); font-size: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .options-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-        .radio-label, .check-label { display: inline-flex; align-items: center; gap: 6px; font-size: 14.5px; color: var(--text-secondary); cursor: pointer; user-select: none; }
-        .radio-label input, .check-label input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary); }
-        .radio-label { font-weight: 600; color: var(--text-primary); }
-        .filter-actions button { background: none; border: none; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; padding: 4px 8px; }
-        .filter-actions button:hover { text-decoration: underline; }
+        .radio-label, .check-label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-secondary); cursor: pointer; user-select: none; }
         .chip-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .chip { padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1; background: var(--bg-paper); color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; user-select: none; }
-        .chip:hover { border-color: var(--primary); color: var(--primary); }
+        .chip { padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1; background: var(--bg-paper); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
+        /* --- 메인 화면 레이아웃 (A4) --- */
         #mainContent { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
-        
-        .a4-page { width: 210mm; min-height: 297mm; background: var(--bg-paper); padding: 20mm 25mm; box-shadow: var(--shadow-lg); border-radius: var(--radius-sm); box-sizing: border-box; position: relative; background-color: white; page-break-after: always; break-after: page; }
-        .a4-page:last-child { page-break-after: auto; break-after: auto; }
-        .page-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--text-primary); padding-bottom: 16px; margin-bottom: 24px; }
-        .page-title { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
-        .page-meta { font-size: 14px; color: var(--text-secondary); font-weight: 600; text-align: right; }
-        .input-line { display: inline-block; width: 100px; border-bottom: 1px solid var(--text-secondary); margin-left: 8px; }
+        .a4-page { 
+            width: 210mm; min-height: 297mm; background: white; padding: 20mm 20mm; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-radius: 2px; box-sizing: border-box; 
+            position: relative; page-break-after: always;
+        }
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--text-primary); padding-bottom: 14px; margin-bottom: 20px; }
+        .page-title { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; }
+        .page-meta { font-size: 14px; font-weight: 600; text-align: right; }
+        .input-line { display: inline-block; width: 100px; border-bottom: 1px solid #000; margin-left: 6px; }
 
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; border: 1px solid var(--border-strong); }
-        tr { page-break-inside: avoid; break-inside: avoid; }
-        th { text-align: center; padding: 12px 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); background-color: #f8fafc; }
-        td { padding: 12px 10px; font-size: 14.5px; line-height: 1.5; vertical-align: middle; border: 1px solid var(--border-strong); background-color: white; }
+        /* --- 테이블 선 두께 0.12px 적용 --- */
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 0.12px solid #000; margin-bottom: 20px; }
+        th, td { border: 0.12px solid #000; padding: 10px 8px; font-size: 14px; vertical-align: middle; word-break: keep-all; }
+        th { background-color: #f8fafc; color: var(--text-secondary); font-weight: 700; font-size: 11px; text-transform: uppercase; }
 
-        .study-table th:nth-child(1) { width: 25%; } .study-table th:nth-child(2) { width: 40%; } .study-table th:nth-child(3) { width: 35%; }
-        .word-cell { font-weight: 700; font-size: 16px; color: var(--text-primary); text-align: left; }
-        .study-table td.word-cell { border-bottom: 1px solid var(--border-strong) !important; }
-        .meaning-cell { color: #1e293b; font-weight: 500; text-align: left; }
-        .synonym-cell { color: var(--text-secondary); font-style: normal; text-align: left; }
-        .synonym-item { display: inline-block; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-size: 13.5px; margin-right: 4px; margin-bottom: 4px; border: 1px solid #e2e8f0; }
+        .word-cell { font-weight: 700; font-size: 15px; text-align: left; background-color: white !important; }
+        .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent; padding-top: 4px; padding-bottom: 4px; }
+        .synonym-item { display: inline-block; background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 12px; margin: 2px; border: 0.12px solid #cbd5e1; }
 
-        .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; padding-top: 6px; padding-bottom: 6px; }
-        .study-table tr.last-row td { border-bottom: 1px solid var(--border-strong) !important; padding-bottom: 12px; }
-        .study-table tr.first-row td { padding-top: 12px; }
+        .num-cell { text-align: center; color: var(--text-tertiary); width: 35px; font-size: 12px; }
+        .answer-text { color: #dc2626; font-weight: 600; }
 
-        .test-table th.col-no { width: 6%; } .test-table th.col-word { width: 24%; } .test-table th.col-mean { width: 20%; }
-        .test-word-cell { font-weight: 600; color: var(--text-primary); word-break: break-word; text-align: left; }
-        .test-meaning-cell { height: 36px; word-break: keep-all; line-height: 1.3; text-align: left; } 
-        .num-cell { text-align: center; color: var(--text-tertiary); font-size: 13px; }
-        .answer-text { color: #dc2626; font-weight: 600; font-size: 13.5px; }
+        /* 오버레이 */
+        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; opacity: 0; pointer-events: none; transition: 0.2s; }
+        .overlay.active { opacity: 1; pointer-events: all; }
+        .spinner { border: 4px solid rgba(255,255,255,0.2); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; width: 210mm; border: 2px dashed #cbd5e1; border-radius: var(--radius-md); background-color: #fafaf9; color: var(--text-tertiary); text-align: center; }
-        .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
-        .empty-text { font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
-
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-        .overlay-screen.active { opacity: 1; pointer-events: all; }
-        .overlay-message { color: white; font-size: 28px; font-weight: 700; text-align: center; }
-        .overlay-message span { display: block; font-size: 16px; font-weight: 400; color: #cbd5e1; margin-top: 12px; }
-        .spinner { border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top: 4px solid white; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* =========================================
+           PDF 생성 전용 모드 (잘림 방지 하드코딩)
+           ========================================= */
+        body.pdf-rendering { display: block !important; background: white !important; }
+        body.pdf-rendering .header-container { display: none !important; }
+        body.pdf-rendering #mainContent { width: 800px !important; margin: 0 !important; gap: 0 !important; display: block !important; }
+        body.pdf-rendering .a4-page { width: 100% !important; box-shadow: none !important; margin: 0 !important; padding: 15mm !important; }
+        body.pdf-rendering table, body.pdf-rendering th, body.pdf-rendering td { border-width: 0.12px !important; border-color: #000 !important; }
 
         @media print {
-            @page { size: A4 portrait; margin: 15mm; }
-            body { background: none; padding: 0; margin: 0; display: block; }
-            .header-container, .overlay-screen { display: none !important; }
-            #mainContent { width: 100%; display: block; margin: 0; padding: 0; gap: 0; }
-            .a4-page { width: 100%; margin: 0; padding: 0; box-shadow: none; border-radius: 0; height: auto; min-height: 0; page-break-after: always; break-after: page; }
-            table { width: 100% !important; border-collapse: collapse; }
-            /* 인쇄 시 표 선 굵기를 0.12px로 고정 */
-            table, th, td { border: 0.12px solid #000 !important; }
-            .study-table td.word-cell { border-bottom: 0.12px solid #000 !important; }
-            .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; }
+            @page { size: A4 portrait; margin: 0; }
+            body { background: white; }
+            .header-container { display: none !important; }
+            #mainContent { gap: 0; width: 100%; }
+            .a4-page { width: 100%; box-shadow: none; padding: 15mm; margin: 0; }
+            table, th, td { border-width: 0.12px !important; }
         }
     </style>
 </head>
 <body>
 
-    <div id="dropOverlay" class="overlay-screen">
-        <div class="overlay-message">
-            📥<br>CSV 파일을 여기에 놓아주세요
-            <span>손을 놓으면 자동으로 단어장이 생성됩니다.</span>
-        </div>
-    </div>
-
-    <div id="loadingOverlay" class="overlay-screen">
-        <div class="spinner"></div>
-        <div class="overlay-message">
-            PDF 데이터를 생성 중입니다...
-            <span id="loadingSubMessage">데이터 추출 방식으로 완벽한 포맷의 PDF가 다운로드됩니다.</span>
-        </div>
-    </div>
+    <div id="dropOverlay" class="overlay">📥 파일을 여기에 놓아주세요</div>
+    <div id="loadingOverlay" class="overlay"><div class="spinner"></div><div>PDF를 생성하고 있습니다...</div></div>
 
     <div class="header-container">
         <div class="toolbar">
-            <a href="https://www.v1ctorym1n.kro.kr/enged" class="btn btn-back">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                돌아가기
-            </a>
-            <label for="csvFileInput" class="btn btn-upload">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                CSV 업로드
-            </label>
+            <a href="https://www.v1ctorym1n.kro.kr/enged" class="btn btn-back">돌아가기</a>
+            <label for="csvFileInput" class="btn btn-upload">CSV 업로드</label>
             <input type="file" id="csvFileInput" accept=".csv" />
-            
-            <button class="btn btn-print" onclick="window.print()" id="printBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                인쇄하기
-            </button>
-            <button class="btn btn-pdf" id="pdfBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>PDF 다운로드</span>
-            </button>
+            <button class="btn btn-print" onclick="window.print()" id="printBtn">인쇄하기</button>
+            <button class="btn btn-pdf" id="pdfBtn">PDF 다운로드</button>
         </div>
 
         <div class="control-panel" id="controlPanel">
             <div class="panel-section">
                 <div class="options-row">
-                    <span style="font-weight:700; color:var(--text-primary); margin-right:10px;">📌 뷰어 모드</span>
-                    <label class="radio-label"><input type="radio" name="viewMode" value="study" checked> 📖 단어장 (학습용)</label>
-                    <label class="radio-label"><input type="radio" name="viewMode" value="test"> 📝 시험지 (테스트용)</label>
+                    <span style="font-weight:800;">📌 모드</span>
+                    <label class="radio-label"><input type="radio" name="viewMode" value="study" checked> 📖 단어장</label>
+                    <label class="radio-label"><input type="radio" name="viewMode" value="test"> 📝 시험지</label>
                 </div>
             </div>
-
-            <div class="panel-section" id="testSettings" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <div class="section-title" style="font-size:14px; margin-bottom:8px;">⚙️ 시험지 출제 옵션 (답안지 자동 생성)</div>
+            <div class="panel-section" id="testSettings" style="display: none;">
                 <div class="options-row">
-                    <label class="check-label"><input type="checkbox" id="chkSynonyms"> 유의어도 문제로 출제</label>
-                    <label class="check-label"><input type="checkbox" id="chkShuffle" checked> 순서 섞기 (랜덤)</label>
-                    <label class="check-label"><input type="checkbox" id="chkCombine"> 선택 Day 통합 출력</label>
-                </div>
-                <div class="options-row" style="margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
-                    <span style="font-size: 13.5px; font-weight: 600; color: var(--text-secondary); margin-right: 8px;">출제 문항 수:</span>
-                    <label class="radio-label"><input type="radio" name="questionCount" value="10"> 10문제</label>
-                    <label class="radio-label"><input type="radio" name="questionCount" value="20"> 20문제</label>
-                    <label class="radio-label"><input type="radio" name="questionCount" value="30"> 30문제</label>
-                    <label class="radio-label"><input type="radio" name="questionCount" value="all" checked> 전체 출제</label>
+                    <label class="check-label"><input type="checkbox" id="chkSynonyms"> 유의어 출제</label>
+                    <label class="check-label"><input type="checkbox" id="chkShuffle" checked> 무작위 섞기</label>
+                    <label class="check-label"><input type="checkbox" id="chkCombine"> 선택 Day 통합</label>
+                    <span style="margin-left:10px; font-weight:700;">문항수:</span>
+                    <label class="radio-label"><input type="radio" name="qCount" value="10"> 10</label>
+                    <label class="radio-label"><input type="radio" name="qCount" value="20"> 20</label>
+                    <label class="radio-label"><input type="radio" name="qCount" value="30"> 30</label>
+                    <label class="radio-label"><input type="radio" name="qCount" value="all" checked> 전체</label>
                 </div>
             </div>
-
-            <div class="panel-section" style="border-bottom: none; padding-bottom: 0;">
-                <div class="section-title">
-                    <span>📄 출력할 Day 선택 (다중 선택)</span>
-                    <div class="filter-actions">
-                        <button onclick="selectAllDays()">전체 선택</button>
-                        <button onclick="deselectAllDays()">전체 해제</button>
-                    </div>
-                </div>
-                <div class="chip-container" id="dayChipsContainer"></div>
+            <div class="panel-section">
+                <div class="section-title"><span>📄 Day 선택</span></div>
+                <div class="chip-container" id="dayChips"></div>
             </div>
         </div>
     </div>
 
     <main id="mainContent">
-        <div class="empty-state" id="emptyState">
-            <div class="empty-icon">📁</div>
-            <div class="empty-text">단어장 CSV 파일을 선택하거나 드래그 해주세요</div>
-            <div style="font-size: 14px; color: var(--text-tertiary);">Day, Word, Meaning (KR), Synonyms 양식에 맞춰 업로드해 주세요.</div>
-        </div>
+        <div style="padding: 100px; color: #94a3b8; text-align: center;">CSV 파일을 업로드하면 단어장이 생성됩니다.</div>
     </main>
 
     <script>
-        let parsedVocabulary = {};
-        let allAvailableDays = [];
+        let rawData = {};
         let selectedDays = new Set();
-        
-        // 현재 화면에 렌더링 된 데이터를 PDF용으로 보관하기 위한 변수
-        let currentPdfData = []; 
 
-        document.querySelectorAll('input[name="viewMode"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                document.getElementById('testSettings').style.display = this.value === 'test' ? 'block' : 'none';
-                renderContent();
-            });
-        });
-
-        document.getElementById('chkSynonyms').addEventListener('change', renderContent);
-        document.getElementById('chkShuffle').addEventListener('change', renderContent);
-        document.getElementById('chkCombine').addEventListener('change', renderContent);
-        document.querySelectorAll('input[name="questionCount"]').forEach(r => r.addEventListener('change', renderContent));
-
+        // 1. CSV 파일 처리
         function handleFile(file) {
             if (!file) return;
-            if (!file.name.toLowerCase().endsWith('.csv')) { alert('CSV 파일만 업로드 가능합니다.'); return; }
             Papa.parse(file, {
                 header: true, skipEmptyLines: true,
-                complete: function(results) { processData(results.data); }
+                complete: (results) => {
+                    processCSV(results.data);
+                }
             });
         }
 
-        document.getElementById('csvFileInput').addEventListener('change', e => handleFile(e.target.files[0]));
+        document.getElementById('csvFileInput').onchange = (e) => handleFile(e.target.files[0]);
+        window.ondragover = (e) => { e.preventDefault(); document.getElementById('dropOverlay').classList.add('active'); };
+        window.ondrop = (e) => { e.preventDefault(); document.getElementById('dropOverlay').classList.remove('active'); handleFile(e.dataTransfer.files[0]); };
 
-        const dropOverlay = document.getElementById('dropOverlay');
-        window.addEventListener('dragover', e => { e.preventDefault(); dropOverlay.classList.add('active'); });
-        window.addEventListener('dragleave', e => { e.preventDefault(); if (e.clientX === 0 || e.clientY === 0) dropOverlay.classList.remove('active'); });
-        window.addEventListener('drop', e => {
-            e.preventDefault(); dropOverlay.classList.remove('active');
-            if (e.dataTransfer.files.length > 0) {
-                document.getElementById('csvFileInput').files = e.dataTransfer.files;
-                handleFile(e.dataTransfer.files[0]);
-            }
-        });
-
-        function processData(data) {
-            parsedVocabulary = {};
-            const daysSet = new Set();
-
+        function processCSV(data) {
+            rawData = {};
+            const days = new Set();
             data.forEach(row => {
-                const day = row['Day']?.trim();
-                if (!day) return;
-                daysSet.add(day);
-                if (!parsedVocabulary[day]) { parsedVocabulary[day] = []; }
+                const d = row['Day']?.trim();
+                if (!d) return;
+                days.add(d);
+                if (!rawData[d]) rawData[d] = [];
 
-                const word = row['Word']?.trim() || '';
-                const meaningRaw = row['Meaning (KR)'] || '';
-                const synonymRaw = row['Synonyms'] || '';
-
-                const meanings = meaningRaw.split(';').map(s => s.trim()).filter(s => s);
-                const synonyms = synonymRaw.split(';').map(s => s.trim()).filter(s => s);
-
-                const maxLen = Math.max(meanings.length, synonyms.length, 1);
-                const details = [];
-
-                for (let i = 0; i < maxLen; i++) {
-                    let synList = synonyms[i] ? synonyms[i].split(',').map(s => s.trim()).filter(s => s) : [];
-                    let formattedSynonyms = synList.map(syn => `<span class="synonym-item">${syn}</span>`).join(' ');
-                    details.push({ 
-                        meaning: meanings[i] || '', 
-                        rawSynonyms: synList,
-                        synonymText: synList.join(', '), // PDF용 텍스트
-                        synonymHTML: formattedSynonyms 
-                    });
+                const mRaw = row['Meaning (KR)'] || '';
+                const sRaw = row['Synonyms'] || '';
+                const meanings = mRaw.split(';').map(s => s.trim()).filter(Boolean);
+                const synonyms = sRaw.split(';').map(s => s.trim()).filter(Boolean);
+                const max = Math.max(meanings.length, synonyms.length, 1);
+                
+                const entries = [];
+                for (let i = 0; i < max; i++) {
+                    entries.push({ m: meanings[i] || '', s: synonyms[i] || '' });
                 }
-                parsedVocabulary[day].push({ word: word, details: details });
+                rawData[d].push({ word: row['Word']?.trim() || '', entries });
             });
 
-            allAvailableDays = Array.from(daysSet).sort((a, b) => parseInt(a) - parseInt(b));
+            const sortedDays = [...days].sort((a, b) => parseInt(a) - parseInt(b));
             selectedDays.clear();
-            if (allAvailableDays.length > 0) selectedDays.add(allAvailableDays[0]);
+            if (sortedDays.length > 0) selectedDays.add(sortedDays[0]);
 
-            renderFilterPanel();
+            const chipBox = document.getElementById('dayChips');
+            chipBox.innerHTML = '';
+            sortedDays.forEach(d => {
+                const c = document.createElement('div');
+                c.className = `chip ${selectedDays.has(d) ? 'active' : ''}`;
+                c.textContent = `Day ${d}`;
+                c.onclick = () => {
+                    if (selectedDays.has(d)) selectedDays.delete(d); else selectedDays.add(d);
+                    c.classList.toggle('active'); render();
+                };
+                chipBox.appendChild(c);
+            });
+
             document.getElementById('controlPanel').style.display = 'block';
             document.getElementById('printBtn').style.display = 'inline-flex';
             document.getElementById('pdfBtn').style.display = 'inline-flex';
-            document.getElementById('emptyState').style.display = 'none';
-            renderContent();
+            render();
         }
 
-        function renderFilterPanel() {
-            const container = document.getElementById('dayChipsContainer');
-            container.innerHTML = '';
-            allAvailableDays.forEach(day => {
-                const chip = document.createElement('div');
-                chip.className = `chip ${selectedDays.has(day) ? 'active' : ''}`;
-                chip.textContent = `Day ${day}`;
-                chip.onclick = () => {
-                    if (selectedDays.has(day)) { selectedDays.delete(day); chip.classList.remove('active'); } 
-                    else { selectedDays.add(day); chip.classList.add('active'); }
-                    renderContent();
-                };
-                container.appendChild(chip);
-            });
-        }
+        // 2. 모드 전환 및 옵션 리스너
+        document.querySelectorAll('input[name="viewMode"]').forEach(r => r.onchange = (e) => {
+            document.getElementById('testSettings').style.display = e.target.value === 'test' ? 'block' : 'none';
+            render();
+        });
+        document.getElementById('chkSynonyms').onchange = render;
+        document.getElementById('chkShuffle').onchange = render;
+        document.getElementById('chkCombine').onchange = render;
+        document.querySelectorAll('input[name="qCount"]').forEach(r => r.onchange = render);
 
-        function selectAllDays() { allAvailableDays.forEach(d => selectedDays.add(d)); renderFilterPanel(); renderContent(); }
-        function deselectAllDays() { selectedDays.clear(); renderFilterPanel(); renderContent(); }
-
-        function renderContent() {
+        // 3. 렌더링 엔진
+        function render() {
             const container = document.getElementById('mainContent');
-            if (selectedDays.size === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">👀</div><div class="empty-text">선택된 Day가 없습니다.</div><div style="font-size: 14px; color: var(--text-tertiary);">패널에서 출력할 Day를 클릭해주세요.</div></div>`;
-                currentPdfData = [];
-                return;
-            }
+            if (selectedDays.size === 0) { container.innerHTML = '<div style="padding:100px; color:#94a3b8;">출력할 Day를 선택해 주세요.</div>'; return; }
             
-            currentPdfData = []; // 데이터 초기화
             const mode = document.querySelector('input[name="viewMode"]:checked').value;
-            if (mode === 'study') renderStudyMode(container);
-            else renderTestMode(container);
-        }
-
-        // --- 단어장(학습용) 화면 렌더링 & PDF 데이터 저장 ---
-        function renderStudyMode(container) {
-            const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
+            const sorted = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
             let html = '';
 
-            sortedDays.forEach(day => {
-                const words = parsedVocabulary[day];
-                if (!words || words.length === 0) return;
-
-                let title = `VOCABULARY | Day ${day}`;
-                let pdfRows = [];
-
-                let pageHtml = `
-                    <div class="a4-page">
-                        <div class="page-header">
-                            <h1 class="page-title">VOCABULARY <span style="color: var(--text-tertiary); font-weight: 300;">|</span> Day ${day}</h1>
-                            <div class="page-meta"><div>Date <span class="input-line"></span></div></div>
-                        </div>
-                        <table class="study-table">
-                            <thead><tr><th>Word</th><th>Meaning</th><th>Synonyms</th></tr></thead>
-                            <tbody>
-                `;
-
-                words.forEach(item => {
-                    const rowCount = item.details.length;
-                    
-                    // PDF용 데이터 구축
-                    item.details.forEach((detail, index) => {
-                        let pdfRow = [];
-                        if (index === 0) {
-                            pdfRow.push({ content: item.word, rowSpan: rowCount, styles: { fontStyle: 'bold', valign: 'middle' } });
-                        }
-                        
-                        let meaningText = detail.meaning ? `${index+1}. ${detail.meaning}` : '';
-                        pdfRow.push(meaningText);
-                        pdfRow.push(detail.synonymText);
-                        pdfRows.push(pdfRow);
-
-                        // HTML 화면용
-                        let rClass = rowCount === 1 ? 'first-row last-row' : (index === 0 ? 'first-row inner-row' : (index === rowCount - 1 ? 'last-row' : 'inner-row'));
-                        pageHtml += `<tr class="${rClass}">`;
-                        if (index === 0) pageHtml += `<td rowspan="${rowCount}" class="word-cell">${item.word}</td>`;
-                        pageHtml += `
-                            <td class="meaning-cell">${detail.meaning ? `<span style="color: var(--text-tertiary); margin-right:4px;">${index+1}.</span> ${detail.meaning}` : ''}</td>
-                            <td class="synonym-cell">${detail.synonymHTML}</td>
-                        </tr>`;
-                    });
-                });
-                pageHtml += `</tbody></table></div>`;
-                html += pageHtml;
-
-                currentPdfData.push({ type: 'study', title: title, headers: ['Word', 'Meaning', 'Synonyms'], rows: pdfRows });
-            });
-            container.innerHTML = html;
-        }
-
-        // --- 시험지(테스트용) 화면 렌더링 & PDF 데이터 저장 ---
-        function renderTestMode(container) {
-            const isSynonyms = document.getElementById('chkSynonyms').checked;
-            const isShuffle = document.getElementById('chkShuffle').checked;
-            const isCombine = document.getElementById('chkCombine').checked;
-            const countVal = document.querySelector('input[name="questionCount"]:checked').value;
-            const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
-            let html = '';
-
-            if (isCombine) {
-                let pool = getTestPool(sortedDays, isSynonyms);
-                if (isShuffle) shuffleArray(pool);
-                if (countVal !== 'all') pool = pool.slice(0, parseInt(countVal, 10));
-                
-                let dayStr = sortedDays.length <= 3 ? sortedDays.join(', ') : `${sortedDays[0]}~${sortedDays[sortedDays.length-1]}`;
-                let title = `VOCABULARY TEST - Day ${dayStr} (Mix)`;
-                
-                html += buildTestPages(pool, title, false);
-                html += buildTestPages(pool, title + " [Answer]", true); 
-            } else {
-                sortedDays.forEach(day => {
-                    let pool = getTestPool([day], isSynonyms);
-                    if (isShuffle) shuffleArray(pool);
-                    if (countVal !== 'all') pool = pool.slice(0, parseInt(countVal, 10));
-                    
-                    html += buildTestPages(pool, `VOCABULARY TEST - Day ${day}`, false);
-                    html += buildTestPages(pool, `VOCABULARY TEST - Day ${day} [Answer]`, true); 
-                });
-            }
-            container.innerHTML = html;
-        }
-
-        function getTestPool(days, includeSynonyms) {
-            let pool = [];
-            let seen = new Set(); 
-
-            days.forEach(day => {
-                const words = parsedVocabulary[day];
-                if (!words) return;
-                
-                words.forEach(item => {
-                    let headword = item.word.trim();
-                    let combinedMeaning = item.details.map(d => d.meaning).filter(Boolean).join(', ');
-                    if(!combinedMeaning) combinedMeaning = "(뜻 없음)";
-
-                    if (headword && !seen.has(headword.toLowerCase())) {
-                        seen.add(headword.toLowerCase());
-                        pool.push({ word: headword, answer: combinedMeaning });
-                    }
-
-                    if (includeSynonyms) {
-                        item.details.forEach(detail => {
-                            detail.rawSynonyms.forEach(syn => {
-                                let s = syn.trim();
-                                if (s && !seen.has(s.toLowerCase())) {
-                                    seen.add(s.toLowerCase());
-                                    pool.push({ word: s, answer: combinedMeaning });
-                                }
-                            });
+            if (mode === 'study') {
+                sorted.forEach(day => {
+                    html += `<div class="a4-page"><div class="page-header"><h1 class="page-title">VOCABULARY | Day ${day}</h1><div class="page-meta">Date: <span class="input-line"></span></div></div>`;
+                    html += `<table class="study-table"><thead><tr><th width="25%">Word</th><th width="40%">Meaning</th><th width="35%">Synonyms</th></tr></thead><tbody>`;
+                    (rawData[day] || []).forEach(item => {
+                        item.entries.forEach((e, i) => {
+                            const isFirst = i === 0;
+                            const isLast = i === item.entries.length - 1;
+                            const rowClass = isFirst ? (isLast ? '' : 'first-row') : (isLast ? 'last-row' : 'inner-row');
+                            html += `<tr class="${rowClass}">`;
+                            if (isFirst) html += `<td rowspan="${item.entries.length}" class="word-cell">${item.word}</td>`;
+                            html += `<td>${e.m ? `<span style="color:#94a3b8; font-size:11px; margin-right:5px;">${i+1}.</span>` + e.m : ''}</td>`;
+                            html += `<td>${e.s.split(',').map(s => `<span class="synonym-item">${s.trim()}</span>`).join('')}</td></tr>`;
                         });
-                    }
+                    });
+                    html += `</tbody></table></div>`;
                 });
-            });
-            return pool;
-        }
+            } else {
+                const isCombine = document.getElementById('chkCombine').checked;
+                const isSyn = document.getElementById('chkSynonyms').checked;
+                const isShuffle = document.getElementById('chkShuffle').checked;
+                const limit = document.querySelector('input[name="qCount"]:checked').value;
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                const buildTest = (days, title) => {
+                    let pool = [];
+                    days.forEach(d => (rawData[d] || []).forEach(item => {
+                        const ans = item.entries.map(e => e.m).join(', ');
+                        pool.push({ q: item.word, a: ans });
+                        if (isSyn) item.entries.forEach(e => e.s.split(',').forEach(s => { if(s.trim()) pool.push({ q: s.trim(), a: ans }); }));
+                    }));
+                    // 중복제거 & 섞기
+                    let finalPool = [];
+                    const seen = new Set();
+                    pool.forEach(x => { if(!seen.has(x.q.toLowerCase())) { seen.add(x.q.toLowerCase()); finalPool.push(x); }});
+                    if (isShuffle) finalPool.sort(() => Math.random() - 0.5);
+                    if (limit !== 'all') finalPool = finalPool.slice(0, parseInt(limit));
+
+                    // 문제지 생성 (50문항 단위 페이지 분할)
+                    for (let i = 0; i < finalPool.length; i += 50) {
+                        html += buildTestSheet(finalPool.slice(i, i+50), title, false, i);
+                    }
+                    // 답안지 생성
+                    for (let i = 0; i < finalPool.length; i += 50) {
+                        html += buildTestSheet(finalPool.slice(i, i+50), title + " [Answer Key]", true, i);
+                    }
+                };
+
+                if (isCombine) buildTest(sorted, `TEST | Day ${sorted.join(', ')}`);
+                else sorted.forEach(d => buildTest([d], `TEST | Day ${d}`));
             }
+            container.innerHTML = html;
         }
 
-        function buildTestPages(pool, title, isAnswerKey) {
-            if (pool.length === 0) return '';
-            const ITEMS_PER_PAGE = 50; 
-            let html = '';
-            const totalPages = Math.ceil(pool.length / ITEMS_PER_PAGE);
-            
-            // PDF 용 데이터 저장 준비
-            let pdfRows = [];
-
-            for (let p = 0; p < pool.length; p += ITEMS_PER_PAGE) {
-                let chunk = pool.slice(p, p + ITEMS_PER_PAGE);
-                let pageNum = Math.floor(p / ITEMS_PER_PAGE) + 1;
-                let displayTitle = totalPages > 1 ? `${title} (p.${pageNum})` : title;
-
-                html += `
-                    <div class="a4-page">
-                        <div class="page-header">
-                            <h1 class="page-title" style="font-size: 1.8rem; ${isAnswerKey ? 'color:#dc2626;' : ''}">${displayTitle}</h1>
-                            ${!isAnswerKey ? `<div class="page-meta"><div>Score <span class="input-line"></span></div></div>` : ''}
-                        </div>
-                        <table class="test-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-no">No.</th><th class="col-word">Word</th><th class="col-mean">${isAnswerKey ? 'Answer' : 'Meaning'}</th>
-                                    <th class="col-no">No.</th><th class="col-word">Word</th><th class="col-mean">${isAnswerKey ? 'Answer' : 'Meaning'}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-
-                const rows = Math.ceil(chunk.length / 2);
-                for (let r = 0; r < rows; r++) {
-                    let left = chunk[r];
-                    let right = chunk[r + rows]; 
-                    
-                    let leftAns = isAnswerKey && left ? left.answer : '';
-                    let rightAns = isAnswerKey && right ? right.answer : '';
-
-                    // HTML 렌더링
-                    html += `<tr>
-                        <td class="num-cell">${left ? p + r + 1 : ''}</td><td class="test-word-cell">${left ? left.word : ''}</td><td class="test-meaning-cell ${isAnswerKey?'answer-text':''}">${leftAns}</td>
-                        <td class="num-cell">${right ? p + rows + r + 1 : ''}</td><td class="test-word-cell">${right ? right.word : ''}</td><td class="test-meaning-cell ${isAnswerKey?'answer-text':''}">${rightAns}</td>
-                    </tr>`;
-                    
-                    // PDF용 데이터 (2단 구성)
-                    pdfRows.push([
-                        left ? (p + r + 1).toString() : '', 
-                        left ? left.word : '', 
-                        leftAns,
-                        right ? (p + rows + r + 1).toString() : '', 
-                        right ? right.word : '', 
-                        rightAns
-                    ]);
-                }
-                html += `</tbody></table></div>`;
+        function buildTestSheet(chunk, title, isAns, offset) {
+            let h = `<div class="a4-page"><div class="page-header"><h1 class="page-title" style="${isAns?'color:#dc2626':''}">${title}</h1>${!isAns?'<div class="page-meta">Score: <span class="input-line"></span></div>':''}</div><table><thead><tr><th width="35">No.</th><th>Word</th><th>${isAns?'Answer':'Meaning'}</th><th width="35">No.</th><th>Word</th><th>${isAns?'Answer':'Meaning'}</th></tr></thead><tbody>`;
+            const half = Math.ceil(chunk.length / 2);
+            for (let i = 0; i < half; i++) {
+                const L = chunk[i], R = chunk[i+half];
+                h += `<tr><td class="num-cell">${offset+i+1}</td><td class="word-cell">${L.q}</td><td class="${isAns?'answer-text':''}">${isAns?L.a:''}</td>`;
+                h += `<td class="num-cell">${R?offset+i+half+1:''}</td><td class="word-cell">${R?R.q:''}</td><td class="${isAns?'answer-text':''}">${(isAns&&R)?R.a:''}</td></tr>`;
             }
-
-            currentPdfData.push({ 
-                type: 'test', 
-                title: title, 
-                isAnswerKey: isAnswerKey,
-                headers: ['No.', 'Word', isAnswerKey?'Answer':'Meaning', 'No.', 'Word', isAnswerKey?'Answer':'Meaning'], 
-                rows: pdfRows 
-            });
-
-            return html;
+            return h + `</tbody></table></div>`;
         }
 
-        // ==========================================
-        // 🌟 데이터 기반 순수 PDF 추출 로직 (jsPDF + AutoTable)
-        // 화면 해상도, 스크롤 위치와 무관하게 완벽한 표 생성 및 폰트 멈춤 해결
-        // ==========================================
-        document.getElementById('pdfBtn').addEventListener('click', async function() {
-            if (currentPdfData.length === 0) { alert("출력할 데이터가 없습니다."); return; }
+        // 4. PDF 다운로드 로직 (HTML 기반 복구 및 좌측 잘림 수정)
+        document.getElementById('pdfBtn').onclick = async function() {
+            const container = document.getElementById('mainContent');
+            if (selectedDays.size === 0) return;
 
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const subMessage = document.getElementById('loadingSubMessage');
-            
-            loadingOverlay.classList.add('active');
-            
-            const btnSpan = this.querySelector('span');
-            const originalText = btnSpan.innerText;
-            btnSpan.innerText = 'PDF 생성 중...';
+            const loading = document.getElementById('loadingOverlay');
+            loading.classList.add('active');
+
+            // 뷰포트 오인 방지를 위한 최상단 스크롤
+            window.scrollTo(0,0);
+
+            // PDF 렌더링 전용 클래스 부여 (가운데 정렬 해제 및 좌측 (0,0) 고정)
+            document.body.classList.add('pdf-rendering');
+
+            // 파일명 동적 생성
+            const mode = document.querySelector('input[name="viewMode"]:checked').value;
+            const sorted = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
+            let dayStr = sorted.length > 3 ? `${sorted[0]}to${sorted[sorted.length-1]}` : sorted.join('_');
+            const filename = `Vocab_${mode === 'test' ? 'Test' : 'Study'}_Day_${dayStr}.pdf`;
+
+            const opt = {
+                margin: 0,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    windowWidth: 800, // 800px 너비 기준으로 캔버스 고정 (반응형 깨짐 방지)
+                    x: 0, y: 0, scrollX: 0, scrollY: 0 
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
             try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                
-                // 1. 브라우저 멈춤 없이 안정적인 TTF 폰트 다운로드 (FileReader Base64 변환 활용)
-                subMessage.innerText = "한글 폰트를 불러오는 중입니다... (최초 1회만, 약 2~3초 소요)";
-                
-                // 완벽히 검증된 공식 Pretendard TTF URL
-                const fontUrl = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/packages/pretendard/dist/public/static/Pretendard-Regular.ttf';
-                
-                const response = await fetch(fontUrl);
-                if (!response.ok) throw new Error("폰트 다운로드 실패");
-                const blob = await response.blob();
-                
-                // reduce 대비 수백 배 빠르고 브라우저가 멈추지 않는 변환 방식
-                const base64Font = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
-                    reader.onerror = () => reject(new Error("Base64 변환 실패"));
-                    reader.readAsDataURL(blob);
-                });
-                
-                subMessage.innerText = "PDF 표 및 데이터를 그리는 중...";
-                
-                doc.addFileToVFS("Pretendard.ttf", base64Font);
-                doc.addFont("Pretendard.ttf", "Pretendard", "normal");
-                doc.setFont("Pretendard");
-
-                const mode = document.querySelector('input[name="viewMode"]:checked').value;
-                const isCombine = document.getElementById('chkCombine').checked;
-                const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
-                let dayString = sortedDays.length <= 3 ? sortedDays.join('_') : `${sortedDays[0]}to${sortedDays[sortedDays.length-1]}`;
-                if (mode === 'test' && isCombine) dayString += '_Mix';
-                const pdfFilename = `Vocabulary_${mode === 'test' ? 'Test' : 'Study'}_Day_${dayString}.pdf`;
-
-                let isFirstPage = true;
-
-                currentPdfData.forEach((pageData) => {
-                    if (!isFirstPage) {
-                        doc.addPage();
-                    }
-                    isFirstPage = false;
-
-                    // 헤더(제목) 렌더링
-                    doc.setFontSize(18);
-                    doc.setTextColor(pageData.isAnswerKey ? '#dc2626' : '#0f172a');
-                    doc.setFont("Pretendard", "bold");
-                    doc.text(pageData.title, 15, 20);
-
-                    // Date / Score 렌더링
-                    if (pageData.type === 'study') {
-                        doc.setFontSize(11);
-                        doc.setTextColor('#475569');
-                        doc.text('Date', 150, 20);
-                        doc.line(160, 20, 195, 20);
-                    } else if (pageData.type === 'test' && !pageData.isAnswerKey) {
-                        doc.setFontSize(11);
-                        doc.setTextColor('#475569');
-                        doc.text('Score', 150, 20);
-                        doc.line(162, 20, 195, 20);
-                    }
-
-                    // 구분선
-                    doc.setDrawColor('#0f172a');
-                    doc.setLineWidth(0.5); 
-                    doc.line(15, 25, 195, 25);
-
-                    // 테이블 렌더링 옵션 (AutoTable)
-                    let tableOptions = {
-                        startY: 32,
-                        head: [pageData.headers],
-                        body: pageData.rows,
-                        theme: 'grid',
-                        styles: {
-                            font: "Pretendard",
-                            fontSize: 10,
-                            textColor: '#0f172a',
-                            lineColor: '#000000', // 검정색 출력 보장
-                            lineWidth: 0.12,      // ★ PDF 출력 시 표 선 굵기를 0.12로 고정
-                            valign: 'middle'
-                        },
-                        headStyles: {
-                            fillColor: '#f8fafc',
-                            textColor: '#475569',
-                            fontStyle: 'bold',
-                            halign: 'center'
-                        },
-                        margin: { top: 15, left: 15, right: 15, bottom: 15 }
-                    };
-
-                    if (pageData.type === 'study') {
-                        tableOptions.columnStyles = {
-                            0: { cellWidth: 45, fontStyle: 'bold' },
-                            1: { cellWidth: 70 },
-                            2: { cellWidth: 65, textColor: '#475569' }
-                        };
-                    } else if (pageData.type === 'test') {
-                        tableOptions.styles.minCellHeight = 10; 
-                        tableOptions.columnStyles = {
-                            0: { cellWidth: 10, halign: 'center', textColor: '#94a3b8' },
-                            1: { cellWidth: 40, fontStyle: 'bold' },
-                            2: { cellWidth: 40, textColor: pageData.isAnswerKey ? '#dc2626' : '#0f172a' },
-                            3: { cellWidth: 10, halign: 'center', textColor: '#94a3b8' },
-                            4: { cellWidth: 40, fontStyle: 'bold' },
-                            5: { cellWidth: 40, textColor: pageData.isAnswerKey ? '#dc2626' : '#0f172a' }
-                        };
-                    }
-
-                    doc.autoTable(tableOptions);
-                });
-
-                doc.save(pdfFilename);
-
-            } catch (err) {
-                console.error("PDF 생성 에러:", err);
-                alert("PDF 생성 중 오류가 발생했습니다. (네트워크 방화벽에 의해 폰트 다운로드가 차단되었을 수 있습니다.)");
+                await html2pdf().set(opt).from(container).save();
+            } catch (e) {
+                console.error(e);
+                alert("PDF 생성 중 오류가 발생했습니다.");
             } finally {
-                loadingOverlay.classList.remove('active');
-                btnSpan.innerText = originalText;
-                subMessage.innerText = "데이터 추출 방식으로 완벽한 포맷의 PDF가 다운로드됩니다.";
+                document.body.classList.remove('pdf-rendering');
+                loading.classList.remove('active');
             }
-        });
+        };
     </script>
 </body>
 </html>
