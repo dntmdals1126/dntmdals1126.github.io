@@ -893,8 +893,9 @@
                             </button>
                         </div>
                         
-                        <!-- 우측: 필터 & Score -->
+                        <!-- 우측: Score & 필터 -->
                         <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
                             <div class="relative">
                                 <button onclick="toggleMenu('quizFilterMenu', event)" class="w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-dim hover:bg-[var(--glass-highlight)] hover:text-text-main transition-colors shadow-sm dropdown-btn" id="quiz-filter-btn" title="필터링 (전체)">
                                     <i class="fa-solid fa-filter"></i>
