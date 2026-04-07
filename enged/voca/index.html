@@ -178,11 +178,23 @@
            인쇄 및 PDF 레이아웃 완벽 최적화 구역
            ========================================= */
 
-        /* 1. PDF 전용 모드 (레이아웃 고정 및 늘어짐 방지) */
+        /* 1. PDF 전용 모드 (왼쪽 잘림, 레이아웃 고정 완벽 방지) */
+        /* PDF 변환 시 body의 flex center가 왼쪽 여백을 자르지 않도록 block으로 강제 초기화 */
+        body.pdf-mode {
+            display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: #fff !important;
+        }
+
         .pdf-mode #mainContent { 
             width: 800px !important; /* 해상도 고정으로 비율 틀어짐 방지 */
-            margin: 0 auto; gap: 0 !important; 
+            margin: 0 !important; /* 가운데 정렬 해제 (왼쪽 잘림 완벽 방지) */
+            padding: 0 !important;
+            gap: 0 !important; 
+            display: block !important;
         }
+
         .pdf-mode .a4-page { 
             width: 800px !important; 
             padding: 0 !important;   /* html2pdf의 여백옵션을 사용하기 위해 내부 패딩 0 */
@@ -204,9 +216,9 @@
 
         /* 2. 일반 프린터 인쇄 모드 (우측 잘림, 선 사라짐 방지) */
         @media print {
-            body { background: none; padding: 0; margin: 0; }
+            body { background: none; padding: 0; margin: 0; display: block; }
             .header-container { display: none !important; }
-            #mainContent { gap: 0; display: block; width: 100%; }
+            #mainContent { gap: 0; display: block; width: 100%; margin: 0; }
             .a4-page { 
                 width: 100%; 
                 margin: 0; 
@@ -482,11 +494,11 @@
                 if (isShuffle) shuffleArray(pool);
                 if (countVal !== 'all') pool = pool.slice(0, parseInt(countVal, 10));
                 
-                let dayStr = sortedDays.join(', ');
-                let title = dayStr.length > 20 ? "VOCABULARY TEST - Mix" : `VOCABULARY TEST - Day ${dayStr}`;
+                let dayStr = sortedDays.length <= 3 ? sortedDays.join(', ') : `${sortedDays[0]}~${sortedDays[sortedDays.length-1]}`;
+                let title = `VOCABULARY TEST - Day ${dayStr} (Mix)`;
                 
                 html += buildTestPages(pool, title);
-                html += buildAnswerPages(pool, title + " [Answer Key]"); // 답안지 추가
+                html += buildAnswerPages(pool, title + " [Answer]"); 
             } else {
                 sortedDays.forEach(day => {
                     let pool = getTestPool([day], isSynonyms);
@@ -494,13 +506,12 @@
                     if (countVal !== 'all') pool = pool.slice(0, parseInt(countVal, 10));
                     
                     html += buildTestPages(pool, `VOCABULARY TEST - Day ${day}`);
-                    html += buildAnswerPages(pool, `VOCABULARY TEST - Day ${day} [Answer Key]`); // 답안지 추가
+                    html += buildAnswerPages(pool, `VOCABULARY TEST - Day ${day} [Answer]`); 
                 });
             }
             container.innerHTML = html;
         }
 
-        // 시험 풀 생성 (답안지용 Meaning 저장 로직 추가)
         function getTestPool(days, includeSynonyms) {
             let pool = [];
             let seen = new Set(); 
@@ -542,7 +553,6 @@
             }
         }
 
-        // 시험 문제지 HTML 생성 (Name 제거)
         function buildTestPages(pool, baseTitle) {
             if (pool.length === 0) return '';
             const ITEMS_PER_PAGE = 50; 
@@ -592,7 +602,6 @@
             return html;
         }
 
-        // 정답지 HTML 생성 (붉은 글씨 적용, Name 제거)
         function buildAnswerPages(pool, baseTitle) {
             if (pool.length === 0) return '';
             const ITEMS_PER_PAGE = 50; 
@@ -639,7 +648,7 @@
             return html;
         }
 
-        // --- 🌟 완벽한 PDF 다운로드 로직 ---
+        // --- 🌟 완벽한 PDF 다운로드 로직 (왼쪽 잘림 수정 & 동적 파일명 생성) ---
         document.getElementById('pdfBtn').addEventListener('click', function() {
             const element = document.getElementById('mainContent');
             if(selectedDays.size === 0) { alert("선택된 Day가 없습니다."); return; }
@@ -649,18 +658,35 @@
             btnSpan.innerText = 'PDF 생성 중...';
             this.style.opacity = '0.7'; this.style.pointerEvents = 'none';
 
-            // pdf-mode 적용 -> 강제 너비 고정 및 패딩 해제
+            // 동적 파일명 생성 로직
+            const mode = document.querySelector('input[name="viewMode"]:checked').value;
+            const isCombine = document.getElementById('chkCombine').checked;
+            const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
+            
+            let dayString = '';
+            if (sortedDays.length <= 3) {
+                dayString = sortedDays.join('_');
+            } else {
+                dayString = `${sortedDays[0]}to${sortedDays[sortedDays.length-1]}`;
+            }
+            
+            if (mode === 'test' && isCombine) {
+                dayString += '_Mix';
+            }
+            
+            const pdfFilename = `Vocabulary_${mode === 'test' ? 'Test' : 'Study'}_Day_${dayString}.pdf`;
+
+            // pdf-mode 적용 (강제 좌측 상단 정렬로 html2canvas offset 엇나가는 현상 방지)
             document.body.classList.add('pdf-mode');
 
             // 브라우저가 CSS를 적용할 수 있도록 약간의 대기 시간(300ms) 부여
             setTimeout(() => {
                 const opt = {
                     margin:       [15, 15, 15, 15], // 상우하좌 15mm 안전 여백 강제 적용
-                    filename:     `Vocabulary_Paper.pdf`,
+                    filename:     pdfFilename,      // 동적으로 만들어진 파일명 사용
                     image:        { type: 'jpeg', quality: 1.0 },
-                    html2canvas:  { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024 }, 
+                    html2canvas:  { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, x: 0, scrollX: 0 }, // x좌표를 강제로 0으로 고정하여 왼쪽 잘림 방지
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    // 표의 줄(tr)이나 제목(page-header)이 중간에 쪼개지지 않도록 avoid 설정
                     pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr', '.page-header'] }
                 };
 
