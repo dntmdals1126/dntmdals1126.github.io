@@ -4,161 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>단어장 출력 시스템</title>
-    <!-- CSV 파싱 라이브러리 -->
+    <!-- 외부 라이브러리 연동 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <!-- PDF 추출 라이브러리 (HTML-to-Canvas 기반) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
     <style>
         :root {
-            --bg-body: #f1f5f9;
-            --bg-paper: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-tertiary: #94a3b8;
-            --border-light: #e2e8f0;
-            --accent: #0f172a; 
-            --primary: #2563eb; 
-            --radius-md: 12px;
-            --radius-sm: 8px;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
         body {
-            font-family: 'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-primary);
+            font-family: 'Pretendard Variable', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; padding-bottom: 60px;
+            min-height: 100vh;
         }
 
-        /* --- 상단 컨트롤 영역 --- */
-        .header-container {
+        /* --- 프리미엄 상단 툴바 --- */
+        .header-wrapper {
             width: 100%; position: sticky; top: 0; z-index: 1000;
-            background: rgba(241, 245, 249, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 20px 0; display: flex; flex-direction: column; align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0; display: flex; flex-direction: column; align-items: center;
         }
 
-        .toolbar { display: flex; gap: 12px; align-items: center; background: var(--bg-paper); padding: 12px 24px; border-radius: 100px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-light); }
-        input[type="file"] { display: none; }
-        .btn { font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 100px; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; }
-        .btn-upload { background-color: var(--bg-paper); color: var(--text-primary); border: 1px solid #94a3b8; }
-        .btn-print { background-color: var(--accent); color: white; display: none; }
-        .btn-pdf { background-color: var(--primary); color: white; display: none; }
-        .btn-back { background-color: transparent; color: var(--text-secondary); text-decoration: none; padding: 10px 16px; }
-        .btn-back:hover { background-color: var(--border-light); border-radius: 100px; }
+        .toolbar {
+            display: flex; gap: 12px; align-items: center;
+            background: white; padding: 8px 16px; border-radius: 100px;
+            box-shadow: var(--shadow); border: 1px solid var(--border-color);
+        }
 
-        .control-panel { width: 100%; max-width: 900px; background: var(--bg-paper); padding: 20px; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-light); margin-top: 16px; display: none; box-sizing: border-box; }
-        .panel-section { border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 16px; }
-        .panel-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-        .section-title { font-weight: 700; color: var(--text-primary); font-size: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .options-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-        .radio-label, .check-label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-secondary); cursor: pointer; user-select: none; }
-        .chip-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .chip { padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1; background: var(--bg-paper); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        input[type="file"] { display: none; }
+        
+        .btn {
+            font-family: inherit; font-size: 13px; font-weight: 600; padding: 8px 18px;
+            border-radius: 100px; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 6px; border: none;
+        }
+        .btn-upload { background: white; color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-upload:hover { background: #f1f5f9; }
+        .btn-print { background: #334155; color: white; display: none; }
+        .btn-pdf { background: var(--primary); color: white; display: none; }
+        .btn-pdf:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-back { color: var(--text-muted); text-decoration: none; font-size: 13px; padding: 8px 12px; }
+        .btn-back:hover { color: var(--primary); }
+
+        /* --- 세련된 옵션 패널 --- */
+        .control-panel {
+            width: 95%; max-width: 900px; background: white; padding: 24px;
+            border-radius: 16px; box-shadow: var(--shadow); margin-top: 20px;
+            border: 1px solid var(--border-color); display: none;
+        }
+        .panel-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
+        .panel-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .section-header { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .options-group { display: flex; gap: 16px; flex-wrap: wrap; }
+        .radio-label, .check-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+        .radio-label input, .check-label input { accent-color: var(--primary); width: 16px; height: 16px; }
+
+        .chip-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .chip { 
+            padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border-color);
+            background: white; color: var(--text-muted); font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: 0.2s;
+        }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- 메인 화면 레이아웃 (A4) --- */
-        #mainContent { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
-        .a4-page { 
-            width: 210mm; min-height: 297mm; background: white; padding: 20mm 20mm; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-radius: 2px; box-sizing: border-box; 
-            position: relative; page-break-after: always;
+        /* --- A4 용지 렌더링 영역 --- */
+        #mainContent { 
+            width: 100%; display: flex; flex-direction: column; align-items: center; 
+            padding: 40px 0; gap: 0; /* PDF 여백 조절을 위해 gap 제거 */
         }
-        .page-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--text-primary); padding-bottom: 14px; margin-bottom: 20px; }
-        .page-title { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; }
-        .page-meta { font-size: 14px; font-weight: 600; text-align: right; }
-        .input-line { display: inline-block; width: 100px; border-bottom: 1px solid #000; margin-left: 6px; }
+        
+        .paper-content {
+            width: 210mm; background: white; padding: 20mm;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05); box-sizing: border-box;
+            position: relative;
+        }
 
-        /* --- 테이블 선 두께 0.12px 적용 --- */
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 0.12px solid #000; margin-bottom: 20px; }
-        th, td { border: 0.12px solid #000; padding: 10px 8px; font-size: 14px; vertical-align: middle; word-break: keep-all; }
-        th { background-color: #f8fafc; color: var(--text-secondary); font-weight: 700; font-size: 11px; text-transform: uppercase; }
+        .page-header { 
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            border-bottom: 3px solid var(--text-main); padding-bottom: 12px; margin-bottom: 24px;
+        }
+        .title-group h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); }
+        .title-group p { margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .header-meta { font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .input-line { display: inline-block; width: 110px; border-bottom: 1px solid var(--text-main); margin-left: 6px; height: 14px; }
 
-        .word-cell { font-weight: 700; font-size: 15px; text-align: left; background-color: white !important; }
-        .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent; padding-top: 4px; padding-bottom: 4px; }
-        .synonym-item { display: inline-block; background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 12px; margin: 2px; border: 0.12px solid #cbd5e1; }
+        /* --- 초정밀 테이블 (0.12px) --- */
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 0.12px solid #000; margin-bottom: 30px; }
+        tr { page-break-inside: avoid; } /* 페이지 중간 잘림 방지 */
+        th, td { border: 0.12px solid #000; padding: 12px 10px; font-size: 14px; line-height: 1.5; vertical-align: middle; }
+        th { background: #f8fafc; color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-align: center; }
 
-        .num-cell { text-align: center; color: var(--text-tertiary); width: 35px; font-size: 12px; }
-        .answer-text { color: #dc2626; font-weight: 600; }
+        .word-col { width: 25%; font-weight: 800; font-size: 15px; color: var(--primary); text-align: left; background: white !important; }
+        .meaning-col { width: 40%; font-weight: 500; }
+        .synonym-col { width: 35%; color: var(--text-muted); font-size: 13px; }
+        
+        .synonym-badge {
+            display: inline-block; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;
+            font-size: 12px; margin: 1px; color: #475569; border: 0.12px solid #cbd5e1;
+        }
 
-        /* 오버레이 */
-        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; opacity: 0; pointer-events: none; transition: 0.2s; }
-        .overlay.active { opacity: 1; pointer-events: all; }
-        .spinner { border: 4px solid rgba(255,255,255,0.2); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        /* 학습 모드 특수 행 스타일 */
+        .study-table tr.inner-row td:not(.word-col) { border-bottom: 0.12px solid transparent; padding-top: 4px; padding-bottom: 4px; }
+        .study-table tr.last-row td { border-bottom: 0.12px solid #000; padding-bottom: 12px; }
+
+        .num-bullet { color: var(--text-tertiary); font-size: 11px; margin-right: 6px; font-weight: 700; }
+        .test-num { color: var(--text-muted); font-size: 11px; text-align: center; width: 30px; }
+        .answer-key-text { color: #e11d48; font-weight: 700; }
+
+        /* --- 빈 화면 로딩 등 --- */
+        .empty-state { padding: 80px; text-align: center; color: var(--text-muted); }
+        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; transition: 0.3s; }
+        .overlay.active { display: flex; }
+        .spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 16px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* =========================================
-           PDF 생성 전용 모드 (잘림 방지 하드코딩)
-           ========================================= */
-        body.pdf-rendering { display: block !important; background: white !important; }
-        body.pdf-rendering .header-container { display: none !important; }
-        body.pdf-rendering #mainContent { width: 800px !important; margin: 0 !important; gap: 0 !important; display: block !important; }
-        body.pdf-rendering .a4-page { width: 100% !important; box-shadow: none !important; margin: 0 !important; padding: 15mm !important; }
-        body.pdf-rendering table, body.pdf-rendering th, body.pdf-rendering td { border-width: 0.12px !important; border-color: #000 !important; }
-
+        /* --- PDF 출력 시 최적화 오버라이드 --- */
+        body.pdf-mode { background: white !important; }
+        body.pdf-mode .header-wrapper { display: none !important; }
+        body.pdf-mode #mainContent { width: 210mm !important; margin: 0 !important; padding: 0 !important; }
+        body.pdf-mode .paper-content { box-shadow: none !important; margin: 0 !important; width: 100% !important; padding: 15mm !important; }
+        
         @media print {
-            @page { size: A4 portrait; margin: 0; }
             body { background: white; }
-            .header-container { display: none !important; }
-            #mainContent { gap: 0; width: 100%; }
-            .a4-page { width: 100%; box-shadow: none; padding: 15mm; margin: 0; }
-            table, th, td { border-width: 0.12px !important; }
+            .header-wrapper { display: none !important; }
+            #mainContent { width: 100%; padding: 0; }
+            .paper-content { box-shadow: none; padding: 15mm; width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div id="dropOverlay" class="overlay">📥 파일을 여기에 놓아주세요</div>
-    <div id="loadingOverlay" class="overlay"><div class="spinner"></div><div>PDF를 생성하고 있습니다...</div></div>
+    <div id="loadingOverlay" class="overlay"><div class="spinner"></div><div style="font-weight: 600;">전문적인 단어장을 생성하고 있습니다...</div></div>
 
-    <div class="header-container">
+    <header class="header-wrapper">
         <div class="toolbar">
-            <a href="https://www.v1ctorym1n.kro.kr/enged" class="btn btn-back">돌아가기</a>
-            <label for="csvFileInput" class="btn btn-upload">CSV 업로드</label>
+            <a href="https://www.v1ctorym1n.kro.kr/enged" class="btn-back">← 돌아가기</a>
+            <label for="csvFileInput" class="btn btn-upload">파일 업로드</label>
             <input type="file" id="csvFileInput" accept=".csv" />
-            <button class="btn btn-print" onclick="window.print()" id="printBtn">인쇄하기</button>
+            <button class="btn btn-print" onclick="window.print()" id="printBtn">인쇄</button>
             <button class="btn btn-pdf" id="pdfBtn">PDF 다운로드</button>
         </div>
 
         <div class="control-panel" id="controlPanel">
             <div class="panel-section">
-                <div class="options-row">
-                    <span style="font-weight:800;">📌 모드</span>
-                    <label class="radio-label"><input type="radio" name="viewMode" value="study" checked> 📖 단어장</label>
-                    <label class="radio-label"><input type="radio" name="viewMode" value="test"> 📝 시험지</label>
+                <div class="section-header">💡 모드 설정</div>
+                <div class="options-group">
+                    <label class="radio-label"><input type="radio" name="viewMode" value="study" checked> 📖 학습용 단어장</label>
+                    <label class="radio-label"><input type="radio" name="viewMode" value="test"> 📝 테스트 시험지</label>
                 </div>
             </div>
+            
             <div class="panel-section" id="testSettings" style="display: none;">
-                <div class="options-row">
-                    <label class="check-label"><input type="checkbox" id="chkSynonyms"> 유의어 출제</label>
+                <div class="section-header">⚙️ 출제 옵션</div>
+                <div class="options-group">
+                    <label class="check-label"><input type="checkbox" id="chkSynonyms"> 유의어 포함</label>
                     <label class="check-label"><input type="checkbox" id="chkShuffle" checked> 무작위 섞기</label>
                     <label class="check-label"><input type="checkbox" id="chkCombine"> 선택 Day 통합</label>
-                    <span style="margin-left:10px; font-weight:700;">문항수:</span>
-                    <label class="radio-label"><input type="radio" name="qCount" value="10"> 10</label>
-                    <label class="radio-label"><input type="radio" name="qCount" value="20"> 20</label>
-                    <label class="radio-label"><input type="radio" name="qCount" value="30"> 30</label>
-                    <label class="radio-label"><input type="radio" name="qCount" value="all" checked> 전체</label>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-left: 10px;">
+                        <span style="font-size: 13px; font-weight: 700;">문항 수:</span>
+                        <label class="radio-label"><input type="radio" name="qCount" value="10"> 10</label>
+                        <label class="radio-label"><input type="radio" name="qCount" value="20"> 20</label>
+                        <label class="radio-label"><input type="radio" name="qCount" value="30"> 30</label>
+                        <label class="radio-label"><input type="radio" name="qCount" value="all" checked> 전체</label>
+                    </div>
                 </div>
             </div>
-            <div class="panel-section">
-                <div class="section-title"><span>📄 Day 선택</span></div>
+
+            <div class="panel-section" style="border-bottom: none;">
+                <div class="section-header">📄 Day 선택</div>
                 <div class="chip-container" id="dayChips"></div>
             </div>
         </div>
-    </div>
+    </header>
 
     <main id="mainContent">
-        <div style="padding: 100px; color: #94a3b8; text-align: center;">CSV 파일을 업로드하면 단어장이 생성됩니다.</div>
+        <div class="empty-state">
+            <div style="font-size: 40px; margin-bottom: 10px;">📁</div>
+            <div style="font-size: 16px; font-weight: 600;">CSV 파일을 업로드하면 고품질 단어장이 생성됩니다.</div>
+        </div>
     </main>
 
     <script>
-        let rawData = {};
+        let rawVocabData = {};
         let selectedDays = new Set();
 
-        // 1. CSV 파일 처리
-        function handleFile(file) {
+        // 1. 파일 핸들링
+        document.getElementById('csvFileInput').onchange = (e) => {
+            const file = e.target.files[0];
             if (!file) return;
             Papa.parse(file, {
                 header: true, skipEmptyLines: true,
@@ -166,58 +211,56 @@
                     processCSV(results.data);
                 }
             });
-        }
-
-        document.getElementById('csvFileInput').onchange = (e) => handleFile(e.target.files[0]);
-        window.ondragover = (e) => { e.preventDefault(); document.getElementById('dropOverlay').classList.add('active'); };
-        window.ondrop = (e) => { e.preventDefault(); document.getElementById('dropOverlay').classList.remove('active'); handleFile(e.dataTransfer.files[0]); };
+        };
 
         function processCSV(data) {
-            rawData = {};
-            const days = new Set();
+            rawVocabData = {};
+            const daysFound = new Set();
             data.forEach(row => {
                 const d = row['Day']?.trim();
                 if (!d) return;
-                days.add(d);
-                if (!rawData[d]) rawData[d] = [];
+                daysFound.add(d);
+                if (!rawVocabData[d]) rawVocabData[d] = [];
 
-                const mRaw = row['Meaning (KR)'] || '';
-                const sRaw = row['Synonyms'] || '';
-                const meanings = mRaw.split(';').map(s => s.trim()).filter(Boolean);
-                const synonyms = sRaw.split(';').map(s => s.trim()).filter(Boolean);
+                const meanings = (row['Meaning (KR)'] || '').split(';').map(s => s.trim()).filter(Boolean);
+                const synonyms = (row['Synonyms'] || '').split(';').map(s => s.trim()).filter(Boolean);
                 const max = Math.max(meanings.length, synonyms.length, 1);
                 
                 const entries = [];
                 for (let i = 0; i < max; i++) {
                     entries.push({ m: meanings[i] || '', s: synonyms[i] || '' });
                 }
-                rawData[d].push({ word: row['Word']?.trim() || '', entries });
+                rawVocabData[d].push({ word: row['Word']?.trim() || '', entries });
             });
 
-            const sortedDays = [...days].sort((a, b) => parseInt(a) - parseInt(b));
+            const sortedDays = [...daysFound].sort((a, b) => parseInt(a) - parseInt(b));
             selectedDays.clear();
             if (sortedDays.length > 0) selectedDays.add(sortedDays[0]);
 
-            const chipBox = document.getElementById('dayChips');
-            chipBox.innerHTML = '';
-            sortedDays.forEach(d => {
-                const c = document.createElement('div');
-                c.className = `chip ${selectedDays.has(d) ? 'active' : ''}`;
-                c.textContent = `Day ${d}`;
-                c.onclick = () => {
-                    if (selectedDays.has(d)) selectedDays.delete(d); else selectedDays.add(d);
-                    c.classList.toggle('active'); render();
-                };
-                chipBox.appendChild(c);
-            });
-
+            renderChips(sortedDays);
             document.getElementById('controlPanel').style.display = 'block';
             document.getElementById('printBtn').style.display = 'inline-flex';
             document.getElementById('pdfBtn').style.display = 'inline-flex';
             render();
         }
 
-        // 2. 모드 전환 및 옵션 리스너
+        function renderChips(days) {
+            const box = document.getElementById('dayChips');
+            box.innerHTML = '';
+            days.forEach(d => {
+                const c = document.createElement('div');
+                c.className = `chip ${selectedDays.has(d) ? 'active' : ''}`;
+                c.textContent = `Day ${d}`;
+                c.onclick = () => {
+                    if (selectedDays.has(d)) selectedDays.delete(d); else selectedDays.add(d);
+                    render();
+                    renderChips(days);
+                };
+                box.appendChild(c);
+            });
+        }
+
+        // 2. 옵션 변경 감지
         document.querySelectorAll('input[name="viewMode"]').forEach(r => r.onchange = (e) => {
             document.getElementById('testSettings').style.display = e.target.value === 'test' ? 'block' : 'none';
             render();
@@ -227,120 +270,143 @@
         document.getElementById('chkCombine').onchange = render;
         document.querySelectorAll('input[name="qCount"]').forEach(r => r.onchange = render);
 
-        // 3. 렌더링 엔진
+        // 3. 렌더링 핵심 로직
         function render() {
             const container = document.getElementById('mainContent');
-            if (selectedDays.size === 0) { container.innerHTML = '<div style="padding:100px; color:#94a3b8;">출력할 Day를 선택해 주세요.</div>'; return; }
+            if (selectedDays.size === 0) { container.innerHTML = '<div class="empty-state">Day를 선택해 주세요.</div>'; return; }
             
             const mode = document.querySelector('input[name="viewMode"]:checked').value;
             const sorted = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
-            let html = '';
+            let finalHtml = '';
 
             if (mode === 'study') {
                 sorted.forEach(day => {
-                    html += `<div class="a4-page"><div class="page-header"><h1 class="page-title">VOCABULARY | Day ${day}</h1><div class="page-meta">Date: <span class="input-line"></span></div></div>`;
-                    html += `<table class="study-table"><thead><tr><th width="25%">Word</th><th width="40%">Meaning</th><th width="35%">Synonyms</th></tr></thead><tbody>`;
-                    (rawData[day] || []).forEach(item => {
+                    finalHtml += `<div class="paper-content">
+                        <div class="page-header">
+                            <div class="title-group">
+                                <h1>VOCABULARY STUDY</h1>
+                                <p>Essential Word List | Day ${day}</p>
+                            </div>
+                            <div class="header-meta">DATE<span class="input-line"></span></div>
+                        </div>
+                        <table class="study-table">
+                            <thead><tr><th width="25%">WORD</th><th width="40%">MEANING</th><th width="35%">SYNONYMS</th></tr></thead>
+                            <tbody>`;
+                    
+                    (rawVocabData[day] || []).forEach(item => {
                         item.entries.forEach((e, i) => {
                             const isFirst = i === 0;
                             const isLast = i === item.entries.length - 1;
                             const rowClass = isFirst ? (isLast ? '' : 'first-row') : (isLast ? 'last-row' : 'inner-row');
-                            html += `<tr class="${rowClass}">`;
-                            if (isFirst) html += `<td rowspan="${item.entries.length}" class="word-cell">${item.word}</td>`;
-                            html += `<td>${e.m ? `<span style="color:#94a3b8; font-size:11px; margin-right:5px;">${i+1}.</span>` + e.m : ''}</td>`;
-                            html += `<td>${e.s.split(',').map(s => `<span class="synonym-item">${s.trim()}</span>`).join('')}</td></tr>`;
+                            finalHtml += `<tr class="${rowClass}">`;
+                            if (isFirst) finalHtml += `<td rowspan="${item.entries.length}" class="word-col">${item.word}</td>`;
+                            finalHtml += `<td class="meaning-col">${e.m ? `<span class="num-bullet">${i+1}</span>` + e.m : ''}</td>`;
+                            finalHtml += `<td class="synonym-col">${e.s.split(',').map(s => `<span class="synonym-badge">${s.trim()}</span>`).join('')}</td></tr>`;
                         });
                     });
-                    html += `</tbody></table></div>`;
+                    finalHtml += `</tbody></table></div>`;
                 });
             } else {
-                const isCombine = document.getElementById('chkCombine').checked;
-                const isSyn = document.getElementById('chkSynonyms').checked;
-                const isShuffle = document.getElementById('chkShuffle').checked;
+                // 테스트 시험지 로직
+                const combine = document.getElementById('chkCombine').checked;
+                const syn = document.getElementById('chkSynonyms').checked;
+                const shuffle = document.getElementById('chkShuffle').checked;
                 const limit = document.querySelector('input[name="qCount"]:checked').value;
 
                 const buildTest = (days, title) => {
                     let pool = [];
-                    days.forEach(d => (rawData[d] || []).forEach(item => {
+                    days.forEach(d => (rawVocabData[d] || []).forEach(item => {
                         const ans = item.entries.map(e => e.m).join(', ');
                         pool.push({ q: item.word, a: ans });
-                        if (isSyn) item.entries.forEach(e => e.s.split(',').forEach(s => { if(s.trim()) pool.push({ q: s.trim(), a: ans }); }));
+                        if (syn) item.entries.forEach(e => e.s.split(',').forEach(s => { if(s.trim()) pool.push({ q: s.trim(), a: ans }); }));
                     }));
-                    // 중복제거 & 섞기
-                    let finalPool = [];
+                    
+                    let uniquePool = [];
                     const seen = new Set();
-                    pool.forEach(x => { if(!seen.has(x.q.toLowerCase())) { seen.add(x.q.toLowerCase()); finalPool.push(x); }});
-                    if (isShuffle) finalPool.sort(() => Math.random() - 0.5);
-                    if (limit !== 'all') finalPool = finalPool.slice(0, parseInt(limit));
+                    pool.forEach(x => { if(!seen.has(x.q.toLowerCase())) { seen.add(x.q.toLowerCase()); uniquePool.push(x); }});
+                    if (shuffle) uniquePool.sort(() => Math.random() - 0.5);
+                    if (limit !== 'all') uniquePool = uniquePool.slice(0, parseInt(limit));
 
-                    // 문제지 생성 (50문항 단위 페이지 분할)
-                    for (let i = 0; i < finalPool.length; i += 50) {
-                        html += buildTestSheet(finalPool.slice(i, i+50), title, false, i);
+                    // 문제지 렌더링
+                    let testHtml = `<div class="paper-content">
+                        <div class="page-header">
+                            <div class="title-group">
+                                <h1>VOCABULARY TEST</h1>
+                                <p>${title}</p>
+                            </div>
+                            <div class="header-meta">SCORE<span class="input-line"></span></div>
+                        </div>
+                        <table><thead><tr><th width="35">NO</th><th>WORD</th><th>MEANING</th><th width="35">NO</th><th>WORD</th><th>MEANING</th></tr></thead><tbody>`;
+                    
+                    const half = Math.ceil(uniquePool.length / 2);
+                    for (let i = 0; i < half; i++) {
+                        const L = uniquePool[i], R = uniquePool[i+half];
+                        testHtml += `<tr><td class="test-num">${i+1}</td><td style="font-weight:700;">${L.q}</td><td></td>`;
+                        testHtml += `<td class="test-num">${R?i+half+1:''}</td><td style="font-weight:700;">${R?R.q:''}</td><td></td></tr>`;
                     }
-                    // 답안지 생성
-                    for (let i = 0; i < finalPool.length; i += 50) {
-                        html += buildTestSheet(finalPool.slice(i, i+50), title + " [Answer Key]", true, i);
+                    testHtml += `</tbody></table></div>`;
+
+                    // 답안지 렌더링
+                    testHtml += `<div class="paper-content">
+                        <div class="page-header">
+                            <div class="title-group">
+                                <h1 class="answer-key-text">ANSWER KEY</h1>
+                                <p>${title}</p>
+                            </div>
+                        </div>
+                        <table><thead><tr><th width="35">NO</th><th>WORD</th><th>ANSWER</th><th width="35">NO</th><th>WORD</th><th>ANSWER</th></tr></thead><tbody>`;
+                    for (let i = 0; i < half; i++) {
+                        const L = uniquePool[i], R = uniquePool[i+half];
+                        testHtml += `<tr><td class="test-num">${i+1}</td><td style="font-weight:700;">${L.q}</td><td class="answer-key-text" style="font-size:12px;">${L.a}</td>`;
+                        testHtml += `<td class="test-num">${R?i+half+1:''}</td><td style="font-weight:700;">${R?R.q:''}</td><td class="answer-key-text" style="font-size:12px;">${R?R.a:''}</td></tr>`;
                     }
+                    testHtml += `</tbody></table></div>`;
+                    return testHtml;
                 };
 
-                if (isCombine) buildTest(sorted, `TEST | Day ${sorted.join(', ')}`);
-                else sorted.forEach(d => buildTest([d], `TEST | Day ${d}`));
+                if (combine) finalHtml = buildTest(sorted, `Day ${sorted.join(', ')} Integrated`);
+                else sorted.forEach(d => finalHtml += buildTest([d], `Day ${d} Individual Test`));
             }
-            container.innerHTML = html;
+            container.innerHTML = finalHtml;
         }
 
-        function buildTestSheet(chunk, title, isAns, offset) {
-            let h = `<div class="a4-page"><div class="page-header"><h1 class="page-title" style="${isAns?'color:#dc2626':''}">${title}</h1>${!isAns?'<div class="page-meta">Score: <span class="input-line"></span></div>':''}</div><table><thead><tr><th width="35">No.</th><th>Word</th><th>${isAns?'Answer':'Meaning'}</th><th width="35">No.</th><th>Word</th><th>${isAns?'Answer':'Meaning'}</th></tr></thead><tbody>`;
-            const half = Math.ceil(chunk.length / 2);
-            for (let i = 0; i < half; i++) {
-                const L = chunk[i], R = chunk[i+half];
-                h += `<tr><td class="num-cell">${offset+i+1}</td><td class="word-cell">${L.q}</td><td class="${isAns?'answer-text':''}">${isAns?L.a:''}</td>`;
-                h += `<td class="num-cell">${R?offset+i+half+1:''}</td><td class="word-cell">${R?R.q:''}</td><td class="${isAns?'answer-text':''}">${(isAns&&R)?R.a:''}</td></tr>`;
-            }
-            return h + `</tbody></table></div>`;
-        }
-
-        // 4. PDF 다운로드 로직 (HTML 기반 복구 및 좌측 잘림 수정)
+        // 4. PDF 저장 로직 (Continuous & High Quality)
         document.getElementById('pdfBtn').onclick = async function() {
-            const container = document.getElementById('mainContent');
             if (selectedDays.size === 0) return;
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('active');
 
-            const loading = document.getElementById('loadingOverlay');
-            loading.classList.add('active');
-
-            // 뷰포트 오인 방지를 위한 최상단 스크롤
+            // 렌더링 좌표 고정 및 클래스 부여
             window.scrollTo(0,0);
+            document.body.classList.add('pdf-mode');
 
-            // PDF 렌더링 전용 클래스 부여 (가운데 정렬 해제 및 좌측 (0,0) 고정)
-            document.body.classList.add('pdf-rendering');
-
-            // 파일명 동적 생성
             const mode = document.querySelector('input[name="viewMode"]:checked').value;
             const sorted = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
-            let dayStr = sorted.length > 3 ? `${sorted[0]}to${sorted[sorted.length-1]}` : sorted.join('_');
-            const filename = `Vocab_${mode === 'test' ? 'Test' : 'Study'}_Day_${dayStr}.pdf`;
+            let dayStr = sorted.length > 3 ? `${sorted[0]}_to_${sorted[sorted.length-1]}` : sorted.join('_');
+            const filename = `Vocab_${mode.toUpperCase()}_Day_${dayStr}.pdf`;
 
             const opt = {
-                margin: 0,
+                margin: 0, // CSS 마진을 사용하기 위해 0 설정
                 filename: filename,
-                image: { type: 'jpeg', quality: 0.98 },
+                image: { type: 'jpeg', quality: 1.0 },
                 html2canvas: { 
-                    scale: 2, 
+                    scale: 3, // 초고화질
                     useCORS: true, 
-                    windowWidth: 800, // 800px 너비 기준으로 캔버스 고정 (반응형 깨짐 방지)
-                    x: 0, y: 0, scrollX: 0, scrollY: 0 
+                    windowWidth: 1200,
+                    letterRendering: true
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['css', 'legacy'] } // CSS의 page-break-after/inside 준수
             };
 
             try {
-                await html2pdf().set(opt).from(container).save();
+                await html2pdf().set(opt).from(document.getElementById('mainContent')).save();
             } catch (e) {
                 console.error(e);
-                alert("PDF 생성 중 오류가 발생했습니다.");
+                alert("PDF 생성 중 문제가 발생했습니다.");
             } finally {
-                document.body.classList.remove('pdf-rendering');
-                loading.classList.remove('active');
+                document.body.classList.remove('pdf-mode');
+                overlay.classList.remove('active');
             }
         };
     </script>
