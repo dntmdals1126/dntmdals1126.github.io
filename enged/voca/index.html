@@ -136,11 +136,15 @@
         .study-table th:nth-child(1) { width: 28%; } .study-table th:nth-child(2) { width: 38%; } .study-table th:nth-child(3) { width: 34%; }
         
         .word-cell { font-weight: 700; font-size: 16px; color: var(--text-primary); vertical-align: middle; text-align: left; }
+        /* 단어 셀 아래의 실선이 사라지지 않도록 명시적 방어 설정 */
+        .study-table td.word-cell { border-bottom: 1px solid var(--border-strong) !important; }
+
         .meaning-cell { color: #1e293b; font-weight: 500; }
         .synonym-cell { color: var(--text-secondary); font-style: normal; }
         .synonym-item { display: inline-block; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-size: 13.5px; margin-right: 4px; margin-bottom: 4px; border: 1px solid #e2e8f0; }
 
-        .study-table tr.inner-row td { border-bottom: 1px solid transparent !important; padding-top: 8px; padding-bottom: 8px; }
+        /* 단어 뜻 사이의 선만 투명하게 처리 (word-cell은 제외!) */
+        .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; padding-top: 8px; padding-bottom: 8px; }
         .study-table tr.last-row td { border-bottom: 1px solid var(--border-strong) !important; padding-bottom: 14px; }
         .study-table tr.first-row td { padding-top: 14px; }
 
@@ -156,7 +160,7 @@
         .test-table th.col-mean { width: 20%; }
 
         .test-word-cell { font-weight: 600; color: var(--text-primary); word-break: break-word; }
-        .test-meaning-cell { height: 38px; } /* 글씨 쓸 수 있는 여유 공간 */
+        .test-meaning-cell { height: 38px; } 
         .num-cell { text-align: center; color: var(--text-tertiary); font-size: 13px; }
 
         /* --- 빈 상태 표시 --- */
@@ -170,20 +174,37 @@
         .drop-message { color: white; font-size: 28px; font-weight: 700; text-align: center; }
         .drop-message span { display: block; font-size: 16px; font-weight: 400; color: #94a3b8; margin-top: 12px; }
 
-        /* --- PDF & 인쇄 전용 최적화 모드 --- */
-        .pdf-mode #mainContent { gap: 0 !important; }
-        .pdf-mode .a4-page { box-shadow: none !important; border-radius: 0 !important; margin: 0 !important; width: 210mm !important; min-height: 297mm !important; }
+        /* --- PDF & 인쇄 전용 최적화 모드 (표 잘림, 선 사라짐 방지) --- */
+        .pdf-mode #mainContent { 
+            gap: 0 !important; 
+            width: 180mm !important; /* jsPDF의 A4 너비(210mm) - 좌우 여백(30mm) = 180mm */
+            margin: 0 auto;
+        }
+        .pdf-mode .a4-page { 
+            width: 100% !important; 
+            padding: 0 !important; /* 🌟 html2pdf 자체 margin을 사용하므로, 내부 패딩을 제거하여 늘어남 방지 */
+            margin: 0 !important;
+            box-shadow: none !important; 
+            border-radius: 0 !important; 
+            min-height: auto !important; 
+            height: auto !important;
+            page-break-after: always;
+            break-after: page;
+        }
         
+        /* 인쇄 및 PDF 시 선 굵기 강화 (사라짐 방지) */
         @media print {
             body { background: none; padding: 0; }
             .header-container { display: none !important; }
             #mainContent { gap: 0; display: block; }
             .a4-page { margin: 0; padding: 0; box-shadow: none; border-radius: 0; width: 100%; height: auto; min-height: auto; }
-            table, th, td { border: 1pt solid #475569 !important; }
-            .study-table tr.inner-row td { border-bottom: 1pt solid transparent !important; }
+            table, th, td { border: 1.5px solid #475569 !important; }
+            .study-table td.word-cell { border-bottom: 1.5px solid #475569 !important; }
+            .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; }
         }
-        .pdf-mode table, .pdf-mode th, .pdf-mode td { border: 1pt solid #475569 !important; }
-        .pdf-mode .study-table tr.inner-row td { border-bottom: 1pt solid transparent !important; }
+        .pdf-mode table, .pdf-mode th, .pdf-mode td { border: 1.5px solid #475569 !important; }
+        .pdf-mode .study-table td.word-cell { border-bottom: 1.5px solid #475569 !important; }
+        .pdf-mode .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; }
     </style>
 </head>
 <body>
@@ -237,6 +258,14 @@
                     <label class="check-label"><input type="checkbox" id="chkShuffle" checked> 순서 섞기 (랜덤)</label>
                     <label class="check-label"><input type="checkbox" id="chkCombine"> 선택 Day 통합 출력</label>
                 </div>
+                <!-- 문항 수 선택 옵션 -->
+                <div class="options-row" style="margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+                    <span style="font-size: 13.5px; font-weight: 600; color: var(--text-secondary); margin-right: 8px;">출제 문항 수:</span>
+                    <label class="radio-label"><input type="radio" name="questionCount" value="10"> 10문제</label>
+                    <label class="radio-label"><input type="radio" name="questionCount" value="20"> 20문제</label>
+                    <label class="radio-label"><input type="radio" name="questionCount" value="30"> 30문제</label>
+                    <label class="radio-label"><input type="radio" name="questionCount" value="all" checked> 전체 출제</label>
+                </div>
             </div>
 
             <!-- Day 선택 -->
@@ -277,6 +306,10 @@
         document.getElementById('chkSynonyms').addEventListener('change', renderContent);
         document.getElementById('chkShuffle').addEventListener('change', renderContent);
         document.getElementById('chkCombine').addEventListener('change', renderContent);
+        
+        document.querySelectorAll('input[name="questionCount"]').forEach(radio => {
+            radio.addEventListener('change', renderContent);
+        });
 
         function handleFile(file) {
             if (!file) return;
@@ -374,7 +407,6 @@
         function selectAllDays() { allAvailableDays.forEach(d => selectedDays.add(d)); renderFilterPanel(); renderContent(); }
         function deselectAllDays() { selectedDays.clear(); renderFilterPanel(); renderContent(); }
 
-        // 출력 메인 라우터
         function renderContent() {
             const container = document.getElementById('mainContent');
             if (selectedDays.size === 0) {
@@ -433,12 +465,17 @@
             const isSynonyms = document.getElementById('chkSynonyms').checked;
             const isShuffle = document.getElementById('chkShuffle').checked;
             const isCombine = document.getElementById('chkCombine').checked;
+            const countVal = document.querySelector('input[name="questionCount"]:checked').value;
             const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
             let html = '';
 
             if (isCombine) {
                 let pool = getTestPool(sortedDays, isSynonyms);
                 if (isShuffle) shuffleArray(pool);
+                
+                if (countVal !== 'all') {
+                    pool = pool.slice(0, parseInt(countVal, 10));
+                }
                 
                 let dayStr = sortedDays.join(', ');
                 let title = dayStr.length > 20 ? "VOCABULARY TEST - Mix" : `VOCABULARY TEST - Day ${dayStr}`;
@@ -447,16 +484,20 @@
                 sortedDays.forEach(day => {
                     let pool = getTestPool([day], isSynonyms);
                     if (isShuffle) shuffleArray(pool);
+                    
+                    if (countVal !== 'all') {
+                        pool = pool.slice(0, parseInt(countVal, 10));
+                    }
+                    
                     html += buildTestPages(pool, `VOCABULARY TEST - Day ${day}`);
                 });
             }
             container.innerHTML = html;
         }
 
-        // 시험 문제 풀 생성
         function getTestPool(days, includeSynonyms) {
             let pool = [];
-            let seen = new Set(); // 중복 출제 방지
+            let seen = new Set(); 
 
             days.forEach(day => {
                 const words = parsedVocabulary[day];
@@ -485,7 +526,6 @@
             return pool;
         }
 
-        // 배열 랜덤 섞기 알고리즘
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -493,10 +533,9 @@
             }
         }
 
-        // 시험지 페이지(A4) HTML 생성 함수 (2단 50문항 기준)
         function buildTestPages(pool, baseTitle) {
             if (pool.length === 0) return '';
-            const ITEMS_PER_PAGE = 50; // 페이지당 문항 수 (25줄 * 2단)
+            const ITEMS_PER_PAGE = 50; 
             let html = '';
             const totalPages = Math.ceil(pool.length / ITEMS_PER_PAGE);
 
@@ -527,7 +566,7 @@
                 const rows = Math.ceil(chunk.length / 2);
                 for (let r = 0; r < rows; r++) {
                     let left = chunk[r];
-                    let right = chunk[r + rows]; // 다음 단(오른쪽)에 배치될 문항
+                    let right = chunk[r + rows]; 
 
                     html += `<tr>
                         <td class="num-cell">${left ? p + r + 1 : ''}</td>
@@ -544,7 +583,7 @@
             return html;
         }
 
-        // --- PDF 다운로드 ---
+        // --- 🌟 완벽한 PDF 다운로드 로직 ---
         document.getElementById('pdfBtn').addEventListener('click', function() {
             const element = document.getElementById('mainContent');
             if(selectedDays.size === 0) { alert("선택된 Day가 없습니다."); return; }
@@ -554,16 +593,19 @@
             btnSpan.innerText = 'PDF 생성 중...';
             this.style.opacity = '0.7'; this.style.pointerEvents = 'none';
 
+            // pdf-mode를 켜서 패딩, 고정 높이를 없애 html2pdf가 자연스럽게 분할하도록 유도
             document.body.classList.add('pdf-mode');
 
+            // 브라우저 렌더링(CSS 적용)을 기다리기 위해 시간차를 둡니다.
             setTimeout(() => {
                 const opt = {
-                    margin:       0,
+                    margin:       [15, 15, 15, 15], // 상우하좌 15mm 여백 강제 적용 (잘림 완벽 방지)
                     filename:     `Vocabulary_Paper.pdf`,
                     image:        { type: 'jpeg', quality: 1.0 },
                     html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, 
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak:    { mode: ['css', 'legacy'] }
+                    // tr(표 한 줄), .page-header 요소가 페이지 중간에서 반토막 나지 않도록 회피(avoid) 속성 적용
+                    pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr', '.page-header'] }
                 };
 
                 html2pdf().set(opt).from(element).save().then(() => {
@@ -576,7 +618,7 @@
                     btnSpan.innerText = originalText;
                     this.style.opacity = '1'; this.style.pointerEvents = 'auto';
                 });
-            }, 100);
+            }, 300);
         });
     </script>
 </body>
