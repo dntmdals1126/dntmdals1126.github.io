@@ -881,49 +881,55 @@
         <!-- 3. Quiz -->
         <div id="view-quiz" class="hidden fade-in-up max-w-2xl mx-auto">
             <div id="quiz-game">
-                <div id="quiz-active-screen">
-                    
-                    <!-- 퀴즈 상단 컨트롤 (필터 및 리셋) -->
-                    <div class="flex justify-between items-center mb-3 px-1">
-                        <div class="relative">
-                            <button onclick="toggleMenu('quizFilterMenu', event)" class="h-8 text-[11px] font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-3 rounded-md text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-1.5 dropdown-btn" id="quiz-filter-btn">
-                                <i class="fa-solid fa-filter"></i> <span>전체 단어</span>
+                
+                <!-- 항상 보이는 퀴즈 헤더 -->
+                <div id="quiz-header" class="mb-4">
+                    <div class="flex justify-between items-start mb-4 px-1">
+                        <!-- 좌측: Progress & 리셋 -->
+                        <div class="flex flex-col items-start gap-2.5">
+                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1">0 / 0</span></span>
+                            <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2.5 py-1.5 rounded-md transition-colors shadow-sm flex items-center gap-1.5">
+                                <i class="fa-solid fa-rotate-right"></i> 리셋
                             </button>
-                            <div id="quizFilterMenu" class="hidden absolute left-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-left transform scale-95 opacity-0 transition-all duration-200 text-sm">
-                                <button onclick="setQuizFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                    <span><i class="fa-solid fa-list w-5 text-center mr-2 opacity-70"></i> 전체 단어</span>
-                                    <i id="quiz-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
+                        </div>
+                        
+                        <!-- 우측: Score & 필터 -->
+                        <div class="flex flex-col items-end gap-2.5">
+                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2.5 py-1 rounded ml-1">0</span></span>
+                            <div class="relative">
+                                <button onclick="toggleMenu('quizFilterMenu', event)" class="h-8 text-[11px] font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] px-3 rounded-md text-text-main shadow-sm hover:bg-[var(--glass-highlight)] transition flex items-center gap-1.5 dropdown-btn" id="quiz-filter-btn">
+                                    <i class="fa-solid fa-filter"></i> <span>전체 단어</span>
                                 </button>
-                                <button onclick="setQuizFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                    <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
-                                    <i id="quiz-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
-                                </button>
-                                <button onclick="setQuizFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                    <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
-                                    <i id="quiz-filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
-                                </button>
-                                <button onclick="setQuizFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                    <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
-                                    <i id="quiz-filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
-                                </button>
+                                <div id="quizFilterMenu" class="hidden absolute right-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200 text-sm">
+                                    <button onclick="setQuizFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-list w-5 text-center mr-2 opacity-70"></i> 전체 단어</span>
+                                        <i id="quiz-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
+                                        <i id="quiz-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
+                                        <i id="quiz-filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
+                                        <i id="quiz-filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1.5">
-                            <i class="fa-solid fa-rotate-right"></i> 리셋
-                        </button>
                     </div>
 
-                    <div class="flex justify-between items-end mb-4 px-1">
-                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
-                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
-                    </div>
-                    
                     <!-- 객관식 / 주관식 모드 토글 -->
-                    <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-4">
+                    <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-2">
                         <button id="mode-spell-btn" onclick="setQuizMode('spelling')" class="flex-1 text-xs font-bold py-1.5 rounded-md bg-[var(--glass-highlight)] text-text-main transition-all duration-300">주관식</button>
                         <button id="mode-multi-btn" onclick="setQuizMode('multiple')" class="flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300">객관식</button>
                     </div>
+                </div>
 
+                <div id="quiz-active-screen">
                     <!-- 문제 영역 -->
                     <div class="section-card mb-3 min-h-[140px] flex flex-col justify-center items-center text-center relative">
                         <p class="text-[10px] text-sub-accent font-bold mb-3 uppercase tracking-widest border-b border-sub-accent-border pb-1 font-sans">Definition</p>
@@ -961,6 +967,13 @@
                         <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-10">END</button>
                         <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-10">NEXT</button>
                     </div>
+                </div>
+
+                <!-- 퀴즈 에러(단어 부족) 스크린 -->
+                <div id="quiz-error-screen" class="hidden section-card text-center py-10 flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-4xl mb-4 opacity-80"></i>
+                    <h2 class="text-lg font-bold text-text-main mb-2 font-sans">단어가 부족합니다</h2>
+                    <p class="text-sm text-text-dim mb-4 font-sans leading-relaxed">선택한 필터 조건에 해당하는 단어가 4개 미만입니다.<br>조건을 변경하거나 단어를 더 추가해주세요.</p>
                 </div>
                 
                 <div id="quiz-end-screen" class="hidden section-card text-center py-10">
@@ -2622,11 +2635,9 @@
             updateQuizFilterMenuUI();
             closeMenu('quizFilterMenu');
 
-            if(isQuizActive) {
-                appState.quizState = { asked: [], score: 0 };
-                saveData();
-                startQuiz();
-            }
+            appState.quizState = { asked: [], score: 0 };
+            saveData();
+            startQuiz();
         }
 
         function getQuizFilteredWords() {
@@ -2665,9 +2676,10 @@
         function startQuiz() {
             let filteredWords = getQuizFilteredWords();
             if (filteredWords.length < 4) {
-                alert("해당 조건으로 퀴즈를 진행하기엔 단어가 부족합니다 (최소 4개). 조건을 변경하거나 단어를 추가해주세요.");
                 document.getElementById('quiz-active-screen').classList.add('hidden');
                 document.getElementById('quiz-end-screen').classList.add('hidden');
+                document.getElementById('quiz-error-screen').classList.remove('hidden');
+                document.getElementById('quiz-progress').innerText = `0 / ${filteredWords.length}`;
                 return;
             }
             
@@ -2677,11 +2689,13 @@
                 appState.quizState = { asked: [], score: 0 };
             }
             
-            if (appState.quizState.asked.length >= filteredWords.length) {
+            let validAsked = appState.quizState.asked.filter(term => filteredWords.some(w => w.term === term));
+            if (validAsked.length >= filteredWords.length) {
                 appState.quizState = { asked: [], score: 0 };
                 saveData();
             }
             
+            document.getElementById('quiz-error-screen').classList.add('hidden');
             document.getElementById('quiz-active-screen').classList.remove('hidden');
             document.getElementById('quiz-end-screen').classList.add('hidden');
             document.getElementById('quiz-score').innerText = appState.quizState.score;
