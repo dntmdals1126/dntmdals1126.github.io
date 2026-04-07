@@ -8,34 +8,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Enged">
+    <meta name="apple-mobile-web-app-title" content="Enged Voca">
     
-    <title>Enged.</title>
+    <title>Enged. Voca</title>
     <meta name="theme-color" content="#050505" />
     
     <!-- 기본 Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2789' height='2789' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-102 638)'%3E%3Crect x='102' y='-638' width='2789' height='2789' fill='%23050505'/%3E%3Cpath d='M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
     
-    <!-- iOS Apple Touch Icon 자동 생성 -->
-    <script>
-        (function() {
-            const svgData = `<svg width="2789" height="2789" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-102 638)"><rect x="102" y="-638" width="2789" height="2789" fill="#050505"/><path d="M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z" fill="#F2F5F9" fill-rule="evenodd"/><path d="M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z" fill="#F2C14B" fill-rule="evenodd"/></g></svg>`;
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 512;
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
-            img.onload = function() {
-                ctx.drawImage(img, 0, 0, 512, 512);
-                const link = document.createElement('link');
-                link.rel = 'apple-touch-icon';
-                link.href = canvas.toDataURL('image/png'); 
-                document.head.appendChild(link);
-            };
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
-        })();
-    </script>
-
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -283,10 +263,10 @@
         }
         
         .flashcard-face.front .fc-inner-content { 
-            align-items: flex-start; text-align: left; justify-content: flex-start;
+            display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%;
         }
         .flashcard-face.back .fc-inner-content { 
-            display: grid; place-items: center; align-content: center; text-align: center; min-height: 100%;
+            align-items: flex-start; text-align: left; justify-content: flex-start;
         }
 
         .fc-scroll-box::-webkit-scrollbar { width: 4px; }
@@ -309,11 +289,12 @@
 
         .slash-wrapper { position: relative; display: inline-flex; justify-content: center; align-items: center; }
         .slash-wrapper::after {
-            content: ''; position: absolute; top: 50%; left: -20%; width: 140%; height: 2px;
+            content: ''; position: absolute; top: 50%; left: -15%; width: 130%; height: 1.5px;
             background-color: currentColor; transform: translateY(-50%) rotate(-45deg) scaleX(0); 
             transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
+            border-radius: 2px;
         }
-        .btn-active .slash-wrapper::after { transform: translateY(-50%) rotate(-45deg) scaleX(1); }
+        .btn-active .slash-wrapper::after, .slash-always::after { transform: translateY(-50%) rotate(-45deg) scaleX(1) !important; }
 
         .clear-btn-enter { opacity: 0; transform: scale(0.8); }
         .clear-btn-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
@@ -340,7 +321,7 @@
             .pc-hide { display: none !important; }
 
             #listContainer th:nth-child(2), #listContainer td.actions-col { width: 70px !important; }
-            #listContainer th:nth-child(3), #listContainer td.term-col-content { width: 25% !important; }
+            #listContainer th:nth-child(3), #listContainer td.term-col-content { width: 30% !important; }
 
             #listContainer th, #listContainer td { position: relative; }
             #listContainer th:nth-child(1)::after, #listContainer td:nth-child(1)::after,
@@ -537,6 +518,10 @@
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
+            <!-- 상위 페이지 이동 링크 -->
+            <a href="https://www.v1ctorym1n.kro.kr/enged" class="tool-btn" title="Enged 페이지">
+                <i class="fa-solid fa-e text-sm"></i>
+            </a>
             <!-- 설정 모달 열기 버튼 -->
             <button class="tool-btn" onclick="openSettingsModal()" title="설정 및 데이터 관리">
                 <i class="fa-solid fa-gear text-sm"></i>
@@ -622,7 +607,7 @@
                     <div class="flex items-center gap-1.5 sm:gap-2 w-full">
                          <div class="flex-1 min-w-0 flex items-center h-9 sm:h-10 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-[14px] px-2 sm:px-3 focus-within:border-blue-500/50 transition-colors relative">
                              <i class="fa-solid fa-search text-text-dim text-[13px] sm:text-sm"></i>
-                             <input type="text" id="searchInput" placeholder="단어, 뜻 검색..." onkeyup="handleSearchInput()" 
+                             <input type="text" id="searchInput" placeholder="표제어, 의미, 유의어 검색..." onkeyup="handleSearchInput()" 
                                 class="flex-1 w-full bg-transparent border-none focus:ring-0 text-text-main placeholder-text-dim text-[13.5px] sm:text-sm font-medium p-0 ml-1.5 sm:ml-2 pr-6">
                              <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2 w-6 h-6 flex items-center justify-center text-text-dim hover:text-text-main">
                                  <i class="fa-solid fa-xmark"></i>
@@ -634,7 +619,7 @@
                              <button onclick="toggleHideTerms()" class="btn btn-sec toolbar-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="hideTermBtn" title="단어 가리기">
                                 <span class="slash-wrapper"><i class="fa-solid fa-font"></i></span>
                              </button>
-                             <button onclick="toggleHideDefs()" class="btn btn-sec toolbar-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="hideDefBtn" title="해설 가리기">
+                             <button onclick="toggleHideDefs()" class="btn btn-sec toolbar-btn h-9 w-8 sm:w-10 sm:h-10 px-0 flex items-center justify-center text-[11px] sm:text-xs !rounded-[14px]" id="hideDefBtn" title="의미 가리기">
                                 <span class="slash-wrapper"><i class="fa-solid fa-align-left"></i></span>
                              </button>
                              
@@ -650,7 +635,7 @@
                                         <i id="filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
                                     </button>
                                     <button onclick="setListFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                        <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10.5px]"></i></span> 암기 제외</span>
+                                        <span><span class="slash-wrapper slash-always text-red-500 w-5 text-center mr-2"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span> 암기 제외</span>
                                         <i id="filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
                                     <button onclick="setListFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
@@ -712,13 +697,13 @@
                                         <i class="fa-solid fa-bookmark cursor-pointer transition-colors list-action-bookmark hover:text-orange-400" title="현재 목록 전체 저장/해제" onclick="toggleAllVisibleNotebook()"></i>
                                     </div>
                                 </th>
-                                <th class="px-4 py-3 term-col w-[25%] cursor-pointer hover:text-[var(--sub-accent)] transition-colors group select-none" onclick="toggleSort()" title="알파벳 정렬">
+                                <th class="px-4 py-3 term-col w-[30%] cursor-pointer hover:text-[var(--sub-accent)] transition-colors group select-none" onclick="toggleSort()" title="알파벳 정렬">
                                     <div class="flex items-center gap-1">
                                         Term
                                         <i id="sortIndicator" class="fa-solid fa-caret-down text-text-dim group-hover:text-[var(--sub-accent)] transition-colors"></i>
                                     </div>
                                 </th>
-                                <th class="px-4 py-3 def-col w-auto mobile-hide">Definition</th>
+                                <th class="px-4 py-3 def-col w-auto mobile-hide">Meaning & Synonyms</th>
                             </tr>
                         </thead>
                         <tbody id="wordListBody" class="divide-y divide-[var(--glass-border)] text-sm text-text-main">
@@ -749,7 +734,7 @@
                                 <i id="fc-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
                             </button>
                             <button onclick="setFcFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
+                                <span><span class="slash-wrapper slash-always text-red-500 w-5 text-center mr-2"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span> 암기 제외</span>
                                 <i id="fc-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
                             </button>
                             <button onclick="setFcFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
@@ -773,52 +758,47 @@
                 </div>
             </div>
 
-            <!-- 카드 영역 디자인 개선 -->
+            <!-- 카드 영역 -->
             <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
-                    <!-- Front (Def) -->
-                    <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)]">
+                    <!-- Front (English Term) -->
+                    <div class="flashcard-face front bg-gradient-to-br from-[var(--fc-back-grad-start)] to-[var(--fc-back-grad-end)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)]">
                         <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <span class="px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[10px] font-bold text-text-dim tracking-wider uppercase">Definition</span>
+                                <span class="px-3 py-1 rounded-full bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] text-[10px] font-bold text-sub-accent tracking-wider uppercase">Word</span>
                                 <div id="fc-front-badges" class="flex items-center gap-1.5"></div>
                             </div>
                         </div>
                         
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
-                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
-                                <div class="fc-inner-content">
-                                    <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
-                                    <div class="w-16 h-[2px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
-                                    <p id="fc-front-ko" class="text-text-dim text-[14.5px] font-kor font-medium text-left w-full"></p>
-                                </div>
+                            <div class="fc-scroll-box w-full h-full flex flex-col justify-center items-center" onclick="event.stopPropagation()">
+                                <h2 id="fc-front-term" class="text-[32px] md:text-[40px] font-black text-text-main break-words font-sans leading-tight text-center w-full px-4">Word</h2>
                             </div>
                         </div>
                         
                         <div class="absolute bottom-4 left-0 right-0 text-text-dim/60 text-xs flex items-center justify-center gap-2 animate-pulse font-sans">
-                            <i class="fa-solid fa-rotate"></i> <span>탭하여 단어 확인</span>
+                            <i class="fa-solid fa-rotate"></i> <span>탭하여 의미 확인</span>
                         </div>
                     </div>
-                    <!-- Back (Term) -->
-                    <div class="flashcard-face back bg-gradient-to-br from-[var(--fc-back-grad-start)] to-[var(--fc-back-grad-end)] backdrop-blur-xl shadow-xl border border-sub-accent-border">
+                    <!-- Back (Meanings & Synonyms) -->
+                    <div class="flashcard-face back bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-sub-accent-border">
                         <div class="absolute top-5 left-5 right-5 flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <span class="px-3 py-1 rounded-full bg-sub-accent-bg border border-sub-accent-border text-[10px] font-bold text-sub-accent tracking-wider uppercase">Term</span>
+                                <span class="px-3 py-1 rounded-full bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-[10px] font-bold text-text-dim tracking-wider uppercase">Meaning & Synonyms</span>
                                 <div id="fc-back-badges" class="flex items-center gap-1.5"></div>
                             </div>
                         </div>
                         
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
-                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
-                                <div class="fc-inner-content justify-center min-h-full">
-                                    <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
-                                    <p id="fc-back-koterm" class="text-sub-accent text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
+                            <div class="fc-scroll-box w-full h-full text-left" onclick="event.stopPropagation()">
+                                <div class="fc-inner-content justify-start" id="fc-back-content">
+                                    <!-- JS Generated Meanings -->
                                 </div>
                             </div>
                         </div>
                         
                         <div class="absolute bottom-4 left-0 right-0 text-primary/50 text-xs flex items-center justify-center gap-2 animate-pulse font-sans">
-                            <i class="fa-solid fa-rotate"></i> <span>탭하여 뜻 확인</span>
+                            <i class="fa-solid fa-rotate"></i> <span>탭하여 단어 확인</span>
                         </div>
                     </div>
                 </div>
@@ -877,46 +857,73 @@
         <!-- 3. Quiz -->
         <div id="view-quiz" class="hidden fade-in-up max-w-2xl mx-auto">
             <div id="quiz-game">
-                <div id="quiz-active-screen">
-                    <div class="flex justify-between items-end mb-5 px-1">
+                
+                <!-- 항상 보이는 퀴즈 헤더 -->
+                <div id="quiz-header" class="mb-4">
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <!-- 좌측: Progress & 리셋 -->
                         <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1"></span></span>
-                            <button onclick="resetQuizProgress()" class="text-[10px] font-bold text-text-dim hover:text-red-500 hover:bg-red-500/10 border border-[var(--glass-border)] bg-[var(--glass-surface)] px-2 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1">
-                                <i class="fa-solid fa-rotate-right"></i> 리셋
+                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">PROGRESS <span id="quiz-progress" class="text-text-main ml-1">0 / 0</span></span>
+                            <button onclick="resetQuizProgress()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-dim hover:text-red-500 hover:bg-red-500/10 transition-colors shadow-sm" title="초기화">
+                                <i class="fa-solid fa-rotate-right"></i>
                             </button>
                         </div>
-                        <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
+                        
+                        <!-- 우측: 필터 & Score -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-text-dim tracking-widest font-sans">SCORE <span id="quiz-score" class="text-sub-accent bg-[var(--glass-highlight)] px-2 py-1 rounded ml-1">0</span></span>
+                            <div class="relative">
+                                <button onclick="toggleMenu('quizFilterMenu', event)" class="w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-dim hover:bg-[var(--glass-highlight)] hover:text-text-main transition-colors shadow-sm dropdown-btn" id="quiz-filter-btn" title="필터링 (전체)">
+                                    <i class="fa-solid fa-filter"></i>
+                                </button>
+                                <div id="quizFilterMenu" class="hidden absolute right-0 top-full mt-2 w-44 bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl shadow-lg backdrop-blur-xl z-[100] flex flex-col py-1.5 origin-top-right transform scale-95 opacity-0 transition-all duration-200 text-sm">
+                                    <button onclick="setQuizFilter('all');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-list w-5 text-center mr-2 opacity-70"></i> 전체 단어</span>
+                                        <i id="quiz-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><span class="slash-wrapper slash-always text-red-500 w-5 text-center mr-2"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span> 암기 제외</span>
+                                        <i id="quiz-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
+                                        <i id="quiz-filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
+                                        <i id="quiz-filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
+
                     <!-- 객관식 / 주관식 모드 토글 -->
-                    <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-4">
+                    <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-2">
                         <button id="mode-spell-btn" onclick="setQuizMode('spelling')" class="flex-1 text-xs font-bold py-1.5 rounded-md bg-[var(--glass-highlight)] text-text-main transition-all duration-300">주관식</button>
                         <button id="mode-multi-btn" onclick="setQuizMode('multiple')" class="flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300">객관식</button>
                     </div>
+                </div>
 
+                <div id="quiz-active-screen">
                     <!-- 문제 영역 -->
                     <div class="section-card mb-3 min-h-[140px] flex flex-col justify-center items-center text-center relative">
-                        <p class="text-[10px] text-sub-accent font-bold mb-3 uppercase tracking-widest border-b border-sub-accent-border pb-1 font-sans">Definition</p>
-                        <p id="quiz-question" class="text-lg font-medium text-text-main leading-relaxed font-sans px-2">
-                            문제 내용이 여기에 표시됩니다.
+                        <p id="quiz-type-badge" class="text-[10px] text-sub-accent font-bold mb-3 uppercase tracking-widest border-b border-sub-accent-border pb-1 font-sans">English Word</p>
+                        <p id="quiz-question" class="text-2xl font-black text-text-main leading-relaxed font-sans px-2 break-words w-full">
+                            Loading...
                         </p>
-                        <!-- 힌트 버튼 -->
-                        <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-sub-accent opacity-80 hover:opacity-100 font-bold px-2 py-1 rounded-md bg-sub-accent-bg transition flex items-center gap-1.5">
-                            <i class="fa-regular fa-lightbulb"></i> 힌트
-                        </button>
-                        <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
-                        <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-sub-accent"></div>
                     </div>
 
                     <!-- 주관식 스펠링 컨테이너 디자인 개선 -->
                     <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
                         <div class="relative w-full shadow-sm rounded-2xl">
-                            <!-- 영어만 입력되도록 oninput 정규식 유지 -->
-                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/40 focus:bg-[var(--glass-highlight)] transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <!-- 한국어, 영어, 특수문자 허용 -->
+                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ0-9\s\-\'\.\,;()]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/40 focus:bg-[var(--glass-highlight)] transition-all outline-none" placeholder="한국어 뜻을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         </div>
+                        <p class="text-[11px] text-text-dim text-center mt-2 opacity-70">* 뜻이 여러 개인 경우 하나만 입력하거나 전체를 입력하세요.</p>
                     </div>
 
                     <!-- 다중선택 객관식 -->
@@ -931,6 +938,13 @@
                         <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-10">END</button>
                         <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-10">NEXT</button>
                     </div>
+                </div>
+
+                <!-- 퀴즈 에러(단어 부족) 스크린 -->
+                <div id="quiz-error-screen" class="hidden section-card text-center py-10 flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-4xl mb-4 opacity-80"></i>
+                    <h2 class="text-lg font-bold text-text-main mb-2 font-sans">단어가 부족합니다</h2>
+                    <p class="text-sm text-text-dim mb-4 font-sans leading-relaxed">선택한 필터 조건에 해당하는 퀴즈 문제가 4개 미만입니다.<br>조건을 변경하거나 단어를 더 추가해주세요.</p>
                 </div>
                 
                 <div id="quiz-end-screen" class="hidden section-card text-center py-10">
@@ -1531,7 +1545,7 @@
 
     <script>
         // === 드롭다운 메뉴 공통 통합 함수 ===
-        const dropdownIds = ['moreMenu', 'filterMenu', 'fcFilterMenu'];
+        const dropdownIds = ['moreMenu', 'filterMenu', 'fcFilterMenu', 'quizFilterMenu'];
 
         function toggleMenu(menuId, e) {
             if(e) e.stopPropagation();
@@ -1549,6 +1563,7 @@
                 if (menuId === 'moreMenu') updateMoreMenuUI();
                 if (menuId === 'filterMenu') updateFilterMenuUI();
                 if (menuId === 'fcFilterMenu') updateFcFilterMenuUI();
+                if (menuId === 'quizFilterMenu') updateQuizFilterMenuUI();
                 
                 void menu.offsetWidth; // 애니메이션 트리거
                 menu.classList.remove('scale-95', 'opacity-0');
@@ -1572,7 +1587,8 @@
             const menus = [
                 { menu: 'moreMenu', btn: 'moreBtn' },
                 { menu: 'filterMenu', btn: 'filterBtn' },
-                { menu: 'fcFilterMenu', btn: 'fc-filter-btn' }
+                { menu: 'fcFilterMenu', btn: 'fc-filter-btn' },
+                { menu: 'quizFilterMenu', btn: 'quiz-filter-btn' }
             ];
             
             menus.forEach(({menu, btn}) => {
@@ -1619,23 +1635,29 @@
                         <tr>
                             <th class="print-num">#</th>
                             <th class="print-term">TERM</th>
-                            <th class="print-def">DEFINITION</th>
+                            <th class="print-def">DEFINITION & SYNONYMS</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
             
             wordsToPrint.forEach((word, index) => {
+                let meaningHtml = '';
+                for (let i = 0; i < word.meaningsList.length; i++) {
+                    meaningHtml += `<div class="en-term" style="margin-top: ${i > 0 ? '6px' : '0'};">${word.meaningsList[i]}</div>`;
+                    if (word.synGroupsList[i]) {
+                        meaningHtml += `<div class="ko-term">${word.synGroupsList[i]}</div>`;
+                    }
+                }
+                
                 html += `
                     <tr>
                         <td class="print-num">${index + 1}</td>
                         <td class="print-term">
-                            <div class="en-term">${word.term}</div>
-                            ${word.koTerm ? `<div class="ko-term">${word.koTerm}</div>` : ''}
+                            <div class="en-def">${word.term}</div>
                         </td>
                         <td class="print-def">
-                            ${word.def ? `<div class="en-def">${word.def}</div>` : ''}
-                            ${word.koDef ? `<div class="ko-def">${word.koDef}</div>` : ''}
+                            ${meaningHtml}
                         </td>
                     </tr>
                 `;
@@ -1963,26 +1985,30 @@
         applyTheme(savedTheme);
         themeToggle.onclick = () => applyTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
 
-        let allWords = [];
+        // NEW DATA STRUCTURES
+        let allWords = []; 
+        let allQuizItems = []; // Contains individual synonyms for specific testing
+
         let appState = { 
             memorized: {}, 
             notebook: [], 
             currentIndex: 0,
-            quizState: { asked: [], score: 0 },
+            quizState: { asked: [], score: 0 }, // asked contains item.id
             fontSizeLevel: 0,
             autoRemoveSaved: true,
-            lastModified: 0, // 타임스탬프 기록용
-            autoSyncEnabled: false // 자동 동기화 옵션 (기본 꺼짐)
+            lastModified: 0, 
+            autoSyncEnabled: false 
         };
         
         let listFilterMode = 'all'; 
         let fcFilterMode = 'all';
+        let quizFilterMode = 'all';
 
         // 폰트 사이즈 3단계
         const fontClasses = [
-            { term: "text-[16px] lg:text-[18px]", koTerm: "text-[12px]", def: "text-[12px] sm:text-[13.5px]", koDef: "text-[12px] text-gray-500" },
-            { term: "text-[17px] lg:text-[19px]", koTerm: "text-[13px]", def: "text-[13px] sm:text-[14.5px]", koDef: "text-[13px] text-gray-500" },
-            { term: "text-[18px] lg:text-[20px]", koTerm: "text-[14px]", def: "text-[14px] sm:text-[15.5px]", koDef: "text-[14px] text-gray-500" }
+            { term: "text-[16px] lg:text-[18px]", koTerm: "text-[13px] sm:text-[14.5px]", def: "text-[12px] sm:text-[13.5px]", koDef: "text-[12px] text-gray-500" },
+            { term: "text-[17px] lg:text-[19px]", koTerm: "text-[14px] sm:text-[15.5px]", def: "text-[13px] sm:text-[14.5px]", koDef: "text-[13px] text-gray-500" },
+            { term: "text-[18px] lg:text-[20px]", koTerm: "text-[15px] sm:text-[16.5px]", def: "text-[14px] sm:text-[15.5px]", koDef: "text-[14px] text-gray-500" }
         ];
         
         let isQuizActive = false;
@@ -2003,7 +2029,6 @@
         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
         ddayTextEl.innerText = days > 0 ? `D-${days}` : "D-?"; 
 
-        // 💡 클라우드 통신을 위해 전역 변수와 업데이트 함수 노출
         window.getAppState = () => appState;
         
         window.updateLocalState = (newState, skipDirty = false) => {
@@ -2011,7 +2036,6 @@
             localStorage.setItem('engVocabState', JSON.stringify(appState));
             updateProgress();
             
-            // 현재 활성화된 탭 리렌더링
             const activeTab = document.querySelector('.chip.active');
             if (activeTab) {
                 const tabId = activeTab.id;
@@ -2027,7 +2051,6 @@
             loadLocalData();
             document.getElementById('setting-auto-remove').checked = appState.autoRemoveSaved;
             
-            // 자동 동기화 셋업
             const autoSyncCheckbox = document.getElementById('setting-auto-sync');
             if (autoSyncCheckbox) autoSyncCheckbox.checked = appState.autoSyncEnabled || false;
             if (appState.autoSyncEnabled) window.startAutoSync();
@@ -2037,6 +2060,7 @@
             updateMoreMenuUI();
             updateFilterMenuUI();
             updateFcFilterMenuUI();
+            updateQuizFilterMenuUI(); 
             updateDashboard();
             switchTab('dashboard');
         };
@@ -2056,7 +2080,6 @@
                 } catch(e) {}
             }
             
-            // 로컬 스토리지에 남아있던 구버전 사용량 기록을 클라우드 동기화용(appState)으로 완전 이전
             const oldUsageStr = localStorage.getItem('engedSyncUsage');
             if (oldUsageStr && !appState.syncUsage) {
                 try {
@@ -2066,15 +2089,12 @@
             }
         }
 
-        // 로컬에 데이터가 저장될 때마다 타임스탬프를 갱신하고 '더티(Dirty)' 상태로 만듭니다.
         function saveData(skipDirty = false) {
             appState.lastModified = Date.now();
             localStorage.setItem('engVocabState', JSON.stringify(appState));
             updateProgress();
             
-            if (!skipDirty) {
-                window.setDirty(true); // 동기화 버튼 색상 변경 등
-            }
+            if (!skipDirty) window.setDirty(true);
         }
         
         function openSettingsModal() {
@@ -2101,7 +2121,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = "enged_backup.json";
+            a.download = "enged_voca_backup.json";
             a.click();
             closeSettingsModal();
         }
@@ -2141,7 +2161,7 @@
 
         async function fetchCSV() {
             try {
-                const response = await fetch('./영어.csv');
+                const response = await fetch('./졸시단어_fixed.csv');
                 if (!response.ok) throw new Error("CSV not found");
                 const text = await response.text();
                 parseCSV(text);
@@ -2154,9 +2174,12 @@
             }
         }
 
+        // 새 CSV 포맷 처리: Day, Word, Meaning (KR), Synonyms
         function parseCSV(text) {
             const lines = text.split(/\r\n|\n/);
             allWords = [];
+            allQuizItems = [];
+            
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
@@ -2170,24 +2193,54 @@
                 }
                 matches.push(cleanCSVField(match));
                 
-                let term, koTerm, def, koDef;
-                const isFirstColNum = /^\d+$/.test(matches[0]);
+                let day = matches[0];
+                let word = matches[1];
+                let koTerm = matches[2];
+                let synonyms = matches[3] || "";
                 
-                if (matches.length >= 5 && isFirstColNum) {
-                    term = matches[1]; koTerm = matches[2]; def = matches[3]; koDef = matches[4];
-                } else if (matches.length >= 4) {
-                    if (isFirstColNum && matches[1]) {
-                         term = matches[1]; koTerm = matches[2]; def = matches[3]; koDef = matches[4] || ""; 
-                    } else {
-                         term = matches[0]; koTerm = matches[1]; def = matches[2]; koDef = matches[3];
+                if (!word || !koTerm) continue;
+
+                let meaningsList = koTerm.split(';').map(m => m.trim());
+                let synGroupsList = synonyms ? synonyms.split(';').map(g => g.trim()) : [];
+
+                allWords.push({ 
+                    day, 
+                    term: word, 
+                    koTerm: koTerm, 
+                    synonyms: synonyms,
+                    meaningsList,
+                    synGroupsList
+                });
+
+                // 표제어 퀴즈 아이템 추가
+                allQuizItems.push({
+                    id: `hw_${i}`,
+                    term: word, // 영어 질문
+                    answer: koTerm, // 한국어 정답 (전체 또는 개별 인정)
+                    type: 'Headword',
+                    parentWord: word
+                });
+
+                // 유의어 퀴즈 아이템 개별 추가
+                for (let j = 0; j < synGroupsList.length; j++) {
+                    let korMeaning = meaningsList[j] ? meaningsList[j] : koTerm; 
+                    let syns = synGroupsList[j].split(',').map(s => s.trim());
+                    for (let k = 0; k < syns.length; k++) {
+                        let syn = syns[k];
+                        if (syn) {
+                            allQuizItems.push({
+                                id: `syn_${i}_${j}_${k}`,
+                                term: syn,
+                                answer: korMeaning,
+                                type: 'Synonym',
+                                parentWord: word
+                            });
+                        }
                     }
                 }
-                
-                if (def) def = def.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
-                if (koDef) koDef = koDef.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
-                if (term && def) allWords.push({ term, koTerm, def, koDef });
             }
         }
+
         function cleanCSVField(text) {
             let clean = text.trim();
             if (clean.startsWith('"') && clean.endsWith('"')) clean = clean.substring(1, clean.length - 1);
@@ -2269,7 +2322,7 @@
                 autoplayTimeout2 = setTimeout(() => {
                     if(!autoplayMode) return;
                     if(appState.currentIndex < flashcardOrder.length - 1) {
-                        nextCard(true); // isAuto 플래그 적용 (autoplay 멈춤 방지)
+                        nextCard(true); // isAuto 플래그 적용
                         runAutoplayCycle();
                     } else {
                         stopAutoplay(); 
@@ -2282,14 +2335,12 @@
             stopAutoplay();
             if (flashcardOrder.length <= 1) return;
 
-            // 시각적 피드백 효과
             const btn = document.querySelector('button[title="섞기"]');
             if(btn) {
                 btn.classList.add('bg-[var(--glass-highlight)]');
                 setTimeout(() => btn.classList.remove('bg-[var(--glass-highlight)]'), 200);
             }
 
-            // Fisher-Yates shuffle
             for (let i = flashcardOrder.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
@@ -2353,10 +2404,8 @@
             const inner = document.getElementById('flashcard-inner');
             
             if (allWords.length === 0 || flashcardOrder.length === 0) {
-                document.getElementById('fc-front').innerHTML = "<div class='text-text-dim text-base text-center mt-12 w-full'>조건에 해당하는 단어가 없습니다.</div>";
-                document.getElementById('fc-front-ko').innerHTML = "<div class='text-center w-full'>우측 상단 필터를 변경하거나 단어를 추가해주세요.</div>";
-                document.getElementById('fc-back-term').innerHTML = "<div class='text-text-dim text-xl'>Empty</div>";
-                document.getElementById('fc-back-koterm').innerText = "";
+                document.getElementById('fc-front-term').innerText = "Empty";
+                document.getElementById('fc-back-content').innerHTML = "<div class='text-center w-full text-text-dim mt-4'>조건에 해당하는 단어가 없습니다.</div>";
                 document.getElementById('fc-progress').innerText = `0 / 0`;
                 document.getElementById('fc-front-badges').innerHTML = '';
                 document.getElementById('fc-back-badges').innerHTML = '';
@@ -2390,10 +2439,20 @@
             const realIndex = flashcardOrder[idx];
             const word = allWords[realIndex];
             
-            document.getElementById('fc-front').innerHTML = word.def;
-            document.getElementById('fc-front-ko').innerHTML = word.koDef;
-            document.getElementById('fc-back-term').innerText = word.term;
-            document.getElementById('fc-back-koterm').innerText = word.koTerm;
+            // Front = English Term
+            document.getElementById('fc-front-term').innerText = word.term;
+            
+            // Back = Meanings + Synonyms
+            let backHtml = '';
+            for (let i = 0; i < word.meaningsList.length; i++) {
+                backHtml += `<div class="mb-3.5"><span class="font-kor font-bold text-[18px] md:text-[20px] text-text-main">${word.meaningsList[i]}</span>`;
+                if (word.synGroupsList[i]) {
+                    backHtml += `<br><span class="text-[14px] md:text-[15px] font-medium text-primary mt-1 inline-block opacity-90">${word.synGroupsList[i]}</span>`;
+                }
+                backHtml += `</div>`;
+            }
+            document.getElementById('fc-back-content').innerHTML = backHtml;
+            
             document.getElementById('fc-progress').innerText = `${idx + 1} / ${flashcardOrder.length}`;
             
             updateFlashcardControls(word.term);
@@ -2532,10 +2591,9 @@
                     <div class="flex-1 pr-4">
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
                             <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
-                            <span class="text-xs text-text-dim font-kor font-bold text-sub-accent">${word.koTerm}</span>
                         </div>
-                        <p class="text-sm text-text-sub font-sans leading-relaxed mb-1">${word.def}</p>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80">${word.koDef}</p>
+                        <p class="text-sm font-kor text-text-main leading-relaxed mb-1">${word.koTerm}</p>
+                        <p class="text-xs text-primary font-sans font-medium opacity-90">${word.synonyms}</p>
                     </div>
                     <button onclick="toggleNotebook('${nbTerm.replace(/'/g, "\\'")}'); renderNotebook();" class="w-10 h-10 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white transition flex items-center justify-center shrink-0" title="단어장에서 제거">
                         <i class="fa-solid fa-bookmark"></i>
@@ -2554,6 +2612,61 @@
         }
 
         // --- Quiz ---
+        function updateQuizFilterMenuUI() {
+            const checks = {
+                'all': document.getElementById('quiz-filter-check-all'),
+                'hideMemorized': document.getElementById('quiz-filter-check-hide'),
+                'onlySaved': document.getElementById('quiz-filter-check-saved'),
+                'onlyMemorized': document.getElementById('quiz-filter-check-memo')
+            };
+            for(let key in checks) {
+                if(checks[key]) checks[key].classList.add('hidden');
+            }
+            if(checks[quizFilterMode]) checks[quizFilterMode].classList.remove('hidden');
+        }
+
+        function setQuizFilter(mode) {
+            quizFilterMode = mode;
+            const btn = document.getElementById('quiz-filter-btn');
+            if(quizFilterMode === 'all') {
+                btn.innerHTML = '<i class="fa-solid fa-filter"></i>';
+                btn.classList.remove('btn-active');
+                btn.title = "필터링 (전체)";
+            } else if(quizFilterMode === 'hideMemorized') {
+                btn.innerHTML = '<span class="slash-wrapper slash-always text-red-500"><i class="fa-solid fa-check text-[10.5px]"></i></span>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (암기 제외)";
+            } else if(quizFilterMode === 'onlySaved') {
+                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-400"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (저장 단어)";
+            } else if(quizFilterMode === 'onlyMemorized') {
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (암기 완료)";
+            }
+            updateQuizFilterMenuUI();
+            closeMenu('quizFilterMenu');
+
+            if(isQuizActive) {
+                appState.quizState = { asked: [], score: 0 };
+                saveData();
+                startQuiz();
+            }
+        }
+
+        // Return filtered sub-items (Headwords + Synonyms)
+        function getQuizFilteredItems() {
+            let validHeadwords = allWords.filter(word => {
+                if (quizFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
+                if (quizFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
+                if (quizFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
+                return true;
+            }).map(w => w.term);
+
+            return allQuizItems.filter(item => validHeadwords.includes(item.parentWord));
+        }
+
         function setQuizMode(mode) {
             quizState.mode = mode;
             const multiBtn = document.getElementById('mode-multi-btn');
@@ -2573,24 +2686,35 @@
 
         function showQuizHint() {
             const hintBox = document.getElementById('quiz-hint-box');
-            hintBox.innerHTML = quizCurrentQ.koDef;
+            hintBox.innerHTML = "Original: " + quizCurrentQ.parentWord;
             hintBox.classList.remove('hidden');
             hintBox.classList.add('anim-fade-in');
         }
 
         function startQuiz() {
-            if (allWords.length < 4) return;
+            let filteredItems = getQuizFilteredItems();
+            if (filteredItems.length < 4) {
+                document.getElementById('quiz-active-screen').classList.add('hidden');
+                document.getElementById('quiz-end-screen').classList.add('hidden');
+                document.getElementById('quiz-error-screen').classList.remove('hidden');
+                document.getElementById('quiz-progress').innerText = `0 / ${filteredItems.length}`;
+                return;
+            }
+            
             isQuizActive = true;
             
             if (!Array.isArray(appState.quizState.asked)) {
                 appState.quizState = { asked: [], score: 0 };
             }
             
-            if (appState.quizState.asked.length >= allWords.length) {
+            // Validate asked items based on current filter
+            let validAsked = appState.quizState.asked.filter(id => filteredItems.some(i => i.id === id));
+            if (validAsked.length >= filteredItems.length) {
                 appState.quizState = { asked: [], score: 0 };
                 saveData();
             }
             
+            document.getElementById('quiz-error-screen').classList.add('hidden');
             document.getElementById('quiz-active-screen').classList.remove('hidden');
             document.getElementById('quiz-end-screen').classList.add('hidden');
             document.getElementById('quiz-score').innerText = appState.quizState.score;
@@ -2608,31 +2732,51 @@
             
             if (!Array.isArray(appState.quizState.asked)) appState.quizState.asked = [];
             
-            let unasked = allWords.filter(w => !appState.quizState.asked.includes(w.term));
+            let filteredItems = getQuizFilteredItems();
+            let unasked = filteredItems.filter(item => !appState.quizState.asked.includes(item.id));
             let isRepeat = false;
 
             if (unasked.length === 0) {
                 appState.quizState.asked = []; 
-                unasked = allWords;
+                unasked = filteredItems;
+                if (unasked.length === 0) return;
             }
 
             if (appState.quizState.asked.length > 0 && Math.random() < 0.25) {
-                quizCurrentQ = allWords.find(w => w.term === appState.quizState.asked[Math.floor(Math.random() * appState.quizState.asked.length)]);
-                isRepeat = true;
+                let askedInFilter = appState.quizState.asked.filter(id => filteredItems.some(i => i.id === id));
+                if (askedInFilter.length > 0) {
+                    let randomId = askedInFilter[Math.floor(Math.random() * askedInFilter.length)];
+                    quizCurrentQ = allQuizItems.find(i => i.id === randomId);
+                    isRepeat = true;
+                } else {
+                    quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                    appState.quizState.asked.push(quizCurrentQ.id);
+                    saveData();
+                }
             } else {
                 quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
-                appState.quizState.asked.push(quizCurrentQ.term);
+                appState.quizState.asked.push(quizCurrentQ.id);
                 saveData();
             }
             
-            document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${allWords.length}`;
+            document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${filteredItems.length}`;
 
             let badgesHtml = '';
             if (isRepeat) badgesHtml += `<span class="inline-block bg-[var(--sub-accent-bg)] text-[var(--sub-accent)] text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-[var(--sub-accent-border)]">REPEATED</span>`;
-            if (appState.memorized[quizCurrentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
-            if (appState.notebook.includes(quizCurrentQ.term)) badgesHtml += `<span class="inline-block bg-orange-500/20 text-orange-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
+            if (appState.memorized[quizCurrentQ.parentWord]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
+            if (appState.notebook.includes(quizCurrentQ.parentWord)) badgesHtml += `<span class="inline-block bg-orange-500/20 text-orange-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
 
-            document.getElementById('quiz-question').innerHTML = badgesHtml + (badgesHtml ? '<br>' : '') + quizCurrentQ.def;
+            document.getElementById('quiz-type-badge').innerText = quizCurrentQ.type;
+            
+            const questionContainer = document.getElementById('quiz-question');
+            questionContainer.innerHTML = '';
+            if (badgesHtml) {
+                const badgeDiv = document.createElement('div');
+                badgeDiv.innerHTML = badgesHtml;
+                questionContainer.appendChild(badgeDiv);
+            }
+            const termNode = document.createTextNode(quizCurrentQ.term);
+            questionContainer.appendChild(termNode);
             
             renderQuizQuestionUI();
         }
@@ -2652,9 +2796,15 @@
                 containerSpell.classList.add('hidden');
                 
                 let options = [quizCurrentQ];
+                let filteredItems = getQuizFilteredItems();
+                let pool = filteredItems.length >= 4 ? filteredItems : allQuizItems;
+
                 while (options.length < 4) {
-                    const r = allWords[Math.floor(Math.random() * allWords.length)];
-                    if (!options.includes(r)) options.push(r);
+                    const r = pool[Math.floor(Math.random() * pool.length)];
+                    // Ensure distinct meanings for multiple choice options
+                    if (!options.some(opt => opt.answer === r.answer)) {
+                        options.push(r);
+                    }
                 }
                 options.sort(() => 0.5 - Math.random());
                 
@@ -2662,7 +2812,7 @@
                 options.forEach(opt => {
                     const btn = document.createElement('button');
                     btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
-                    btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
+                    btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-kor font-bold flex-1 leading-snug">${opt.answer}</span>`;
                     btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
                     containerMulti.appendChild(btn);
                 });
@@ -2673,11 +2823,12 @@
                 inputSpell.value = '';
                 inputSpell.disabled = false;
                 inputSpell.classList.remove('border-green-500', 'text-green-500', 'border-red-500', 'text-red-500');
+                inputSpell.focus();
             }
         }
 
         // --- 퀴즈 정답 피드백 처리 통합 함수 ---
-        function processQuizResult(isCorrect, termForFeedback, termToSave) {
+        function processQuizResult(isCorrect, answerForFeedback, parentWordToSave) {
             const feedback = document.getElementById('quiz-feedback');
             if (isCorrect) {
                 appState.quizState.score++;
@@ -2685,9 +2836,9 @@
                 feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
                 saveData();
             } else {
-                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
-                if (!appState.notebook.includes(termToSave)) {
-                    appState.notebook.push(termToSave);
+                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold font-kor">${answerForFeedback}</span></div>`;
+                if (!appState.notebook.includes(parentWordToSave)) {
+                    appState.notebook.push(parentWordToSave);
                     saveData();
                 }
             }
@@ -2701,7 +2852,7 @@
             feedback.classList.remove('hidden');
             for (let btn of btns) {
                 btn.disabled = true;
-                if (btn.innerText.includes(correct.term)) {
+                if (btn.innerText.includes(correct.answer)) {
                     btn.classList.add('border-green-500', 'bg-green-500/10');
                     btn.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                     btn.querySelector('div').classList.add('bg-green-500', 'text-white');
@@ -2709,14 +2860,14 @@
                 }
             }
 
-            if (selected.term === correct.term) {
-                processQuizResult(true, correct.term, correct.term);
+            if (selected.answer === correct.answer) {
+                processQuizResult(true, correct.answer, correct.parentWord);
             } else {
                 btnElement.classList.add('border-red-500', 'bg-red-500/10');
                 btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
-                processQuizResult(false, correct.term, correct.term);
+                processQuizResult(false, correct.answer, correct.parentWord);
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
         }
@@ -2724,22 +2875,29 @@
         function checkSpellingAnswer() {
             if (!document.getElementById('quiz-actions').classList.contains('hidden')) return;
             const inputEl = document.getElementById('quiz-spelling-input');
-            const answer = inputEl.value.trim().toLowerCase();
+            const answer = inputEl.value.replace(/\s+/g, '').toLowerCase(); // 공백 무시
             
-            const correctTerm = quizCurrentQ.term.toLowerCase().replace(/\s*\(.*?\)\s*/g, '').trim();
             const feedback = document.getElementById('quiz-feedback');
-            
             if(!answer) return;
+
+            // 정답 검증 로직: 세미콜론 분리 혹은 전체 일치
+            const fullAnswerStr = quizCurrentQ.answer.replace(/\s+/g, '').toLowerCase();
+            let validAnswers = quizCurrentQ.answer.split(';').map(s => s.replace(/\s+/g, '').toLowerCase());
+            
+            let isCorrect = false;
+            if (answer === fullAnswerStr || validAnswers.includes(answer)) {
+                isCorrect = true;
+            }
 
             inputEl.disabled = true;
             feedback.classList.remove('hidden');
             
-            if (answer === correctTerm) {
+            if (isCorrect) {
                 inputEl.classList.add('border-green-500', 'text-green-500');
-                processQuizResult(true, quizCurrentQ.term, quizCurrentQ.term);
+                processQuizResult(true, quizCurrentQ.answer, quizCurrentQ.parentWord);
             } else {
                 inputEl.classList.add('border-red-500', 'text-red-500');
-                processQuizResult(false, quizCurrentQ.term, quizCurrentQ.term);
+                processQuizResult(false, quizCurrentQ.answer, quizCurrentQ.parentWord);
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
         }
@@ -2761,18 +2919,12 @@
                 if (listFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
                 if (listFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
                 if(!query) return true;
-                return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.def.toLowerCase().includes(query);
+                return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.synonyms.toLowerCase().includes(query);
             });
 
             filtered.sort((a, b) => {
                 if (query) {
                     const qLower = query;
-                    const isAcronymA = a.term.toLowerCase().includes(`(${qLower})`) || a.term.toLowerCase().includes(`${qLower})`) || a.term.toLowerCase().includes(`(${qLower}`);
-                    const isAcronymB = b.term.toLowerCase().includes(`(${qLower})`) || b.term.toLowerCase().includes(`${qLower})`) || b.term.toLowerCase().includes(`(${qLower}`);
-                    
-                    if (isAcronymA && !isAcronymB) return -1;
-                    if (!isAcronymA && isAcronymB) return 1;
-
                     const aTermHas = a.term.toLowerCase().includes(qLower);
                     const bTermHas = b.term.toLowerCase().includes(qLower);
                     if(aTermHas && !bTermHas) return -1;
@@ -2820,7 +2972,7 @@
                 btn.classList.remove('btn-active');
                 btn.title = "필터링 (전체)";
             } else if(listFilterMode === 'hideMemorized') {
-                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10px]"></i></span>';
+                btn.innerHTML = '<span class="slash-wrapper slash-always text-red-500"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span>';
                 btn.classList.add('btn-active');
                 btn.title = "필터링 (암기 제외)";
             } else if(listFilterMode === 'onlySaved') {
@@ -2883,86 +3035,6 @@
             }
         }
 
-        // === 맞춤형 도움말 모달(팝업) 기능 ===
-        function openHelpModal(type) {
-            const modal = document.getElementById('helpModal');
-            const contentBox = document.getElementById('helpModalDynamicContent');
-            const titleBox = document.getElementById('helpModalTitle');
-
-            if (type === 'list') {
-                titleBox.innerHTML = '<i class="fa-solid fa-list text-[var(--sub-accent)]"></i> 리스트 도움말';
-                contentBox.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-[var(--sub-accent)]">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-[var(--sub-accent)]">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
-                        </div>
-                    </div>
-                `;
-            } else if (type === 'flashcard') {
-                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-[var(--sub-accent)]"></i> 플래시카드 도움말';
-                contentBox.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-hand-pointer text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 '저장'됩니다. (PC: ←/→ 방향키 지원)</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-[var(--sub-accent)] text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (modal && contentBox) {
-                modal.classList.remove('hidden');
-                void modal.offsetWidth; 
-                modal.classList.remove('opacity-0');
-                document.getElementById('helpModalContent').classList.remove('scale-95');
-                document.getElementById('helpModalContent').classList.add('scale-100');
-            }
-        }
-
-        function closeHelpModal() {
-            const modal = document.getElementById('helpModal');
-            const content = document.getElementById('helpModalContent');
-            if (modal && content) {
-                modal.classList.add('opacity-0');
-                content.classList.remove('scale-100');
-                content.classList.add('scale-95');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
-
         function renderListTable() {
             const tbody = document.getElementById('wordListBody');
             if(!tbody) return;
@@ -2970,7 +3042,6 @@
             tbody.innerHTML = '';
             
             let filtered = getCurrentlyFilteredWords();
-
             const fs = fontClasses[appState.fontSizeLevel || 0];
 
             filtered.forEach((word, idx) => {
@@ -2990,6 +3061,17 @@
                 const termClass = hideTerms ? 'blur-target' : '';
                 const defClass = hideDefs ? 'blur-target' : '';
 
+                // Meaning & Synonyms List Layout
+                let meaningHtml = '';
+                for (let i = 0; i < word.meaningsList.length; i++) {
+                    meaningHtml += `<div style="margin-top: ${i > 0 ? '6px' : '0'};">`;
+                    meaningHtml += `<span class="font-kor font-bold text-text-main ${fs.koTerm}">${highlight(word.meaningsList[i])}</span>`;
+                    if (word.synGroupsList[i]) {
+                        meaningHtml += `<br><span class="font-sans font-medium text-primary inline-block opacity-90 ${fs.def}">${highlight(word.synGroupsList[i])}</span>`;
+                    }
+                    meaningHtml += `</div>`;
+                }
+
                 tr.innerHTML = `
                     <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
                     <td class="px-2 py-3 text-center actions-col">
@@ -3004,12 +3086,13 @@
                         </div>
                     </td>
                     <td class="px-3 py-3 align-top term-col-content">
-                        <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                        <div class="font-bold text-[var(--sub-accent)] font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
+                        <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                            <span class="px-2 py-0.5 bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] text-sub-accent text-[10px] font-bold rounded-md whitespace-nowrap">Day ${word.day}</span>
+                        </div>
+                        <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.1; padding-bottom: 0.1em;">${highlight(word.term)}</div>
                     </td>
-                    <td class="px-3 py-3 align-top def-col-content">
-                        <div class="text-[var(--text-def)] font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
-                        <div class="font-kor leading-snug break-words ${defClass} ${fs.koDef}">${highlight(word.koDef)}</div>
+                    <td class="px-3 py-3 align-top def-col-content ${defClass}">
+                        ${meaningHtml}
                     </td>
                 `;
                 tbody.appendChild(tr);
