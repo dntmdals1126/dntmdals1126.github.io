@@ -313,7 +313,7 @@
             background-color: currentColor; transform: translateY(-50%) rotate(-45deg) scaleX(0); 
             transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
         }
-        .btn-active .slash-wrapper::after { transform: translateY(-50%) rotate(-45deg) scaleX(1); }
+        .btn-active .slash-wrapper::after, .slash-always::after { transform: translateY(-50%) rotate(-45deg) scaleX(1) !important; }
 
         .clear-btn-enter { opacity: 0; transform: scale(0.8); }
         .clear-btn-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
@@ -654,7 +654,7 @@
                                         <i id="filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
                                     </button>
                                     <button onclick="setListFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                        <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10.5px]"></i></span> 암기 제외</span>
+                                        <span><span class="w-5 text-center mr-2 inline-block opacity-70"><span class="slash-wrapper slash-always"><i class="fa-solid fa-check text-[10.5px]"></i></span></span> 암기 제외</span>
                                         <i id="filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
                                     <button onclick="setListFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
@@ -753,7 +753,7 @@
                                 <i id="fc-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
                             </button>
                             <button onclick="setFcFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
+                                <span><span class="w-5 text-center mr-2 inline-block opacity-70"><span class="slash-wrapper slash-always"><i class="fa-solid fa-check text-[10.5px]"></i></span></span> 암기 제외</span>
                                 <i id="fc-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
                             </button>
                             <button onclick="setFcFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
@@ -906,7 +906,7 @@
                                         <i id="quiz-filter-check-all" class="fa-solid fa-check text-sub-accent"></i>
                                     </button>
                                     <button onclick="setQuizFilter('hideMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                        <span><span class="slash-wrapper w-5 text-center mr-2 opacity-70"><i class="fa-solid fa-check text-[10px]"></i></span> 암기 제외</span>
+                                        <span><span class="w-5 text-center mr-2 inline-block opacity-70"><span class="slash-wrapper slash-always"><i class="fa-solid fa-check text-[10.5px]"></i></span></span> 암기 제외</span>
                                         <i id="quiz-filter-check-hide" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
                                     <button onclick="setQuizFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
@@ -2623,7 +2623,7 @@
                 btn.classList.remove('btn-active');
                 btn.title = "필터링 (전체)";
             } else if(quizFilterMode === 'hideMemorized') {
-                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10px]"></i></span>';
+                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10.5px]"></i></span>';
                 btn.classList.add('btn-active');
                 btn.title = "필터링 (암기 제외)";
             } else if(quizFilterMode === 'onlySaved') {
@@ -2940,7 +2940,7 @@
                 btn.classList.remove('btn-active');
                 btn.title = "필터링 (전체)";
             } else if(listFilterMode === 'hideMemorized') {
-                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10px]"></i></span>';
+                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10.5px]"></i></span>';
                 btn.classList.add('btn-active');
                 btn.title = "필터링 (암기 제외)";
             } else if(listFilterMode === 'onlySaved') {
