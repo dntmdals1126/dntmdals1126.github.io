@@ -11,8 +11,7 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
     <style>
         :root {
-            /* 모던 색상 팔레트 */
-            --bg-body: #f1f5f9;
+            var-bg-body: #f1f5f9;
             --bg-paper: #ffffff;
             --text-primary: #0f172a;
             --text-secondary: #475569;
@@ -31,7 +30,7 @@
 
         body {
             font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            background-color: var(--bg-body);
+            background-color: #f1f5f9;
             color: var(--text-primary);
             margin: 0;
             padding: 0;
@@ -78,7 +77,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none;
         }
         .btn-upload { background-color: var(--bg-paper); color: var(--text-primary); border: 1px solid var(--border-strong); }
-        .btn-upload:hover { background-color: var(--bg-body); transform: translateY(-1px); }
+        .btn-upload:hover { background-color: #f8fafc; transform: translateY(-1px); }
         .btn-print { background-color: var(--accent); color: white; display: none; }
         .btn-print:hover { background-color: var(--accent-hover); box-shadow: var(--shadow-sm); }
         .btn-pdf { background-color: var(--primary); color: white; display: none; }
@@ -97,9 +96,7 @@
         .panel-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
         
         .section-title { font-weight: 700; color: var(--text-primary); font-size: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        
         .options-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-        
         .radio-label, .check-label { display: inline-flex; align-items: center; gap: 6px; font-size: 14.5px; color: var(--text-secondary); cursor: pointer; user-select: none; }
         .radio-label input, .check-label input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary); }
         .radio-label { font-weight: 600; color: var(--text-primary); }
@@ -128,120 +125,123 @@
         .page-meta { font-size: 14px; color: var(--text-secondary); font-weight: 600; text-align: right; }
         .input-line { display: inline-block; width: 100px; border-bottom: 1px solid var(--text-secondary); margin-left: 8px; }
 
-        /* --- 단어장(학습용) 테이블 스타일 --- */
-        .study-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; border: 1px solid var(--border-strong); }
-        .study-table tr { page-break-inside: avoid; break-inside: avoid; }
-        .study-table th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); background-color: #f8fafc; }
-        .study-table td { padding: 14px 16px; font-size: 14.5px; line-height: 1.6; vertical-align: top; border: 1px solid var(--border-strong); background-color: white; }
-        .study-table th:nth-child(1) { width: 28%; } .study-table th:nth-child(2) { width: 38%; } .study-table th:nth-child(3) { width: 34%; }
-        
-        .word-cell { font-weight: 700; font-size: 16px; color: var(--text-primary); vertical-align: middle; text-align: left; }
-        .study-table td.word-cell { border-bottom: 1px solid var(--border-strong) !important; }
+        /* --- 테이블 공통 디자인 --- */
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; border: 1px solid var(--border-strong); }
+        tr { page-break-inside: avoid; break-inside: avoid; }
+        th { text-align: center; padding: 12px 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); background-color: #f8fafc; }
+        td { padding: 12px 10px; font-size: 14.5px; line-height: 1.5; vertical-align: middle; border: 1px solid var(--border-strong); background-color: white; }
 
-        .meaning-cell { color: #1e293b; font-weight: 500; }
-        .synonym-cell { color: var(--text-secondary); font-style: normal; }
+        /* 단어장(학습용) */
+        .study-table th:nth-child(1) { width: 25%; } .study-table th:nth-child(2) { width: 40%; } .study-table th:nth-child(3) { width: 35%; }
+        .word-cell { font-weight: 700; font-size: 16px; color: var(--text-primary); text-align: left; }
+        .study-table td.word-cell { border-bottom: 1px solid var(--border-strong) !important; }
+        .meaning-cell { color: #1e293b; font-weight: 500; text-align: left; }
+        .synonym-cell { color: var(--text-secondary); font-style: normal; text-align: left; }
         .synonym-item { display: inline-block; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-size: 13.5px; margin-right: 4px; margin-bottom: 4px; border: 1px solid #e2e8f0; }
 
-        .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; padding-top: 8px; padding-bottom: 8px; }
-        .study-table tr.last-row td { border-bottom: 1px solid var(--border-strong) !important; padding-bottom: 14px; }
-        .study-table tr.first-row td { padding-top: 14px; }
+        /* 같은 단어의 뜻 분리선 (투명 처리) */
+        .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; padding-top: 6px; padding-bottom: 6px; }
+        .study-table tr.last-row td { border-bottom: 1px solid var(--border-strong) !important; padding-bottom: 12px; }
+        .study-table tr.first-row td { padding-top: 12px; }
 
-        /* --- 시험지(테스트용 & 답안지) 테이블 스타일 --- */
-        .test-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; border: 1px solid var(--border-strong); }
-        .test-table tr { page-break-inside: avoid; break-inside: avoid; }
-        .test-table th, .test-table td { border: 1px solid var(--border-strong); padding: 8px 12px; vertical-align: middle; font-size: 14.5px; }
-        .test-table th { background-color: #f8fafc; text-align: center; font-size: 12px; text-transform: uppercase; color: var(--text-secondary); }
-        
-        .test-table th.col-no { width: 6%; }
-        .test-table th.col-word { width: 24%; }
-        .test-table th.col-mean { width: 20%; }
-
-        .test-word-cell { font-weight: 600; color: var(--text-primary); word-break: break-word; }
-        .test-meaning-cell { height: 38px; word-break: keep-all; line-height: 1.3; } 
+        /* 시험지(테스트용) */
+        .test-table th.col-no { width: 6%; } .test-table th.col-word { width: 24%; } .test-table th.col-mean { width: 20%; }
+        .test-word-cell { font-weight: 600; color: var(--text-primary); word-break: break-word; text-align: left; }
+        .test-meaning-cell { height: 36px; word-break: keep-all; line-height: 1.3; text-align: left; } 
         .num-cell { text-align: center; color: var(--text-tertiary); font-size: 13px; }
-
-        /* 답안지 전용 강조색 */
         .answer-text { color: #dc2626; font-weight: 600; font-size: 13.5px; }
 
         /* --- 빈 상태 표시 --- */
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; width: 210mm; border: 2px dashed #cbd5e1; border-radius: var(--radius-md); background-color: #fafaf9; color: var(--text-tertiary); text-align: center; transition: all 0.2s ease; }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; width: 210mm; border: 2px dashed #cbd5e1; border-radius: var(--radius-md); background-color: #fafaf9; color: var(--text-tertiary); text-align: center; }
         .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
         .empty-text { font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
 
-        /* --- 드래그 앤 드롭 오버레이 --- */
-        #dropOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-        #dropOverlay.active { opacity: 1; }
-        .drop-message { color: white; font-size: 28px; font-weight: 700; text-align: center; }
-        .drop-message span { display: block; font-size: 16px; font-weight: 400; color: #94a3b8; margin-top: 12px; }
+        /* --- 오버레이 (드래그 앤 드롭 & 로딩) --- */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        .overlay-screen.active { opacity: 1; pointer-events: all; }
+        .overlay-message { color: white; font-size: 28px; font-weight: 700; text-align: center; }
+        .overlay-message span { display: block; font-size: 16px; font-weight: 400; color: #cbd5e1; margin-top: 12px; }
+        
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top: 4px solid white; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* =========================================
-           인쇄 및 PDF 레이아웃 완벽 최적화 구역
+           ★ 완벽한 인쇄 및 PDF 추출을 위한 코어 CSS ★
            ========================================= */
 
-        /* 1. PDF 전용 모드 (왼쪽 잘림, 레이아웃 고정 완벽 방지) */
-        /* PDF 변환 시 body의 flex center가 왼쪽 여백을 자르지 않도록 block으로 강제 초기화 */
-        body.pdf-mode {
-            display: block !important;
+        /* 1. PDF 렌더링 전용 클래스 (스크립트가 잠시 붙였다 뗌) */
+        body.is-generating-pdf {
+            background: #fff !important;
             padding: 0 !important;
             margin: 0 !important;
-            background: #fff !important;
+            display: block !important; /* flex 해제하여 쏠림 방지 */
         }
-
-        .pdf-mode #mainContent { 
-            width: 800px !important; /* 해상도 고정으로 비율 틀어짐 방지 */
-            margin: 0 !important; /* 가운데 정렬 해제 (왼쪽 잘림 완벽 방지) */
+        body.is-generating-pdf .header-container,
+        body.is-generating-pdf #dropOverlay,
+        body.is-generating-pdf #loadingOverlay {
+            display: none !important;
+        }
+        body.is-generating-pdf #mainContent {
+            width: 800px !important; /* 렌더링 기준 픽셀 고정 (A4 비율 최적화) */
+            margin: 0 !important; /* 가운데 정렬 해제. (0,0) 위치 강제 고정 */
             padding: 0 !important;
             gap: 0 !important; 
             display: block !important;
         }
-
-        .pdf-mode .a4-page { 
-            width: 800px !important; 
-            padding: 0 !important;   /* html2pdf의 여백옵션을 사용하기 위해 내부 패딩 0 */
+        body.is-generating-pdf .a4-page {
+            width: 100% !important; 
+            height: auto !important;
+            min-height: 0 !important; 
+            padding: 0 !important; /* jsPDF의 Margin 옵션을 활용하기 위해 내부 패딩 0 */
             margin: 0 !important;
             box-shadow: none !important; 
             border-radius: 0 !important; 
-            min-height: auto !important; 
-            height: auto !important;
             page-break-after: always;
             break-after: page;
             box-sizing: border-box;
         }
         
-        /* 선 사라짐 방지를 위해 PDF/인쇄 시 강제 두께 및 색상 지정 */
-        .pdf-mode table, .pdf-mode th, .pdf-mode td { border: 1.5px solid #475569 !important; }
-        .pdf-mode .test-table, .pdf-mode .study-table { border: 2px solid #334155 !important; } /* 최외곽선 강화 */
-        .pdf-mode .study-table td.word-cell { border-bottom: 1.5px solid #475569 !important; }
-        .pdf-mode .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; }
+        /* 얇은 선 증발 방지 하드코딩 */
+        body.is-generating-pdf table, 
+        body.is-generating-pdf th, 
+        body.is-generating-pdf td { border: 1.5pt solid #000 !important; }
+        body.is-generating-pdf .study-table td.word-cell { border-bottom: 1.5pt solid #000 !important; }
+        body.is-generating-pdf .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; }
 
-        /* 2. 일반 프린터 인쇄 모드 (우측 잘림, 선 사라짐 방지) */
+        /* 2. 일반 프린터(Ctrl+P) 인쇄 모드 */
         @media print {
+            @page { size: A4 portrait; margin: 15mm; }
             body { background: none; padding: 0; margin: 0; display: block; }
-            .header-container { display: none !important; }
-            #mainContent { gap: 0; display: block; width: 100%; margin: 0; }
+            .header-container, .overlay-screen { display: none !important; }
+            #mainContent { width: 100%; display: block; margin: 0; padding: 0; gap: 0; }
             .a4-page { 
-                width: 100%; 
-                margin: 0; 
-                padding: 10mm 15mm; /* 인쇄용 안전 여백 확보 */
-                box-shadow: none; border-radius: 0; height: auto; min-height: auto; 
-                page-break-after: always;
-                box-sizing: border-box;
+                width: 100%; margin: 0; padding: 0;
+                box-shadow: none; border-radius: 0; height: auto; min-height: 0; 
+                page-break-after: always; break-after: page;
             }
-            /* 표 크기 안전선 확보 및 최외곽선 실종 방지 */
-            table { width: 100% !important; max-width: 100% !important; border-collapse: collapse; }
-            table, th, td { border: 1.5px solid #475569 !important; }
-            .test-table, .study-table { border: 2px solid #334155 !important; } 
-            .study-table td.word-cell { border-bottom: 1.5px solid #475569 !important; }
+            table { width: 100% !important; border-collapse: collapse; }
+            table, th, td { border: 1.5pt solid #000 !important; }
+            .study-table td.word-cell { border-bottom: 1.5pt solid #000 !important; }
             .study-table tr.inner-row td:not(.word-cell) { border-bottom-color: transparent !important; }
         }
     </style>
 </head>
 <body>
 
-    <div id="dropOverlay">
-        <div class="drop-message">
+    <!-- 드래그 앤 드롭 오버레이 -->
+    <div id="dropOverlay" class="overlay-screen">
+        <div class="overlay-message">
             📥<br>CSV 파일을 여기에 놓아주세요
             <span>손을 놓으면 자동으로 단어장이 생성됩니다.</span>
+        </div>
+    </div>
+
+    <!-- PDF 로딩 오버레이 (스크롤 락) -->
+    <div id="loadingOverlay" class="overlay-screen">
+        <div class="spinner"></div>
+        <div class="overlay-message">
+            PDF 문서를 생성 중입니다...
+            <span>화면을 만지거나 스크롤하지 마시고 잠시만 기다려주세요.</span>
         </div>
     </div>
 
@@ -328,10 +328,7 @@
         document.getElementById('chkSynonyms').addEventListener('change', renderContent);
         document.getElementById('chkShuffle').addEventListener('change', renderContent);
         document.getElementById('chkCombine').addEventListener('change', renderContent);
-        
-        document.querySelectorAll('input[name="questionCount"]').forEach(radio => {
-            radio.addEventListener('change', renderContent);
-        });
+        document.querySelectorAll('input[name="questionCount"]').forEach(r => r.addEventListener('change', renderContent));
 
         function handleFile(file) {
             if (!file) return;
@@ -339,13 +336,9 @@
                 alert('CSV 파일만 업로드 가능합니다.');
                 return;
             }
-
             Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    processData(results.data);
-                }
+                header: true, skipEmptyLines: true,
+                complete: function(results) { processData(results.data); }
             });
         }
 
@@ -369,7 +362,6 @@
             data.forEach(row => {
                 const day = row['Day']?.trim();
                 if (!day) return;
-                
                 daysSet.add(day);
                 if (!parsedVocabulary[day]) { parsedVocabulary[day] = []; }
 
@@ -386,7 +378,6 @@
                 for (let i = 0; i < maxLen; i++) {
                     let synList = synonyms[i] ? synonyms[i].split(',').map(s => s.trim()).filter(s => s) : [];
                     let formattedSynonyms = synList.map(syn => `<span class="synonym-item">${syn}</span>`).join(' ');
-                    
                     details.push({ 
                         meaning: meanings[i] || '', 
                         rawSynonyms: synList,
@@ -405,7 +396,6 @@
             document.getElementById('printBtn').style.display = 'inline-flex';
             document.getElementById('pdfBtn').style.display = 'inline-flex';
             document.getElementById('emptyState').style.display = 'none';
-
             renderContent();
         }
 
@@ -434,7 +424,6 @@
                 container.innerHTML = `<div class="empty-state"><div class="empty-icon">👀</div><div class="empty-text">선택된 Day가 없습니다.</div><div style="font-size: 14px; color: var(--text-tertiary);">패널에서 출력할 Day를 클릭해주세요.</div></div>`;
                 return;
             }
-
             const mode = document.querySelector('input[name="viewMode"]:checked').value;
             if (mode === 'study') renderStudyMode(container);
             else renderTestMode(container);
@@ -453,9 +442,7 @@
                     <div class="a4-page">
                         <div class="page-header">
                             <h1 class="page-title">VOCABULARY <span style="color: var(--text-tertiary); font-weight: 300;">|</span> Day ${day}</h1>
-                            <div class="page-meta">
-                                <div>Date <span class="input-line"></span></div>
-                            </div>
+                            <div class="page-meta"><div>Date <span class="input-line"></span></div></div>
                         </div>
                         <table class="study-table">
                             <thead><tr><th>Word</th><th>Meaning</th><th>Synonyms</th></tr></thead>
@@ -568,9 +555,7 @@
                     <div class="a4-page">
                         <div class="page-header">
                             <h1 class="page-title" style="font-size: 1.8rem;">${title}</h1>
-                            <div class="page-meta">
-                                <div>Score <span class="input-line"></span></div>
-                            </div>
+                            <div class="page-meta"><div>Score <span class="input-line"></span></div></div>
                         </div>
                         <table class="test-table">
                             <thead>
@@ -586,15 +571,9 @@
                 for (let r = 0; r < rows; r++) {
                     let left = chunk[r];
                     let right = chunk[r + rows]; 
-
                     html += `<tr>
-                        <td class="num-cell">${left ? p + r + 1 : ''}</td>
-                        <td class="test-word-cell">${left ? left.word : ''}</td>
-                        <td class="test-meaning-cell"></td>
-                        
-                        <td class="num-cell">${right ? p + rows + r + 1 : ''}</td>
-                        <td class="test-word-cell">${right ? right.word : ''}</td>
-                        <td class="test-meaning-cell"></td>
+                        <td class="num-cell">${left ? p + r + 1 : ''}</td><td class="test-word-cell">${left ? left.word : ''}</td><td class="test-meaning-cell"></td>
+                        <td class="num-cell">${right ? p + rows + r + 1 : ''}</td><td class="test-word-cell">${right ? right.word : ''}</td><td class="test-meaning-cell"></td>
                     </tr>`;
                 }
                 html += `</tbody></table></div>`;
@@ -632,15 +611,9 @@
                 for (let r = 0; r < rows; r++) {
                     let left = chunk[r];
                     let right = chunk[r + rows]; 
-
                     html += `<tr>
-                        <td class="num-cell">${left ? p + r + 1 : ''}</td>
-                        <td class="test-word-cell">${left ? left.word : ''}</td>
-                        <td class="test-meaning-cell answer-text">${left ? left.answer : ''}</td>
-                        
-                        <td class="num-cell">${right ? p + rows + r + 1 : ''}</td>
-                        <td class="test-word-cell">${right ? right.word : ''}</td>
-                        <td class="test-meaning-cell answer-text">${right ? right.answer : ''}</td>
+                        <td class="num-cell">${left ? p + r + 1 : ''}</td><td class="test-word-cell">${left ? left.word : ''}</td><td class="test-meaning-cell answer-text">${left ? left.answer : ''}</td>
+                        <td class="num-cell">${right ? p + rows + r + 1 : ''}</td><td class="test-word-cell">${right ? right.word : ''}</td><td class="test-meaning-cell answer-text">${right ? right.answer : ''}</td>
                     </tr>`;
                 }
                 html += `</tbody></table></div>`;
@@ -648,59 +621,57 @@
             return html;
         }
 
-        // --- 🌟 완벽한 PDF 다운로드 로직 (왼쪽 잘림 수정 & 동적 파일명 생성) ---
-        document.getElementById('pdfBtn').addEventListener('click', function() {
+        // --- 🌟 완벽을 기한 PDF 다운로드 코어 로직 ---
+        document.getElementById('pdfBtn').addEventListener('click', async function() {
             const element = document.getElementById('mainContent');
             if(selectedDays.size === 0) { alert("선택된 Day가 없습니다."); return; }
 
-            const btnSpan = this.querySelector('span');
-            const originalText = btnSpan.innerText;
-            btnSpan.innerText = 'PDF 생성 중...';
-            this.style.opacity = '0.7'; this.style.pointerEvents = 'none';
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('active'); // 로딩창 활성화 및 스크롤 락
 
-            // 동적 파일명 생성 로직
+            // ★ PDF의 좌표 엇나감 원인(스크롤)을 원천 차단
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+            // 파일명 구성
             const mode = document.querySelector('input[name="viewMode"]:checked').value;
             const isCombine = document.getElementById('chkCombine').checked;
             const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
-            
-            let dayString = '';
-            if (sortedDays.length <= 3) {
-                dayString = sortedDays.join('_');
-            } else {
-                dayString = `${sortedDays[0]}to${sortedDays[sortedDays.length-1]}`;
-            }
-            
-            if (mode === 'test' && isCombine) {
-                dayString += '_Mix';
-            }
-            
+            let dayString = sortedDays.length <= 3 ? sortedDays.join('_') : `${sortedDays[0]}to${sortedDays[sortedDays.length-1]}`;
+            if (mode === 'test' && isCombine) dayString += '_Mix';
             const pdfFilename = `Vocabulary_${mode === 'test' ? 'Test' : 'Study'}_Day_${dayString}.pdf`;
 
-            // pdf-mode 적용 (강제 좌측 상단 정렬로 html2canvas offset 엇나가는 현상 방지)
-            document.body.classList.add('pdf-mode');
+            // ★ PDF 전용 클래스 부착 (화면을 800px로 압축, 패딩 삭제, 플렉스 해제)
+            document.body.classList.add('is-generating-pdf');
 
-            // 브라우저가 CSS를 적용할 수 있도록 약간의 대기 시간(300ms) 부여
-            setTimeout(() => {
-                const opt = {
-                    margin:       [15, 15, 15, 15], // 상우하좌 15mm 안전 여백 강제 적용
-                    filename:     pdfFilename,      // 동적으로 만들어진 파일명 사용
-                    image:        { type: 'jpeg', quality: 1.0 },
-                    html2canvas:  { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, x: 0, scrollX: 0 }, // x좌표를 강제로 0으로 고정하여 왼쪽 잘림 방지
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr', '.page-header'] }
-                };
+            // 브라우저 렌더링 강제 업데이트 및 대기
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-                html2pdf().set(opt).from(element).save().then(() => {
-                    document.body.classList.remove('pdf-mode');
-                    btnSpan.innerText = originalText;
-                    this.style.opacity = '1'; this.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    alert('PDF 생성 중 오류가 발생했습니다.');
-                    document.body.classList.remove('pdf-mode');
-                    btnSpan.innerText = originalText;
-                    this.style.opacity = '1'; this.style.pointerEvents = 'auto';
-                });
-            }, 300);
+            const opt = {
+                margin:       15, // ★ CSS 패딩을 지우고, 엔진에서 상하좌우 15mm 여백 강제 생성 (잘림 방지)
+                filename:     pdfFilename,
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    letterRendering: true, 
+                    windowWidth: 800, // ★ CSS의 800px과 완벽히 일치시켜 쏠림 현상 소거
+                    x: 0, y: 0,       // ★ 캡처 시작 좌표를 무조건 (0,0)으로 강제
+                    scrollY: 0, scrollX: 0
+                }, 
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr', '.page-header'] }
+            };
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (err) {
+                console.error(err);
+                alert('PDF 생성 중 시스템 오류가 발생했습니다.');
+            } finally {
+                // 원상 복구
+                document.body.classList.remove('is-generating-pdf');
+                loadingOverlay.classList.remove('active');
+            }
         });
     </script>
 </body>
