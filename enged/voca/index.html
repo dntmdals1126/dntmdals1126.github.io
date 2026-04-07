@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>세련된 A4 단어장 (다중 선택)</title>
+    <title>단어장 출력 시스템</title>
     <!-- CSV 파싱 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <!-- PDF 추출 라이브러리 -->
@@ -18,7 +18,7 @@
             --text-secondary: #475569;
             --text-tertiary: #94a3b8;
             --border-light: #e2e8f0;
-            --border-strong: #cbd5e1;
+            --border-strong: #94a3b8; 
             --accent: #0f172a; 
             --accent-hover: #334155;
             --primary: #2563eb; 
@@ -73,164 +73,135 @@
         input[type="file"] { display: none; }
 
         .btn {
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: none;
+            font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 20px;
+            border-radius: 100px; cursor: pointer; transition: all 0.2s ease;
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none;
         }
-
         .btn-upload { background-color: var(--bg-paper); color: var(--text-primary); border: 1px solid var(--border-strong); }
         .btn-upload:hover { background-color: var(--bg-body); transform: translateY(-1px); }
         .btn-print { background-color: var(--accent); color: white; display: none; }
         .btn-print:hover { background-color: var(--accent-hover); box-shadow: var(--shadow-sm); }
         .btn-pdf { background-color: var(--primary); color: white; display: none; }
         .btn-pdf:hover { background-color: var(--primary-hover); box-shadow: var(--shadow-sm); }
+        .btn-back { background-color: transparent; color: var(--text-secondary); text-decoration: none; border: 1px solid transparent; padding: 10px 16px; }
+        .btn-back:hover { background-color: var(--border-light); color: var(--text-primary); }
 
-        /* --- Day 다중 선택 패널 --- */
-        .filter-panel {
-            width: 100%;
-            max-width: 900px;
-            background: var(--bg-paper);
-            padding: 20px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-            margin-top: 16px;
-            display: none;
-            box-sizing: border-box;
+        /* --- 제어 패널 (옵션 및 필터) --- */
+        .control-panel {
+            width: 100%; max-width: 900px; background: var(--bg-paper); padding: 20px;
+            border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light); margin-top: 16px; display: none; box-sizing: border-box;
         }
 
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .filter-title { font-weight: 700; color: var(--text-primary); font-size: 15px; }
+        .panel-section { border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 16px; }
+        .panel-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
         
-        .filter-actions button {
-            background: none; border: none;
-            color: var(--primary); font-size: 13px; font-weight: 600;
-            cursor: pointer; padding: 4px 8px;
-        }
+        .section-title { font-weight: 700; color: var(--text-primary); font-size: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .options-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        
+        .radio-label, .check-label { display: inline-flex; align-items: center; gap: 6px; font-size: 14.5px; color: var(--text-secondary); cursor: pointer; user-select: none; }
+        .radio-label input, .check-label input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary); }
+        .radio-label { font-weight: 600; color: var(--text-primary); }
+
+        .filter-actions button { background: none; border: none; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; padding: 4px 8px; }
         .filter-actions button:hover { text-decoration: underline; }
-
-        .chip-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .chip {
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border-strong);
-            background: var(--bg-paper);
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
+        
+        .chip-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1; background: var(--bg-paper); color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; user-select: none; }
         .chip:hover { border-color: var(--primary); color: var(--primary); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- 메인 컨테이너 (여러 페이지 포함) --- */
-        #mainContent {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px; /* 화면에서 페이지 사이 간격 */
-        }
+        /* --- 메인 컨테이너 --- */
+        #mainContent { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
 
-        /* --- A4 용지 스타일 --- */
+        /* --- A4 용지 공통 스타일 --- */
         .a4-page {
-            width: 210mm;
-            min-height: 297mm;
-            background: var(--bg-paper);
-            padding: 20mm 25mm;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            box-sizing: border-box;
-            position: relative;
-            background-color: white;
-            /* 인쇄/PDF 시 페이지 넘김 강제 적용 */
-            page-break-after: always;
-            break-after: page;
+            width: 210mm; min-height: 297mm; background: var(--bg-paper); padding: 20mm 25mm;
+            box-shadow: var(--shadow-lg); border-radius: var(--radius-sm); box-sizing: border-box;
+            position: relative; background-color: white; page-break-after: always; break-after: page;
         }
-
-        /* 마지막 페이지는 페이지 넘김 방지 */
         .a4-page:last-child { page-break-after: auto; break-after: auto; }
 
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 2px solid var(--text-primary);
-            padding-bottom: 16px;
-            margin-bottom: 32px;
-        }
-
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--text-primary); padding-bottom: 16px; margin-bottom: 32px; }
         .page-title { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
         .page-meta { font-size: 13px; color: var(--text-secondary); font-weight: 500; line-height: 1.8; text-align: right; }
-        .input-line { display: inline-block; width: 120px; border-bottom: 1px solid var(--border-strong); margin-left: 8px; }
+        .input-line { display: inline-block; width: 120px; border-bottom: 1px solid var(--text-secondary); margin-left: 8px; }
 
-        /* --- 테이블 스타일 --- */
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; }
+        /* --- 단어장(학습용) 테이블 스타일 --- */
+        .study-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; border: 1px solid var(--border-strong); }
+        .study-table tr { page-break-inside: avoid; break-inside: avoid; }
+        .study-table th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); background-color: #f8fafc; }
+        .study-table td { padding: 14px 16px; font-size: 14.5px; line-height: 1.6; vertical-align: top; border: 1px solid var(--border-strong); background-color: white; }
+        .study-table th:nth-child(1) { width: 28%; } .study-table th:nth-child(2) { width: 38%; } .study-table th:nth-child(3) { width: 34%; }
         
-        /* 테이블 행이 페이지 중간에 잘리지 않도록 보호 */
-        tr { page-break-inside: avoid; break-inside: avoid; }
-        
-        th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); border-bottom: 2px solid var(--border-light); }
-        td { padding: 14px 16px; font-size: 14.5px; line-height: 1.6; vertical-align: top; border-bottom: 1px solid var(--border-light); }
-
-        th:nth-child(1) { width: 28%; } th:nth-child(2) { width: 38%; } th:nth-child(3) { width: 34%; }
-
-        .word-cell { font-weight: 700; font-size: 16px; color: var(--text-primary); border-right: 1px solid var(--border-light); vertical-align: middle; text-align: left; }
+        .word-cell { font-weight: 700; font-size: 16px; color: var(--text-primary); vertical-align: middle; text-align: left; }
         .meaning-cell { color: #1e293b; font-weight: 500; }
         .synonym-cell { color: var(--text-secondary); font-style: normal; }
+        .synonym-item { display: inline-block; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-size: 13.5px; margin-right: 4px; margin-bottom: 4px; border: 1px solid #e2e8f0; }
+
+        .study-table tr.inner-row td { border-bottom: 1px solid transparent !important; padding-top: 8px; padding-bottom: 8px; }
+        .study-table tr.last-row td { border-bottom: 1px solid var(--border-strong) !important; padding-bottom: 14px; }
+        .study-table tr.first-row td { padding-top: 14px; }
+
+        /* --- 시험지(테스트용) 테이블 스타일 --- */
+        .test-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 20px; border: 1px solid var(--border-strong); }
+        .test-table tr { page-break-inside: avoid; break-inside: avoid; }
+        .test-table th, .test-table td { border: 1px solid var(--border-strong); padding: 8px 12px; vertical-align: middle; font-size: 14.5px; }
+        .test-table th { background-color: #f8fafc; text-align: center; font-size: 12px; text-transform: uppercase; color: var(--text-secondary); }
         
-        .synonym-item { display: inline-block; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-size: 13.5px; margin-right: 4px; margin-bottom: 4px; }
+        /* 2단 구성 열 너비 지정 (50%씩) */
+        .test-table th.col-no { width: 6%; }
+        .test-table th.col-word { width: 24%; }
+        .test-table th.col-mean { width: 20%; }
 
-        tr.inner-row td { border-bottom: none; padding-top: 8px; padding-bottom: 8px; }
-        tr.last-row td { border-bottom: 1px solid var(--border-light); padding-bottom: 14px; }
-        tr.first-row td { padding-top: 14px; }
+        .test-word-cell { font-weight: 600; color: var(--text-primary); word-break: break-word; }
+        .test-meaning-cell { height: 38px; } /* 글씨 쓸 수 있는 여유 공간 */
+        .num-cell { text-align: center; color: var(--text-tertiary); font-size: 13px; }
 
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; width: 210mm; border: 2px dashed var(--border-strong); border-radius: var(--radius-md); background-color: #fafaf9; color: var(--text-tertiary); text-align: center; }
+        /* --- 빈 상태 표시 --- */
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; width: 210mm; border: 2px dashed #cbd5e1; border-radius: var(--radius-md); background-color: #fafaf9; color: var(--text-tertiary); text-align: center; transition: all 0.2s ease; }
         .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
         .empty-text { font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
 
-        /* --- 인쇄 최적화 --- */
+        /* --- 드래그 앤 드롭 오버레이 --- */
+        #dropOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        #dropOverlay.active { opacity: 1; }
+        .drop-message { color: white; font-size: 28px; font-weight: 700; text-align: center; }
+        .drop-message span { display: block; font-size: 16px; font-weight: 400; color: #94a3b8; margin-top: 12px; }
+
+        /* --- PDF & 인쇄 전용 최적화 모드 --- */
+        .pdf-mode #mainContent { gap: 0 !important; }
+        .pdf-mode .a4-page { box-shadow: none !important; border-radius: 0 !important; margin: 0 !important; width: 210mm !important; min-height: 297mm !important; }
+        
         @media print {
             body { background: none; padding: 0; }
             .header-container { display: none !important; }
             #mainContent { gap: 0; display: block; }
-            .a4-page {
-                margin: 0; padding: 0; box-shadow: none; border-radius: 0;
-                width: 100%; height: auto; min-height: auto;
-            }
-            .synonym-item { border: 1px solid #e2e8f0; }
+            .a4-page { margin: 0; padding: 0; box-shadow: none; border-radius: 0; width: 100%; height: auto; min-height: auto; }
+            table, th, td { border: 1pt solid #475569 !important; }
+            .study-table tr.inner-row td { border-bottom: 1pt solid transparent !important; }
         }
+        .pdf-mode table, .pdf-mode th, .pdf-mode td { border: 1pt solid #475569 !important; }
+        .pdf-mode .study-table tr.inner-row td { border-bottom: 1pt solid transparent !important; }
     </style>
 </head>
 <body>
 
+    <!-- 드래그 앤 드롭 오버레이 -->
+    <div id="dropOverlay">
+        <div class="drop-message">
+            📥<br>CSV 파일을 여기에 놓아주세요
+            <span>손을 놓으면 자동으로 단어장이 생성됩니다.</span>
+        </div>
+    </div>
+
     <div class="header-container">
         <div class="toolbar">
+            <a href="https://www.v1ctorym1n.kro.kr/enged" class="btn btn-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                돌아가기
+            </a>
             <label for="csvFileInput" class="btn btn-upload">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                 CSV 업로드
@@ -241,33 +212,52 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                 인쇄하기
             </button>
-
             <button class="btn btn-pdf" id="pdfBtn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>PDF 다운로드</span>
             </button>
         </div>
 
-        <!-- 다중 선택 패널 -->
-        <div class="filter-panel" id="filterPanel">
-            <div class="filter-header">
-                <div class="filter-title">📄 출력할 Day 선택 (다중 선택)</div>
-                <div class="filter-actions">
-                    <button onclick="selectAllDays()">전체 선택</button>
-                    <button onclick="deselectAllDays()">전체 해제</button>
+        <!-- 통합 제어 패널 -->
+        <div class="control-panel" id="controlPanel">
+            <!-- 모드 선택 -->
+            <div class="panel-section">
+                <div class="options-row">
+                    <span style="font-weight:700; color:var(--text-primary); margin-right:10px;">📌 뷰어 모드</span>
+                    <label class="radio-label"><input type="radio" name="viewMode" value="study" checked> 📖 단어장 (학습용)</label>
+                    <label class="radio-label"><input type="radio" name="viewMode" value="test"> 📝 시험지 (테스트용)</label>
                 </div>
             </div>
-            <div class="chip-container" id="dayChipsContainer">
-                <!-- Day 버튼들이 여기에 동적으로 생성됩니다. -->
+
+            <!-- 시험지 전용 옵션 -->
+            <div class="panel-section" id="testSettings" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div class="section-title" style="font-size:14px; margin-bottom:8px;">⚙️ 시험지 출제 옵션</div>
+                <div class="options-row">
+                    <label class="check-label"><input type="checkbox" id="chkSynonyms"> 유의어도 문제로 출제</label>
+                    <label class="check-label"><input type="checkbox" id="chkShuffle" checked> 순서 섞기 (랜덤)</label>
+                    <label class="check-label"><input type="checkbox" id="chkCombine"> 선택 Day 통합 출력</label>
+                </div>
+            </div>
+
+            <!-- Day 선택 -->
+            <div class="panel-section" style="border-bottom: none; padding-bottom: 0;">
+                <div class="section-title">
+                    <span>📄 출력할 Day 선택 (다중 선택)</span>
+                    <div class="filter-actions">
+                        <button onclick="selectAllDays()">전체 선택</button>
+                        <button onclick="deselectAllDays()">전체 해제</button>
+                    </div>
+                </div>
+                <div class="chip-container" id="dayChipsContainer"></div>
             </div>
         </div>
     </div>
 
-    <!-- 메인 콘텐츠 영역 (A4 용지들이 여기에 쌓임) -->
     <main id="mainContent">
         <div class="empty-state" id="emptyState">
             <div class="empty-icon">📁</div>
-            <div class="empty-text">단어장 CSV 파일을 선택해주세요</div>
+            <div class="empty-text">단어장 CSV 파일을 선택하거나 드래그 해주세요</div>
+            <div style="font-size: 14px; color: var(--text-tertiary);">Day, Word, Meaning (KR), Synonyms 양식에 맞춰 업로드해 주세요.</div>
         </div>
     </main>
 
@@ -276,9 +266,24 @@
         let allAvailableDays = [];
         let selectedDays = new Set();
 
-        document.getElementById('csvFileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
+        // UI 이벤트 리스너 등록
+        document.querySelectorAll('input[name="viewMode"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('testSettings').style.display = this.value === 'test' ? 'block' : 'none';
+                renderContent();
+            });
+        });
+
+        document.getElementById('chkSynonyms').addEventListener('change', renderContent);
+        document.getElementById('chkShuffle').addEventListener('change', renderContent);
+        document.getElementById('chkCombine').addEventListener('change', renderContent);
+
+        function handleFile(file) {
             if (!file) return;
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('CSV 파일만 업로드 가능합니다.');
+                return;
+            }
 
             Papa.parse(file, {
                 header: true,
@@ -287,6 +292,20 @@
                     processData(results.data);
                 }
             });
+        }
+
+        document.getElementById('csvFileInput').addEventListener('change', e => handleFile(e.target.files[0]));
+
+        // 드래그 앤 드롭
+        const dropOverlay = document.getElementById('dropOverlay');
+        window.addEventListener('dragover', e => { e.preventDefault(); dropOverlay.classList.add('active'); });
+        window.addEventListener('dragleave', e => { e.preventDefault(); if (e.clientX === 0 || e.clientY === 0) dropOverlay.classList.remove('active'); });
+        window.addEventListener('drop', e => {
+            e.preventDefault(); dropOverlay.classList.remove('active');
+            if (e.dataTransfer.files.length > 0) {
+                document.getElementById('csvFileInput').files = e.dataTransfer.files;
+                handleFile(e.dataTransfer.files[0]);
+            }
         });
 
         function processData(data) {
@@ -311,99 +330,72 @@
                 const details = [];
 
                 for (let i = 0; i < maxLen; i++) {
-                    let formattedSynonyms = '';
-                    if (synonyms[i]) {
-                        formattedSynonyms = synonyms[i].split(',')
-                            .map(syn => `<span class="synonym-item">${syn.trim()}</span>`)
-                            .join(' ');
-                    }
-                    details.push({ meaning: meanings[i] || '', synonymHTML: formattedSynonyms });
+                    let synList = synonyms[i] ? synonyms[i].split(',').map(s => s.trim()).filter(s => s) : [];
+                    let formattedSynonyms = synList.map(syn => `<span class="synonym-item">${syn}</span>`).join(' ');
+                    
+                    details.push({ 
+                        meaning: meanings[i] || '', 
+                        rawSynonyms: synList,
+                        synonymHTML: formattedSynonyms 
+                    });
                 }
-
                 parsedVocabulary[day].push({ word: word, details: details });
             });
 
             allAvailableDays = Array.from(daysSet).sort((a, b) => parseInt(a) - parseInt(b));
-            
-            // 초기 세팅: 첫 1개 Day만 기본 선택
             selectedDays.clear();
-            if (allAvailableDays.length > 0) {
-                selectedDays.add(allAvailableDays[0]);
-            }
+            if (allAvailableDays.length > 0) selectedDays.add(allAvailableDays[0]);
 
             renderFilterPanel();
-            
-            document.getElementById('filterPanel').style.display = 'block';
+            document.getElementById('controlPanel').style.display = 'block';
             document.getElementById('printBtn').style.display = 'inline-flex';
             document.getElementById('pdfBtn').style.display = 'inline-flex';
             document.getElementById('emptyState').style.display = 'none';
 
-            renderTables();
+            renderContent();
         }
 
-        // 다중 선택 버튼(칩) 생성
         function renderFilterPanel() {
             const container = document.getElementById('dayChipsContainer');
             container.innerHTML = '';
-
             allAvailableDays.forEach(day => {
                 const chip = document.createElement('div');
                 chip.className = `chip ${selectedDays.has(day) ? 'active' : ''}`;
                 chip.textContent = `Day ${day}`;
-                chip.onclick = () => toggleDay(day, chip);
+                chip.onclick = () => {
+                    if (selectedDays.has(day)) { selectedDays.delete(day); chip.classList.remove('active'); } 
+                    else { selectedDays.add(day); chip.classList.add('active'); }
+                    renderContent();
+                };
                 container.appendChild(chip);
             });
         }
 
-        // 특정 Day 토글
-        function toggleDay(day, chipElement) {
-            if (selectedDays.has(day)) {
-                selectedDays.delete(day);
-                chipElement.classList.remove('active');
-            } else {
-                selectedDays.add(day);
-                chipElement.classList.add('active');
-            }
-            renderTables();
-        }
+        function selectAllDays() { allAvailableDays.forEach(d => selectedDays.add(d)); renderFilterPanel(); renderContent(); }
+        function deselectAllDays() { selectedDays.clear(); renderFilterPanel(); renderContent(); }
 
-        // 전체 선택
-        function selectAllDays() {
-            allAvailableDays.forEach(day => selectedDays.add(day));
-            renderFilterPanel();
-            renderTables();
-        }
-
-        // 전체 해제
-        function deselectAllDays() {
-            selectedDays.clear();
-            renderFilterPanel();
-            renderTables();
-        }
-
-        // 선택된 Day들에 대해 A4 용지 렌더링
-        function renderTables() {
+        // 출력 메인 라우터
+        function renderContent() {
             const container = document.getElementById('mainContent');
-            
             if (selectedDays.size === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">👀</div>
-                        <div class="empty-text">선택된 Day가 없습니다.</div>
-                        <div style="font-size: 14px; color: var(--text-tertiary);">상단 패널에서 출력할 Day를 클릭해주세요.</div>
-                    </div>`;
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon">👀</div><div class="empty-text">선택된 Day가 없습니다.</div><div style="font-size: 14px; color: var(--text-tertiary);">패널에서 출력할 Day를 클릭해주세요.</div></div>`;
                 return;
             }
 
-            // 선택된 Day를 오름차순으로 정렬하여 출력
-            const sortedSelectedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
-            let finalHtml = '';
+            const mode = document.querySelector('input[name="viewMode"]:checked').value;
+            if (mode === 'study') renderStudyMode(container);
+            else renderTestMode(container);
+        }
 
-            sortedSelectedDays.forEach(day => {
+        // --- 단어장(학습용) 렌더링 ---
+        function renderStudyMode(container) {
+            const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
+            let html = '';
+
+            sortedDays.forEach(day => {
                 const words = parsedVocabulary[day];
                 if (!words || words.length === 0) return;
 
-                // 각 Day마다 새로운 a4-page 생성
                 let pageHtml = `
                     <div class="a4-page">
                         <div class="page-header">
@@ -413,89 +405,178 @@
                                 <div style="margin-top: 8px;">Name <span class="input-line"></span></div>
                             </div>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Word</th>
-                                    <th>Meaning</th>
-                                    <th>Synonyms</th>
-                                </tr>
-                            </thead>
+                        <table class="study-table">
+                            <thead><tr><th>Word</th><th>Meaning</th><th>Synonyms</th></tr></thead>
                             <tbody>
                 `;
 
                 words.forEach(item => {
                     const rowCount = item.details.length;
                     item.details.forEach((detail, index) => {
-                        let rowClass = '';
-                        if (rowCount === 1) rowClass = 'first-row last-row';
-                        else if (index === 0) rowClass = 'first-row inner-row';
-                        else if (index === rowCount - 1) rowClass = 'last-row';
-                        else rowClass = 'inner-row';
-
-                        pageHtml += `<tr class="${rowClass}">`;
-                        
-                        if (index === 0) {
-                            pageHtml += `<td rowspan="${rowCount}" class="word-cell">${item.word}</td>`;
-                        }
-                        
+                        let rClass = rowCount === 1 ? 'first-row last-row' : (index === 0 ? 'first-row inner-row' : (index === rowCount - 1 ? 'last-row' : 'inner-row'));
+                        pageHtml += `<tr class="${rClass}">`;
+                        if (index === 0) pageHtml += `<td rowspan="${rowCount}" class="word-cell">${item.word}</td>`;
                         pageHtml += `
-                            <td class="meaning-cell">
-                                ${detail.meaning ? `<span style="color: var(--text-tertiary); margin-right:4px;">${index+1}.</span> ${detail.meaning}` : ''}
-                            </td>
+                            <td class="meaning-cell">${detail.meaning ? `<span style="color: var(--text-tertiary); margin-right:4px;">${index+1}.</span> ${detail.meaning}` : ''}</td>
                             <td class="synonym-cell">${detail.synonymHTML}</td>
                         </tr>`;
                     });
                 });
-
                 pageHtml += `</tbody></table></div>`;
-                finalHtml += pageHtml;
+                html += pageHtml;
             });
-
-            container.innerHTML = finalHtml;
+            container.innerHTML = html;
         }
 
-        // 다중 페이지 PDF 다운로드 로직
+        // --- 시험지(테스트용) 렌더링 ---
+        function renderTestMode(container) {
+            const isSynonyms = document.getElementById('chkSynonyms').checked;
+            const isShuffle = document.getElementById('chkShuffle').checked;
+            const isCombine = document.getElementById('chkCombine').checked;
+            const sortedDays = Array.from(selectedDays).sort((a, b) => parseInt(a) - parseInt(b));
+            let html = '';
+
+            if (isCombine) {
+                let pool = getTestPool(sortedDays, isSynonyms);
+                if (isShuffle) shuffleArray(pool);
+                
+                let dayStr = sortedDays.join(', ');
+                let title = dayStr.length > 20 ? "VOCABULARY TEST - Mix" : `VOCABULARY TEST - Day ${dayStr}`;
+                html += buildTestPages(pool, title);
+            } else {
+                sortedDays.forEach(day => {
+                    let pool = getTestPool([day], isSynonyms);
+                    if (isShuffle) shuffleArray(pool);
+                    html += buildTestPages(pool, `VOCABULARY TEST - Day ${day}`);
+                });
+            }
+            container.innerHTML = html;
+        }
+
+        // 시험 문제 풀 생성
+        function getTestPool(days, includeSynonyms) {
+            let pool = [];
+            let seen = new Set(); // 중복 출제 방지
+
+            days.forEach(day => {
+                const words = parsedVocabulary[day];
+                if (!words) return;
+                
+                words.forEach(item => {
+                    let headword = item.word.trim();
+                    if (headword && !seen.has(headword.toLowerCase())) {
+                        seen.add(headword.toLowerCase());
+                        pool.push({ word: headword });
+                    }
+
+                    if (includeSynonyms) {
+                        item.details.forEach(detail => {
+                            detail.rawSynonyms.forEach(syn => {
+                                let s = syn.trim();
+                                if (s && !seen.has(s.toLowerCase())) {
+                                    seen.add(s.toLowerCase());
+                                    pool.push({ word: s });
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+            return pool;
+        }
+
+        // 배열 랜덤 섞기 알고리즘
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // 시험지 페이지(A4) HTML 생성 함수 (2단 50문항 기준)
+        function buildTestPages(pool, baseTitle) {
+            if (pool.length === 0) return '';
+            const ITEMS_PER_PAGE = 50; // 페이지당 문항 수 (25줄 * 2단)
+            let html = '';
+            const totalPages = Math.ceil(pool.length / ITEMS_PER_PAGE);
+
+            for (let p = 0; p < pool.length; p += ITEMS_PER_PAGE) {
+                let chunk = pool.slice(p, p + ITEMS_PER_PAGE);
+                let pageNum = Math.floor(p / ITEMS_PER_PAGE) + 1;
+                let title = totalPages > 1 ? `${baseTitle} (p.${pageNum})` : baseTitle;
+
+                html += `
+                    <div class="a4-page">
+                        <div class="page-header">
+                            <h1 class="page-title" style="font-size: 1.8rem;">${title}</h1>
+                            <div class="page-meta">
+                                <div>Score <span class="input-line"></span></div>
+                                <div style="margin-top: 8px;">Name <span class="input-line"></span></div>
+                            </div>
+                        </div>
+                        <table class="test-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-no">No.</th><th class="col-word">Word</th><th class="col-mean">Meaning</th>
+                                    <th class="col-no">No.</th><th class="col-word">Word</th><th class="col-mean">Meaning</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                const rows = Math.ceil(chunk.length / 2);
+                for (let r = 0; r < rows; r++) {
+                    let left = chunk[r];
+                    let right = chunk[r + rows]; // 다음 단(오른쪽)에 배치될 문항
+
+                    html += `<tr>
+                        <td class="num-cell">${left ? p + r + 1 : ''}</td>
+                        <td class="test-word-cell">${left ? left.word : ''}</td>
+                        <td class="test-meaning-cell"></td>
+                        
+                        <td class="num-cell">${right ? p + rows + r + 1 : ''}</td>
+                        <td class="test-word-cell">${right ? right.word : ''}</td>
+                        <td class="test-meaning-cell"></td>
+                    </tr>`;
+                }
+                html += `</tbody></table></div>`;
+            }
+            return html;
+        }
+
+        // --- PDF 다운로드 ---
         document.getElementById('pdfBtn').addEventListener('click', function() {
             const element = document.getElementById('mainContent');
-            if(selectedDays.size === 0) {
-                alert("선택된 Day가 없습니다.");
-                return;
-            }
+            if(selectedDays.size === 0) { alert("선택된 Day가 없습니다."); return; }
 
             const btnSpan = this.querySelector('span');
             const originalText = btnSpan.innerText;
-            
             btnSpan.innerText = 'PDF 생성 중...';
-            this.style.opacity = '0.7';
-            this.style.pointerEvents = 'none';
+            this.style.opacity = '0.7'; this.style.pointerEvents = 'none';
 
-            // 그림자 등 PDF 변환에 방해되는 요소 임시 제거
-            const pages = element.querySelectorAll('.a4-page');
-            pages.forEach(p => { p.style.boxShadow = 'none'; });
+            document.body.classList.add('pdf-mode');
 
-            // 옵션 설정 (페이지 나누기 css 인식)
-            const opt = {
-                margin:       0,
-                filename:     `Vocabulary_Selected_Days.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1000 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'], avoid: 'tr' } // CSS의 page-break 인식 및 테이블 행 잘림 방지
-            };
+            setTimeout(() => {
+                const opt = {
+                    margin:       0,
+                    filename:     `Vocabulary_Paper.pdf`,
+                    image:        { type: 'jpeg', quality: 1.0 },
+                    html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, 
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak:    { mode: ['css', 'legacy'] }
+                };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                btnSpan.innerText = originalText;
-                this.style.opacity = '1';
-                this.style.pointerEvents = 'auto';
-                pages.forEach(p => { p.style.boxShadow = ''; }); // 그림자 복구
-            }).catch(err => {
-                alert('PDF 생성 중 오류가 발생했습니다.');
-                btnSpan.innerText = originalText;
-                this.style.opacity = '1';
-                this.style.pointerEvents = 'auto';
-                pages.forEach(p => { p.style.boxShadow = ''; });
-            });
+                html2pdf().set(opt).from(element).save().then(() => {
+                    document.body.classList.remove('pdf-mode');
+                    btnSpan.innerText = originalText;
+                    this.style.opacity = '1'; this.style.pointerEvents = 'auto';
+                }).catch(err => {
+                    alert('PDF 생성 중 오류가 발생했습니다.');
+                    document.body.classList.remove('pdf-mode');
+                    btnSpan.innerText = originalText;
+                    this.style.opacity = '1'; this.style.pointerEvents = 'auto';
+                });
+            }, 100);
         });
     </script>
 </body>
