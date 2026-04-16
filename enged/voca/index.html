@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Enged Vocab">
-    <title>Enged Vocab Master</title>
+    <title>Enged. Vocab Master</title>
     
     <!-- 기본 Favicon (Enged 원본) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2789' height='2789' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-102 638)'%3E%3Crect x='102' y='-638' width='2789' height='2789' fill='%23050505'/%3E%3Cpath d='M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
@@ -155,8 +155,8 @@
 
         /* --- Header (Floating Pill) --- */
         header { 
-            position: fixed; top: 16px; left: 50%; transform: translateX(-50%); 
-            width: calc(100% - 32px); max-width: 1000px; height: var(--header-h); z-index: 1000; 
+            position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); 
+            width: calc(100% - 32px); max-width: 1100px; height: var(--header-h); z-index: 1000; 
             background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
             border: 1px solid var(--glass-border); border-radius: 99px; 
             display: flex; align-items: center; justify-content: space-between; padding: 0 24px; 
@@ -201,7 +201,7 @@
         /* 기능 제어 액션 패널 고정 설정 */
         #actionCard {
             position: sticky;
-            top: calc(var(--header-h) + 24px);
+            top: calc(var(--header-h) + 24px + env(safe-area-inset-top));
             z-index: 900;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
@@ -293,8 +293,11 @@
         /* Mobile tweaks */
         @media (max-width: 640px) {
             :root { --header-h: 60px; }
-            header { top: 0; width: 100%; border-radius: 0; max-width: none; border-left: none; border-right: none; border-top: none; }
-            #actionCard { margin-top: 80px; top: calc(var(--header-h) + 12px); }
+            header { 
+                top: 0; width: 100%; border-radius: 0; max-width: none; border-left: none; border-right: none; border-top: none; 
+                padding-top: env(safe-area-inset-top); height: calc(var(--header-h) + env(safe-area-inset-top));
+            }
+            #actionCard { margin-top: calc(80px + env(safe-area-inset-top)); top: calc(var(--header-h) + 12px + env(safe-area-inset-top)); }
             .control-card { margin-top: 16px; padding: 20px; border-radius: 0; border-left: none; border-right: none; }
         }
     </style>
@@ -345,12 +348,20 @@
     </header>
 
     <!-- 기능 제어 액션 패널 (Sticky 요소) -->
-    <div class="section-card w-fit mx-auto mt-[100px] flex flex-wrap items-center justify-center gap-3 py-3 px-5 transition-colors border border-[var(--glass-border)]" id="actionCard" style="backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
-        <label for="csvFileInput" class="btn btn-sec cursor-pointer mb-0">
+    <div class="section-card w-fit mx-auto flex flex-wrap items-center justify-center gap-3 py-3 px-5 transition-colors border border-[var(--glass-border)]" id="actionCard" style="margin-top: calc(100px + env(safe-area-inset-top)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+        
+        <!-- 데이터 업로드 버튼 -->
+        <label for="csvFileInput" id="uploadLabel" class="btn btn-sec cursor-pointer mb-0">
             <i data-lucide="file-up" class="w-4 h-4"></i> 
             <span>데이터 업로드</span>
         </label>
         <input type="file" id="csvFileInput" accept=".csv" />
+
+        <!-- 데이터 초기화 버튼 (파일 로드 후 업로드 버튼 대신 표시됨) -->
+        <button class="btn" id="resetDataBtn" style="display:none; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;" onclick="clearLocalData()">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+            <span>데이터 초기화</span>
+        </button>
         
         <button class="btn btn-sec" onclick="window.print()" id="printBtn" style="display:none;">
             <i data-lucide="printer" class="w-4 h-4"></i>
@@ -404,12 +415,12 @@
 
     <!-- 메인 렌더링 영역 -->
     <main id="renderArea">
-        <div style="padding: 100px 20px; text-align: center; color: var(--text-sub);" id="emptyStateArea">
+        <div style="padding: calc(100px + env(safe-area-inset-top)) 20px 100px; text-align: center; color: var(--text-sub);" id="emptyStateArea">
             <div class="w-16 h-16 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center mx-auto mb-6 pointer-events-none">
                 <i data-lucide="file-spreadsheet" class="w-8 h-8 text-primary opacity-80"></i>
             </div>
             <h2 class="text-lg font-bold text-text-main mb-2 pointer-events-none">데이터를 업로드해 주세요</h2>
-            <p class="text-sm font-medium opacity-80 pointer-events-none">상단의 버튼을 누르거나 화면에 CSV 파일을 드래그하면<br>고품질 단어장이 자동으로 렌더링됩니다.</p>
+            <p class="text-sm font-medium opacity-80 pointer-events-none">상단의 버튼을 누르거나 화면에 CSV 파일을 드래그하면<br>단어장이 자동으로 렌더링됩니다.</p>
         </div>
     </main>
 
@@ -478,13 +489,28 @@
             if(files.length > 0) {
                 const file = files[0];
                 if(file.name.toLowerCase().endsWith('.csv')) {
-                    Papa.parse(file, {
-                        header: true, skipEmptyLines: true,
-                        complete: (res) => { processRawData(res.data); }
-                    });
+                    processFile(file);
                 } else {
                     alert("CSV 파일만 업로드 가능합니다.");
                 }
+            }
+        }
+
+        // --- Local Storage Data Logic ---
+        // 앱이 켜질 때 로컬 스토리지에 저장된 파일이 있는지 확인
+        window.onload = () => {
+            lucide.createIcons();
+            const savedCSV = localStorage.getItem('savedVocabCSV');
+            if (savedCSV) {
+                parseCSVString(savedCSV);
+            }
+        };
+
+        // 데이터 초기화 버튼 누를 때 실행되는 함수
+        function clearLocalData() {
+            if(confirm("저장된 단어장 데이터를 기기에서 초기화하시겠습니까?")) {
+                localStorage.removeItem('savedVocabCSV');
+                location.reload();
             }
         }
 
@@ -492,15 +518,34 @@
         let vocabRepository = {};
         let selectedDays = new Set();
 
-        // 1. CSV 파싱
+        // 1. CSV 파일 인풋 변경
         document.getElementById('csvFileInput').onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            Papa.parse(file, {
+            processFile(file);
+        };
+
+        // 파일을 읽어 로컬 스토리지에 저장하고 파싱 시작
+        function processFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                try {
+                    localStorage.setItem('savedVocabCSV', text);
+                } catch(err) {
+                    console.warn("로컬 스토리지 저장 실패 (용량 초과 등):", err);
+                }
+                parseCSVString(text);
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSVString(text) {
+            Papa.parse(text, {
                 header: true, skipEmptyLines: true,
                 complete: (res) => { processRawData(res.data); }
             });
-        };
+        }
 
         function processRawData(data) {
             vocabRepository = {};
@@ -524,7 +569,9 @@
             if (sorted.length > 0) selectedDays.add(sorted[0]);
             updateDayTags(sorted);
             
-            // 데이터 파싱 후 UI 토글
+            // 데이터 로드 완료 후 UI 전환
+            document.getElementById('uploadLabel').style.display = 'none'; // 데이터 업로드 버튼 숨김
+            document.getElementById('resetDataBtn').style.display = 'inline-flex'; // 데이터 초기화 붉은 버튼 표시
             document.getElementById('configCard').style.display = 'flex';
             document.getElementById('printBtn').style.display = 'inline-flex';
             document.getElementById('pdfBtn').style.display = 'inline-flex';
@@ -731,8 +778,6 @@
             }
         };
 
-        // 초기 아이콘 로드
-        window.onload = () => lucide.createIcons();
     </script>
 </body>
 </html>
