@@ -216,7 +216,7 @@
         
         /* 설정 섹션의 타이틀 정렬 교정 */
         .config-section { display: flex; flex-direction: column; gap: 12px; }
-        .config-title { font-size: 14px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; opacity: 0.9; }
+        .config-title { font-size: 14px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; gap: 8px; opacity: 0.9; }
 
         .option-group { display: flex; gap: 16px; flex-wrap: wrap; background: var(--glass-highlight); padding: 12px; border-radius: 14px; border: 1px solid var(--glass-border); }
         .label-box { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-main); cursor: pointer; }
@@ -232,7 +232,7 @@
         .tag.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
 
         /* =========================================
-           인쇄 / PDF 전용 레이아웃 (여백 짤림 방지 최적화)
+           인쇄 / PDF 전용 레이아웃 
            ========================================= */
         #renderArea { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 0; }
         
@@ -275,20 +275,19 @@
         .spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- 인쇄 전용 CSS (브라우저 물리 프린트기의 짤림 방지 보정) --- */
+        /* --- 물리적 인쇄 전용 CSS (A4 포맷 및 여백 확보) --- */
         @media print {
             :root, html, body {
-                color-scheme: light !important; /* 다크모드 캔버스 검은색 렌더링 원천 차단 */
+                color-scheme: light !important; 
                 background: #ffffff !important;
                 background-color: #ffffff !important;
                 background-image: none !important;
             }
-            @page { size: A4; margin: 15mm; } /* 물리적 프린터에서 상하좌우 안전 여백 15mm 강제 확보 */
+            @page { size: A4; margin: 15mm; } 
             html, body { height: auto !important; overflow: visible !important; }
             .app-header, .control-card, #actionCard, .status-mask, .blobs { display: none !important; }
             #renderArea { padding: 0 !important; width: 100% !important; display: block !important; gap: 0 !important; background: transparent !important; }
             
-            /* 프린터 여백(@page)을 사용하므로 내부 패딩을 0으로 만들어 레이아웃 밀림 방지 */
             .sheet { 
                 box-shadow: none !important; border: none !important; width: 100% !important; 
                 height: auto !important; min-height: 0 !important;
@@ -297,7 +296,7 @@
             }
         }
 
-        /* --- PDF 생성용 강제 렌더링 클래스 --- */
+        /* --- PDF 저장 전용 CSS (1 Day = 1 Page 커스텀 비율 대응) --- */
         html.pdf-export-active, body.pdf-export-active { 
             color-scheme: light !important; 
             background: #ffffff !important; 
@@ -306,12 +305,16 @@
             width: 100% !important; overflow: visible !important; height: auto !important; 
         }
         body.pdf-export-active .blobs, body.pdf-export-active .app-header, body.pdf-export-active .control-card, body.pdf-export-active #actionCard { display: none !important; }
-        body.pdf-export-active #renderArea { width: 100% !important; padding: 0 !important; display: block !important; gap: 0 !important; background: transparent !important; }
         
-        /* html2pdf 여백(opt)과 합쳐서 적절한 상하 여백 생성, 자동 높이 조정 */
+        body.pdf-export-active #renderArea { 
+            width: 800px !important; /* 렌더링 너비 고정 */
+            padding: 0 !important; margin: 0 auto !important; 
+            display: block !important; gap: 0 !important; background: transparent !important; 
+        }
+        
         body.pdf-export-active .sheet { 
-            box-shadow: none !important; width: 100% !important; margin: 0 !important; border: none !important; 
-            padding: 5mm 20mm !important; height: auto !important; min-height: 0 !important; border-radius: 0; page-break-after: always !important; 
+            box-shadow: none !important; width: 800px !important; margin: 0 !important; border: none !important; 
+            padding: 40px !important; height: auto !important; min-height: 0 !important; border-radius: 0; page-break-after: always !important; 
             background: #ffffff !important;
         }
 
@@ -647,7 +650,7 @@
         document.getElementById('chkMergePool').onchange = updateView;
         document.querySelectorAll('input[name="qLimit"]').forEach(r => r.onchange = updateView);
 
-        // 3. 통합 렌더링 로직
+        // 3. 통합 렌더링 로직 (시험지 모드 포함 모든 청크 분할 제거)
         function updateView() {
             const area = document.getElementById('renderArea');
             if (selectedDays.size === 0) { 
@@ -704,45 +707,39 @@
                     if (isShuffle) uniquePool.sort(() => Math.random() - 0.5);
                     if (limitValue !== 'all') uniquePool = uniquePool.slice(0, parseInt(limitValue));
 
-                    let out = '';
-                    const CHUNK = 40; 
-                    for (let i = 0; i < uniquePool.length; i += CHUNK) {
-                        const chunk = uniquePool.slice(i, i + CHUNK);
-                        out += `
-                        <section class="sheet">
-                            <div class="sheet-header">
-                                <div class="header-left">
-                                    <h1>시험지 (${label})</h1>
-                                </div>
+                    // 청크 분할 없이 1개의 거대한 표로 생성
+                    let out = `
+                    <section class="sheet">
+                        <div class="sheet-header">
+                            <div class="header-left">
+                                <h1>시험지 (${label})</h1>
                             </div>
-                            <table class="print-table"><thead><tr><th width="40">No.</th><th>Vocabulary</th><th>Answer</th><th width="40">No.</th><th>Vocabulary</th><th>Answer</th></tr></thead><tbody>`;
-                        const half = Math.ceil(chunk.length / 2);
-                        for (let r = 0; r < half; r++) {
-                            const L = chunk[r], R = chunk[r + half];
-                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:800; color:#000 !important;">${L.q}</td><td></td>`;
-                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:800; color:#000 !important;">${R ? R.q : ''}</td><td></td></tr>`;
-                        }
-                        out += `</tbody></table></section>`;
+                        </div>
+                        <table class="print-table"><thead><tr><th width="40">No.</th><th>Vocabulary</th><th>Answer</th><th width="40">No.</th><th>Vocabulary</th><th>Answer</th></tr></thead><tbody>`;
+                    const half = Math.ceil(uniquePool.length / 2);
+                    for (let r = 0; r < half; r++) {
+                        const L = uniquePool[r], R = uniquePool[r + half];
+                        out += `<tr><td class="test-no">${r+1}</td><td style="font-weight:800; color:#000 !important;">${L.q}</td><td></td>`;
+                        out += `<td class="test-no">${R ? r+half+1 : ''}</td><td style="font-weight:800; color:#000 !important;">${R ? R.q : ''}</td><td></td></tr>`;
                     }
-                    // 정답지
-                    for (let i = 0; i < uniquePool.length; i += CHUNK) {
-                        const chunk = uniquePool.slice(i, i + CHUNK);
-                        out += `
-                        <section class="sheet">
-                            <div class="sheet-header">
-                                <div class="header-left">
-                                    <h1 style="color:#dc2626 !important;">정답지 (${label})</h1>
-                                </div>
+                    out += `</tbody></table></section>`;
+
+                    // 정답지 역시 단일 표로 생성
+                    out += `
+                    <section class="sheet">
+                        <div class="sheet-header">
+                            <div class="header-left">
+                                <h1 style="color:#dc2626 !important;">정답지 (${label})</h1>
                             </div>
-                            <table class="print-table"><thead><tr><th width="40">No.</th><th>Vocabulary</th><th>Correct Answer</th><th width="40">No.</th><th>Vocabulary</th><th>Correct Answer</th></tr></thead><tbody>`;
-                        const half = Math.ceil(chunk.length / 2);
-                        for (let r = 0; r < half; r++) {
-                            const L = chunk[r], R = chunk[r + half];
-                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:800; color:#000 !important;">${L.q}</td><td class="ans-highlight">${L.a}</td>`;
-                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:800; color:#000 !important;">${R ? R.q : ''}</td><td class="ans-highlight">${R ? R.a : ''}</td></tr>`;
-                        }
-                        out += `</tbody></table></section>`;
+                        </div>
+                        <table class="print-table"><thead><tr><th width="40">No.</th><th>Vocabulary</th><th>Correct Answer</th><th width="40">No.</th><th>Vocabulary</th><th>Correct Answer</th></tr></thead><tbody>`;
+                    for (let r = 0; r < half; r++) {
+                        const L = uniquePool[r], R = uniquePool[r + half];
+                        out += `<tr><td class="test-no">${r+1}</td><td style="font-weight:800; color:#000 !important;">${L.q}</td><td class="ans-highlight">${L.a}</td>`;
+                        out += `<td class="test-no">${R ? r+half+1 : ''}</td><td style="font-weight:800; color:#000 !important;">${R ? R.q : ''}</td><td class="ans-highlight">${R ? R.a : ''}</td></tr>`;
                     }
+                    out += `</tbody></table></section>`;
+                    
                     return out;
                 };
 
@@ -753,50 +750,72 @@
             lucide.createIcons();
         }
 
-        // 4. PDF 저장
+        // 4. PDF 저장 (동적 높이 조절 방식으로 1 Day = 1 PDF Page 생성)
         document.getElementById('pdfBtn').onclick = async function() {
             const overlay = document.getElementById('statusOverlay');
             overlay.classList.add('active');
             
-            // 화면 스크롤 초기화 및 PDF 렌더링 클래스 강제 적용
             window.scrollTo(0,0);
             document.documentElement.classList.add('pdf-export-active');
             document.body.classList.add('pdf-export-active');
             
-            const modeName = document.querySelector('input[name="viewMode"]:checked').value;
-            const sortedList = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
-            
-            // 파일명에 선택된 Day 동적으로 포함
-            let nameTag = sortedList.length > 2 ? `${sortedList[0]}_TO_${sortedList[sortedList.length-1]}` : sortedList.join('_');
-            if (!nameTag) nameTag = "ALL";
-            const saveName = `Vocab_${modeName}_Day_${nameTag}.pdf`;
-
-            const opt = {
-                margin: [15, 0, 15, 0], // 상하 15mm 물리 마진 확보
-                filename: saveName,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2.0, 
-                    useCORS: true, 
-                    letterRendering: true,
-                    scrollY: 0,
-                    scrollX: 0
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-                pagebreak: { mode: ['css', 'legacy'] } 
-            };
-
             try {
-                // 레이아웃 전환 및 렌더링이 완료될 때까지 충분히 대기
+                // 레이아웃 전환 대기 (요소들이 지정된 폭과 패딩을 적용받도록 기다림)
                 await new Promise(r => setTimeout(r, 600));
-                const element = document.getElementById('renderArea');
+
+                const modeName = document.querySelector('input[name="viewMode"]:checked').value;
+                const sortedList = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
                 
+                let nameTag = sortedList.length > 2 ? `${sortedList[0]}_TO_${sortedList[sortedList.length-1]}` : sortedList.join('_');
+                if (!nameTag) nameTag = "ALL";
+                const saveName = `Vocab_${modeName}_Day_${nameTag}.pdf`;
+
+                // 각 Day(sheet) 중 가장 긴 요소의 높이를 측정하여 PDF 페이지 규격으로 사용
+                const pdfWidth = 800; 
+                let maxSheetHeight = 0;
+                const sheets = document.querySelectorAll('#renderArea .sheet');
+                sheets.forEach(sheet => {
+                    if (sheet.offsetHeight > maxSheetHeight) {
+                        maxSheetHeight = sheet.offsetHeight;
+                    }
+                });
+                
+                // 잘림 방지를 위한 하단 버퍼 추가
+                maxSheetHeight += 20;
+
+                // 내용이 너무 적을 경우를 대비해 최소 A4 비율(1:1.414) 보장
+                if (maxSheetHeight < 1131) maxSheetHeight = 1131;
+
+                const opt = {
+                    margin: 0,
+                    filename: saveName,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2.0, 
+                        useCORS: true, 
+                        letterRendering: true,
+                        width: pdfWidth,
+                        windowWidth: pdfWidth,
+                        scrollY: 0,
+                        scrollX: 0
+                    },
+                    jsPDF: { 
+                        unit: 'px', 
+                        format: [pdfWidth, maxSheetHeight], 
+                        orientation: 'portrait', 
+                        compress: true 
+                    },
+                    pagebreak: { mode: ['css', 'legacy'] } 
+                };
+
+                const element = document.getElementById('renderArea');
                 await html2pdf().set(opt).from(element).save();
+
             } catch (err) {
                 console.error("PDF 생성 실패:", err);
                 alert("PDF 생성 중 문제가 발생했습니다. 브라우저 인쇄 기능을 이용해 주세요.");
             } finally {
-                // 복귀
+                // 원상 복구
                 document.documentElement.classList.remove('pdf-export-active');
                 document.body.classList.remove('pdf-export-active');
                 overlay.classList.remove('active');
