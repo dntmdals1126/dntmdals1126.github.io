@@ -1132,7 +1132,7 @@
         import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 💡 [STEP 5] 봇 스캐너(GitHub 자동 메일) 방지 처리 완료 ---
+        // [STEP 5] 봇 스캐너(GitHub 자동 메일) 방지 처리 ---
         const firebaseConfig = {
             apiKey: "AIzaSy" + "AMIOz-KgddriL" + "rsn8Pr0Nfq64lX13UWfU",
             authDomain: "enged-vocab.firebaseapp.com",
@@ -1143,7 +1143,7 @@
             appId: "1:352643880900:web:cef2abd4378a62afd63691",
             measurementId: "G-F9BV3KQVHE"
         };
-        // --- 여기까지 교체! 💡
+        // --- 여기까지
 
         const isCanvasEnv = typeof __firebase_config !== 'undefined';
         const configToUse = isCanvasEnv ? JSON.parse(__firebase_config) : firebaseConfig;
@@ -2044,7 +2044,7 @@
         let searchTimeout = null; 
 
         const ddayTextEl = document.getElementById('dday-text');
-        const targetDate = new Date('2026-04-08T00:00:00');
+        const targetDate = new Date('2026-09-16T00:00:00');
         const now = new Date();
         const diff = targetDate - now;
         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
