@@ -254,7 +254,8 @@
             text-align: center; text-transform: uppercase; border-bottom: 2px solid #111827 !important; letter-spacing: 0.03em;
         }
 
-        .col-vocabulary { font-weight: 800; font-size: 15.5px; color: #111827 !important; }
+        /* 영단어 부분 중앙 정렬 적용 */
+        .col-vocabulary { font-weight: 800; font-size: 15.5px; color: #111827 !important; text-align: center; }
         .col-meaning { font-weight: 500; font-size: 14px; }
         .col-synonyms { font-size: 12px; color: #4b5563 !important; }
         
@@ -608,7 +609,7 @@
             let htmlPayload = ''; 
 
             if (mode === 'study') {
-                const MAX_LINES = 16; // 16줄 허용 설정
+                const MAX_LINES = 20; // 16줄 -> 20줄로 증가
 
                 sortedList.forEach(day => {
                     const dayItems = vocabRepository[day] || [];
@@ -658,7 +659,7 @@
                                 </div>
                             </div>
                             <table class="print-table">
-                                <thead><tr><th width="28%">VOCABULARY</th><th width="42%">KOREAN MEANING</th><th width="30%">SYNONYMS</th></tr></thead>
+                                <thead><tr><th width="26%">VOCABULARY</th><th width="34%">KOREAN MEANING</th><th width="40%">SYNONYMS</th></tr></thead>
                                 <tbody>`;
                         
                         chunk.forEach(item => {
@@ -680,7 +681,7 @@
                 const isSyn = document.getElementById('chkIncludeSyn').checked;
                 const isShuffle = document.getElementById('chkShufflePool').checked;
                 const limitValue = document.querySelector('input[name="qLimit"]:checked').value;
-                const TEST_CHUNK = 30; // 시험지 문항 수 30개 (15줄) 고정
+                const TEST_CHUNK = 36; // 시험지 문항 수 30개(15줄) -> 36개(18줄)로 증가
 
                 const buildAssmt = (days, label) => {
                     let pool = [];
