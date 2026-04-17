@@ -171,9 +171,14 @@
         .btn-pri:hover { background: #2563eb; }
         .btn-sec { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--glass-border); }
         .btn-sec:hover { background: rgba(255,255,255,0.12); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; transition: all 0.2s; }
+        @media (hover: hover) and (pointer: fine) {
+            .btn-danger:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); }
+        }
         html[data-theme="light"] .btn-sec { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
         html[data-theme="light"] .btn-sec:hover { background: #e2e8f0; }
         
+        /* 모바일에서도 뒤로가기 버튼이 상시 보이도록 유지 */
         .tool-icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid transparent; background: transparent; color: var(--text-main); display: flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; cursor: pointer; }
         @media (hover: hover) and (pointer: fine) {
             .tool-icon-btn:hover { background: var(--glass-highlight); border-color: var(--glass-border); }
@@ -217,7 +222,7 @@
         .tag.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
 
         /* =========================================
-           A4 학습지 렌더링 영역 (디자인 향상)
+           A4 학습지 렌더링 영역
            ========================================= */
         #renderArea { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 40px; }
         
@@ -254,7 +259,6 @@
             text-align: center; text-transform: uppercase; border-bottom: 2px solid #111827 !important; letter-spacing: 0.03em;
         }
 
-        /* 영단어 부분 중앙 정렬 적용 */
         .col-vocabulary { font-weight: 800; font-size: 15.5px; color: #111827 !important; text-align: center; }
         .col-meaning { font-weight: 500; font-size: 14px; }
         .col-synonyms { font-size: 12px; color: #4b5563 !important; }
@@ -276,6 +280,18 @@
         .spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
+        /* --- 모달 애니메이션 --- */
+        @keyframes modalPopIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-card { animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+        .icon-pulse { animation: iconPulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1); }
+
         /* --- 인쇄 및 PDF 내보내기 전용 CSS (빈 페이지 완벽 방지) --- */
         @media print {
             :root, html, body {
@@ -284,14 +300,13 @@
             }
             @page { size: A4; margin: 0; } 
             html, body { height: auto !important; overflow: visible !important; }
-            .app-header, .control-card, #actionCard, .status-mask, .blobs { display: none !important; }
+            .app-header, .control-card, #actionCard, .status-mask, .blobs, #warningModal { display: none !important; }
             #renderArea { padding: 0 !important; width: 210mm !important; display: block !important; gap: 0 !important; background: transparent !important; margin: 0 auto !important; }
             
-            /* 빈 페이지가 안 생기도록 높이를 auto로 두고 명시적 페이지 분할 사용 */
             .sheet { 
-                box-shadow: none !important; border: none !important; width: 210mm !important; 
-                height: auto !important; min-height: 0 !important; max-height: none !important;
+                box-shadow: none !important; border: none !important; width: 210mm !important; height: auto !important; min-height: 0 !important; max-height: 296mm !important;
                 padding: 15mm 20mm !important; margin: 0 !important; border-radius: 0 !important; background: #ffffff !important;
+                overflow: hidden !important; 
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
             }
@@ -303,13 +318,13 @@
             color-scheme: light !important; background: #ffffff !important; background-color: #ffffff !important; background-image: none !important; width: 100% !important; overflow: visible !important; height: auto !important; 
             margin: 0 !important; padding: 0 !important;
         }
-        body.pdf-export-active .blobs, body.pdf-export-active .app-header, body.pdf-export-active .control-card, body.pdf-export-active #actionCard { display: none !important; }
+        body.pdf-export-active .blobs, body.pdf-export-active .app-header, body.pdf-export-active .control-card, body.pdf-export-active #actionCard, body.pdf-export-active #warningModal { display: none !important; }
         body.pdf-export-active #renderArea { width: 210mm !important; padding: 0 !important; margin: 0 auto !important; display: block !important; gap: 0 !important; background: transparent !important; }
         
         body.pdf-export-active .sheet { 
             box-shadow: none !important; width: 210mm !important; margin: 0 !important; border: none !important; 
-            padding: 15mm 20mm !important; height: auto !important; min-height: 0 !important; max-height: none !important; border-radius: 0 !important; 
-            background: #ffffff !important; 
+            padding: 15mm 20mm !important; height: auto !important; min-height: 0 !important; max-height: 296mm !important; border-radius: 0 !important; 
+            background: #ffffff !important; overflow: hidden !important;
             page-break-after: always !important;
             page-break-inside: avoid !important;
         }
@@ -335,10 +350,25 @@
         <div class="blob b2"></div>
     </div>
 
+    <!-- PDF 로딩 오버레이 -->
     <div id="statusOverlay" class="status-mask">
         <div class="spinner"></div>
         <div class="text-lg font-bold text-white tracking-wide">PDF를 생성하고 있습니다.</div>
         <div class="text-sm mt-2 text-text-sub" style="color: #94a3b8;">파일 안정성 검증 및 페이지 레이아웃 조정 중...</div>
+    </div>
+
+    <!-- 간소화된 Day 선택 한도 초과 경고 모달 -->
+    <div id="warningModal" class="status-mask" style="z-index: 10000; display: none; touch-action: none; user-select: none; -webkit-user-select: none;">
+        <div class="section-card modal-card max-w-sm w-[90%] flex flex-col items-center text-center p-6 gap-4">
+            <div class="icon-pulse w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 mb-2">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-text-main">저장 및 인쇄 오류 주의</h3>
+            <p class="text-sm text-text-sub leading-relaxed">
+                Day를 5개 이상 선택할 경우<br>저장 및 인쇄 시 오류가 발생할 수 있습니다.<br>안정성을 위해 4개 이하로 나누어 주세요.
+            </p>
+            <button class="btn btn-pri w-full mt-2" onclick="document.getElementById('warningModal').style.display='none'">확인</button>
+        </div>
     </div>
 
     <header class="app-header">
@@ -374,7 +404,7 @@
         </label>
         <input type="file" id="csvFileInput" accept=".csv" />
 
-        <button class="btn" id="resetDataBtn" style="display:none; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;" onclick="clearLocalData()">
+        <button class="btn btn-danger" id="resetDataBtn" style="display:none;" onclick="clearLocalData()">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
             <span>데이터 초기화</span>
         </button>
@@ -560,7 +590,14 @@
                 tag.className = `tag ${selectedDays.has(d) ? 'active' : ''}`;
                 tag.textContent = `Day ${d}`;
                 tag.onclick = () => {
-                    if (selectedDays.has(d)) selectedDays.delete(d); else selectedDays.add(d);
+                    if (selectedDays.has(d)) {
+                        selectedDays.delete(d); 
+                    } else {
+                        selectedDays.add(d);
+                        if (selectedDays.size >= 5) {
+                            document.getElementById('warningModal').style.display = 'flex';
+                        }
+                    }
                     updateView();
                     updateDayTags(days);
                 };
@@ -572,6 +609,11 @@
             const availableDays = Object.keys(vocabRepository).sort((a, b) => parseInt(a) - parseInt(b));
             if (availableDays.length === 0) return;
             availableDays.forEach(d => selectedDays.add(d));
+            
+            if (selectedDays.size >= 5) {
+                document.getElementById('warningModal').style.display = 'flex';
+            }
+            
             updateDayTags(availableDays);
             updateView();
         }
@@ -592,7 +634,7 @@
         document.getElementById('chkMergePool').onchange = updateView;
         document.querySelectorAll('input[name="qLimit"]').forEach(r => r.onchange = updateView);
 
-        // 3. 통합 렌더링 로직 (정교한 동적 분할, 표 하단 텍스트 완전히 삭제)
+        // 3. 통합 렌더링 로직 (한글 뜻 글자 수 기반 동적 MAX_LINES 적용)
         function updateView() {
             const area = document.getElementById('renderArea');
             if (selectedDays.size === 0) { 
@@ -609,16 +651,26 @@
             let htmlPayload = ''; 
 
             if (mode === 'study') {
-                const MAX_LINES = 20; // 16줄 -> 20줄로 증가
-
                 sortedList.forEach(day => {
                     const dayItems = vocabRepository[day] || [];
                     
+                    // 한글 뜻(KOREAN MEANING)의 최대 글자 수 계산
+                    let maxMLen = 0;
+                    dayItems.forEach(item => {
+                        item.entries.forEach(e => {
+                            if (e.meaning && e.meaning.length > maxMLen) {
+                                maxMLen = e.meaning.length;
+                            }
+                        });
+                    });
+                    
+                    // 글자 수가 15칸 이하이면 22줄, 16칸 이상이면 표가 잘리지 않게 20줄 적용
+                    const MAX_LINES = maxMLen <= 15 ? 22 : 20;
+
                     let pages = [];
                     let currentChunk = [];
                     let currentLines = 0;
 
-                    // 단어 줄바꿈을 수학적으로 예측하여 동적 분할
                     dayItems.forEach(item => {
                         let itemLines = 0;
                         item.entries.forEach(e => {
@@ -626,9 +678,9 @@
                             let sLen = e.synonym ? e.synonym.length : 0;
                             let wLen = item.word ? item.word.length : 0;
 
-                            let mLines = Math.ceil((mLen || 1) / 22);
-                            let sLines = Math.ceil((sLen || 1) / 30);
-                            let wLines = Math.ceil((wLen || 1) / 16);
+                            let mLines = Math.ceil((mLen || 1) / 24);
+                            let sLines = Math.ceil((sLen || 1) / 32);
+                            let wLines = Math.ceil((wLen || 1) / 18);
 
                             itemLines += Math.max(1, mLines, sLines, wLines); 
                         });
@@ -681,7 +733,7 @@
                 const isSyn = document.getElementById('chkIncludeSyn').checked;
                 const isShuffle = document.getElementById('chkShufflePool').checked;
                 const limitValue = document.querySelector('input[name="qLimit"]:checked').value;
-                const TEST_CHUNK = 36; // 시험지 문항 수 30개(15줄) -> 36개(18줄)로 증가
+                const TEST_CHUNK = 36; 
 
                 const buildAssmt = (days, label) => {
                     let pool = [];
@@ -717,10 +769,14 @@
                         const half = Math.ceil(chunk.length / 2);
                         for (let r = 0; r < half; r++) {
                             const L = chunk[r], R = chunk[r + half];
-                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:800; color:#000 !important;">${L.q}</td><td></td>`;
-                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:800; color:#000 !important;">${R ? R.q : ''}</td><td></td></tr>`;
+                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${L.q}</td><td></td>`;
+                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${R ? R.q : ''}</td><td></td></tr>`;
                         }
                         out += `</tbody></table>
+                            <div style="margin-top: auto; padding-top: 14px; border-top: 2px solid #111827; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; font-weight: 800; color: #6b7280; letter-spacing: 0.05em;">${label.toUpperCase()} TEST</span>
+                                <span style="font-size: 12px; font-weight: 600; color: #9ca3af;">VOCAB TEST</span>
+                            </div>
                         </section>`;
                     }
                     // 정답지 생성
@@ -741,10 +797,14 @@
                         const half = Math.ceil(chunk.length / 2);
                         for (let r = 0; r < half; r++) {
                             const L = chunk[r], R = chunk[r + half];
-                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:800; color:#000 !important;">${L.q}</td><td class="ans-highlight">${L.a}</td>`;
-                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:800; color:#000 !important;">${R ? R.q : ''}</td><td class="ans-highlight">${R ? R.a : ''}</td></tr>`;
+                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${L.q}</td><td class="ans-highlight">${L.a}</td>`;
+                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${R ? R.q : ''}</td><td class="ans-highlight">${R ? R.a : ''}</td></tr>`;
                         }
                         out += `</tbody></table>
+                            <div style="margin-top: auto; padding-top: 14px; border-top: 2px solid #111827; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; font-weight: 800; color: #6b7280; letter-spacing: 0.05em;">${label.toUpperCase()} ANSWERS</span>
+                                <span style="font-size: 12px; font-weight: 600; color: #9ca3af;">ANSWER KEY</span>
+                            </div>
                         </section>`;
                     }
                     return out;
@@ -756,12 +816,10 @@
             area.innerHTML = htmlPayload;
             lucide.createIcons();
 
-            // 모바일 꾹 눌러 이미지 저장 기능을 위한 백그라운드 오버레이 적용
             clearTimeout(overlayTimeoutId);
             overlayTimeoutId = setTimeout(applyMobileImageOverlay, 800);
         }
 
-        // 모바일 기기에서만 종이를 꾹 눌러 '이미지 저장'이 가능하게 만드는 핵심 오버레이 기술
         async function applyMobileImageOverlay() {
             const isMobile = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent);
             if (!isMobile) return; 
@@ -780,7 +838,6 @@
             }
         }
 
-        // 4. 빈 페이지 생성을 막기 위해 순수 CSS 방식의 분할로 저장 로직 완전 고정
         document.getElementById('pdfBtn').onclick = async function() {
             const overlay = document.getElementById('statusOverlay');
             overlay.classList.add('active');
@@ -808,7 +865,7 @@
                     scrollX: 0
                 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-                pagebreak: { mode: 'css' } // CSS 분할 명령어 우선 반영 (빈 페이지 방지 핵심)
+                pagebreak: { mode: 'css' } 
             };
 
             try {
