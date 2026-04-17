@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
-    <!-- PWA & iOS Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Enged Voca">
     <title>Enged. Voca</title>
     
-    <!-- 기본 Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2789' height='2789' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-102 638)'%3E%3Crect x='102' y='-638' width='2789' height='2789' fill='%23050505'/%3E%3Cpath d='M1086.86-12 2130-12 1992.3 393.199 1377.63 393.199 1315.79 575.168 1895.55 575.168 1778.69 919.005 1198.93 919.005 1138.17 1097.8 1763.42 1097.8 1625.72 1503 572 1503 1086.86-12Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2238.6 1028C2308.33 1028 2359.43 1051.8 2391.88 1099.39 2424.33 1146.98 2428.69 1205.67 2404.99 1275.47 2381.29 1345.27 2337 1404.14 2272.11 1452.09 2207.23 1500.03 2139.91 1524 2070.17 1524 1999.73 1524 1948.52 1500.03 1916.55 1452.09 1884.57 1404.14 1880.43 1345.27 1904.13 1275.47 1927.84 1205.67 1971.9 1146.98 2036.31 1099.39 2100.72 1051.8 2168.15 1028 2238.6 1028Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
     
     <script>
@@ -33,13 +31,11 @@
         })();
     </script>
 
-    <!-- 핵심 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,7 +67,6 @@
     </script>
 
     <style>
-        /* 상위 페이지와 동일한 CSS Variables 동기화 */
         :root {
             --bg-dark: #050505; 
             --glass-surface: rgba(20, 20, 25, 0.75);
@@ -105,7 +100,6 @@
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
-        /* 커스텀 스크롤바 (상위 페이지와 통일) */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 3px; }
@@ -163,7 +157,7 @@
         }
         html[data-theme="light"] header { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); }
 
-        .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); }
+        .logo { display: flex; align-items: baseline; cursor: pointer; color: var(--text-main); transition: color 0.3s; }
         .header-tools { display: flex; gap: 8px; align-items: center; }
 
         input[type="file"] { display: none; }
@@ -207,7 +201,7 @@
         html[data-theme="light"] #actionCard { box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
         
         .control-card {
-            width: 100%; max-width: 1000px; margin-top: 24px; 
+            width: 100%; max-width: 720px; margin-top: 24px; 
             display: flex; flex-direction: column; gap: 24px;
         }
         
@@ -230,40 +224,40 @@
         /* =========================================
            A4 학습지 렌더링 영역
            ========================================= */
-        #renderArea { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 40px; overflow-x: hidden; }
+        #renderArea { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 40px; }
         
         .sheet {
             width: 210mm; min-height: 297mm; padding: 15mm 20mm; box-sizing: border-box; 
             position: relative; display: flex; flex-direction: column; page-break-after: always;
             background: #ffffff !important; color: #111827 !important;
             border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            /* Transform scale for mobile will be applied via JS */
         }
 
         html[data-theme="light"] .sheet { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
+        /* 외곽선 및 두께 미세 조정 (0.24px / 0.12px) */
         .sheet-header { 
             display: flex; justify-content: space-between; align-items: flex-end; 
-            border-bottom: 2px solid #111827 !important; padding-bottom: 12px; margin-bottom: 16px;
+            border-bottom: 0.24px solid #111827 !important; padding-bottom: 12px; margin-bottom: 16px;
         }
         .sheet-header h1 { 
-            margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -0.03em; color: #111827 !important; font-family: "Pretendard", sans-serif; display: flex; align-items: baseline; gap: 8px;
+            margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -0.03em; font-family: "Pretendard", sans-serif; display: flex; align-items: baseline; gap: 8px;
         }
         .sheet-header .page-info { font-size: 14px; font-weight: 700; color: #6b7280; letter-spacing: 0; }
         
         .print-table { 
             width: 100%; border-collapse: collapse; table-layout: fixed; 
-            border: 2px solid #111827 !important; margin-bottom: 0; background-color: #fff !important; 
+            border: 0.24px solid #111827 !important; margin-bottom: 0; background-color: #fff !important; 
         }
         .print-table tr { page-break-inside: avoid; } 
         
         .print-table th, .print-table td { 
-            border: 1px solid #e5e7eb !important; padding: 10px 12px; font-size: 14px; line-height: 1.4; vertical-align: middle; 
+            border: 0.12px solid #e5e7eb !important; padding: 10px 12px; font-size: 14px; line-height: 1.4; vertical-align: middle; 
             word-break: keep-all !important; overflow-wrap: break-word !important; color: #111827 !important; 
         }
         .print-table th { 
             background: #f8fafc !important; color: #475569 !important; font-size: 11.5px; font-weight: 800; 
-            text-align: center; text-transform: uppercase; border-bottom: 2px solid #111827 !important; letter-spacing: 0.03em;
+            text-align: center; text-transform: uppercase; border-bottom: 0.24px solid #111827 !important; letter-spacing: 0.03em;
         }
 
         .col-vocabulary { font-weight: 800; font-size: 15.5px; color: #111827 !important; text-align: center; }
@@ -277,7 +271,7 @@
         .bullet-point { color: #6b7280 !important; font-size: 11px; margin-right: 8px; font-weight: 900; }
         
         .test-no { 
-            text-align: center; color: #4b5563 !important; width: 55px !important; font-size: 13px; font-weight: 900; 
+            text-align: center; color: #4b5563 !important; font-size: 13px; font-weight: 900; 
             background: #f1f5f9 !important; white-space: nowrap !important;
         }
         .ans-highlight { color: #dc2626 !important; font-weight: 800; }
@@ -287,38 +281,39 @@
         .spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- 모달 애니메이션 --- */
         @keyframes modalPopIn {
             0% { opacity: 0; transform: scale(0.95) translateY(10px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         .modal-card { animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        
+        /* 펄스 애니메이션 수정: 바깥으로 퍼져나가는 형태 */
         @keyframes iconPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
-        .icon-pulse { animation: iconPulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1); }
+        .icon-pulse { animation: iconPulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1); border-radius: 50%; }
 
-        /* --- 인쇄 및 PDF 내보내기 전용 CSS (빈 페이지 완벽 방지) --- */
         @media print {
             :root, html, body {
                 color-scheme: light !important; background: #ffffff !important; background-color: #ffffff !important; background-image: none !important;
                 margin: 0 !important; padding: 0 !important;
             }
-            @page { size: A4; margin: 0; } 
+            @page { size: A4 portrait; margin: 0 !important; }
             html, body { height: auto !important; overflow: visible !important; }
             .app-header, .control-card, #actionCard, .status-mask, .blobs, #warningModal { display: none !important; }
             #renderArea { padding: 0 !important; width: 210mm !important; display: block !important; gap: 0 !important; background: transparent !important; margin: 0 auto !important; }
             
             .sheet { 
-                box-shadow: none !important; border: none !important; width: 210mm !important; height: auto !important; min-height: 0 !important; max-height: 296mm !important;
-                padding: 15mm 20mm !important; margin: 0 !important; border-radius: 0 !important; background: #ffffff !important;
+                box-shadow: none !important; border: none !important; width: 210mm !important; 
+                height: 296.5mm !important; max-height: 297mm !important;
+                padding: 15mm 20mm !important; margin: 0 auto !important; border-radius: 0 !important; background: #ffffff !important;
                 overflow: hidden !important; 
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
-                transform: none !important; /* 스케일 초기화 */
             }
-            .sheet:last-child { page-break-after: auto !important; }
+            .sheet:last-child { page-break-after: avoid !important; break-after: avoid !important; }
             .img-overlay { display: none !important; }
         }
 
@@ -330,24 +325,34 @@
         body.pdf-export-active #renderArea { width: 210mm !important; padding: 0 !important; margin: 0 auto !important; display: block !important; gap: 0 !important; background: transparent !important; }
         
         body.pdf-export-active .sheet { 
-            box-shadow: none !important; width: 210mm !important; margin: 0 !important; border: none !important; 
-            padding: 15mm 20mm !important; height: auto !important; min-height: 0 !important; max-height: 296mm !important; border-radius: 0 !important; 
+            box-shadow: none !important; width: 210mm !important; margin: 0 auto !important; border: none !important; 
+            padding: 15mm 20mm !important; height: 296.5mm !important; max-height: 297mm !important; border-radius: 0 !important; 
             background: #ffffff !important; overflow: hidden !important;
-            page-break-after: always !important;
+            page-break-after: always !important; break-after: page !important;
             page-break-inside: avoid !important;
-            transform: none !important; /* 스케일 초기화 */
         }
-        body.pdf-export-active .sheet:last-child { page-break-after: auto !important; }
+        body.pdf-export-active .sheet:last-child { page-break-after: avoid !important; break-after: avoid !important; }
         body.pdf-export-active .img-overlay { display: none !important; }
 
         @media (max-width: 640px) {
             :root { --header-h: 60px; }
             header { 
                 top: 0; width: 100%; border-radius: 0; max-width: none; border-left: none; border-right: none; border-top: none; 
-                padding-top: env(safe-area-inset-top); height: calc(var(--header-h) + env(safe-area-inset-top));
+                padding: env(safe-area-inset-top) 16px 0; 
+                height: calc(var(--header-h) + env(safe-area-inset-top));
+                border-bottom: 1px solid var(--glass-border);
             }
+            .logo span:last-child { transform: translateY(1px); }
+            
             #actionCard { margin-top: calc(80px + env(safe-area-inset-top)); top: calc(var(--header-h) + 12px + env(safe-area-inset-top)); }
-            .control-card { margin-top: 16px; padding: 20px; border-radius: 0; border-left: none; border-right: none; }
+            
+            .control-card { 
+                margin: 16px auto 0; padding: 20px; border-radius: 16px; 
+                border-left: 1px solid var(--glass-border); 
+                border-right: 1px solid var(--glass-border); 
+                width: calc(100% - 32px); 
+            }
+            .sheet { transform: scale(0.9); transform-origin: top center; margin-bottom: -15%; }
         }
     </style>
 </head>
@@ -365,17 +370,24 @@
         <div class="text-sm mt-2 text-text-sub" style="color: #94a3b8;">파일 안정성 검증 및 페이지 레이아웃 조정 중...</div>
     </div>
 
-    <!-- 간소화된 Day 선택 한도 초과 경고 모달 -->
+    <!-- 경고 모달 (인쇄/PDF 클릭 시 호출) -->
     <div id="warningModal" class="status-mask" style="z-index: 10000; display: none; touch-action: none; user-select: none; -webkit-user-select: none;">
         <div class="section-card modal-card max-w-sm w-[90%] flex flex-col items-center text-center p-6 gap-4">
-            <div class="icon-pulse w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 mb-2">
-                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            <div class="icon-pulse w-12 h-12 flex items-center justify-center text-red-500 mb-2">
+                <i data-lucide="alert-triangle" class="w-7 h-7 relative z-10"></i>
             </div>
             <h3 class="text-lg font-bold text-text-main">저장 및 인쇄 오류 주의</h3>
             <p class="text-sm text-text-sub leading-relaxed">
-                Day를 5개 이상 선택할 경우<br>저장 및 인쇄 시 오류가 발생할 수 있습니다.<br>안정성을 위해 4개 이하로 나누어 주세요.
+                Day를 5개 이상 한 번에 처리할 경우<br>저장 및 인쇄 시 오류가 발생할 수 있습니다.<br>안정성을 위해 가급적 나누어 처리해 주세요.
             </p>
-            <button class="btn btn-pri w-full mt-2" onclick="document.getElementById('warningModal').style.display='none'">확인</button>
+            <div class="flex items-center gap-2 mt-2">
+                <input type="checkbox" id="hideWarningToday" class="w-4 h-4 accent-primary cursor-pointer">
+                <label for="hideWarningToday" class="text-xs text-text-dim cursor-pointer font-bold">오늘 하루 안 보기</label>
+            </div>
+            <div class="flex gap-2 w-full mt-2">
+                <button class="btn btn-sec flex-1 !h-[42px]" onclick="document.getElementById('warningModal').style.display='none'; pendingExportType=null;">취소</button>
+                <button class="btn btn-pri flex-1 !h-[42px]" onclick="proceedExport()">무시하고 진행</button>
+            </div>
         </div>
     </div>
 
@@ -386,11 +398,11 @@
         </div>
         <div class="header-tools">
             <a href="https://www.v1ctorym1n.kro.kr/enged" class="tool-icon-btn flex" title="상위 메뉴">
-                <i data-lucide="corner-up-left" class="w-4 h-4"></i>
+                <i data-lucide="corner-up-left" class="w-5 h-5"></i> <!-- 20px 크기 유지 -->
             </a>
             <button class="tool-icon-btn ml-1" id="themeToggle" title="테마 변경">
-                <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
-                <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
+                <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
                     <circle cx="12" cy="12" r="5"></circle>
                     <line x1="12" y1="1" x2="12" y2="3"></line>
                     <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -406,25 +418,28 @@
     </header>
 
     <div class="section-card w-fit mx-auto flex flex-wrap items-center justify-center gap-3 py-3 px-5 transition-colors border border-[var(--glass-border)]" id="actionCard" style="margin-top: calc(100px + env(safe-area-inset-top)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+        <!-- 버튼 순서: 업로드, 인쇄, PDF 저장, 초기화 -->
         <label for="csvFileInput" id="uploadLabel" class="btn btn-sec cursor-pointer mb-0">
             <i data-lucide="file-up" class="w-4 h-4"></i> 
             <span>데이터 업로드</span>
         </label>
         <input type="file" id="csvFileInput" accept=".csv" />
 
+        <button class="btn btn-sec" onclick="handleExport('print')" id="printBtn" style="display:none;">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>인쇄</span>
+        </button>
+        <button class="btn btn-pri" onclick="handleExport('pdf')" id="pdfBtnTrigger" style="display:none;">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>PDF 저장</span>
+        </button>
         <button class="btn btn-danger" id="resetDataBtn" style="display:none;" onclick="clearLocalData()">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
             <span>데이터 초기화</span>
         </button>
-        <button class="btn btn-sec" onclick="window.print()" id="printBtn" style="display:none;">
-            <i data-lucide="printer" class="w-4 h-4"></i>
-            <span>인쇄</span>
-        </button>
-        <button class="btn btn-pri" id="pdfBtn" style="display:none;">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            <span>PDF 저장</span>
-        </button>
     </div>
+    
+    <button id="realPdfBtn" style="display:none;"></button>
 
     <div class="section-card control-card" id="configCard" style="display: none;">
         <div class="config-section">
@@ -453,7 +468,14 @@
 
         <div class="config-section">
             <div class="flex items-center justify-between w-full mb-1">
-                <div class="config-title w-auto"><i data-lucide="check-square" class="w-4 h-4 text-primary"></i> 학습 대상 Day 선택</div>
+                <div class="config-title w-auto">
+                    <i data-lucide="check-square" class="w-4 h-4 text-primary"></i> 학습 대상 Day 선택
+                    <!-- 복수 선택 토글 -->
+                    <label class="flex items-center gap-1.5 ml-3 px-2 py-0.5 rounded bg-[var(--glass-highlight)] border border-[var(--glass-border)] cursor-pointer hover:bg-[var(--glass-border)] transition-colors">
+                        <input type="checkbox" id="chkMultiSelect" class="accent-primary w-3 h-3 cursor-pointer">
+                        <span class="text-[11px] font-bold text-text-sub">복수 선택</span>
+                    </label>
+                </div>
                 <div class="flex items-center gap-2">
                     <button onclick="selectAllDays()" class="text-[11px] font-bold px-2.5 py-1.5 bg-[var(--glass-highlight)] hover:bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-md text-text-main transition-colors">전체 선택</button>
                     <button onclick="deselectAllDays()" class="text-[11px] font-bold px-2.5 py-1.5 bg-[var(--glass-highlight)] hover:bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-md text-text-main transition-colors">전체 해제</button>
@@ -526,7 +548,6 @@
             lucide.createIcons();
             const savedCSV = localStorage.getItem('savedVocabCSV');
             if (savedCSV) { parseCSVString(savedCSV); }
-            window.addEventListener('resize', resizeSheets);
         };
 
         function clearLocalData() {
@@ -578,15 +599,17 @@
                 vocabRepository[d].push({ word: row['Word']?.trim() || '', entries });
             });
             const sorted = [...availableDays].sort((a, b) => parseInt(a) - parseInt(b));
-            selectedDays.clear();
-            if (sorted.length > 0) selectedDays.add(sorted[0]);
+            
+            // 초기 화면: 아무것도 선택되지 않은 상태가 기본
+            selectedDays.clear(); 
+            
             updateDayTags(sorted);
             
             document.getElementById('uploadLabel').style.display = 'none'; 
             document.getElementById('resetDataBtn').style.display = 'inline-flex'; 
             document.getElementById('configCard').style.display = 'flex';
             document.getElementById('printBtn').style.display = 'inline-flex';
-            document.getElementById('pdfBtn').style.display = 'inline-flex';
+            document.getElementById('pdfBtnTrigger').style.display = 'inline-flex';
             document.getElementById('emptyStateArea').style.display = 'none';
             updateView();
         }
@@ -599,14 +622,23 @@
                 tag.className = `tag ${selectedDays.has(d) ? 'active' : ''}`;
                 tag.textContent = `Day ${d}`;
                 tag.onclick = () => {
-                    if (selectedDays.has(d)) {
-                        selectedDays.delete(d); 
+                    const isMulti = document.getElementById('chkMultiSelect').checked;
+                    
+                    if (!isMulti) {
+                        if (selectedDays.has(d)) {
+                            selectedDays.delete(d); 
+                        } else {
+                            selectedDays.clear(); 
+                            selectedDays.add(d);  
+                        }
                     } else {
-                        selectedDays.add(d);
-                        if (selectedDays.size >= 5) {
-                            document.getElementById('warningModal').style.display = 'flex';
+                        if (selectedDays.has(d)) {
+                            selectedDays.delete(d); 
+                        } else {
+                            selectedDays.add(d);
                         }
                     }
+                    
                     updateView();
                     updateDayTags(days);
                 };
@@ -617,12 +649,9 @@
         function selectAllDays() {
             const availableDays = Object.keys(vocabRepository).sort((a, b) => parseInt(a) - parseInt(b));
             if (availableDays.length === 0) return;
+            
+            document.getElementById('chkMultiSelect').checked = true;
             availableDays.forEach(d => selectedDays.add(d));
-            
-            if (selectedDays.size >= 5) {
-                document.getElementById('warningModal').style.display = 'flex';
-            }
-            
             updateDayTags(availableDays);
             updateView();
         }
@@ -634,6 +663,40 @@
             updateView();
         }
 
+        let pendingExportType = null;
+
+        function handleExport(type) {
+            const hideWarningDate = localStorage.getItem('hideWarningDate');
+            const today = new Date().toDateString();
+            
+            if (selectedDays.size >= 5 && hideWarningDate !== today) {
+                pendingExportType = type;
+                document.getElementById('warningModal').style.display = 'flex';
+            } else {
+                executeExport(type);
+            }
+        }
+
+        function executeExport(type) {
+            if (type === 'print') {
+                window.print();
+            } else if (type === 'pdf') {
+                document.getElementById('realPdfBtn').click();
+            }
+        }
+
+        function proceedExport() {
+            const chk = document.getElementById('hideWarningToday');
+            if (chk && chk.checked) {
+                localStorage.setItem('hideWarningDate', new Date().toDateString());
+            }
+            document.getElementById('warningModal').style.display = 'none';
+            if (pendingExportType) {
+                executeExport(pendingExportType);
+            }
+            pendingExportType = null;
+        }
+
         document.querySelectorAll('input[name="viewMode"]').forEach(r => r.onchange = (e) => {
             document.getElementById('testConfigArea').style.display = e.target.value === 'test' ? 'flex' : 'none';
             updateView();
@@ -643,7 +706,6 @@
         document.getElementById('chkMergePool').onchange = updateView;
         document.querySelectorAll('input[name="qLimit"]').forEach(r => r.onchange = updateView);
 
-        // 3. 통합 렌더링 로직
         function updateView() {
             const area = document.getElementById('renderArea');
             if (selectedDays.size === 0) { 
@@ -662,62 +724,70 @@
             if (mode === 'study') {
                 sortedList.forEach(day => {
                     const dayItems = vocabRepository[day] || [];
-                    
                     let maxMLen = 0;
                     dayItems.forEach(item => {
                         item.entries.forEach(e => {
                             if (e.meaning && e.meaning.length > maxMLen) maxMLen = e.meaning.length;
                         });
                     });
-                    const MAX_LINES = maxMLen <= 15 ? 22 : 20;
-
+                    
+                    const MAX_LINES = maxMLen <= 17 ? 22 : 20;
                     let pages = [];
                     let currentChunk = [];
                     let currentLines = 0;
+                    let currentCells = 0;
 
                     dayItems.forEach(item => {
                         let itemLines = 0;
+                        let itemCells = item.entries.length;
                         item.entries.forEach(e => {
-                            let mLen = e.meaning ? e.meaning.length : 0;
                             let sLen = e.synonym ? e.synonym.length : 0;
-                            let wLen = item.word ? item.word.length : 0;
-
-                            let mLines = Math.ceil((mLen || 1) / 24);
-                            let sLines = Math.ceil((sLen || 1) / 32);
-                            let wLines = Math.ceil((wLen || 1) / 18);
-
-                            itemLines += Math.max(1, mLines, sLines, wLines); 
+                            let sLines = Math.ceil((sLen || 1) / 34);
+                            itemLines += sLines; 
                         });
 
-                        if (currentLines + itemLines > MAX_LINES && currentChunk.length > 0) {
+                        let futureCells = currentCells + itemCells;
+                        let futureLines = currentLines + itemLines;
+                        
+                        let allowedLines = 22;
+                        if (futureCells === 14) allowedLines = 21;
+                        else if (futureCells === 15) allowedLines = 22;
+                        else if (futureCells === 16) allowedLines = 17;
+                        else if (futureCells === 17) allowedLines = 16;
+                        else if (futureCells === 18) allowedLines = 16;
+
+                        if (currentChunk.length > 0 && (futureCells >= 19 || futureLines > allowedLines)) {
                             pages.push(currentChunk);
                             currentChunk = [];
                             currentLines = 0;
+                            currentCells = 0;
+                            futureCells = itemCells;
+                            futureLines = itemLines;
                         }
+                        
                         currentChunk.push(item);
-                        currentLines += itemLines;
+                        currentLines = futureLines;
+                        currentCells = futureCells;
                     });
-                    
                     if (currentChunk.length > 0) pages.push(currentChunk);
 
                     const totalPages = pages.length;
-
                     pages.forEach((chunk, pageIndex) => {
                         const pageNum = pageIndex + 1;
+                        // 타이틀 포맷 수정: 단어장(청색), Day/페이지(흑색), 기호(-, p) 제거
                         htmlPayload += `
                         <section class="sheet">
                             <div class="sheet-header">
                                 <div class="header-left">
-                                    <h1>단어장 <span style="color:#3b82f6; margin-left:4px;">Day ${day}</span> <span class="page-info">${totalPages > 1 ? `- ${pageNum}/${totalPages}p` : ''}</span></h1>
+                                    <h1><span style="color:#3b82f6;">단어장</span> <span style="color:#111827; margin-left:6px;">Day ${day} ${totalPages > 1 ? `${pageNum}/${totalPages}` : ''}</span></h1>
                                 </div>
                                 <div class="header-right" style="text-align: right; display: flex; align-items: flex-end;">
                                     <span style="font-family: 'Cal Sans', sans-serif; font-size: 18px; font-style: italic; font-weight: 600; color: #111827; letter-spacing: -0.02em;">Enged<span style="color: #fbbf24;">.</span></span>
                                 </div>
                             </div>
                             <table class="print-table">
-                                <thead><tr><th width="26%">VOCABULARY</th><th width="34%">KOREAN MEANING</th><th width="40%">SYNONYMS</th></tr></thead>
+                                <thead><tr><th width="26%">VOCABULARY</th><th width="30%">KOREAN MEANING</th><th width="44%">SYNONYMS</th></tr></thead>
                                 <tbody>`;
-                        
                         chunk.forEach(item => {
                             item.entries.forEach((e, idx) => {
                                 htmlPayload += `<tr>`;
@@ -726,10 +796,7 @@
                                 htmlPayload += `<td class="col-synonyms">${e.synonym.split(',').map(s => `<span class="badge-synonym">${s.trim()}</span>`).join('')}</td></tr>`;
                             });
                         });
-                        
-                        htmlPayload += `</tbody>
-                            </table>
-                        </section>`;
+                        htmlPayload += `</tbody></table></section>`;
                     });
                 });
             } else {
@@ -739,7 +806,7 @@
                 const limitValue = document.querySelector('input[name="qLimit"]:checked').value;
                 const TEST_CHUNK = 36; 
 
-                const buildAssmt = (days, label) => {
+                const buildAssmt = (days, label, isAnswerSheet = false) => {
                     let pool = [];
                     days.forEach(d => (vocabRepository[d] || []).forEach(item => {
                         const ans = item.entries.map(e => e.meaning).filter(Boolean).join(', ');
@@ -754,8 +821,9 @@
 
                     let out = '';
                     const totalPages = Math.ceil(uniquePool.length / TEST_CHUNK);
+                    const titleBase = isAnswerSheet ? '정답지' : '시험지';
+                    const titleColor = isAnswerSheet ? '#dc2626' : '#3b82f6';
 
-                    // 시험지 생성
                     for (let i = 0; i < uniquePool.length; i += TEST_CHUNK) {
                         const chunk = uniquePool.slice(i, i + TEST_CHUNK);
                         const pageNum = Math.floor(i / TEST_CHUNK) + 1;
@@ -763,100 +831,42 @@
                         <section class="sheet">
                             <div class="sheet-header">
                                 <div class="header-left">
-                                    <h1>시험지 <span style="color:#3b82f6; font-size:18px; margin-left:6px;">(${label})</span> <span class="page-info">${totalPages > 1 ? `- ${pageNum}/${totalPages}p` : ''}</span></h1>
+                                    <h1><span style="color:${titleColor};">${titleBase}</span> <span style="color:#111827; font-size:18px; margin-left:6px;">(${label}) ${totalPages > 1 ? `${pageNum}/${totalPages}` : ''}</span></h1>
                                 </div>
                                 <div class="header-right" style="text-align: right; display: flex; align-items: flex-end;">
                                     <span style="font-family: 'Cal Sans', sans-serif; font-size: 18px; font-style: italic; font-weight: 600; color: #111827; letter-spacing: -0.02em;">Enged<span style="color: #fbbf24;">.</span></span>
                                 </div>
                             </div>
-                            <table class="print-table"><thead><tr><th width="55">No.</th><th>Vocabulary</th><th>Answer</th><th width="55">No.</th><th>Vocabulary</th><th>Answer</th></tr></thead><tbody>`;
+                            <table class="print-table"><thead><tr><th width="55">No.</th><th>Vocabulary</th><th>${isAnswerSheet ? 'Correct Answer' : 'Answer'}</th><th width="55">No.</th><th>Vocabulary</th><th>${isAnswerSheet ? 'Correct Answer' : 'Answer'}</th></tr></thead><tbody>`;
                         const half = Math.ceil(chunk.length / 2);
                         for (let r = 0; r < half; r++) {
                             const L = chunk[r], R = chunk[r + half];
-                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${L.q}</td><td></td>`;
-                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${R ? R.q : ''}</td><td></td></tr>`;
+                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${L.q}</td><td class="${isAnswerSheet ? 'ans-highlight' : ''}">${isAnswerSheet ? L.a : ''}</td>`;
+                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${R ? R.q : ''}</td><td class="${isAnswerSheet ? 'ans-highlight' : ''}">${isAnswerSheet && R ? R.a : ''}</td></tr>`;
                         }
-                        out += `</tbody></table>
-                        </section>`;
-                    }
-                    // 정답지 생성
-                    for (let i = 0; i < uniquePool.length; i += TEST_CHUNK) {
-                        const chunk = uniquePool.slice(i, i + TEST_CHUNK);
-                        const pageNum = Math.floor(i / TEST_CHUNK) + 1;
-                        out += `
-                        <section class="sheet">
-                            <div class="sheet-header">
-                                <div class="header-left">
-                                    <h1 style="color:#dc2626 !important;">정답지 <span style="font-size:18px; margin-left:6px;">(${label})</span> <span class="page-info">${totalPages > 1 ? `- ${pageNum}/${totalPages}p` : ''}</span></h1>
-                                </div>
-                                <div class="header-right" style="text-align: right; display: flex; align-items: flex-end;">
-                                    <span style="font-family: 'Cal Sans', sans-serif; font-size: 18px; font-style: italic; font-weight: 600; color: #111827; letter-spacing: -0.02em;">Enged<span style="color: #fbbf24;">.</span></span>
-                                </div>
-                            </div>
-                            <table class="print-table"><thead><tr><th width="55">No.</th><th>Vocabulary</th><th>Correct Answer</th><th width="55">No.</th><th>Vocabulary</th><th>Correct Answer</th></tr></thead><tbody>`;
-                        const half = Math.ceil(chunk.length / 2);
-                        for (let r = 0; r < half; r++) {
-                            const L = chunk[r], R = chunk[r + half];
-                            out += `<tr><td class="test-no">${i+r+1}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${L.q}</td><td class="ans-highlight">${L.a}</td>`;
-                            out += `<td class="test-no">${R ? i+r+half+1 : ''}</td><td style="font-weight:500; font-size:13.5px; color:#000 !important;">${R ? R.q : ''}</td><td class="ans-highlight">${R ? R.a : ''}</td></tr>`;
-                        }
-                        out += `</tbody></table>
-                        </section>`;
+                        out += `</tbody></table></section>`;
                     }
                     return out;
                 };
 
-                if (isMerge) htmlPayload = buildAssmt(sortedList, `Day ${sortedList.join(', ')} 통합`);
-                else sortedList.forEach(d => htmlPayload += buildAssmt([d], `Day ${d}`));
+                if (isMerge) htmlPayload = buildAssmt(sortedList, `Day ${sortedList.join(', ')} 통합`) + buildAssmt(sortedList, `Day ${sortedList.join(', ')} 통합`, true);
+                else sortedList.forEach(d => htmlPayload += (buildAssmt([d], `Day ${d}`) + buildAssmt([d], `Day ${d}`, true)));
             }
             area.innerHTML = htmlPayload;
             lucide.createIcons();
 
             clearTimeout(overlayTimeoutId);
-            overlayTimeoutId = setTimeout(() => {
-                resizeSheets();
-                applyMobileImageOverlay();
-            }, 50);
-        }
-
-        // 모바일 가로스크롤 방지: Sheet 자동 스케일링 로직
-        function resizeSheets() {
-            if (document.body.classList.contains('pdf-export-active')) return;
-            const ww = window.innerWidth;
-            const targetWidth = 794; // 210mm in px (96dpi)
-            
-            const scale = ww < (targetWidth + 40) ? (ww - 40) / targetWidth : 1;
-            
-            document.querySelectorAll('.sheet').forEach(s => {
-                if (scale < 1) {
-                    s.style.transform = `scale(${scale})`;
-                    s.style.transformOrigin = 'top center';
-                    const unscaledHeight = s.offsetHeight || (297 * 3.78);
-                    const scaledHeight = unscaledHeight * scale;
-                    s.style.marginBottom = `-${unscaledHeight - scaledHeight - 20}px`; 
-                } else {
-                    s.style.transform = 'none';
-                    s.style.marginBottom = '40px';
-                }
-            });
+            overlayTimeoutId = setTimeout(applyMobileImageOverlay, 800);
         }
 
         async function applyMobileImageOverlay() {
             const isMobile = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent);
             if (!isMobile) return; 
-
             const sheets = document.querySelectorAll('.sheet');
             for (let sheet of sheets) {
                 if (sheet.querySelector('.img-overlay')) continue;
                 try {
-                    // 스케일 원상복구 후 캡처해야 깨지지 않음
-                    const prevTransform = sheet.style.transform;
-                    sheet.style.transform = 'none';
-                    
                     const canvas = await html2canvas(sheet, { scale: 2, useCORS: true, logging: false });
-                    
-                    sheet.style.transform = prevTransform;
-                    
                     const img = document.createElement('img');
                     img.src = canvas.toDataURL('image/jpeg', 0.95);
                     img.className = 'img-overlay';
@@ -866,23 +876,15 @@
             }
         }
 
-        document.getElementById('pdfBtn').onclick = async function() {
+        document.getElementById('realPdfBtn').onclick = async function() {
             const overlay = document.getElementById('statusOverlay');
             overlay.classList.add('active');
-            
             window.scrollTo(0,0);
             document.documentElement.classList.add('pdf-export-active');
             document.body.classList.add('pdf-export-active');
             
-            // 인쇄 화질 저하 방지를 위해 스케일 원상 복구
-            document.querySelectorAll('.sheet').forEach(s => {
-                s.style.transform = 'none';
-                s.style.marginBottom = '0px';
-            });
-            
             const modeName = document.querySelector('input[name="viewMode"]:checked').value;
             const sortedList = [...selectedDays].sort((a, b) => parseInt(a) - parseInt(b));
-            
             let nameTag = sortedList.length > 2 ? `${sortedList[0]}_TO_${sortedList[sortedList.length-1]}` : sortedList.join('_');
             if (!nameTag) nameTag = "ALL";
             const saveName = `Vocab_${modeName}_Day_${nameTag}.pdf`;
@@ -890,23 +892,15 @@
             const opt = {
                 margin: 0, 
                 filename: saveName,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2.0, 
-                    useCORS: true, 
-                    letterRendering: true,
-                    scrollY: 0,
-                    scrollX: 0
-                },
+                image: { type: 'jpeg', quality: 0.85 }, 
+                html2canvas: { scale: 1.5, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
                 pagebreak: { mode: 'css' } 
             };
 
             try {
                 await new Promise(r => setTimeout(r, 600));
-                const element = document.getElementById('renderArea');
-                
-                await html2pdf().set(opt).from(element).save();
+                await html2pdf().set(opt).from(document.getElementById('renderArea')).save();
             } catch (err) {
                 console.error("PDF 생성 실패:", err);
                 alert("PDF 생성 중 문제가 발생했습니다. 브라우저 '인쇄' 기능을 이용해 주세요.");
@@ -914,10 +908,8 @@
                 document.documentElement.classList.remove('pdf-export-active');
                 document.body.classList.remove('pdf-export-active');
                 overlay.classList.remove('active');
-                resizeSheets(); // 모바일 뷰 스케일 복구
             }
         };
-
     </script>
 </body>
 </html>
