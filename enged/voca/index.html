@@ -409,7 +409,7 @@
         </div>
         <div class="header-tools">
             <a href="https://www.v1ctorym1n.kro.kr/enged" class="tool-icon-btn flex" title="상위 메뉴">
-                <i data-lucide="corner-up-left" class="w-5 h-5"></i>
+                <i data-lucide="corner-up-left" class="w-5 h-5"></i> 
             </a>
             <button class="tool-icon-btn ml-1" id="themeToggle" title="테마 변경">
                 <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
@@ -703,8 +703,8 @@
                     let maxMLen = 0;
                     dayItems.forEach(item => item.entries.forEach(e => { if (e.meaning.length > maxMLen) maxMLen = e.meaning.length; }));
                     
-                    // 한계점 상향 조정하여 빈공간 낭비 줄임
-                    const MAX_LINES = maxMLen <= 17 ? 26 : 24; 
+                    // 최대 줄 수를 기존보다 2줄씩 하향 조정하여 하단 여백 추가 확보
+                    const MAX_LINES = maxMLen <= 17 ? 24 : 22; 
                     let pages = [];
                     let currentChunk = [];
                     let currentLines = 0;
@@ -725,7 +725,8 @@
                         let allowedLines = MAX_LINES;
                         if (futureCells >= 16) allowedLines = MAX_LINES - 1;
 
-                        if (currentChunk.length > 0 && (futureCells >= 19 || futureLines > allowedLines)) {
+                        // 최대 칸 수 제한을 19 -> 18로 축소
+                        if (currentChunk.length > 0 && (futureCells >= 18 || futureLines > allowedLines)) {
                             pages.push(currentChunk);
                             currentChunk = []; currentLines = 0; currentCells = 0;
                             futureCells = itemCells; futureLines = itemLines;
