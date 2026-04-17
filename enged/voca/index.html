@@ -255,11 +255,12 @@
             width: 100%; border-collapse: collapse; table-layout: fixed; 
             border: 2px solid #111827 !important; margin-bottom: 0; background-color: #fff !important; 
         }
-        .print-table tr { page-break-inside: avoid; } 
+        .print-table tr { page-break-inside: avoid; break-inside: avoid; } 
         
         .print-table th, .print-table td { 
             border: 1px solid #e5e7eb !important; padding: 10px 12px; font-size: 14px; line-height: 1.4; vertical-align: middle; 
             word-break: keep-all !important; overflow-wrap: break-word !important; color: #111827 !important; 
+            page-break-inside: avoid; break-inside: avoid;
         }
         .print-table th { 
             background: #f8fafc !important; color: #475569 !important; font-size: 11.5px; font-weight: 800; 
@@ -299,45 +300,50 @@
         }
         .icon-pulse { animation: iconPulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1); }
 
-        /* --- 인쇄 및 PDF 내보내기 전용 CSS (빈 페이지 완벽 방지) --- */
+        /* --- 인쇄 전용 CSS (iPadOS 빈 페이지 완벽 방지 & 강제 데스크탑 레이아웃) --- */
         @media print {
             :root, html, body {
                 color-scheme: light !important; background: #ffffff !important; background-color: #ffffff !important; background-image: none !important;
-                margin: 0 !important; padding: 0 !important;
+                margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: 1024px !important; /* 강제 PC 뷰 */
             }
-            @page { size: A4; margin: 0; } 
+            @page { size: A4 portrait; margin: 0 !important; } /* Safari 빈 페이지 유발 원인인 margin 제거 */
+            
             html, body { height: auto !important; overflow: visible !important; }
             .app-header, .control-card, #actionCard, .status-mask, .blobs, #warningModal { display: none !important; }
-            #renderArea { padding: 0 !important; width: 210mm !important; display: block !important; gap: 0 !important; background: transparent !important; margin: 0 auto !important; }
+            #renderArea { padding: 0 !important; width: 100% !important; display: block !important; gap: 0 !important; background: transparent !important; margin: 0 auto !important; }
             
             .sheet { 
-                box-shadow: none !important; border: none !important; width: 210mm !important; height: auto !important; min-height: 0 !important; max-height: 296mm !important;
-                padding: 15mm 20mm !important; margin: 0 !important; border-radius: 0 !important; background: #ffffff !important;
+                box-shadow: none !important; border: none !important; 
+                width: 210mm !important; height: 296.5mm !important; max-height: 297mm !important; /* 높이 강제 고정으로 Spill-over 완벽 차단 */
+                padding: 15mm 20mm !important; margin: 0 auto !important; border-radius: 0 !important; background: #ffffff !important;
                 overflow: hidden !important; 
                 page-break-after: always !important;
+                break-after: page !important;
                 page-break-inside: avoid !important;
-                transform: none !important; /* 스케일 초기화 */
+                transform: none !important; /* 모바일 축소 스케일 인쇄 시 무효화 */
             }
-            .sheet:last-child { page-break-after: auto !important; }
+            .sheet:last-child { page-break-after: auto !important; break-after: auto !important; }
             .img-overlay { display: none !important; }
         }
 
+        /* --- PDF 내보내기 전용 CSS (고해상도 및 강제 데스크탑 레이아웃) --- */
         html.pdf-export-active, body.pdf-export-active { 
-            color-scheme: light !important; background: #ffffff !important; background-color: #ffffff !important; background-image: none !important; width: 100% !important; overflow: visible !important; height: auto !important; 
-            margin: 0 !important; padding: 0 !important;
+            color-scheme: light !important; background: #ffffff !important; background-color: #ffffff !important; background-image: none !important; 
+            width: 100% !important; min-width: 1200px !important; /* 모바일에서 저장해도 넓게 렌더링되도록 강제 고정 */
+            overflow: visible !important; height: auto !important; margin: 0 !important; padding: 0 !important;
         }
         body.pdf-export-active .blobs, body.pdf-export-active .app-header, body.pdf-export-active .control-card, body.pdf-export-active #actionCard, body.pdf-export-active #warningModal { display: none !important; }
-        body.pdf-export-active #renderArea { width: 210mm !important; padding: 0 !important; margin: 0 auto !important; display: block !important; gap: 0 !important; background: transparent !important; }
+        body.pdf-export-active #renderArea { width: 100% !important; padding: 0 !important; margin: 0 auto !important; display: block !important; gap: 0 !important; background: transparent !important; }
         
         body.pdf-export-active .sheet { 
-            box-shadow: none !important; width: 210mm !important; margin: 0 !important; border: none !important; 
-            padding: 15mm 20mm !important; height: auto !important; min-height: 0 !important; max-height: 296mm !important; border-radius: 0 !important; 
+            box-shadow: none !important; width: 210mm !important; margin: 0 auto !important; border: none !important; 
+            padding: 15mm 20mm !important; height: 296.5mm !important; max-height: 297mm !important; border-radius: 0 !important; 
             background: #ffffff !important; overflow: hidden !important;
-            page-break-after: always !important;
+            page-break-after: always !important; break-after: page !important;
             page-break-inside: avoid !important;
-            transform: none !important; /* 스케일 초기화 */
+            transform: none !important;
         }
-        body.pdf-export-active .sheet:last-child { page-break-after: auto !important; }
+        body.pdf-export-active .sheet:last-child { page-break-after: auto !important; break-after: auto !important; }
         body.pdf-export-active .img-overlay { display: none !important; }
 
         @media (max-width: 640px) {
@@ -347,7 +353,15 @@
                 padding-top: env(safe-area-inset-top); height: calc(var(--header-h) + env(safe-area-inset-top));
             }
             #actionCard { margin-top: calc(80px + env(safe-area-inset-top)); top: calc(var(--header-h) + 12px + env(safe-area-inset-top)); }
-            .control-card { margin-top: 16px; padding: 20px; border-radius: 0; border-left: none; border-right: none; }
+            
+            /* 모바일 화면에서 박스가 벽에 닿지 않도록 폭 수정 */
+            .control-card { 
+                margin-top: 16px; padding: 20px; 
+                width: calc(100% - 32px); /* 화면에서 16px씩 여백 유지 */
+                border-radius: 16px; /* 둥근 모서리 유지 */
+                border-left: 1px solid var(--glass-border); 
+                border-right: 1px solid var(--glass-border); 
+            }
         }
     </style>
 </head>
@@ -362,7 +376,7 @@
     <div id="statusOverlay" class="status-mask">
         <div class="spinner"></div>
         <div class="text-lg font-bold text-white tracking-wide">PDF를 생성하고 있습니다.</div>
-        <div class="text-sm mt-2 text-text-sub" style="color: #94a3b8;">파일 안정성 검증 및 페이지 레이아웃 조정 중...</div>
+        <div class="text-sm mt-2 text-text-sub" style="color: #94a3b8;">고해상도 렌더링 최적화 중...</div>
     </div>
 
     <!-- 간소화된 Day 선택 한도 초과 경고 모달 -->
@@ -890,13 +904,14 @@
             const opt = {
                 margin: 0, 
                 filename: saveName,
-                image: { type: 'jpeg', quality: 0.98 },
+                image: { type: 'jpeg', quality: 1.0 }, // 최상급 화질 옵션
                 html2canvas: { 
-                    scale: 2.0, 
+                    scale: 3.0, // 고해상도(Retina 디스플레이) 대응을 위한 스케일 대폭 상향
                     useCORS: true, 
                     letterRendering: true,
                     scrollY: 0,
-                    scrollX: 0
+                    scrollX: 0,
+                    windowWidth: 1200 // 모바일에서도 PC 환경처럼 넓게 렌더링되도록 폭 강제 설정
                 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
                 pagebreak: { mode: 'css' } 
