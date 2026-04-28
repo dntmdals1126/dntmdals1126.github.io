@@ -29,7 +29,7 @@
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   
-  <!-- Favicon (PC 크롬 등 최신 브라우저용 SVG) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2354' height='2354' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cg transform='translate(-1613 -34)'%3E%3Crect x='1615.5' y='36.4999' width='2349' height='2349' stroke='%23172C51' stroke-width='4.58333' stroke-miterlimit='8' fill='%23050505'/%3E%3Cpath d='M2543.16 639.483C2566.39 638.6 2589.89 638.92 2613.59 640.497 2945.37 662.575 3207.02 923.821 3250.86 1250.89L3252 1264.39 3244.7 1255.74C3231.95 1237.4 3224.6 1220.56 3218.97 1209.88L3209.64 1192.64C3153.84 1094.32 3053.23 1025.43 2934.73 1017.54 2745.15 1004.92 2581.53 1153.28 2569.31 1348.89 2557.08 1544.52 2393.47 1692.87 2203.88 1680.25 2014.28 1667.64 1870.5 1498.83 1882.73 1303.22 1905.66 936.425 2194.68 652.723 2543.16 639.483Z' fill='%23F2F5F9' fill-rule='evenodd'/%3E%3Cpath d='M2929.57 1098.16C3041 1102.07 3141.8 1179.75 3172.81 1296.48 3210.99 1440.12 3354.87 1524.66 3494.17 1485.28 3598.64 1455.76 3670.87 1364.93 3684.36 1260.74L3685.38 1229.21 3688.09 1220.05 3694.88 1261.63C3710.85 1511.98 3554.85 1747.78 3311.07 1816.68 3032.47 1895.42 2744.73 1726.35 2668.37 1439.05 2630.18 1295.4 2712.16 1147.03 2851.46 1107.66 2877.58 1100.28 2903.87 1097.25 2929.57 1098.16Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
   
   <script>
@@ -48,15 +48,12 @@
           
           try {
               const pngUrl = canvas.toDataURL("image/png");
-              
-              // 모바일 홈 화면 및 외부 공유/사파리용 apple-touch-icon 동적 추가
               const appleIcon = document.createElement("link");
               appleIcon.rel = "apple-touch-icon";
               appleIcon.sizes = "512x512";
               appleIcon.href = pngUrl;
               document.head.appendChild(appleIcon);
               
-              // PWA Manifest 생성을 위해 전역 변수로 전달
               window.dynamicPngFavicon = pngUrl;
               window.dispatchEvent(new CustomEvent('faviconReady'));
           } catch(e) { console.error("Favicon generation failed", e); }
@@ -147,7 +144,7 @@
       min-height: 100vh;
       background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
                   radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
-      background-attachment: fixed; /* Fixes background during scroll/bounce */
+      background-attachment: fixed;
       overflow-x: hidden; 
       transition: background 0.3s;
     }
@@ -190,10 +187,9 @@
       pointer-events: none; z-index: 900;
     }
 
-    /* --- Header (Default: PC & Tablet - Floating Pill) --- */
+    /* --- Header --- */
     header {
       position: fixed; 
-      /* Fix for iPad PWA: Move down by safe area */
       top: calc(16px + env(safe-area-inset-top)); 
       left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: var(--header-max-w); height: var(--header-h);
@@ -209,9 +205,7 @@
     }
     .fs-mode-active header { transform: translateY(-100px); opacity: 0; pointer-events: none; }
     
-    html[data-theme="light"] header {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
+    html[data-theme="light"] header { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
 
     .logo {
       font-family: var(--font-logo); font-size: 22px; font-weight: 400;
@@ -236,7 +230,6 @@
     /* --- Main Layout --- */
     main { 
         max-width: var(--max-w); margin: 0 auto; 
-        /* Main padding to account for header + safe area */
         padding: calc(100px + env(safe-area-inset-top)) 16px 60px; 
         position: relative; z-index: 1; 
     }
@@ -248,9 +241,7 @@
       padding: 6px; margin-bottom: 20px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
-    html[data-theme="light"] .section-card {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
+    html[data-theme="light"] .section-card { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
     
     /* --- Clock & Search --- */
     .time-container { padding: 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -274,19 +265,14 @@
     .search-inner { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
     
     .engine-box {
-        background: rgba(0,0,0,0.2); 
-        border: 1px solid var(--glass-border); 
-        border-radius: 18px; 
-        padding: 4px;
-        position: relative;
+        background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); 
+        border-radius: 18px; padding: 4px; position: relative;
     }
     html[data-theme="light"] .engine-box { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); }
 
     .engine-wrapper {
       position: relative; overflow: hidden;
-      mask-image: none; -webkit-mask-image: none;
-      transition: mask-image 0.2s;
-      border-radius: 14px;
+      transition: mask-image 0.2s; border-radius: 14px;
     }
     .engine-wrapper.mask-right { mask-image: linear-gradient(to right, black 85%, transparent); -webkit-mask-image: linear-gradient(to right, black 85%, transparent); }
     .engine-wrapper.mask-left { mask-image: linear-gradient(to right, transparent, black 15%); -webkit-mask-image: linear-gradient(to right, transparent, black 15%); }
@@ -294,44 +280,27 @@
 
     .engine-list {
       display: flex; gap: 6px; overflow-x: auto; 
-      padding: 8px 10px;
-      scrollbar-width: none;
+      padding: 8px 10px; scrollbar-width: none;
     }
     .engine-list::-webkit-scrollbar { display: none; }
 
     .engine-chip {
       flex: 0 0 auto; padding: 8px 14px; border-radius: 12px;
-      font-size: 14px; font-weight: 600;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--glass-border);
-      color: var(--text-sub); cursor: pointer;
-      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--glass-border); color: var(--text-sub);
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
       transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-    html[data-theme="light"] .engine-chip {
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        color: #334155;
-    }
+    html[data-theme="light"] .engine-chip { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; }
     
     @media (hover: hover) {
         .engine-chip:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-            background: var(--hover-color, rgba(255,255,255,0.1));
-            color: white;
-            border-color: transparent;
+            transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            background: var(--hover-color, rgba(255,255,255,0.1)); color: white; border-color: transparent;
         }
-        
-        /* Light Mode Hover Fix */
-        html[data-theme="light"] .engine-chip:hover {
-            background: var(--hover-color);
-            color: white !important;
-            border-color: transparent;
-        }
+        html[data-theme="light"] .engine-chip:hover { background: var(--hover-color); color: white !important; border-color: transparent; }
     }
     .engine-chip[data-active="true"] { color: white; border-color: transparent; }
-    
     .engine-chip[data-engine="google"][data-active="true"] { background: #4285F4; }
     .engine-chip[data-engine="naver"][data-active="true"] { background: #03cf5d; }
     .engine-chip[data-engine="youtube"][data-active="true"] { background: #ff0000; }
@@ -342,12 +311,7 @@
     .engine-chip[data-engine="riss"][data-active="true"] { background: #F76323; }
     .engine-chip[data-engine="everytime"][data-active="true"] { background: #f91f15; }
     .engine-chip[data-engine="googlemap"][data-active="true"] { background: #4285F4; }
-    
-    /* Force white text on active chips in light mode */
-    html[data-theme="light"] .engine-chip[data-active="true"] {
-        color: #ffffff !important;
-        border-color: transparent;
-    }
+    html[data-theme="light"] .engine-chip[data-active="true"] { color: #ffffff !important; border-color: transparent; }
 
     .search-bar {
       position: relative; display: flex; align-items: center;
@@ -355,32 +319,19 @@
       border-radius: 18px; padding: 0 6px; transition: all 0.3s;
       margin-top: 2px; height: 56px;
     }
-    html[data-theme="light"] .search-bar { 
-        background: #ffffff;
-        border-color: var(--glass-border); 
-        box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    }
-    
+    html[data-theme="light"] .search-bar { background: #ffffff; border-color: var(--glass-border); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
     .search-bar:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: var(--glass-surface); }
     
     .search-icon { margin-left: 14px; color: var(--text-sub); opacity: 0.8; }
     #q {
-      flex: 1; border: none; background: transparent;
-      height: 100%; 
-      font-size: 16px; font-weight: 300; 
-      color: var(--text-main); padding: 0 12px; min-width: 0;
+      flex: 1; border: none; background: transparent; height: 100%; 
+      font-size: 16px; font-weight: 300; color: var(--text-main); padding: 0 12px; min-width: 0;
     }
-    /* Slightly bolder input text for light mode */
     html[data-theme="light"] #q { color: #0f172a; font-weight: 500; }
     #q::placeholder { font-weight: 300; opacity: 0.5; }
     #q::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 
-    .clear-btn {
-      background: none; border: none; color: var(--text-sub);
-      cursor: pointer; padding: 8px; display: none;
-      align-items: center; justify-content: center;
-      transition: color 0.2s;
-    }
+    .clear-btn { background: none; border: none; color: var(--text-sub); cursor: pointer; padding: 8px; display: none; align-items: center; justify-content: center; transition: color 0.2s; }
     .clear-btn:hover { color: var(--text-main); }
     .clear-btn.visible { display: flex; }
     .search-btn {
@@ -388,41 +339,23 @@
       background: var(--primary); color: white; border: none;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s; margin-right: 4px;
-      font-weight: 600; font-size: 14px; padding: 0 16px;
-      box-shadow: none !important;
+      font-weight: 600; font-size: 14px; padding: 0 16px; box-shadow: none !important;
     }
     .search-btn:active { transform: scale(0.96); }
 
     /* --- Accordion Details --- */
     details {
-      background: var(--glass-surface);
-      border: 1px solid var(--glass-border); border-radius: var(--radius-md);
-      margin-bottom: var(--section-gap); overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-md);
+      margin-bottom: var(--section-gap); overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    details[open] { 
-        background: rgba(13, 16, 22, 0.95); 
-        border-color: rgba(59, 130, 246, 0.25); 
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
-    }
-    html[data-theme="light"] details { 
-        background: #ffffff; 
-        border-color: var(--glass-border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    html[data-theme="light"] details[open] { 
-        background: #ffffff; 
-        border-color: rgba(37, 99, 235, 0.3);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.08); 
-    }
+    details[open] { background: rgba(13, 16, 22, 0.95); border-color: rgba(59, 130, 246, 0.25); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    html[data-theme="light"] details { background: #ffffff; border-color: var(--glass-border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    html[data-theme="light"] details[open] { background: #ffffff; border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
 
     summary {
-      list-style: none; 
-      margin: 6px; padding: 14px 20px; 
-      border-radius: 14px;
+      list-style: none; margin: 6px; padding: 14px 20px; border-radius: 14px;
       display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer; user-select: none;
-      transition: background 0.2s;
+      cursor: pointer; user-select: none; transition: background 0.2s;
     }
     summary::-webkit-details-marker { display: none; }
     @media (hover: hover) { summary:hover { background: var(--glass-highlight); } }
@@ -434,30 +367,19 @@
     .chevron { transition: transform 0.3s; opacity: 0.5; }
     details[open] .chevron { transform: rotate(180deg); opacity: 1; color: var(--primary); }
 
-    .details-wrapper {
-      display: grid; grid-template-rows: 0fr;
-      transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    .details-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     details[open] .details-wrapper { grid-template-rows: 1fr; }
     .det-inner { overflow: hidden; }
     
-    .det-content { 
-      padding: 12px 20px 20px; 
-      opacity: 0; transform: translateY(-10px); transition: 0.3s; 
-    }
+    .det-content { padding: 12px 20px 20px; opacity: 0; transform: translateY(-10px); transition: 0.3s; }
     details[open] .det-content { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
     
     .no-select-weather { user-select: none; -webkit-user-select: none; }
     .no-select-weather .weather-input { user-select: text !important; -webkit-user-select: text !important; }
 
     /* --- Weather Widget --- */
-    .weather-header {
-        display: flex; justify-content: space-between; align-items: flex-end;
-        margin-bottom: 20px;
-    }
-    .weather-main-info {
-        display: flex; align-items: center; gap: 14px;
-    }
+    .weather-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+    .weather-main-info { display: flex; align-items: center; gap: 14px; }
     #wMainIcon i { font-size: 40px; filter: drop-shadow(0 0 4px rgba(0,0,0,0.2)); }
     .weather-temp-group { display: flex; flex-direction: column; }
     #wMainTemp { font-size: 28px; font-weight: 700; line-height: 1; }
@@ -467,105 +389,59 @@
     #wDescText { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .update-text { font-size: 11px; opacity: 0.5; }
 
-    .weather-stats-row {
-        display: flex; gap: 8px;
-    }
-    .stat-box {
-        background: rgba(255,255,255,0.05); 
-        border: 1px solid var(--glass-border); 
-        border-radius: 12px;
-        padding: 8px 10px;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        min-width: 60px;
-    }
-    html[data-theme="light"] .stat-box { 
-        background: #f8fafc; 
-        border-color: #cbd5e1;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
+    .weather-stats-row { display: flex; gap: 8px; }
+    .stat-box { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; padding: 8px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 60px; }
+    html[data-theme="light"] .stat-box { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .stat-label { font-size: 10px; opacity: 0.6; margin-bottom: 2px; }
     .stat-val { font-size: 13px; font-weight: 600; }
 
-    .weather-forecasts-wrapper {
-        display: flex; gap: 15px; margin-bottom: 15px;
-        align-items: stretch;
-    }
-    .forecast-panel {
-        flex: 1;
-        background: rgba(255,255,255,0.02);
-        border: 1px solid var(--glass-border);
-        border-radius: 14px;
-        padding: 12px;
-        display: flex; flex-direction: column;
-    }
+    .weather-forecasts-wrapper { display: flex; gap: 15px; margin-bottom: 15px; align-items: stretch; }
+    .forecast-panel { flex: 1; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; }
     html[data-theme="light"] .forecast-panel { background: rgba(0,0,0,0.02); }
-    
     .fc-title { font-size: 12px; font-weight: 600; opacity: 0.7; margin-bottom: 10px; display: block; }
-    
-    .fc-list-row {
-        display: flex; justify-content: space-between; gap: 6px;
-        flex: 1;
-    }
-    .fc-item {
-        flex: 1; display: flex; flex-direction: column; align-items: center; 
-        gap: 2px;
-        padding: 8px 4px; /* Improved padding */
-        background: rgba(255,255,255,0.04); border-radius: 10px;
-        height: 110px;
-        justify-content: space-evenly;
-    }
+    .fc-list-row { display: flex; justify-content: space-between; gap: 6px; flex: 1; }
+    .fc-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; background: rgba(255,255,255,0.04); border-radius: 10px; height: 110px; justify-content: space-evenly; }
     html[data-theme="light"] .fc-item { background: rgba(0,0,0,0.04); }
-    
     .fc-time { font-size: 11px; opacity: 0.8; font-weight: 500; }
     .fc-icon { font-size: 18px; margin: 2px 0; }
-    /* Weather Icon Shadow for Light Mode */
     html[data-theme="light"] .fc-icon { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15)); }
-
     .fc-temp { font-size: 12px; font-weight: 700; }
     .fc-sub { font-size: 10px; opacity: 0.6; } 
 
     .weather-search { display: flex; gap: 6px; height: 40px; }
-    .weather-input { 
-        flex: 1; 
-        background: rgba(0,0,0,0.2); 
-        border: 1px solid var(--glass-border); 
-        border-radius: 10px; 
-        color: var(--text-main); 
-        padding: 0 12px; 
-        font-size: 14px;
-        height: 100%; box-sizing: border-box;
-    }
-    .weather-btn { 
-        width: 40px; 
-        border-radius: 10px; 
-        border: 1px solid var(--glass-border); 
-        background: rgba(255,255,255,0.05); 
-        color: var(--text-main); 
-        cursor: pointer; 
-        display: flex; align-items: center; justify-content: center;
-        height: 100%; box-sizing: border-box;
-    }
-    html[data-theme="light"] .weather-input { 
-        background: #f8fafc; 
-        border-color: #cbd5e1;
-        color: var(--text-main); 
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    html[data-theme="light"] .weather-btn { 
-        background: #f8fafc; 
-        border-color: #cbd5e1;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    .weather-input { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); padding: 0 12px; font-size: 14px; height: 100%; box-sizing: border-box; }
+    .weather-btn { width: 40px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; height: 100%; box-sizing: border-box; }
+    html[data-theme="light"] .weather-input { background: #f8fafc; border-color: #cbd5e1; color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    html[data-theme="light"] .weather-btn { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .spin-anim { animation: spin 1s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(-360deg); } }
+
+    /* --- Link Grid (Responsive & Balanced using Flex/Grid + CSS :has()) --- */
+    .grid {
+      display: grid;
+      gap: 10px;
+      /* PC: Base is up to 4 columns */
+      grid-template-columns: repeat(4, 1fr);
     }
     
-    .spin-anim { animation: spin 1s linear infinite; }
-    @keyframes spin { 100% { transform: rotate(-360deg); } } /* Counter-clockwise for refresh */
+    /* Dynamic Balancing for PC using CSS :has() */
+    .grid:has(> .card-link:last-child:nth-child(1)) { grid-template-columns: 1fr; }
+    .grid:has(> .card-link:last-child:nth-child(2)) { grid-template-columns: repeat(2, 1fr); }
+    .grid:has(> .card-link:last-child:nth-child(3)) { grid-template-columns: repeat(3, 1fr); }
+    
+    /* 5 items -> 3 then 2 layout (Span ratio over 6 columns) */
+    .grid:has(> .card-link:last-child:nth-child(5)) { grid-template-columns: repeat(6, 1fr); }
+    .grid:has(> .card-link:last-child:nth-child(5)) > .card-link:nth-child(-n+3) { grid-column: span 2; }
+    .grid:has(> .card-link:last-child:nth-child(5)) > .card-link:nth-child(n+4) { grid-column: span 3; }
+    
+    /* 6 items -> 3 then 3 layout */
+    .grid:has(> .card-link:last-child:nth-child(6)) { grid-template-columns: repeat(3, 1fr); }
+    
+    /* 7 items -> 4 then 3 layout (Span ratio over 12 columns) */
+    .grid:has(> .card-link:last-child:nth-child(7)) { grid-template-columns: repeat(12, 1fr); }
+    .grid:has(> .card-link:last-child:nth-child(7)) > .card-link:nth-child(-n+4) { grid-column: span 3; }
+    .grid:has(> .card-link:last-child:nth-child(7)) > .card-link:nth-child(n+5) { grid-column: span 4; }
 
-    /* --- Link Grid --- */
-    .grid {
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-      gap: 10px;
-    }
     .card-link {
       display: flex; flex-direction: row; align-items: center; justify-content: flex-start;
       padding: 16px 20px; gap: 12px;
@@ -574,11 +450,7 @@
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); 
       position: relative; overflow: hidden;
     }
-    html[data-theme="light"] .card-link { 
-        background: #f8fafc;
-        border-color: #cbd5e1;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    }
+    html[data-theme="light"] .card-link { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
     
     @media (hover: hover) {
         .card-link:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); transform: translateY(-3px); }
@@ -589,6 +461,27 @@
 
     .card-icon { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
     .card-label { font-size: 16px; font-weight: 600; color: var(--text-main); line-height: 1.3; text-align: left; }
+
+    /* Library Badge */
+    .badge-lib {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 2px 6px; margin-right: 6px;
+      background: var(--glass-highlight);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      font-size: 11px; font-weight: 700; color: var(--primary);
+      vertical-align: middle; transform: translateY(-1px);
+    }
+    html[data-theme="light"] .badge-lib {
+        background: rgba(37, 99, 235, 0.1);
+        border-color: rgba(37, 99, 235, 0.2);
+    }
+
+    /* Divider for sections */
+    .section-divider {
+      height: 1px; background: var(--glass-border);
+      margin: 16px 4px; opacity: 0.6;
+    }
 
     /* --- YouTube & Stopwatch --- */
     .yt-container {
@@ -609,23 +502,29 @@
 
     .sw-main-panel { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
     
-    .sw-time {
-      font-size: 50px; 
-      font-weight: 700; color: var(--text-main);
-      font-variant-numeric: tabular-nums; letter-spacing: 1px;
+    /* Stopwatch Redesign - Phil / Glassmorphism Style */
+    .sw-display-box {
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--glass-border);
+      padding: 16px 32px;
+      border-radius: 20px;
       margin-bottom: 24px;
+      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex; align-items: baseline; justify-content: center;
+      width: 100%; max-width: 320px;
     }
-    .sw-ms { font-size: 0.5em; opacity: 0.6; font-weight: 500; }
+    html[data-theme="light"] .sw-display-box {
+      background: #f1f5f9;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-color: #cbd5e1;
+    }
+
+    .sw-time { font-size: 42px; font-weight: 700; color: var(--text-main); line-height: 1; transition: all 0.3s; margin: 0; }
+    .sw-ms { font-size: 0.5em; opacity: 0.5; font-weight: 500; }
 
     .sw-controls { display: flex; gap: 12px; }
-    .btn {
-      height: 48px; border-radius: 14px;
-      font-weight: 600; font-size: 15px;
-      border: 1px solid transparent; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: all 0.2s;
-      min-width: 100px;
-    }
+    .btn { height: 48px; border-radius: 24px; font-weight: 600; font-size: 15px; border: 1px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; min-width: 100px; padding: 0 24px; }
+    .sw-controls .btn-sec { background: var(--glass-surface); }
     .btn:active { transform: scale(0.95); }
     .btn-pri { background: var(--primary); color: white; }
     @media (hover: hover) { .btn-pri:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 4px 12px var(--primary-glow); } }
@@ -641,320 +540,130 @@
     html[data-theme="light"] .btn-danger { background: #fee2e2; color: #b91c1c; border-color: #f87171; }
     @media (hover: hover) { .btn-danger:hover { background: rgba(220, 38, 38, 0.3); } }
 
-    .lap-list-container {
-      width: 100%; 
-      max-height: 140px; 
-      overflow-y: auto;
-      border-top: 1px solid var(--glass-border); 
-      padding-top: 12px;
-      display: none; animation: slideDown 0.4s ease;
-    }
+    .lap-list-container { width: 100%; max-height: 140px; overflow-y: auto; border-top: 1px solid var(--glass-border); padding-top: 12px; display: none; animation: slideDown 0.4s ease; }
     .lap-list-container.active { display: block; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .lap-row {
-      display: flex; justify-content: space-between;
-      padding: 10px 14px; margin-bottom: 6px; border-radius: 10px;
-      font-size: 15px; color: var(--text-sub);
-      background: rgba(255,255,255,0.03);
-      animation: fadeInRight 0.3s ease;
-    }
+    .lap-row { display: flex; justify-content: space-between; padding: 10px 14px; margin-bottom: 6px; border-radius: 10px; font-size: 15px; color: var(--text-sub); background: rgba(255,255,255,0.03); animation: fadeInRight 0.3s ease; }
     @keyframes fadeInRight { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-    
     .lap-row:first-child { color: #0ea5e9; background: rgba(14, 165, 233, 0.1); font-weight: 600; }
 
-    .fs-mode {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--bg-dark);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      /* Adjusted for Safe Area */
-      padding: env(safe-area-inset-top) 40px 40px; 
-    }
+    .fs-mode { position: fixed; inset: 0; z-index: 9999; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: env(safe-area-inset-top) 40px 40px; }
     .fs-mode .stopwatch-wrap { flex-direction: column !important; align-items: center; width: 100%; max-width: 600px; justify-content: center; }
     .fs-mode .sw-main-panel { width: 100% !important; border: none !important; padding: 0 !important; }
     .fs-mode .sw-time { font-size: 12vw; margin-bottom: 40px; transition: all 0.5s ease; }
     .fs-mode .sw-controls { transform: scale(1.3); margin-bottom: 30px; }
-    
     .fs-mode.has-laps .stopwatch-wrap { justify-content: flex-start; padding-top: 15vh; }
     .fs-mode.has-laps .sw-time { font-size: 10vw; margin-bottom: 30px; }
-    
-    .fs-mode .lap-list-container {
-      display: none; 
-      width: 100% !important; 
-      border-top: none; 
-      margin-top: 40px; 
-      padding: 0; 
-      background: transparent; border-radius: 0;
-      max-height: 125px; 
-      overflow-y: auto;
-    }
+    .fs-mode .lap-list-container { display: none; width: 100% !important; border-top: none; margin-top: 40px; padding: 0; background: transparent; border-radius: 0; max-height: 125px; overflow-y: auto; }
     .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; }
     .fs-mode.has-laps .lap-list-container.active { display: block; }
 
     /* --- Footer & UI Components --- */
-    footer {
-      text-align: center; padding: 10px 0; 
-      color: var(--text-sub); font-size: 12px;
-      margin-top: 10px;
-    }
+    footer { text-align: center; padding: 10px 0; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
     footer b { font-family: 'Cal Sans', sans-serif; font-weight: 400; color: var(--text-main); }
     footer p { margin: 4px 0 0; opacity: 0.7; }
 
-    .notice-bar {
-      margin: 0 auto 20px; max-width: var(--max-w);
-      background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(34, 211, 238, 0.1));
-      border: 1px solid var(--glass-border); border-radius: 14px;
-      padding: 8px 16px; display: flex; align-items: center; gap: 12px;
-      position: relative; z-index: 10; overflow: hidden;
-    }
+    .notice-bar { margin: 0 auto 20px; max-width: var(--max-w); background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(34, 211, 238, 0.1)); border: 1px solid var(--glass-border); border-radius: 14px; padding: 8px 16px; display: flex; align-items: center; gap: 12px; position: relative; z-index: 10; overflow: hidden; }
     .notice-badge { background: var(--primary); color: white; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; z-index: 2; }
     .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 24px; }
-    .notice-text { 
-        position: absolute; white-space: nowrap; font-size: 13px; color: var(--text-sub); font-weight: 500; top: 4px;
-        animation: marquee 20s linear infinite; 
-    }
-    @keyframes marquee { 
-        0% { left: 100%; transform: translateX(0); }
-        100% { left: -100%; transform: translateX(-100%); }
-    }
+    .notice-text { position: absolute; white-space: nowrap; font-size: 13px; color: var(--text-sub); font-weight: 500; top: 4px; animation: marquee 20s linear infinite; }
+    @keyframes marquee { 0% { left: 100%; transform: translateX(0); } 100% { left: -100%; transform: translateX(-100%); } }
     .notice-close { background: none; border: none; color: var(--text-sub); cursor: pointer; padding: 0 4px; z-index: 2; font-size: 16px; }
 
     /* --- Drawer --- */
     .drawer-back { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1100; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
-    .drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 300px;
-      background: var(--bg-dark); z-index: 1200;
-      transform: translateX(100%); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      border-left: 1px solid var(--glass-border); 
-      /* Safe Area adjustment for Drawer */
-      padding: calc(24px + env(safe-area-inset-top)) 24px 24px; 
-      display: flex; flex-direction: column; overflow-y: auto;
-    }
+    .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 300px; background: var(--bg-dark); z-index: 1200; transform: translateX(100%); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid var(--glass-border); padding: calc(24px + env(safe-area-inset-top)) 24px 24px; display: flex; flex-direction: column; overflow-y: auto; }
     .drawer.open { transform: translateX(0); }
     .drawer-back.open { opacity: 1; pointer-events: auto; }
-    
     .nav-head { font-size: 13px; color: var(--text-dim); margin: 20px 0 10px; font-weight: 600; letter-spacing: 1px; }
-    .nav-list a {
-      display: block; padding: 14px; margin-bottom: 6px;
-      background: var(--glass-highlight); border-radius: 14px;
-      font-weight: 500; color: var(--text-main); transition: 0.2s;
-    }
+    .nav-list a { display: block; padding: 14px; margin-bottom: 6px; background: var(--glass-highlight); border-radius: 14px; font-weight: 500; color: var(--text-main); transition: 0.2s; }
     @media (hover: hover) { .nav-list a:hover { background: var(--glass-border); color: var(--primary); } }
 
     /* --- Floating Buttons --- */
-    .scroll-btn {
-      position: fixed; bottom: 24px; right: 24px; width: 40px; height: 40px;
-      border-radius: 14px; 
-      background: var(--header-bg); /* Glass Effect same as header */
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      color: var(--text-main); display: flex; align-items: center; justify-content: center;
-      cursor: pointer; opacity: 0; transform: translateY(10px); pointer-events: none;
-      transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 900;
-    }
-    @media (hover: hover) { .scroll-btn:hover { transform: translateY(-4px); } }
+    .scroll-btn, .settings-float-btn { position: fixed; right: 24px; width: 40px; height: 40px; border-radius: 14px; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 900; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .scroll-btn { bottom: 24px; opacity: 0; transform: translateY(10px); pointer-events: none; }
     .scroll-btn.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-    .settings-float-btn {
-        position: fixed; bottom: 74px; right: 24px; width: 40px; height: 40px;
-        border-radius: 14px; 
-        background: var(--header-bg); /* Glass Effect same as header */
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--glass-border);
-        color: var(--text-main); display: flex; align-items: center; justify-content: center;
-        cursor: pointer; opacity: 0.8; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 900;
+    .settings-float-btn { bottom: 74px; opacity: 0.8; }
+    @media (hover: hover) { 
+        .scroll-btn:hover { transform: translateY(-4px); }
+        .settings-float-btn:hover { opacity: 1; transform: translateY(-2px); }
     }
-    @media (hover: hover) { .settings-float-btn:hover { opacity: 1; transform: translateY(-2px); } }
-
-    /* --- Floating Buttons Visibility Fix for Light Mode --- */
-    html[data-theme="light"] .settings-float-btn,
-    html[data-theme="light"] .scroll-btn {
-        background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-        border-color: #cbd5e1; /* Darker border for visibility */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow */
-        color: #1e293b;
-    }
+    html[data-theme="light"] .settings-float-btn, html[data-theme="light"] .scroll-btn { background: rgba(255, 255, 255, 0.8); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.15); color: #1e293b; }
 
     /* --- Settings Modal --- */
-    .modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1300;
-        display: none; align-items: center; justify-content: center;
-        backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s;
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1300; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
     .modal-overlay.open { display: flex; opacity: 1; }
-    
-    .modal-content {
-        width: 90%; max-width: 400px; 
-        background: rgba(20, 20, 25, 0.85); /* Darker glass for modal */
-        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        border: 1px solid var(--glass-border); border-radius: 20px;
-        padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        transform: scale(0.95); transition: transform 0.3s;
-        max-height: 80vh; /* Prevent modal from being larger than screen */
-        display: flex; flex-direction: column;
-    }
-    /* Light Mode Modal */
-    html[data-theme="light"] .modal-content {
-        background: rgba(255, 255, 255, 0.9); /* Header-like glass */
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        border-color: rgba(0,0,0,0.1);
-    }
+    .modal-content { width: 90%; max-width: 400px; background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.3s; max-height: 80vh; display: flex; flex-direction: column; }
+    html[data-theme="light"] .modal-content { background: rgba(255, 255, 255, 0.9); box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.1); }
     .modal-overlay.open .modal-content { transform: scale(1); }
-    
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
     .modal-title { font-size: 18px; font-weight: 700; }
     .modal-close { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 24px; }
 
-    /* Settings UI in Modal */
-    #settingsList {
-        overflow-y: auto; /* Scroll inside the list */
-        margin-bottom: 20px;
-        overscroll-behavior: contain; /* Prevent body scroll */
-    }
-
-    /* Custom Scrollbar for Settings List */
+    #settingsList { overflow-y: auto; margin-bottom: 20px; overscroll-behavior: contain; }
     #settingsList::-webkit-scrollbar { width: 6px; }
     #settingsList::-webkit-scrollbar-track { background: transparent; }
     #settingsList::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
     #settingsList::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-thumb-hover); }
 
-    .settings-item {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px; margin-bottom: 8px;
-        background: rgba(255,255,255,0.05); border-radius: 12px; /* Glassy item in Dark */
-        border: 1px solid var(--glass-border);
-        user-select: none; -webkit-user-select: none; /* Prevent text selection */
-        
-        /* Animation for entry */
-        opacity: 0; transform: translateY(10px);
-        animation: itemFadeIn 0.3s forwards;
-        
-        transition: all 0.2s ease;
-    }
+    .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--glass-border); user-select: none; -webkit-user-select: none; opacity: 0; transform: translateY(10px); animation: itemFadeIn 0.3s forwards; transition: all 0.2s ease; }
     @keyframes itemFadeIn { to { opacity: 1; transform: translateY(0); } }
-    
-    /* Drag Over Styles - Visualization */
-    .sortable-ghost {
-        opacity: 0.4;
-        background: var(--glass-highlight);
-        border-style: dashed;
-    }
-    .sortable-drag {
-        background: var(--glass-surface);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    
-    /* Light Mode Settings Item */
-    html[data-theme="light"] .settings-item {
-        background: rgba(255, 255, 255, 0.5); /* Semi-transparent in light */
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-    
+    .sortable-ghost { opacity: 0.4; background: var(--glass-highlight); border-style: dashed; }
+    .sortable-drag { background: var(--glass-surface); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    html[data-theme="light"] .settings-item { background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0,0,0,0.05); }
     .st-label { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; cursor: pointer; flex: 1; }
-    .st-ctrls { display: flex; gap: 4px; align-items: center; }
-    
-    .st-btn {
-        width: 28px; height: 28px; border-radius: 8px;
-        background: rgba(255,255,255,0.05); border: none;
-        color: var(--text-sub); display: flex; align-items: center; justify-content: center;
-        cursor: pointer;
-    }
-    html[data-theme="light"] .st-btn { background: #e2e8f0; color: #475569; }
-    .st-btn:hover { background: var(--glass-highlight); color: var(--text-main); }
-    
-    /* Drag Handle */
-    .drag-handle {
-        width: 32px; height: 32px; 
-        display: flex; align-items: center; justify-content: center;
-        color: var(--text-dim); cursor: grab;
-        touch-action: none; /* Important for custom touch logic */
-        margin-left: 8px;
-    }
+    .drag-handle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); cursor: grab; touch-action: none; margin-left: 8px; }
     .drag-handle:active { cursor: grabbing; color: var(--primary); }
-
     .st-check { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
     /* --- Mobile Styles --- */
     @media (max-width: 480px) {
-      :root {
-        --header-h: 60px; 
-        --section-gap: 16px; 
-      }
-      
-      /* Mobile Header: Bar Style (Fixed Top, Full Width) */
-      header { 
-          top: 0; 
-          width: 100%; 
-          border-radius: 0; 
-          border-top: none; border-left: none; border-right: none; 
-          padding: 0 16px; 
-          /* Safe Area Padding for Mobile Header */
-          padding-top: env(safe-area-inset-top); 
-          height: calc(var(--header-h) + env(safe-area-inset-top));
-          align-items: center;
-          /* Reset centering for full width */
-          left: 0; 
-          transform: none; 
-          max-width: none;
-          background: var(--header-bg);
-          border-bottom: 1px solid var(--glass-border);
-      }
-      
-      /* Mobile Spacing Fix with Safe Area */
+      :root { --header-h: 60px; --section-gap: 16px; }
+      header { top: 0; width: 100%; border-radius: 0; border-top: none; border-left: none; border-right: none; padding: 0 16px; padding-top: env(safe-area-inset-top); height: calc(var(--header-h) + env(safe-area-inset-top)); align-items: center; left: 0; transform: none; max-width: none; background: var(--header-bg); border-bottom: 1px solid var(--glass-border); }
       main { padding-top: calc(80px + env(safe-area-inset-top)); } 
-      
-      /* Mobile Gradient Fix: Start gradient below safe area */
       .scroll-mask { top: env(safe-area-inset-top); height: 80px; }
-
       .logo { font-size: 22px; }
       .logo .by { font-size: 11px; margin-left: 2px; }
       .header-tools { gap: 4px; }
       .tool-btn { width: 36px; height: 36px; }
-
       .time-container { display: none; }
       .mobile-clock-container { display: block; padding: 12px 0; }
-      
       .search-inner { padding: 12px !important; gap: 12px; }
       .engine-box { padding: 2px; } 
       .engine-chip { padding: 6px 12px; font-size: 13px; }
       .search-bar { height: 52px; border-radius: 16px; }
-      
       #q { font-size: 16px; font-weight: 300; }
       
-      .grid { 
-          gap: 10px; 
-          grid-template-columns: repeat(2, 1fr); 
+      /* Reset grid layouts for Mobile (Force 2 Columns) */
+      .grid,
+      .grid:has(> .card-link:last-child:nth-child(1)),
+      .grid:has(> .card-link:last-child:nth-child(2)),
+      .grid:has(> .card-link:last-child:nth-child(3)),
+      .grid:has(> .card-link:last-child:nth-child(5)),
+      .grid:has(> .card-link:last-child:nth-child(6)),
+      .grid:has(> .card-link:last-child:nth-child(7)) {
+          grid-template-columns: repeat(2, 1fr);
       }
-      .grid > :nth-child(2n+1):last-child { grid-column: span 2; }
-
-      .card-link { 
-          flex-direction: column; justify-content: center; align-items: center;
-          padding: 16px 8px; gap: 10px; text-align: center;
-          border-radius: 18px; min-height: 90px;
+      .grid > .card-link { grid-column: span 1 !important; }
+      .grid:has(> .card-link:last-child:nth-child(odd)) > .card-link:last-child {
+          grid-column: span 2 !important;
       }
+      
+      .card-link { flex-direction: column; justify-content: center; align-items: center; padding: 16px 8px; gap: 10px; text-align: center; border-radius: 18px; min-height: 90px; }
       .card-icon { width: 28px; height: 28px; margin-bottom: 0; } 
       .card-label { font-size: 14px; text-align: center; line-height: 1.2; word-break: keep-all; font-weight: 500; } 
-      
       .sw-time { font-size: 40px; margin-bottom: 20px; }
       .btn { height: 44px; padding: 0 16px; font-size: 14px; min-width: 80px; }
       .fs-mode .sw-controls { transform: scale(1.1); margin-bottom: 20px; }
       .fs-mode .sw-time { font-size: 15vw; } 
-      
-      .fs-mode .lap-list-container { 
-          margin-top: 20px; 
-          padding-top: 0; 
-          width: 85% !important; 
-          border-top: none;
-      }
+      .fs-mode .lap-list-container { margin-top: 20px; padding-top: 0; width: 85% !important; border-top: none; }
       .fs-mode .lap-list-container .lap-row:first-child { margin-top: 0; } 
-
       .section-card { padding: 12px; } 
       summary { padding: 18px 16px; margin: 0; }
       .sum-title { font-weight: 600; font-size: 15px; } 
       .det-content { padding: 8px 12px 20px; }
-      .yt-container { padding-bottom: 40%; } 
-      
-      /* Mobile Stats Scroll */
+      .yt-container { padding-bottom: 40%; }
       .weather-header { flex-direction: column; align-items: flex-start; gap: 15px; }
       .weather-stats-row { width: 100%; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
       .weather-stats-row::-webkit-scrollbar { display: none; }
@@ -964,6 +673,58 @@
 
     @media (max-width: 768px) {
       .fs-mode .sw-time { font-size: 16vw; }
+    }
+
+    /* --- Fullscreen Clock Styles --- */
+    .fs-clock-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg-dark);
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      padding: env(safe-area-inset-top) 40px 40px;
+    }
+    .fs-clock-overlay.active { display: flex; }
+    .fs-clock-date { font-size: 4vw; color: var(--text-sub); font-weight: 500; margin-bottom: 20px; }
+    .fs-clock-time { font-size: 20vw; font-weight: 700; line-height: 1; color: var(--text-main); }
+    .fs-clock-sub { display: flex; flex-direction: column; justify-content: space-between; height: 15vw; margin-left: 2vw; text-align: left; }
+    .fs-clock-ampm { font-size: 4vw; font-weight: 700; line-height: 1; }
+    .fs-clock-ampm.am { color: var(--time-am); }
+    .fs-clock-ampm.pm { color: var(--time-pm); }
+    .fs-clock-sec { font-size: 6vw; color: var(--text-sub); font-weight: 500; line-height: 1; }
+    
+    .fs-clock-close {
+      position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 20px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: var(--text-main);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+    }
+    html[data-theme="light"] .fs-clock-close { background: rgba(0,0,0,0.05); }
+    @media (hover: hover) { .fs-clock-close:hover { background: rgba(255,255,255,0.15); transform: scale(1.05); } }
+
+    @media (max-width: 480px) {
+      .fs-clock-time { font-size: 25vw; }
+      .fs-clock-date { font-size: 6vw; margin-bottom: 30px; }
+      .fs-clock-sub { height: 20vw; margin-left: 3vw; }
+      .fs-clock-ampm { font-size: 6vw; }
+      .fs-clock-sec { font-size: 8vw; }
+    }
+    
+    /* Fullscreen Stopwatch Overrides */
+    .fs-mode .sw-display-box { background: transparent; border: none; box-shadow: none; max-width: 100%; padding: 0; margin-bottom: 40px; }
+    .fs-mode .sw-time { font-size: 14vw; }
+    .fs-mode.has-laps .sw-time { font-size: 10vw; }
+    
+    @media (max-width: 480px) {
+       .sw-display-box { padding: 12px 20px; }
+       .sw-time { font-size: 36px; }
+       .fs-mode .sw-time { font-size: 18vw; }
+       .fs-mode.has-laps .sw-time { font-size: 14vw; }
+    }
+    
+    /* Strict Tabular Numbers */
+    .tabular-time {
+        font-family: 'Outfit', 'Pretendard', monospace !important;
+        font-variant-numeric: tabular-nums !important;
+        letter-spacing: 2px !important;
     }
   </style>
 </head>
@@ -1029,6 +790,7 @@
     <div class="nav-head no-select">OTHERS</div>
     <nav class="nav-list">
       <a href="/jejubus/" target="_blank" class="nav-link">Jeju Bus Timetable</a>
+      <a href="/busgame/" target="_blank" class="nav-link">BUS Escape!</a>
     </nav>
   </aside>
 
@@ -1045,58 +807,70 @@
   </div>
 
   <main>
-    <!-- Top Fixed Sections: Clock & Search -->
-    <section class="section-card time-container no-select">
-      <div class="date-row">
-        <span id="dateDisplay">Loading...</span>
-      </div>
-      <div class="time-row" id="timeDisplay">
-        <span class="time-main">12:00</span>
-        <div class="time-sub">
-          <span class="ampm">AM</span>
-          <span class="time-sec">00</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card mobile-clock-container no-select" id="mobileClockSection">
-        <div id="mobileClockText" class="mobile-clock-text"></div>
-    </section>
-
-    <section class="section-card search-inner">
-      <div class="engine-box">
-        <div class="engine-wrapper" id="engineWrapper">
-          <div class="engine-list no-select" id="engineList">
-            <div class="engine-chip" data-engine="google" data-name="Google" data-color="#4285F4" style="--hover-color: #4285F4" data-active="true">Google</div>
-            <div class="engine-chip" data-engine="naver" data-name="NAVER" data-color="#03cf5d" style="--hover-color: #03cf5d">NAVER</div>
-            <div class="engine-chip" data-engine="youtube" data-name="YouTube" data-color="#ff0000" style="--hover-color: #ff0000">YouTube</div>
-            <div class="engine-chip" data-engine="namu" data-name="나무위키" data-color="#00a495" style="--hover-color: #00a495">나무위키</div>
-            <div class="engine-chip" data-engine="cbnul" data-name="충북대학교 도서관" data-color="#B52555" style="--hover-color: #B52555">충북대학교 도서관</div>
-            <div class="engine-chip" data-engine="wikipedia" data-name="위키백과" data-color="#555" style="--hover-color: #555">위키백과</div>
-            <div class="engine-chip" data-engine="dbpia" data-name="DBpia" data-color="#cf393e" style="--hover-color: #cf393e">DBpia</div>
-            <div class="engine-chip" data-engine="riss" data-name="RISS" data-color="#F76323" style="--hover-color: #F76323">RISS</div>
-            <div class="engine-chip" data-engine="everytime" data-name="에브리타임" data-color="#f91f15" style="--hover-color: #f91f15">에브리타임</div>
-            <div class="engine-chip" data-engine="googlemap" data-name="Google Maps" data-color="#4285F4" style="--hover-color: #4285F4">Google Maps</div>
-          </div>
-        </div>
-      </div>
-      <div class="search-bar">
-        <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="text" id="q" placeholder="검색어를 입력하세요" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-        <button class="clear-btn" id="clearBtn" title="지우기">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button class="search-btn no-select" id="searchBtn">검색</button>
-      </div>
-    </section>
-
     <!-- Reorderable Sections Wrapper -->
     <div id="sectionWrapper">
-        <!-- Weather (Lazy Load implemented) -->
+        
+        <!-- Clock Section -->
+        <div id="sec-clock">
+            <section class="section-card time-container no-select" style="position: relative;">
+                <div class="date-row">
+                    <span id="dateDisplay">Loading...</span>
+                </div>
+                <div class="time-row" id="timeDisplay">
+                    <span class="time-main tabular-time">12:00</span>
+                    <div class="time-sub">
+                    <span class="ampm">AM</span>
+                    <span class="time-sec tabular-time">00</span>
+                    </div>
+                </div>
+                <button class="tool-btn" id="clockFullBtn" style="position:absolute; top:12px; right:12px; width:36px; height:36px; background:rgba(255,255,255,0.05);" title="Fullscreen">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                </button>
+            </section>
+
+            <section class="section-card mobile-clock-container no-select" id="mobileClockSection" style="position: relative;">
+                <div id="mobileClockText" class="mobile-clock-text"></div>
+                <button class="tool-btn" id="mobileClockFullBtn" style="position:absolute; top:50%; right:8px; transform:translateY(-50%); width:32px; height:32px; background:rgba(255,255,255,0.05);" title="Fullscreen">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                </button>
+            </section>
+        </div>
+
+        <!-- Search Section -->
+        <div id="sec-search">
+            <section class="section-card search-inner">
+                <div class="engine-box">
+                    <div class="engine-wrapper" id="engineWrapper">
+                    <div class="engine-list no-select" id="engineList">
+                        <div class="engine-chip" data-engine="google" data-name="Google" data-color="#4285F4" style="--hover-color: #4285F4" data-active="true">Google</div>
+                        <div class="engine-chip" data-engine="naver" data-name="NAVER" data-color="#03cf5d" style="--hover-color: #03cf5d">NAVER</div>
+                        <div class="engine-chip" data-engine="youtube" data-name="YouTube" data-color="#ff0000" style="--hover-color: #ff0000">YouTube</div>
+                        <div class="engine-chip" data-engine="namu" data-name="나무위키" data-color="#00a495" style="--hover-color: #00a495">나무위키</div>
+                        <div class="engine-chip" data-engine="cbnul" data-name="충북대학교 도서관" data-color="#B52555" style="--hover-color: #B52555">충북대학교 도서관</div>
+                        <div class="engine-chip" data-engine="wikipedia" data-name="위키백과" data-color="#555" style="--hover-color: #555">위키백과</div>
+                        <div class="engine-chip" data-engine="dbpia" data-name="DBpia" data-color="#cf393e" style="--hover-color: #cf393e">DBpia</div>
+                        <div class="engine-chip" data-engine="riss" data-name="RISS" data-color="#F76323" style="--hover-color: #F76323">RISS</div>
+                        <div class="engine-chip" data-engine="everytime" data-name="에브리타임" data-color="#f91f15" style="--hover-color: #f91f15">에브리타임</div>
+                        <div class="engine-chip" data-engine="googlemap" data-name="Google Maps" data-color="#4285F4" style="--hover-color: #4285F4">Google Maps</div>
+                    </div>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input type="text" id="q" placeholder="검색어를 입력하세요" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    <button class="clear-btn" id="clearBtn" title="지우기">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <button class="search-btn no-select" id="searchBtn">검색</button>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Weather -->
         <details id="det-weather" open>
             <summary class="no-select">
                 <div class="sum-title">
-                <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>
+                <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></svg>
                 Weather
                 </div>
                 <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
@@ -1104,9 +878,7 @@
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content no-select-weather">
-                    <!-- Top Section: Main Info + Stats -->
                     <div class="weather-header">
-                        <!-- Left: Current Main Info -->
                         <div class="weather-main-info">
                             <span id="wMainIcon"></span>
                             <div class="weather-temp-group">
@@ -1118,10 +890,7 @@
                                 <span class="update-text" id="updateText">업데이트 대기 중</span>
                             </div>
                         </div>
-
-                        <!-- Right: Detailed Stats in Row (Split Max/Min Boxes) -->
                         <div class="weather-stats-row">
-                            <!-- New Separate Boxes -->
                             <div class="stat-box">
                                 <span class="stat-label">최고</span>
                                 <span class="stat-val" id="wMax">--°</span>
@@ -1130,59 +899,42 @@
                                 <span class="stat-label">최저</span>
                                 <span class="stat-val" id="wMin">--°</span>
                             </div>
-                            <!-- Humidity -->
                             <div class="stat-box">
                                 <span class="stat-label">습도</span>
                                 <span class="stat-val" id="wHumidity">--%</span>
                             </div>
-                            <!-- Probability -->
                             <div class="stat-box">
                                 <span class="stat-label">강수확률</span>
                                 <span class="stat-val" id="wProb">--%</span>
                             </div>
-                            <!-- Rain Amount -->
                             <div class="stat-box">
                                 <span class="stat-label">강수량</span>
                                 <span class="stat-val" id="wRain">--mm</span>
                             </div>
-                            <!-- Feels Like -->
                             <div class="stat-box">
                                 <span class="stat-label">체감온도</span>
                                 <span class="stat-val" id="wFeel">--°C</span>
                             </div>
-                            <!-- Wind (Moved to end) -->
                             <div class="stat-box">
                                 <span class="stat-label">풍속</span>
                                 <span class="stat-val" id="wWind">--km/h</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Mid Section: Forecasts -->
                     <div class="weather-forecasts-wrapper">
-                        <!-- Left: Short-term (Hourly) -->
                         <div class="forecast-panel">
                             <span class="fc-title">단기 예보</span>
-                            <div class="fc-list-row" id="hourlyForecastBox">
-                                <!-- JS Generated -->
-                            </div>
+                            <div class="fc-list-row" id="hourlyForecastBox"></div>
                         </div>
-
-                        <!-- Right: Daily -->
                         <div class="forecast-panel">
                             <span class="fc-title">주간 예보</span>
-                            <div class="fc-list-row" id="dailyForecastBox">
-                                <!-- JS Generated -->
-                            </div>
+                            <div class="fc-list-row" id="dailyForecastBox"></div>
                         </div>
                     </div>
-
-                    <!-- Search Bar -->
                     <div class="weather-search">
                         <button class="weather-btn" id="wBtnLoc" title="현재 위치">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
                         </button>
-                        <!-- New Refresh Button -->
                         <button class="weather-btn" id="wBtnRefresh" title="새로고침">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         </button>
@@ -1196,11 +948,11 @@
             </div>
         </details>
 
-        <!-- Graduation -->
+        <!-- Future Planning & Graduation -->
         <details id="det-future" open>
             <summary class="no-select">
                 <div class="sum-title">
-                <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
                 Future Planning & Graduation
                 </div>
                 <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
@@ -1209,26 +961,26 @@
                 <div class="det-inner">
                 <div class="det-content">
                     <div class="grid no-select">
-                    <a href="/enged/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=v1ctorym1n.kro.kr" class="card-icon" alt="">
-                        <span class="card-label">졸업시험</span>
-                    </a>
-                    <a href="https://cbnuteacher.champstudy.com/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=champ.hackers.com" class="card-icon" alt="">
-                        <span class="card-label">[도서관] 해커스임용</span>
-                    </a>
-                    <a href="https://cremaclub.yes24.com/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=yes24.com" class="card-icon" alt="">
-                        <span class="card-label">[도서관] 크레마클럽</span>
-                    </a>
-                    <a href="https://www.cbhope1539.net/supportProgram/list.do?key=2004215755716" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=cbhope1539.net" class="card-icon" alt="">
-                        <span class="card-label">충북청년희망센터</span>
-                    </a>
-                    <a href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=knue.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">한국교원대 공지사항</span>
-                    </a>
+                        <a href="/enged/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">졸업시험</span>
+                        </a>
+                        <a href="https://cbnuteacher.champstudy.com/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=hackers.ac" class="card-icon" alt="">
+                            <span class="card-label"><span class="badge-lib">도서관</span>해커스임용</span>
+                        </a>
+                        <a href="https://cremaclub.yes24.com/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=yes24.com" class="card-icon" alt="">
+                            <span class="card-label"><span class="badge-lib">도서관</span>크레마클럽</span>
+                        </a>
+                        <a href="https://www.cbhope1539.net/supportProgram/list.do?key=2004215755716" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=cbhope1539.net" class="card-icon" alt="">
+                            <span class="card-label">충북청년희망센터</span>
+                        </a>
+                        <a href="https://www.knue.ac.kr/www/selectBbsNttList.do?bbsNo=26&key=807" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=knue.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">한국교원대 공지사항</span>
+                        </a>
                     </div>
                 </div>
                 </div>
@@ -1248,39 +1000,43 @@
                 <div class="det-inner">
                 <div class="det-content">
                     <div class="grid no-select">
-                    <a href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">공지사항</span>
-                    </a>
-                    <a href="https://cbnul.chungbuk.ac.kr/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">중앙도서관</span>
-                    </a>
-                    <a href="https://edu.chungbuk.ac.kr/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">사범대학 교직부</span>
-                    </a>
-                    <a href="https://cafe.naver.com/cbnuengedu" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=cafe.naver.com" class="card-icon" alt="">
-                        <span class="card-label">영어교육과 카페</span>
-                    </a>
-                    <a href="https://lms.chungbuk.ac.kr/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">eCampus</span>
-                    </a>
-                    <a href="https://eis.cbnu.ac.kr/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">개신누리</span>
-                    </a>
-                    <a href="https://cieat.chungbuk.ac.kr/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=cieat.chungbuk.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">CIEAT</span>
-                    </a>
-                    <a href="https://eisa.cbnu.ac.kr/atlecLogin" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
-                        <span class="card-label">수강신청</span>
-                    </a>
-                    </a>
+                        <a href="https://www.cbnu.ac.kr/www/selectBbsNttList.do?bbsNo=8&key=813" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">공지사항</span>
+                        </a>
+                        <a href="https://cbnul.chungbuk.ac.kr/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">중앙도서관</span>
+                        </a>
+                        <a href="https://edu.chungbuk.ac.kr/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">사범대학 교직부</span>
+                        </a>
+                        <a href="https://cafe.naver.com/cbnuengedu" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">영어교육과 카페</span>
+                        </a>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+
+                    <div class="grid no-select">
+                        <a href="https://lms.chungbuk.ac.kr/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">eCampus</span>
+                        </a>
+                        <a href="https://eis.cbnu.ac.kr/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">개신누리</span>
+                        </a>
+                        <a href="https://cieat.chungbuk.ac.kr/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=cieat.chungbuk.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">CIEAT</span>
+                        </a>
+                        <a href="https://eisa.cbnu.ac.kr/atlecLogin" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=32&domain=eis.cbnu.ac.kr" class="card-icon" alt="">
+                            <span class="card-label">수강신청</span>
+                        </a>
                     </div>
                 </div>
                 </div>
@@ -1301,11 +1057,13 @@
                 <div class="det-content">
                     <div class="stopwatch-wrap no-select" id="stopwatchWrap">
                     <div class="sw-main-panel">
-                        <div class="sw-time" id="swDisplay">00:00:00<small class="sw-ms">.00</small></div>
+                        <div class="sw-display-box">
+                            <div class="sw-time tabular-time" id="swDisplay">00:00:00<span class="sw-ms">.00</span></div>
+                        </div>
                         <div class="sw-controls">
                         <button class="btn btn-pri" id="swStart">Start</button>
                         <button class="btn btn-sec" id="swLap">Reset</button>
-                        <button class="btn btn-sec" id="swFull" title="Fullscreen" style="min-width:50px;">
+                        <button class="btn btn-sec" id="swFull" title="Fullscreen" style="min-width:50px; padding: 0 16px;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
                         </button>
                         </div>
@@ -1330,49 +1088,22 @@
                 <div class="det-inner">
                 <div class="det-content">
                     <div class="grid no-select">
-                    <a href="https://gemini.google.com/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=gemini.google.com" class="card-icon" alt="">
-                        <span class="card-label">Gemini</span>
-                    </a>
-                    <a href="http://chat.openai.com/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=chat.openai.com" class="card-icon" alt="">
-                        <span class="card-label">ChatGPT</span>
-                    </a>
-                    <a href="http://www.claude.ai/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=claude.ai" class="card-icon" alt="">
-                        <span class="card-label">Claude</span>
-                    </a>
-                    <a href="https://www.perplexity.ai/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=perplexity.ai" class="card-icon" alt="">
-                        <span class="card-label">Perplexity</span>
-                    </a>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </details>
-
-        <!-- Other Services -->
-        <details id="det-other">
-            <summary class="no-select">
-                <div class="sum-title">
-                <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-                Other Services
-                </div>
-                <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <div class="details-wrapper">
-                <div class="det-inner">
-                <div class="det-content">
-                    <div class="grid no-select">
-                    <a href="/busgame/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=leagues.withgoogle.com" class="card-icon" alt="">
-                        <span class="card-label">BUS Escape!</span>
-                    </a>
-                        <a href="/enged/" target="_blank" class="card-link">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=v1ctorym1n.kro.kr" class="card-icon" alt="">
-                        <span class="card-label">졸업시험 단어</span>
-                    </a>
+                        <a href="https://gemini.google.com/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=gemini.google.com" class="card-icon" alt="">
+                            <span class="card-label">Gemini</span>
+                        </a>
+                        <a href="http://chat.openai.com/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=chat.openai.com" class="card-icon" alt="">
+                            <span class="card-label">ChatGPT</span>
+                        </a>
+                        <a href="http://www.claude.ai/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=claude.ai" class="card-icon" alt="">
+                            <span class="card-label">Claude</span>
+                        </a>
+                        <a href="https://www.perplexity.ai/" target="_blank" class="card-link">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=perplexity.ai" class="card-icon" alt="">
+                            <span class="card-label">Perplexity</span>
+                        </a>
                     </div>
                 </div>
                 </div>
@@ -1392,7 +1123,7 @@
                 <div class="det-inner">
                 <div class="det-content">
                     <div class="yt-container no-select">
-                    <iframe class="yt-frame" src="https://www.youtube.com/embed/X8Ch0REAPwA?controls=1&modestbranding=1" title="Lofi Girl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe class="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&modestbranding=1" title="Lofi Girl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
                 </div>
@@ -1400,18 +1131,33 @@
         </details>
     </div>
 
+    <!-- Fullscreen Clock Overlay -->
+    <div class="fs-clock-overlay no-select" id="fsClockOverlay">
+        <button class="fs-clock-close" id="fsClockCloseBtn" title="닫기">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="fs-clock-date" id="fsDate">Loading...</div>
+        <div style="display:flex; align-items:center; justify-content:center;">
+            <div class="fs-clock-time tabular-time" id="fsTime">12:00</div>
+            <div class="fs-clock-sub">
+                <div class="fs-clock-ampm" id="fsAmPm">AM</div>
+                <div class="fs-clock-sec tabular-time" id="fsSec">00</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Notice Bar -->
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
-        <span class="notice-text">WebHub Version 5.1.5 업데이트 완료</span>
+        <span class="notice-text">WebHub Version 5.2.0 업데이트 완료</span>
       </div>
       <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
     </div>
 
     <footer class="no-select">
-      <b>WebHub</b> Ver. 5.1.5<br>
-      <p>© 2025 Seungmin Woo. All rights reserved.</p>
+      <b>WebHub</b> Ver. 5.2.0<br>
+      <p>© 2026 Seungmin Woo. All rights reserved.</p>
     </footer>
 
     <!-- Floating Buttons -->
@@ -1456,7 +1202,6 @@
       function generateManifest() {
           const linkIcon = document.querySelector('link[rel="icon"]');
           if (linkIcon) {
-              // Canvas 스크립트에서 생성된 PNG가 있다면 사용, 없으면 SVG 폴백
               const finalIconUrl = window.dynamicPngFavicon || linkIcon.href;
               const finalIconType = window.dynamicPngFavicon ? "image/png" : "image/svg+xml";
               
@@ -1477,12 +1222,11 @@
           }
       }
       
-      // PNG 변환이 완료되었으면 즉시 실행, 아니면 완료 이벤트를 대기
       if (window.dynamicPngFavicon) {
           generateManifest();
       } else {
           window.addEventListener('faviconReady', generateManifest);
-          setTimeout(generateManifest, 1000); // 안전 장치: 1초 후에도 안되면 원본 SVG로 생성
+          setTimeout(generateManifest, 1000);
       }
 
       // --- Accordion Logic ---
@@ -1524,16 +1268,31 @@
       const closeSettingsModal = document.getElementById('closeSettingsModal');
 
       const defaultSections = [
+          { id: 'sec-clock', name: 'Clock', visible: true },
+          { id: 'sec-search', name: 'Search', visible: true },
           { id: 'det-weather', name: 'Weather', visible: true },
-          { id: 'det-future', name: 'Future Planning', visible: true },
+          { id: 'det-future', name: 'Future Planning & Graduation', visible: true },
           { id: 'det-cbnu', name: 'Chungbuk National University', visible: true },
           { id: 'det-stopwatch', name: 'Stopwatch', visible: true },
           { id: 'det-ai', name: 'Artificial Intelligence', visible: true },
-          { id: 'det-other', name: 'Other Services', visible: true },
           { id: 'det-music', name: 'Music', visible: true },
       ];
 
       let sectionsConfig = JSON.parse(localStorage.getItem('sectionsConfig')) || defaultSections;
+
+      // Migration: 이름 변경 반영 및 삭제된 섹션 처리, 시계/검색 추가
+      sectionsConfig.forEach(conf => {
+          if (conf.id === 'det-future' && (conf.name === 'Future Planning' || conf.name === 'Education Volunteering')) {
+              conf.name = 'Future Planning & Graduation';
+          }
+      });
+      sectionsConfig = sectionsConfig.filter(conf => conf.id !== 'det-other'); // 삭제된 Other Services 필터링
+      
+      // 시계 및 검색 섹션이 설정에 없다면 맨 위에 추가
+      if (!sectionsConfig.find(conf => conf.id === 'sec-clock')) {
+          sectionsConfig.unshift({ id: 'sec-search', name: 'Search', visible: true });
+          sectionsConfig.unshift({ id: 'sec-clock', name: 'Clock', visible: true });
+      }
 
       function applySectionConfig() {
           sectionsConfig.forEach(conf => {
@@ -1705,6 +1464,34 @@
       searchBtn.onclick = doSearch;
       q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
 
+      // --- Fullscreen Clock Logic ---
+      const fsClockOverlay = document.getElementById('fsClockOverlay');
+      const clockFullBtn = document.getElementById('clockFullBtn');
+      const mobileClockFullBtn = document.getElementById('mobileClockFullBtn');
+      const fsClockCloseBtn = document.getElementById('fsClockCloseBtn');
+
+      if (fsClockOverlay) {
+        fsClockOverlay.addEventListener('click', (e) => {
+          if (e.target === fsClockOverlay) toggleClockFull();
+        });
+      }
+
+      function toggleClockFull() {
+        if (!fsClockOverlay) return;
+        fsClockOverlay.classList.toggle('active');
+        if (fsClockOverlay.classList.contains('active')) {
+          document.documentElement.classList.add('fs-mode-active');
+          document.body.classList.add('locked');
+        } else {
+          document.documentElement.classList.remove('fs-mode-active');
+          document.body.classList.remove('locked');
+        }
+      }
+
+      if (clockFullBtn) clockFullBtn.onclick = toggleClockFull;
+      if (mobileClockFullBtn) mobileClockFullBtn.onclick = toggleClockFull;
+      if (fsClockCloseBtn) fsClockCloseBtn.onclick = toggleClockFull;
+
       // --- Time & Date ---
       const dateEl = document.getElementById('dateDisplay');
       const timeMain = document.querySelector('.time-main');
@@ -1742,6 +1529,19 @@
           `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}</span> ` + 
           `<span class="mobile-time-part">${ampmKr} ${h}시 ${mm}분 ${ss}초</span>`;
           
+        // Fullscreen Clock Sync
+        const fsDate = document.getElementById('fsDate');
+        const fsTime = document.getElementById('fsTime');
+        const fsSec = document.getElementById('fsSec');
+        const fsAmPm = document.getElementById('fsAmPm');
+        if (fsDate) fsDate.textContent = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}`;
+        if (fsTime) fsTime.textContent = `${hh}:${mm}`;
+        if (fsSec) fsSec.textContent = ss;
+        if (fsAmPm) {
+            fsAmPm.textContent = ampm;
+            fsAmPm.className = `fs-clock-ampm ${isAm ? 'am' : 'pm'}`;
+        }
+
         if (weatherUpdateTime) {
             const diffMin = (now - weatherUpdateTime) / 1000 / 60;
             if (diffMin < 5) {
@@ -1834,7 +1634,6 @@
             wRain.textContent = `${rain}mm`;
             wFeel.textContent = `${feel}°C`;
             
-            // New: Set Today's Max/Min in Separate Boxes
             if (data.daily && data.daily.temperature_2m_max && data.daily.temperature_2m_min) {
                const tMax = Math.round(data.daily.temperature_2m_max[0]);
                const tMin = Math.round(data.daily.temperature_2m_min[0]);
@@ -1847,7 +1646,7 @@
             
             weatherUpdateTime = new Date();
             
-            // --- Save to LocalStorage for Offline ---
+            // Save to LocalStorage for Offline
             const cacheData = {
                 timestamp: Date.now(),
                 data: data,
@@ -1904,17 +1703,13 @@
 
          } catch (e) {
             console.error("Fetch failed, trying cache", e);
-            // --- Load from Cache if Offline ---
             const cached = localStorage.getItem('weatherCache');
             if (cached) {
                 try {
                     const c = JSON.parse(cached);
-                    // Minimal re-render for cache (or refactor render logic)
-                    // For simplicity, we just set main texts here as fallback
                     wMainTemp.textContent = `${Math.round(c.data.current.temperature_2m)}°C`;
                     wLocation.textContent = c.name;
                     updateText.textContent = "오프라인 (저장된 데이터)";
-                    // We could recall fetchWeather logic with mock data, but for now just text update
                 } catch (err) {
                     wMainTemp.textContent = "--";
                     wLocation.textContent = "오류";
@@ -2072,15 +1867,6 @@
       const lapsDiv = document.getElementById('swLaps');
       const swWrap = document.getElementById('stopwatchWrap');
       let lapCnt = 1;
-
-      function formatSw(ms) {
-        const date = new Date(ms);
-        const m = String(date.getUTCMinutes()).padStart(2, '0');
-        const s = String(date.getUTCSeconds()).padStart(2, '0');
-        const h = String(Math.floor(ms / 3600000)).padStart(2, '0');
-        const cs = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0');
-        return `${h}:${m}:${s}<small class="sw-ms">.${cs}</small>`;
-      }
       
       function formatLapText(ms) {
         const date = new Date(ms);
@@ -2089,6 +1875,16 @@
         const h = String(Math.floor(ms / 3600000)).padStart(2, '0');
         const cs = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0');
         return `${h}:${m}:${s}.${cs}`;
+      }
+
+      function updateSwDisplay(ms) {
+        const date = new Date(ms);
+        const m = String(date.getUTCMinutes()).padStart(2, '0');
+        const s = String(date.getUTCSeconds()).padStart(2, '0');
+        const h = String(Math.floor(ms / 3600000)).padStart(2, '0');
+        const cs = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0');
+        
+        if (swDisplay) swDisplay.innerHTML = `${h}:${m}:${s}<span class="sw-ms">.${cs}</span>`;
       }
 
       function toggleSw() {
@@ -2101,11 +1897,7 @@
           startT = Date.now() - elapsed;
           timer = setInterval(() => {
             elapsed = Date.now() - startT;
-            if (!swWrap.parentNode.classList.contains('fs-mode')) {
-               swDisplay.innerHTML = formatSw(elapsed);
-            } else {
-               swDisplay.innerHTML = formatSw(elapsed); 
-            }
+            updateSwDisplay(elapsed);
           }, 10);
           btnStart.textContent = 'Stop';
           btnStart.className = 'btn btn-danger';
@@ -2127,7 +1919,7 @@
           lapsDiv.prepend(d);
         } else {
           elapsed=0; lapCnt=1;
-          swDisplay.innerHTML='00:00:00<small class="sw-ms">.00</small>';
+          updateSwDisplay(0);
           lapsDiv.innerHTML='';
           lapsDiv.classList.remove('active');
           swWrap.classList.remove('has-laps');
@@ -2164,6 +1956,7 @@
         if(e.code==='KeyL') lapOrReset();
         if(e.code==='Escape') {
           if(swWrap.parentNode.classList.contains('fs-mode')) toggleFull();
+          else if(fsClockOverlay && fsClockOverlay.classList.contains('active')) toggleClockFull();
           else setDrawer(false);
         }
       });
