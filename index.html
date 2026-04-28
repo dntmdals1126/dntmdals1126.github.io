@@ -552,13 +552,19 @@
     }
     .stopwatch-wrap.has-laps .lap-box {
       display: flex;
-      border-top: 1px solid var(--glass-border);
-      padding-top: 12px;
       margin-top: 20px; 
     }
-    html[data-theme="light"] .stopwatch-wrap.has-laps .lap-box { border-color: rgba(0, 0, 0, 0.1); }
     
-    .lap-empty-text { display: none; }
+    @media (min-width: 720px) {
+      .stopwatch-wrap { flex-direction: row; align-items: center; justify-content: center; }
+      .stopwatch-wrap.has-laps { align-items: flex-start; }
+      .sw-main-panel { width: 100%; border-right: 1px solid transparent; padding-right: 0; transition: all 0.4s ease; }
+      .lap-box { display: flex; width: 0; opacity: 0; overflow: hidden; padding: 0; margin: 0; transition: all 0.4s ease; border-left: none; }
+      .stopwatch-wrap.has-laps .sw-main-panel { width: 50%; border-right-color: var(--glass-border); padding-right: 20px; }
+      .stopwatch-wrap.has-laps .lap-box { width: 50%; opacity: 1; padding-left: 20px; margin-top: 0; overflow: visible; }
+    }
+    
+    .lap-empty-text { display: none; } /* Never show empty text in normal mode */
     
     .lap-list-container {
       width: 100%; max-height: 150px; overflow-y: auto; display: block;
@@ -572,9 +578,24 @@
     /* --- 전체화면 모드 (시계/스톱워치) --- */
     .fs-mode { position: fixed; inset: 0; z-index: 9999; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: env(safe-area-inset-top) 40px 40px; }
     
-    /* 전체화면 스타일 우선 적용 (!important) */
-    .fs-mode .stopwatch-wrap { flex-direction: column !important; align-items: center !important; width: 100%; max-width: 600px; justify-content: flex-start; padding-top: 10vh; }
-    .fs-mode .sw-main-panel { width: 100% !important; border-right: none !important; padding-right: 0 !important; }
+    /* 전체화면 스타일 최우선 적용 (PC 분할 애니메이션 방지) */
+    .fs-mode .stopwatch-wrap, 
+    .fs-mode .stopwatch-wrap.has-laps { 
+        flex-direction: column !important; 
+        align-items: center !important; 
+        width: 100% !important; 
+        max-width: 600px !important; 
+        justify-content: center !important; 
+        padding-top: 0 !important; 
+    }
+    
+    .fs-mode .sw-main-panel, 
+    .fs-mode .stopwatch-wrap.has-laps .sw-main-panel { 
+        width: 100% !important; 
+        border-right: none !important; 
+        padding-right: 0 !important; 
+    }
+    
     .fs-mode .sw-time { font-size: 10vw; margin-bottom: 30px; transition: none; }
     .fs-mode .sw-controls { transform: scale(1.3); margin-bottom: 30px; }
     
@@ -583,24 +604,34 @@
         max-width: 100%; padding: 0; margin-bottom: 40px; 
     }
     
-    /* 전체화면 랩 기록 박스 (레이아웃 고정) */
-    .fs-mode .lap-box {
-      display: flex !important; width: 100% !important; max-width: 400px !important; 
-      margin-top: 20px !important; 
-      height: 130px !important;
-      border: 1px dashed var(--glass-border) !important; background: rgba(255, 255, 255, 0.05) !important;
-      border-radius: 16px; padding: 12px !important; box-sizing: border-box; overflow: visible !important;
-      margin-left: 0 !important;
+    /* 전체화면 랩 기록 박스 (중앙 고정) */
+    .fs-mode .lap-box, 
+    .fs-mode .stopwatch-wrap.has-laps .lap-box {
+      display: flex !important; 
+      width: 100% !important; 
+      max-width: 400px !important; 
+      margin: 20px auto 0 auto !important; 
+      height: 130px !important; /* 약 2.5 랩 크기 고정 */
+      border: 1px dashed var(--glass-border) !important; 
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-radius: 16px !important; 
+      padding: 12px !important; 
+      box-sizing: border-box !important; 
+      overflow: hidden !important; 
+      opacity: 1 !important;
     }
-    html[data-theme="light"] .fs-mode .lap-box { background: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; }
+    html[data-theme="light"] .fs-mode .lap-box, 
+    html[data-theme="light"] .fs-mode .stopwatch-wrap.has-laps .lap-box { 
+        background: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; 
+    }
 
     .fs-mode .lap-empty-text {
-      display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      display: block !important; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       color: var(--text-dim); font-size: 14px; width: 100%; text-align: center; pointer-events: none;
     }
     .fs-mode .stopwatch-wrap.has-laps .lap-empty-text { display: none !important; }
 
-    .fs-mode .lap-list-container { max-height: 100%; }
+    .fs-mode .lap-list-container { max-height: 100% !important; overflow-y: auto !important; }
 
     /* --- 하단 푸터 및 알림 바 --- */
     footer { text-align: center; padding: 10px 0; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
@@ -702,39 +733,27 @@
       .tool-btn { width: 36px; height: 36px; }
       .time-container { display: none; }
       
-      /* 모바일 시계 위젯 전면 개편 (프리미엄 위젯 스타일) */
+      /* 모바일 시계 위젯 (기존 카드 테마와 통일성 유지) */
       .mobile-clock-container { 
-          display: flex; flex-direction: column; align-items: center; justify-content: center; 
-          padding: 32px 20px; position: relative; 
-          border-radius: 28px; 
-          background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.2) 100%); 
-          box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-          border: 1px solid var(--glass-border); 
-          margin-bottom: 20px; 
+          display: flex; align-items: center; justify-content: space-between; 
+          padding: 16px 20px; position: relative; 
       }
-      html[data-theme="light"] .mobile-clock-container { 
-          background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%); 
-          box-shadow: 0 10px 24px rgba(0,0,0,0.06); 
-          border-color: #e2e8f0; 
-      }
-      
-      .mobile-clock-text { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
-      .mobile-date-part { font-size: 14px; font-weight: 600; color: var(--text-sub); letter-spacing: 1px; line-height: 1; }
-      .mobile-time-wrapper { display: flex; align-items: baseline; justify-content: center; gap: 8px; }
-      .mobile-time-main { font-size: 60px; font-weight: 800; color: var(--text-main); line-height: 0.95; letter-spacing: -1px; }
-      .mobile-time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 42px; text-align: left; padding-bottom: 4px; }
-      .mobile-time-ampm { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; line-height: 1; }
+      .mobile-clock-text { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+      .mobile-date-part { font-size: 13px; font-weight: 500; color: var(--text-sub); line-height: 1; letter-spacing: 0; }
+      .mobile-time-wrapper { display: flex; align-items: flex-end; gap: 6px; }
+      .mobile-time-main { font-size: 36px; font-weight: 700; color: var(--text-main); line-height: 1; letter-spacing: 1px; }
+      .mobile-time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 30px; text-align: left; padding-bottom: 2px; }
+      .mobile-time-ampm { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; line-height: 1; }
       .mobile-time-ampm.am { color: var(--time-am); }
       .mobile-time-ampm.pm { color: var(--time-pm); }
-      .mobile-time-sec { font-size: 18px; font-weight: 600; color: var(--text-dim); line-height: 1; }
+      .mobile-time-sec { font-size: 14px; font-weight: 500; color: var(--text-dim); line-height: 1; }
       
       .mobile-clock-full-btn { 
-          position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; 
-          border-radius: 50%; background: rgba(255,255,255,0.05); 
-          border: 1px solid var(--glass-border); flex-shrink: 0; margin-left: 0; 
-          box-shadow: none; color: var(--text-main); transition: 0.2s; 
+          width: 36px; height: 36px; border-radius: 50%; 
+          background: rgba(255,255,255,0.05); border: 1px solid transparent; 
+          color: var(--text-main); flex-shrink: 0; display: flex; align-items: center; justify-content: center;
       }
-      html[data-theme="light"] .mobile-clock-full-btn { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #475569; }
+      html[data-theme="light"] .mobile-clock-full-btn { background: rgba(0,0,0,0.05); color: #475569; }
 
       .search-inner { padding: 12px !important; gap: 12px; }
       .engine-box { padding: 2px; } 
@@ -931,10 +950,10 @@
                 </button>
             </section>
 
-            <!-- 모바일 전용 시계 위젯 (프리미엄 디자인 적용) -->
-            <section class="mobile-clock-container no-select" id="mobileClockSection">
+            <!-- 모바일 전용 시계 위젯 -->
+            <section class="section-card mobile-clock-container no-select" id="mobileClockSection">
                 <div id="mobileClockText" class="mobile-clock-text"></div>
-                <button class="tool-btn mobile-clock-full-btn" id="mobileClockFullBtn" title="Fullscreen">
+                <button class="mobile-clock-full-btn" id="mobileClockFullBtn" title="Fullscreen">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
                 </button>
             </section>
@@ -1641,7 +1660,7 @@
         ampmEl.textContent = ampm;
         ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
 
-        // 모바일 환경에 맞게 디자인된 고급 레이아웃으로 변경
+        // 통일감 있는 모바일 레이아웃 적용
         mobileClock.innerHTML = 
           `<div class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}</div>` + 
           `<div class="mobile-time-wrapper">` +
