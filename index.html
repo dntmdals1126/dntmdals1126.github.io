@@ -487,11 +487,11 @@
     /* --- 스톱워치 및 미디어 영역 --- */
     .yt-container {
       width: 100%; max-width: 600px; margin: 0 auto; 
-      position: relative; padding-bottom: 56.25%; 
+      aspect-ratio: 16 / 9; 
       border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border);
       background: #000;
     }
-    .yt-frame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .yt-frame { width: 100%; height: 100%; border: none; display: block; }
 
     .stopwatch-wrap { display: flex; flex-direction: column; align-items: center; width: 100%; transition: all 0.4s ease; justify-content: center; }
 
@@ -702,13 +702,29 @@
       .tool-btn { width: 36px; height: 36px; }
       .time-container { display: none; }
       
-      /* 모바일 시계 위젯 스타일 (2줄 레이아웃 적용 및 겹침 해결) */
-      .mobile-clock-container { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; }
-      .mobile-clock-text { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-      .mobile-date-part { font-size: 13px; font-weight: 500; color: var(--text-sub); line-height: 1; }
-      .mobile-time-part { font-size: 24px; font-weight: 700; color: var(--text-main); font-variant-numeric: tabular-nums; letter-spacing: 0.5px; line-height: 1; }
-      .mobile-clock-full-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.05); flex-shrink: 0; margin-left: 10px; }
-      html[data-theme="light"] .mobile-clock-full-btn { background: rgba(0,0,0,0.05); }
+      /* 모바일 시계 위젯 스타일 (고급 글래스모피즘 & 타이포그래피) */
+      .mobile-clock-container { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px; }
+      .mobile-clock-text { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+      .mobile-date-part { font-size: 13px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.5px; line-height: 1; }
+      .mobile-time-wrapper { display: flex; align-items: center; gap: 8px; }
+      .mobile-time-main { font-size: 44px; font-weight: 800; color: var(--text-main); line-height: 1; }
+      .mobile-time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 36px; text-align: left; }
+      .mobile-time-ampm { font-size: 13px; font-weight: 800; letter-spacing: 0.5px; line-height: 1; }
+      .mobile-time-ampm.am { color: var(--time-am); }
+      .mobile-time-ampm.pm { color: var(--time-pm); }
+      .mobile-time-sec { font-size: 16px; font-weight: 600; color: var(--text-sub); line-height: 1; }
+      
+      .mobile-clock-full-btn { 
+          width: 46px; height: 46px; border-radius: 14px; 
+          background: rgba(255,255,255,0.06); flex-shrink: 0; margin-left: 10px; 
+          border: 1px solid var(--glass-border);
+          box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.1);
+      }
+      html[data-theme="light"] .mobile-clock-full-btn { 
+          background: #f8fafc; border-color: #cbd5e1; 
+          box-shadow: inset 0 2px 4px #ffffff, 0 4px 12px rgba(0,0,0,0.05); 
+          color: #475569;
+      }
 
       .search-inner { padding: 12px !important; gap: 12px; }
       .engine-box { padding: 2px; } 
@@ -1615,10 +1631,16 @@
         ampmEl.textContent = ampm;
         ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
 
-        // 공백을 제거하여 2줄 레이아웃 블록으로 렌더링되게 최적화
+        // 모바일 환경에 맞게 디자인된 고급 레이아웃으로 변경
         mobileClock.innerHTML = 
-          `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}</span>` + 
-          `<span class="mobile-time-part">${ampmKr} ${h}시 ${mm}분 ${ss}초</span>`;
+          `<div class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}</div>` + 
+          `<div class="mobile-time-wrapper">` +
+            `<span class="mobile-time-main tabular-time">${hh}:${mm}</span>` +
+            `<div class="mobile-time-sub">` +
+              `<span class="mobile-time-ampm ${isAm ? 'am' : 'pm'}">${ampm}</span>` +
+              `<span class="mobile-time-sec tabular-time">${ss}</span>` +
+            `</div>` +
+          `</div>`;
           
         // 전체화면 시계 동기화
         const fsDate = document.getElementById('fsDate');
