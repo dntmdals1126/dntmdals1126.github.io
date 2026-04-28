@@ -702,29 +702,39 @@
       .tool-btn { width: 36px; height: 36px; }
       .time-container { display: none; }
       
-      /* 모바일 시계 위젯 스타일 (고급 글래스모피즘 & 타이포그래피) */
-      .mobile-clock-container { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px; }
-      .mobile-clock-text { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-      .mobile-date-part { font-size: 13px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.5px; line-height: 1; }
-      .mobile-time-wrapper { display: flex; align-items: center; gap: 8px; }
-      .mobile-time-main { font-size: 44px; font-weight: 800; color: var(--text-main); line-height: 1; }
-      .mobile-time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 36px; text-align: left; }
-      .mobile-time-ampm { font-size: 13px; font-weight: 800; letter-spacing: 0.5px; line-height: 1; }
+      /* 모바일 시계 위젯 전면 개편 (프리미엄 위젯 스타일) */
+      .mobile-clock-container { 
+          display: flex; flex-direction: column; align-items: center; justify-content: center; 
+          padding: 32px 20px; position: relative; 
+          border-radius: 28px; 
+          background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.2) 100%); 
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+          border: 1px solid var(--glass-border); 
+          margin-bottom: 20px; 
+      }
+      html[data-theme="light"] .mobile-clock-container { 
+          background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%); 
+          box-shadow: 0 10px 24px rgba(0,0,0,0.06); 
+          border-color: #e2e8f0; 
+      }
+      
+      .mobile-clock-text { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+      .mobile-date-part { font-size: 14px; font-weight: 600; color: var(--text-sub); letter-spacing: 1px; line-height: 1; }
+      .mobile-time-wrapper { display: flex; align-items: baseline; justify-content: center; gap: 8px; }
+      .mobile-time-main { font-size: 60px; font-weight: 800; color: var(--text-main); line-height: 0.95; letter-spacing: -1px; }
+      .mobile-time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 42px; text-align: left; padding-bottom: 4px; }
+      .mobile-time-ampm { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; line-height: 1; }
       .mobile-time-ampm.am { color: var(--time-am); }
       .mobile-time-ampm.pm { color: var(--time-pm); }
-      .mobile-time-sec { font-size: 16px; font-weight: 600; color: var(--text-sub); line-height: 1; }
+      .mobile-time-sec { font-size: 18px; font-weight: 600; color: var(--text-dim); line-height: 1; }
       
       .mobile-clock-full-btn { 
-          width: 46px; height: 46px; border-radius: 14px; 
-          background: rgba(255,255,255,0.06); flex-shrink: 0; margin-left: 10px; 
-          border: 1px solid var(--glass-border);
-          box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.1);
+          position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; 
+          border-radius: 50%; background: rgba(255,255,255,0.05); 
+          border: 1px solid var(--glass-border); flex-shrink: 0; margin-left: 0; 
+          box-shadow: none; color: var(--text-main); transition: 0.2s; 
       }
-      html[data-theme="light"] .mobile-clock-full-btn { 
-          background: #f8fafc; border-color: #cbd5e1; 
-          box-shadow: inset 0 2px 4px #ffffff, 0 4px 12px rgba(0,0,0,0.05); 
-          color: #475569;
-      }
+      html[data-theme="light"] .mobile-clock-full-btn { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #475569; }
 
       .search-inner { padding: 12px !important; gap: 12px; }
       .engine-box { padding: 2px; } 
@@ -921,8 +931,8 @@
                 </button>
             </section>
 
-            <!-- 인라인 절대 위치 속성을 제거하고 flex-shrink 클래스 적용 -->
-            <section class="section-card mobile-clock-container no-select" id="mobileClockSection">
+            <!-- 모바일 전용 시계 위젯 (프리미엄 디자인 적용) -->
+            <section class="mobile-clock-container no-select" id="mobileClockSection">
                 <div id="mobileClockText" class="mobile-clock-text"></div>
                 <button class="tool-btn mobile-clock-full-btn" id="mobileClockFullBtn" title="Fullscreen">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
