@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" />
   
   <!-- 날씨 아이콘 라이브러리 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css">
@@ -1338,10 +1338,10 @@
                 <div class="det-content">
                     <div class="music-grid no-select">
                         <div class="yt-container">
-                            <iframe class="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&modestbranding=1" title="Lofi Girl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe class="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&modestbranding=1" title="Lofi Girl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                         </div>
                         <div class="yt-container">
-                            <iframe class="yt-frame" src="https://www.youtube.com/embed/6K05OjoSR14?controls=1&modestbranding=1" title="Studio Ghibli" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe class="yt-frame" src="https://www.youtube.com/embed/6K05OjoSR14?controls=1&modestbranding=1" title="Studio Ghibli" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                         </div>
                     </div>
                 </div>
@@ -2442,9 +2442,13 @@
 
       async function searchLocation() {
          if(!wInputLoc) return;
-         const query = wInputLoc.value.trim();
+         let query = wInputLoc.value.trim();
          if(!query) return;
          
+         // 특정 지명 검색 시 엉뚱한 위치(북한 등)가 먼저 잡히는 오탐지 방지
+         if (query === "전주") query = "전주시";
+         if (query === "광주") query = "광주광역시";
+
          const suffixes = ["", "시", "특별시", "광역시", "군", "구"];
          let found = false;
 
@@ -2458,7 +2462,20 @@
                    const loc = data.results[0];
                    currentLat = loc.latitude;
                    currentLon = loc.longitude;
-                   currentLocationName = `${loc.name}, ${loc.country_code.toUpperCase()}`;
+                   
+                   let countryName = loc.country_code.toUpperCase();
+                   const countryMap = {
+                       'KR': '대한민국', 'KP': '북한', 'US': '미국', 'JP': '일본', 'CN': '중국',
+                       'GB': '영국', 'FR': '프랑스', 'DE': '독일', 'IT': '이탈리아', 'RU': '러시아',
+                       'CA': '캐나다', 'AU': '호주', 'TW': '대만', 'VN': '베트남', 'PH': '베트남' // 오타 주의: PH는 필리핀
+                   };
+                   countryMap['PH'] = '필리핀'; // 수정된 매핑
+                   
+                   if (countryMap[countryName]) {
+                       countryName = countryMap[countryName];
+                   }
+                   
+                   currentLocationName = `${loc.name}, ${countryName}`;
                    fetchWeather(currentLat, currentLon, currentLocationName);
                    wInputLoc.value = '';
                    found = true;
