@@ -313,14 +313,30 @@
         .time-container .time-sub { height: 30px; }
         .time-container .ampm { font-size: 12px; }
         .time-container .time-sec { font-size: 14px; }
+        
+        .clock-wrap.show-cal .time-container .date-row { font-size: 14px; }
+        .clock-wrap.show-cal .time-container .time-main { font-size: 44px; }
+        .clock-wrap.show-cal .time-container .time-sub { height: 36px; }
+        .clock-wrap.show-cal .time-container .ampm { font-size: 13px; }
+        .clock-wrap.show-cal .time-container .time-sec { font-size: 16px; }
+
+        .clock-wrap.show-cal .calendar-box { padding: 16px; border-top: 1px solid var(--glass-border); } 
+
+        .bm-action-btn { padding: 0 6px; height: 24px; font-size: 11px; gap: 3px; }
+        .bm-action-btn svg { width: 12px; height: 12px; }
+        .bm-header-actions { gap: 4px; }
     }
 
     /* 캘린더 패널 */
     .calendar-box { 
-        width: 100%; display: none; padding: 16px 20px 20px; border-top: 1px solid var(--glass-border); 
-        box-sizing: border-box; margin: 0; 
+        width: 100%; max-height: 0; opacity: 0; padding: 0 20px; border-top: 1px solid transparent; 
+        box-sizing: border-box; margin: 0; overflow: hidden;
+        display: flex; flex-direction: column; justify-content: center;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .clock-wrap.show-cal .calendar-box { display: flex; flex-direction: column; justify-content: center; }
+    .clock-wrap.show-cal .calendar-box { 
+        max-height: 500px; opacity: 1; padding: 16px 20px 20px; border-top-color: var(--glass-border); 
+    }
 
     @media (min-width: 481px) {
         .clock-wrap { flex-direction: row; align-items: center; }
@@ -328,10 +344,10 @@
         .clock-main-panel { border-right: 1px solid transparent; padding-right: 0; }
         
         /* 캘린더를 닫았을 때 시계 높이에 영향을 주지 않도록 max-height 0 적용 */
-        .calendar-box { display: block; width: 0; opacity: 0; padding: 0; border-top: none; margin: 0; transition: all 0.4s ease; overflow: hidden; max-height: 0; }
+        .calendar-box { width: 0; padding: 0; border-top: none; }
         
         .clock-wrap.show-cal .clock-main-panel { width: 50%; border-right-color: var(--glass-border); padding-right: 20px; border-bottom: none; }
-        .clock-wrap.show-cal .calendar-box { width: 50%; opacity: 1; padding: 16px 20px; overflow: visible; display: flex; flex-direction: column; justify-content: center; border-left: none; max-height: 500px; }
+        .clock-wrap.show-cal .calendar-box { width: 50%; padding: 16px 20px; overflow: visible; border-top: none; border-left: none; max-height: 500px; }
     }
 
     /* --- 검색 영역 --- */
@@ -507,12 +523,13 @@
     .bm-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px var(--primary-glow); }
 
     /* 북마크 헤더 액션 버튼 */
-    .bm-action-btn { width: auto; height: 26px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; gap: 4px; background: rgba(255,255,255,0.05); color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; cursor: pointer; margin-right: 8px; }
+    .bm-action-btn { width: auto; height: 26px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; gap: 4px; background: rgba(255,255,255,0.05); color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; cursor: pointer; }
     html[data-theme="light"] .bm-action-btn { background: rgba(0,0,0,0.05); color: #475569; }
     @media (hover: hover) { 
         .bm-action-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-main); border-color: var(--glass-border); }
         html[data-theme="light"] .bm-action-btn:hover { background: rgba(0,0,0,0.1); color: #0f172a; border-color: var(--glass-border); }
     }
+    .bm-header-actions { display: flex; align-items: center; gap: 6px; }
 
     /* --- 반응형 링크 그리드 --- */
     .grid { display: grid; gap: 10px; grid-template-columns: repeat(4, 1fr); }
@@ -1116,7 +1133,7 @@
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 My Bookmarks
                 </div>
-                <div style="display:flex; align-items:center; gap:6px;">
+                <div class="bm-header-actions">
                     <button class="bm-action-btn" id="editBookmarkBtn" title="편집">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                         <span>편집</span>
