@@ -288,9 +288,9 @@
     }
 
     /* 시계 고정 버튼 분리 */
-    .clock-cal-btn { position: absolute; left: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; }
+    .clock-cal-btn { position: absolute; left: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; color: var(--text-main); }
     .clock-fmt-btn { position: absolute; left: 56px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; color: var(--text-main); font-size: 11px; font-weight: 700; border: 1px solid transparent; cursor: pointer; }
-    .clock-full-btn { position: absolute; right: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; }
+    .clock-full-btn { position: absolute; right: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; color: var(--text-main); }
     
     html[data-theme="light"] .clock-cal-btn, html[data-theme="light"] .clock-full-btn, html[data-theme="light"] .clock-fmt-btn { background: rgba(0,0,0,0.05); color: #475569; }
     
@@ -300,10 +300,12 @@
     }
     
     @media (max-width: 480px) {
-        .clock-cal-btn { left: 12px; top: 12px; }
-        .clock-fmt-btn { left: 52px; top: 12px; }
-        .clock-full-btn { right: 12px; top: 12px; }
-        .clock-main-panel { padding: 14px 48px; }
+        .clock-cal-btn { left: 12px; top: 12px; width: 32px; height: 32px; }
+        .clock-cal-btn svg { width: 14px; height: 14px; }
+        .clock-fmt-btn { left: 50px; top: 12px; width: 32px; height: 32px; font-size: 10px; }
+        .clock-full-btn { right: 12px; top: 12px; width: 32px; height: 32px; }
+        .clock-full-btn svg { width: 14px; height: 14px; }
+        .clock-main-panel { padding: 14px 44px; }
         
         /* 모바일 통합 시계 사이즈 조정 */
         .time-container .date-row { font-size: 13px; }
@@ -1459,8 +1461,8 @@
       
       function updateExpandToggleIcon() {
           const allDetails = document.querySelectorAll('details');
-          const isAllExpanded = Array.from(allDetails).every(d => d.open);
-          if(isAllExpanded) {
+          const isAnyExpanded = Array.from(allDetails).some(d => d.open);
+          if(isAnyExpanded) {
               if(iconExpandAll) iconExpandAll.style.display = 'none';
               if(iconCollapseAll) iconCollapseAll.style.display = 'block';
           } else {
@@ -1472,8 +1474,8 @@
       if(expandToggle) {
           expandToggle.onclick = () => {
               const allDetails = document.querySelectorAll('details');
-              const isAllExpanded = Array.from(allDetails).every(d => d.open);
-              const targetState = !isAllExpanded;
+              const isAnyExpanded = Array.from(allDetails).some(d => d.open);
+              const targetState = !isAnyExpanded;
               
               allDetails.forEach(d => {
                   const wrapper = d.querySelector('.details-wrapper');
