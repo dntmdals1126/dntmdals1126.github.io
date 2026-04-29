@@ -173,7 +173,7 @@
     ::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-thumb-hover); }
 
     /* --- 마이크로 인터랙션 (터치 피드백) --- */
-    button:active, .card-link:active, summary:active, .engine-chip:active, .cal-day:not(.other-month):active {
+    button:active, .card-link:active, summary:not(:has(button:hover)):active, .engine-chip:active, .cal-day:not(.other-month):active {
         transform: scale(0.96) !important;
         transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
@@ -194,7 +194,7 @@
       background: linear-gradient(to bottom, var(--bg-dark) 40%, transparent);
       pointer-events: none; z-index: 900;
     }
-    body.locked .scroll-mask { display: none; }
+    .fs-mode-active .scroll-mask { display: none; }
 
     /* --- 상단 고정 헤더 --- */
     header {
@@ -256,67 +256,67 @@
     .clock-wrap { display: flex; flex-direction: column; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .clock-wrap.show-cal { align-items: stretch; }
 
+    /* 시계 애니메이션 (12/24 변경) */
+    .time-animate { animation: timeFade 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes timeFade {
+        0% { opacity: 0.2; transform: scale(0.97); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
     /* 시계 패널 */
     .clock-main-panel { position: relative; width: 100%; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 20px; }
     
-    /* 기본 시계 폰트 사이즈 (달력 닫힘 상태) */
+    /* 통합 시계 컨테이너 */
     .time-container { padding: 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .date-row { font-size: 15px; color: var(--text-sub); font-weight: 500; display: flex; align-items: center; gap: 8px; transition: all 0.4s ease; }
     .time-row { display: flex; align-items: center; gap: 8px; color: var(--text-main); line-height: 1; transition: all 0.4s ease; }
-    .time-main { font-size: 42px; font-weight: 700; letter-spacing: 1px; font-variant-numeric: tabular-nums; transition: all 0.4s ease; }
+    .time-main { font-size: 42px; font-weight: 700; letter-spacing: 1px; transition: all 0.4s ease; }
     .time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 34px; text-align: left; transition: all 0.4s ease; }
     .ampm { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.4s ease; }
     .ampm.am { color: var(--time-am); }
     .ampm.pm { color: var(--time-pm); }
-    .time-sec { font-size: 15px; font-weight: 500; color: var(--text-sub); font-variant-numeric: tabular-nums; transition: all 0.4s ease; }
+    .time-sec { font-size: 15px; font-weight: 500; color: var(--text-sub); transition: all 0.4s ease; }
 
-    /* 달력 열렸을 때 (시계 폰트 확대) */
-    .clock-wrap.show-cal .time-row { gap: 10px; }
-    .clock-wrap.show-cal .date-row { font-size: 16px; }
-    .clock-wrap.show-cal .time-main { font-size: 56px; font-weight: 800; }
-    .clock-wrap.show-cal .time-sub { height: 44px; }
-    .clock-wrap.show-cal .ampm { font-size: 15px; font-weight: 800; }
-    .clock-wrap.show-cal .time-sec { font-size: 18px; font-weight: 600; }
-
-    .pc-clock-box { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    @media (max-width: 480px) { .pc-clock-box { display: none !important; } }
-    
-    .mo-clock-box { display: none; align-items: center; justify-content: center; }
-    @media (max-width: 480px) { 
-        .mo-clock-box { display: flex; } 
-        .clock-main-panel { padding: 14px 48px; }
+    /* 달력 열렸을 때 (PC/태블릿) */
+    @media (min-width: 481px) {
+        .clock-wrap.show-cal .time-row { gap: 10px; }
+        .clock-wrap.show-cal .date-row { font-size: 16px; }
+        .clock-wrap.show-cal .time-main { font-size: 56px; font-weight: 800; }
+        .clock-wrap.show-cal .time-sub { height: 44px; }
+        .clock-wrap.show-cal .ampm { font-size: 15px; font-weight: 800; }
+        .clock-wrap.show-cal .time-sec { font-size: 18px; font-weight: 600; }
     }
 
-    /* 모바일 기본 시계 사이즈 */
-    .mobile-clock-text { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .mobile-date-part { font-size: 12px; font-weight: 500; color: var(--text-sub); line-height: 1; transition: all 0.4s ease; }
-    .mobile-time-wrapper { display: flex; align-items: flex-end; gap: 6px; transition: all 0.4s ease; }
-    .mobile-time-main { font-size: 32px; font-weight: 700; color: var(--text-main); line-height: 1; letter-spacing: 1px; transition: all 0.4s ease; }
-    .mobile-time-sub { display: flex; flex-direction: column; justify-content: space-between; height: 26px; text-align: left; padding-bottom: 2px; transition: all 0.4s ease; }
-    .mobile-time-ampm { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; line-height: 1; transition: all 0.4s ease; }
-    .mobile-time-ampm.am { color: var(--time-am); }
-    .mobile-time-ampm.pm { color: var(--time-pm); }
-    .mobile-time-sec { font-size: 13px; font-weight: 500; color: var(--text-dim); line-height: 1; transition: all 0.4s ease; }
-
-    /* 달력 열렸을 때 모바일 폰트 확대 */
-    .clock-wrap.show-cal .mobile-date-part { font-size: 14px; font-weight: 600; }
-    .clock-wrap.show-cal .mobile-time-main { font-size: 40px; font-weight: 800; }
-    .clock-wrap.show-cal .mobile-time-sub { height: 32px; }
-    .clock-wrap.show-cal .mobile-time-ampm { font-size: 13px; font-weight: 800; }
-    .clock-wrap.show-cal .mobile-time-sec { font-size: 15px; font-weight: 600; }
-
-    /* 시계 좌상단/우상단 고정 버튼 분리 */
-    .clock-cal-btn { position: absolute; left: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; }
-    .clock-full-btn { position: absolute; right: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; }
-    html[data-theme="light"] .clock-cal-btn, html[data-theme="light"] .clock-full-btn { background: rgba(0,0,0,0.05); color: #475569; }
+    /* 시계 고정 버튼 분리 */
+    .clock-cal-btn { position: absolute; left: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; }
+    .clock-fmt-btn { position: absolute; left: 56px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; color: var(--text-main); font-size: 11px; font-weight: 700; border: 1px solid transparent; cursor: pointer; }
+    .clock-full-btn { position: absolute; right: 16px; top: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; }
+    
+    html[data-theme="light"] .clock-cal-btn, html[data-theme="light"] .clock-full-btn, html[data-theme="light"] .clock-fmt-btn { background: rgba(0,0,0,0.05); color: #475569; }
+    
     @media (hover: hover) {
-        .clock-cal-btn:hover, .clock-full-btn:hover { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); }
-        html[data-theme="light"] .clock-cal-btn:hover, html[data-theme="light"] .clock-full-btn:hover { background: rgba(0,0,0,0.1); border-color: var(--glass-border); }
+        .clock-cal-btn:hover, .clock-full-btn:hover, .clock-fmt-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--glass-border); color: var(--text-main); }
+        html[data-theme="light"] .clock-cal-btn:hover, html[data-theme="light"] .clock-full-btn:hover, html[data-theme="light"] .clock-fmt-btn:hover { background: rgba(0,0,0,0.1); border-color: var(--glass-border); color: #0f172a; }
     }
     
     @media (max-width: 480px) {
         .clock-cal-btn { left: 12px; top: 12px; }
+        .clock-fmt-btn { left: 52px; top: 12px; }
         .clock-full-btn { right: 12px; top: 12px; }
+        .clock-main-panel { padding: 14px 48px; }
+        
+        /* 모바일 통합 시계 사이즈 조정 */
+        .time-container .date-row { font-size: 13px; }
+        .time-container .time-main { font-size: 38px; }
+        .time-container .time-sub { height: 30px; }
+        .time-container .ampm { font-size: 12px; }
+        .time-container .time-sec { font-size: 14px; }
+        
+        .clock-wrap.show-cal .time-container .date-row { font-size: 14px; }
+        .clock-wrap.show-cal .time-container .time-main { font-size: 44px; }
+        .clock-wrap.show-cal .time-container .time-sub { height: 36px; }
+        .clock-wrap.show-cal .time-container .ampm { font-size: 13px; }
+        .clock-wrap.show-cal .time-container .time-sec { font-size: 16px; }
     }
 
     /* 캘린더 패널 */
@@ -458,13 +458,22 @@
     html[data-theme="light"] .calendar-nav-btn { background: #f8fafc; border-color: #cbd5e1; color: #0f172a; }
     .calendar-nav-btn:hover { background: rgba(255, 255, 255, 0.1); }
     html[data-theme="light"] .calendar-nav-btn:hover { background: rgba(0, 0, 0, 0.05); }
+
+    /* 캘린더 오늘 버튼 */
+    .cal-today-btn {
+        background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
+        font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; height: 32px; margin-left: 8px;
+    }
+    .cal-today-btn:hover { background: rgba(255,255,255,0.1); }
+    html[data-theme="light"] .cal-today-btn { border-color: #cbd5e1; color: #0f172a; }
+    html[data-theme="light"] .cal-today-btn:hover { background: rgba(0,0,0,0.05); }
     
     /* 깔끔한 디자인의 가짜 달력 버튼 UI */
     .cal-month-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
     .cal-month-display {
         background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); color: var(--text-main);
-        font-size: 15px; font-weight: 700; font-family: var(--font-base); padding: 6px 14px;
-        border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+        font-size: 15px; font-weight: 700; font-family: var(--font-base); padding: 4px 14px; height: 32px; box-sizing: border-box;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;
         transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .cal-month-display:hover { background: rgba(255, 255, 255, 0.12); transform: scale(0.98); }
@@ -500,6 +509,14 @@
     .bm-input { padding:12px; border-radius:12px; border:1px solid var(--glass-border); background:rgba(0,0,0,0.2); color:var(--text-main); font-size:15px; font-family:var(--font-base); width:100%; box-sizing:border-box; }
     html[data-theme="light"] .bm-input { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #0f172a; }
     .bm-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px var(--primary-glow); }
+
+    /* 북마크 헤더 액션 버튼 */
+    .bm-action-btn { width: auto; height: 26px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; gap: 4px; background: rgba(255,255,255,0.05); color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; cursor: pointer; margin-right: 8px; }
+    html[data-theme="light"] .bm-action-btn { background: rgba(0,0,0,0.05); color: #475569; }
+    @media (hover: hover) { 
+        .bm-action-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-main); border-color: var(--glass-border); }
+        html[data-theme="light"] .bm-action-btn:hover { background: rgba(0,0,0,0.1); color: #0f172a; border-color: var(--glass-border); }
+    }
 
     /* --- 반응형 링크 그리드 --- */
     .grid { display: grid; gap: 10px; grid-template-columns: repeat(4, 1fr); }
@@ -675,9 +692,6 @@
       .stat-box { min-width: 70px; flex: 0 0 auto; }
       .weather-forecasts-wrapper { flex-direction: column; gap: 10px; }
       
-      .clock-main-panel { padding: 14px 48px; }
-      .clock-cal-btn { left: 12px; top: 12px; }
-      .clock-full-btn { right: 12px; top: 12px; }
       .clock-wrap.show-cal .calendar-box { padding: 16px; } 
     }
 
@@ -720,7 +734,10 @@
     /* 하단 푸터 등 기타 UI */
     footer { text-align: center; padding: 10px 0; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
     footer b { font-family: 'Cal Sans', sans-serif; font-weight: 400; color: var(--text-main); }
-    footer p { margin: 4px 0 0; opacity: 0.7; }
+    footer p { margin: 4px 0 0; opacity: 0.7; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .footer-link { background: none; border: none; padding: 0; margin: 0; color: inherit; font-family: inherit; font-size: inherit; text-decoration: underline; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; }
+    .footer-link:hover { opacity: 1; }
+    
     .notice-bar { margin: 0 auto 20px; max-width: var(--max-w); background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(34, 211, 238, 0.1)); border: 1px solid var(--glass-border); border-radius: 14px; padding: 8px 16px; display: flex; align-items: center; gap: 12px; position: relative; z-index: 10; overflow: hidden; }
     .notice-badge { background: var(--primary); color: white; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; z-index: 2; }
     .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 24px; }
@@ -740,7 +757,7 @@
     .drawer.open { transform: translateX(0); }
     .drawer-back.open { opacity: 1; pointer-events: auto; }
     .nav-head { font-size: 13px; color: var(--text-dim); margin: 20px 0 10px; font-weight: 600; letter-spacing: 1px; }
-    .nav-list a { display: block; padding: 14px; margin-bottom: 6px; background: var(--glass-highlight); border-radius: 14px; font-weight: 500; color: var(--text-main); transition: 0.2s; }
+    .nav-list a { display: block; width: 100%; text-align: left; padding: 14px; margin-bottom: 6px; background: var(--glass-highlight); border-radius: 14px; font-weight: 500; color: var(--text-main); border: none; font-family: inherit; font-size: 16px; cursor: pointer; transition: 0.2s; box-sizing: border-box; }
     @media (hover: hover) { .nav-list a:hover { background: var(--glass-border); color: var(--primary); } }
 
     .scroll-btn, .settings-float-btn { position: fixed; right: 24px; width: 40px; height: 40px; border-radius: 14px; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 900; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -750,26 +767,39 @@
     @media (hover: hover) { .scroll-btn:hover { transform: translateY(-4px); } .settings-float-btn:hover { opacity: 1; transform: translateY(-2px); } }
     html[data-theme="light"] .settings-float-btn, html[data-theme="light"] .scroll-btn { background: rgba(255, 255, 255, 0.8); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.15); color: #1e293b; }
 
-    /* 모달 및 설정 패널 */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1300; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
-    .modal-overlay.open { display: flex; opacity: 1; }
-    .modal-content { width: 90%; max-width: 400px; background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.3s; max-height: 80vh; display: flex; flex-direction: column; }
+    /* 모달 공통 애니메이션 및 스타일 개선 */
+    .modal-overlay { 
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1300; 
+        display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); 
+        opacity: 0; visibility: hidden; pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
+    
+    .modal-content { 
+        width: 90%; max-width: 400px; background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
+        border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+        transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        max-height: 85vh; display: flex; flex-direction: column; 
+    }
     html[data-theme="light"] .modal-content { background: rgba(255, 255, 255, 0.9); box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.1); }
-    .modal-overlay.open .modal-content { transform: scale(1); }
+    .modal-overlay.open .modal-content { transform: scale(1) translateY(0); }
+    
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
     .modal-title { font-size: 18px; font-weight: 700; }
-    .modal-close { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 24px; }
+    .modal-close { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 24px; padding: 0 4px; }
+    
     #settingsList { overflow-y: auto; margin-bottom: 20px; overscroll-behavior: contain; }
     .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--glass-border); user-select: none; opacity: 0; transform: translateY(10px); animation: itemFadeIn 0.3s forwards; transition: all 0.2s ease; }
     @keyframes itemFadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
     html[data-theme="light"] .settings-item { background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0,0,0,0.05); }
-    .st-label { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 500; cursor: pointer; flex: 1; }
+    .st-label { display: flex; align-items: center; gap: 14px; font-size: 17px; font-weight: 500; cursor: pointer; flex: 1; }
     .drag-handle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); cursor: grab; touch-action: none; margin-left: 8px; }
     .drag-handle:active { cursor: grabbing; color: var(--primary); }
     .st-check { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
-    .btn-reset { width: 100%; height: 54px; font-size: 15px; margin-top: auto; border-radius: 14px; background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
-    html[data-theme="light"] .btn-reset { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+    .btn-reset { width: 100%; height: 64px; font-size: 16px; margin-top: auto; border-radius: 14px; background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1); }
+    html[data-theme="light"] .btn-reset { background: #fee2e2; color: #dc2626; border-color: #fca5a5; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1); }
     @media (hover: hover) {
         .btn-reset:hover { background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.5); color: #f87171; transform: translateY(-2px); }
         html[data-theme="light"] .btn-reset:hover { background: #fecaca; border-color: #f87171; color: #b91c1c; }
@@ -814,7 +844,7 @@
   <div class="drawer-back" id="drawerOverlay"></div>
   <aside class="drawer" id="drawer">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="margin:0; font-weight:700; color:var(--text-sub);">MENU</h3>
+      <h3 class="no-select" style="margin:0; font-weight:700; color:var(--text-sub);">MENU</h3>
       <button class="tool-btn" id="closeDrawer">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
@@ -844,10 +874,10 @@
     </nav>
   </aside>
 
-  <!-- 설정 모달 (단일 유지) -->
+  <!-- 설정 모달 -->
   <div class="modal-overlay" id="settingsModal">
       <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header no-select">
               <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
                   <span class="modal-title">섹션 설정</span>
                   <span style="font-size: 11px; color: var(--text-dim); font-weight: 400; letter-spacing: 0.5px;">Section Settings</span>
@@ -859,10 +889,10 @@
       </div>
   </div>
 
-  <!-- 즐겨찾기 추가 모달 (단일 유지) -->
+  <!-- 즐겨찾기 추가 모달 -->
   <div class="modal-overlay" id="addBookmarkModal">
       <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header no-select">
               <span class="modal-title">즐겨찾기 추가</span>
               <button class="modal-close" id="closeAddBookmarkModal">×</button>
           </div>
@@ -873,6 +903,44 @@
           <button class="btn btn-pri" id="saveBookmarkBtn" style="width:100%;">추가하기</button>
       </div>
   </div>
+  
+  <!-- 오픈소스 라이선스 모달 -->
+  <div class="modal-overlay" id="ossModal">
+      <div class="modal-content" style="max-height: 70vh;">
+          <div class="modal-header no-select">
+              <span class="modal-title">Open Source Licenses</span>
+              <button class="modal-close" id="closeOSSModal">×</button>
+          </div>
+          <div style="overflow-y: auto; font-size: 13px; color: var(--text-sub); line-height: 1.5; padding-right: 8px;">
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">SortableJS</h4>
+              <p>Copyright (c) 2021 SortableJS and RubaXa<br>MIT License</p>
+              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+              
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Open-Meteo API</h4>
+              <p>Weather data by <a href="https://open-meteo.com/" target="_blank" style="text-decoration:underline;">Open-Meteo.com</a><br>License: CC-BY 4.0</p>
+              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Weather Icons</h4>
+              <p>Copyright (c) 2015 Erik Flowers<br>SIL OFL 1.1 (Fonts) / MIT License (CSS)</p>
+              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Lucide / Feather Icons</h4>
+              <p>Copyright (c) Lucide Contributors / Cole Bemis<br>MIT License (Inline SVGs)</p>
+              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+              
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Google Fonts (Google Sans Flex, Outfit)</h4>
+              <p>SIL Open Font License, 1.1</p>
+              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+              
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Pretendard</h4>
+              <p>Copyright (c) 2021 Kiliman<br>SIL Open Font License, 1.1</p>
+              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+              
+              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Cal Sans</h4>
+              <p>Copyright (c) 2021 Cal.com, Inc.<br>SIL Open Font License, 1.1</p>
+          </div>
+      </div>
+  </div>
 
   <main>
     <div id="sectionWrapper">
@@ -881,26 +949,26 @@
         <div id="sec-clock">
             <section class="section-card clock-wrap no-select" id="clockWrap">
                 <div class="clock-main-panel">
-                    <!-- PC Clock -->
-                    <div class="pc-clock-box" id="pcClockPanel">
-                        <div class="date-row"><span id="dateDisplay">Loading...</span></div>
+                    <!-- 통합 시간 컨테이너 -->
+                    <div class="time-container" id="timeContainer">
+                        <div class="date-row" id="dateDisplay">Loading...</div>
                         <div class="time-row" id="timeDisplay">
-                            <span class="time-main tabular-time">12:00</span>
-                            <div class="time-sub">
-                            <span class="ampm">AM</span>
-                            <span class="time-sec tabular-time">00</span>
+                            <span class="time-main tabular-time" id="timeMain">12:00</span>
+                            <div class="time-sub" id="timeSub">
+                                <span class="ampm" id="ampmText">AM</span>
+                                <span class="time-sec tabular-time" id="timeSec">00</span>
                             </div>
                         </div>
                     </div>
-                    <!-- Mobile Clock -->
-                    <div class="mo-clock-box" id="mobileClockPanel">
-                        <div id="mobileClockText" class="mobile-clock-text"></div>
-                    </div>
-                    <!-- Tools Overlay (좌/우상단 분리) -->
-                    <button class="tool-btn clock-cal-btn" id="clockCalBtn" title="달력">
+                    
+                    <!-- Tools Overlay -->
+                    <button class="clock-cal-btn" id="clockCalBtn" title="달력">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     </button>
-                    <button class="tool-btn clock-full-btn" id="clockFullBtn" title="전체화면">
+                    <button class="clock-fmt-btn" id="clockFmtBtn" title="12/24H 변경">
+                        <span id="clockFmtText">12H</span>
+                    </button>
+                    <button class="clock-full-btn" id="clockFullBtn" title="전체화면">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
                     </button>
                 </div>
@@ -912,13 +980,16 @@
                             <button class="calendar-nav-btn" id="prevMonth" title="이전 달">
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
                             </button>
-                            <!-- 세련된 네이티브 Picker 디자인 -->
-                            <div class="cal-month-wrapper">
-                                <div id="calMonthDisplay" class="cal-month-display">
-                                    <span id="calMonthText">2026년 4월</span>
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                            <!-- 세련된 네이티브 Picker 디자인 및 오늘 버튼 -->
+                            <div style="display:flex; align-items:center; gap: 8px;">
+                                <div class="cal-month-wrapper">
+                                    <div id="calMonthDisplay" class="cal-month-display">
+                                        <span id="calMonthText">2026년 4월</span>
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                                    </div>
+                                    <input type="month" id="calMonthInput" class="cal-month-input-hidden" title="년/월 선택">
                                 </div>
-                                <input type="month" id="calMonthInput" class="cal-month-input-hidden" title="년/월 선택">
+                                <button class="cal-today-btn" id="calTodayBtn">오늘</button>
                             </div>
                             <button class="calendar-nav-btn" id="nextMonth" title="다음 달">
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
@@ -951,7 +1022,7 @@
                 </div>
                 <div class="search-bar">
                     <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                    <input type="text" id="q" placeholder="검색어를 입력하세요 (단축키: /)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    <input type="text" id="q" placeholder="검색어를 입력하세요" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     <button class="clear-btn" id="clearBtn" title="지우기">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     </button>
@@ -1049,12 +1120,14 @@
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 My Bookmarks
                 </div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <button class="tool-btn" id="editBookmarkBtn" style="width:28px;height:28px;" title="편집">
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <button class="bm-action-btn" id="editBookmarkBtn" title="편집">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        <span>편집</span>
                     </button>
-                    <button class="tool-btn" id="addBookmarkBtn" style="width:28px;height:28px;" title="추가">
+                    <button class="bm-action-btn" id="addBookmarkBtn" title="추가">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+                        <span>추가</span>
                     </button>
                     <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
@@ -1278,7 +1351,7 @@
         <div class="fs-clock-date" id="fsDate">Loading...</div>
         <div style="display:flex; align-items:center; justify-content:center;">
             <div class="fs-clock-time tabular-time" id="fsTime">12:00</div>
-            <div class="fs-clock-sub">
+            <div class="fs-clock-sub" id="fsTimeSub">
                 <div class="fs-clock-ampm" id="fsAmPm">AM</div>
                 <div class="fs-clock-sec tabular-time" id="fsSec">00</div>
             </div>
@@ -1289,14 +1362,14 @@
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
-        <span class="notice-text">WebHub Version 5.4.3 안정성 업데이트 완료</span>
+        <span class="notice-text">WebHub Version 5.4.7 업데이트 (라이선스 검토 완료 및 애니메이션 최적화)</span>
       </div>
       <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
     </div>
 
     <footer class="no-select">
-      <b>WebHub</b> Ver. 5.4.3<br>
-      <p>© 2026 Seungmin Woo. All rights reserved.</p>
+      <b>WebHub</b> Ver. 5.4.7<br>
+      <p>© 2026 Seungmin Woo. All rights reserved. <span style="opacity:0.5;">|</span> <button id="openOSSModal" class="footer-link">OSS Licenses</button></p>
     </footer>
 
     <!-- Floating Buttons -->
@@ -1316,7 +1389,7 @@
           if (navigator.vibrate) navigator.vibrate(ms);
       }
       document.body.addEventListener('pointerdown', (e) => {
-          if (e.target.closest('button, .card-link, summary, .engine-chip, .cal-day:not(.other-month)')) {
+          if (e.target.closest('button, .card-link, summary:not(:has(button:hover)), .engine-chip, .cal-day:not(.other-month)')) {
               vibrate(10);
           }
       });
@@ -1379,6 +1452,55 @@
           setTimeout(generateManifest, 1000);
       }
 
+      // --- Expand / Collapse All ---
+      const expandToggle = document.getElementById('expandToggle');
+      const iconExpandAll = document.getElementById('iconExpandAll');
+      const iconCollapseAll = document.getElementById('iconCollapseAll');
+      
+      function updateExpandToggleIcon() {
+          const allDetails = document.querySelectorAll('details');
+          const isAllExpanded = Array.from(allDetails).every(d => d.open);
+          if(isAllExpanded) {
+              if(iconExpandAll) iconExpandAll.style.display = 'none';
+              if(iconCollapseAll) iconCollapseAll.style.display = 'block';
+          } else {
+              if(iconExpandAll) iconExpandAll.style.display = 'block';
+              if(iconCollapseAll) iconCollapseAll.style.display = 'none';
+          }
+      }
+
+      if(expandToggle) {
+          expandToggle.onclick = () => {
+              const allDetails = document.querySelectorAll('details');
+              const isAllExpanded = Array.from(allDetails).every(d => d.open);
+              const targetState = !isAllExpanded;
+              
+              allDetails.forEach(d => {
+                  const wrapper = d.querySelector('.details-wrapper');
+                  if(targetState) {
+                      if (!d.hasAttribute('open')) {
+                          d.setAttribute('open', '');
+                          if (d.id) localStorage.setItem(d.id, 'open');
+                      }
+                  } else {
+                      if (d.hasAttribute('open') && wrapper) {
+                          wrapper.style.gridTemplateRows = '0fr';
+                          setTimeout(() => {
+                              d.removeAttribute('open');
+                              wrapper.style.gridTemplateRows = '';
+                              if(d.id) localStorage.setItem(d.id, 'closed');
+                          }, 300);
+                      } else {
+                          d.removeAttribute('open');
+                          if(d.id) localStorage.setItem(d.id, 'closed');
+                      }
+                  }
+              });
+              setTimeout(() => updateExpandToggleIcon(), 300);
+              vibrate(10);
+          };
+      }
+
       // --- Accordion Logic ---
       const allDetails = document.querySelectorAll('details');
       allDetails.forEach((dt) => {
@@ -1389,9 +1511,11 @@
               else if (state === 'closed') dt.removeAttribute('open');
           }
       });
+      updateExpandToggleIcon();
+
       document.querySelectorAll('summary').forEach(summary => {
         summary.addEventListener('click', (e) => {
-          // 즐겨찾기 헤더의 추가/편집 버튼 클릭 시 토글 방지 (완벽 제어)
+          // 즐겨찾기 헤더의 추가/편집 버튼 클릭 시 토글 방지
           if (e.target.closest('#addBookmarkBtn') || e.target.closest('#editBookmarkBtn')) {
               e.preventDefault(); 
               return; 
@@ -1407,14 +1531,17 @@
                     details.removeAttribute('open');
                     wrapper.style.gridTemplateRows = '';
                     if(id) localStorage.setItem(id, 'closed');
+                    updateExpandToggleIcon();
                 }, 300);
             } else {
                 details.removeAttribute('open');
                 if(id) localStorage.setItem(id, 'closed');
+                updateExpandToggleIcon();
             }
           } else {
             details.setAttribute('open', '');
             if(id) localStorage.setItem(id, 'open');
+            updateExpandToggleIcon();
           }
         });
       });
@@ -1521,32 +1648,73 @@
           resetSettingsBtn.onclick = () => {
               if(confirm('모든 섹션 순서와 숨김 설정을 초기화하시겠습니까?')) {
                   sectionsConfig = JSON.parse(JSON.stringify(defaultSections));
+                  localStorage.setItem('sectionsConfig', JSON.stringify(sectionsConfig));
                   applySectionConfig();
+                  renderSettingsUI();
               }
           };
       }
 
-      function toggleModal(open) {
-          if(!settingsModal) return;
+      function toggleModal(modalEl, open) {
+          if(!modalEl) return;
           if(open) {
-              renderSettingsUI();
-              settingsModal.classList.add('open');
+              if (modalEl.id === 'settingsModal') renderSettingsUI();
+              modalEl.classList.add('open');
               document.body.style.overflow = 'hidden';
           } else {
-              settingsModal.classList.remove('open');
+              modalEl.classList.remove('open');
               document.body.style.overflow = '';
           }
       }
       
-      if(floatSettingsBtn) floatSettingsBtn.onclick = () => toggleModal(true);
-      if(closeSettingsModal) closeSettingsModal.onclick = () => toggleModal(false);
+      if(floatSettingsBtn) floatSettingsBtn.onclick = () => toggleModal(settingsModal, true);
+      if(closeSettingsModal) closeSettingsModal.onclick = () => toggleModal(settingsModal, false);
       if(settingsModal) {
           settingsModal.onclick = (e) => {
-              if (e.target === settingsModal) toggleModal(false);
+              if (e.target === settingsModal) toggleModal(settingsModal, false);
           };
       }
 
       applySectionConfig();
+
+      // --- 24시간제 표시 토글 ---
+      const clockFmtBtn = document.getElementById('clockFmtBtn');
+      const clockFmtText = document.getElementById('clockFmtText');
+      let is24HourFormat = localStorage.getItem('is24HourFormat') === 'true'; // 기본값 false(12시간제)
+
+      function updateClockFmtBtn() {
+          if(clockFmtText) {
+              clockFmtText.textContent = is24HourFormat ? "24H" : "12H";
+          }
+      }
+      
+      updateClockFmtBtn();
+
+      if(clockFmtBtn) {
+          clockFmtBtn.onclick = () => {
+              is24HourFormat = !is24HourFormat;
+              localStorage.setItem('is24HourFormat', is24HourFormat);
+              updateClockFmtBtn();
+              
+              // 시간 포맷 변경 시 애니메이션 효과 (Jitter 없이 전체 감싸는 부모에)
+              const tc = document.getElementById('timeContainer');
+              const fc = document.getElementById('fsTime')?.parentElement;
+              
+              if(tc) {
+                  tc.classList.remove('time-animate');
+                  void tc.offsetWidth;
+                  tc.classList.add('time-animate');
+              }
+              if(fc) {
+                  fc.classList.remove('time-animate');
+                  void fc.offsetWidth;
+                  fc.classList.add('time-animate');
+              }
+
+              updateTime();
+              vibrate(10);
+          };
+      }
 
       // --- Search ---
       const engineList = document.getElementById('engineList');
@@ -1583,7 +1751,7 @@
           document.querySelectorAll('.engine-chip').forEach(c => c.removeAttribute('data-active'));
           initialChip.setAttribute('data-active', 'true');
           updateSearchColor(color);
-          if(q) q.placeholder = `${name} 검색어 입력 (단축키: /)`;
+          if(q) q.placeholder = `${name} 검색어를 입력하세요`;
           setTimeout(() => {
             initialChip.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
           }, 100);
@@ -1599,7 +1767,7 @@
               localStorage.setItem('lastEngine', curEngine);
               [...engineList.children].forEach(c => c.dataset.active = (c === chip));
               updateSearchColor(color);
-              if(q) q.placeholder = `${name} 검색어 입력 (단축키: /)`;
+              if(q) q.placeholder = `${name} 검색어를 입력하세요`;
               chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             }
           });
@@ -1688,10 +1856,9 @@
 
       // --- Time & Date ---
       const dateEl = document.getElementById('dateDisplay');
-      const timeMain = document.querySelector('.time-main');
-      const ampmEl = document.querySelector('.ampm');
-      const secEl = document.querySelector('.time-sec');
-      const mobileClock = document.getElementById('mobileClockText');
+      const timeMain = document.getElementById('timeMain');
+      const ampmEl = document.getElementById('ampmText');
+      const secEl = document.getElementById('timeSec');
       const updateText = document.getElementById('updateText');
       
       let weatherUpdateTime = null;
@@ -1706,10 +1873,13 @@
         let h = now.getHours();
         const isAm = h < 12;
         const ampm = isAm ? 'AM' : 'PM';
-        const ampmKr = isAm ? '오전' : '오후';
-        h = h % 12;
-        h = h ? h : 12; 
-        const hh = String(h).padStart(2, '0');
+        
+        let displayH = h;
+        if (!is24HourFormat) {
+            displayH = h % 12;
+            displayH = displayH ? displayH : 12; 
+        }
+        const hh = String(displayH).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const ss = String(now.getSeconds()).padStart(2, '0');
         
@@ -1719,12 +1889,7 @@
         if(ampmEl) {
             ampmEl.textContent = ampm;
             ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
-        }
-
-        if(mobileClock) {
-            mobileClock.innerHTML = 
-            `<span class="mobile-date-part">${y}년 ${parseInt(m)}월 ${parseInt(d)}일 ${wd}</span> ` + 
-            `<span class="mobile-time-part">${ampmKr} ${h}시 ${mm}분 ${ss}초</span>`;
+            ampmEl.style.visibility = is24HourFormat ? 'hidden' : 'visible'; // 공간 차지 유지
         }
           
         // Fullscreen Clock Sync
@@ -1738,6 +1903,7 @@
         if (fsAmPm) {
             fsAmPm.textContent = ampm;
             fsAmPm.className = `fs-clock-ampm ${isAm ? 'am' : 'pm'}`;
+            fsAmPm.style.visibility = is24HourFormat ? 'hidden' : 'visible'; // 공간 차지 유지
         }
 
         if (weatherUpdateTime && updateText) {
@@ -1758,6 +1924,7 @@
       const calMonthInput = document.getElementById('calMonthInput');
       const calMonthText = document.getElementById('calMonthText');
       const calGrid = document.getElementById('calGrid');
+      const calTodayBtn = document.getElementById('calTodayBtn');
       let calDate = new Date();
 
       // 한국 주요 공휴일 및 대체공휴일 간이 계산 (2025~2027)
@@ -1897,6 +2064,15 @@
               renderCalendar();
           }
       });
+
+      if(calTodayBtn) {
+          calTodayBtn.addEventListener('click', () => {
+              calDate = new Date();
+              renderCalendar();
+              vibrate(10);
+          });
+      }
+
       renderCalendar();
 
       // --- 북마크 (My Bookmarks) ---
@@ -1915,7 +2091,7 @@
           if(!bookmarkGrid) return;
           bookmarkGrid.innerHTML = '';
           if(bookmarks.length === 0) {
-              bookmarkGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-dim); font-size:14px;">등록된 즐겨찾기가 없습니다. + 버튼을 눌러 추가해보세요.</div>';
+              bookmarkGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-dim); font-size:14px;">등록된 즐겨찾기가 없습니다. 추가 버튼을 눌러보세요.</div>';
               return;
           }
           bookmarks.forEach((bm, idx) => {
@@ -1951,10 +2127,7 @@
               e.stopPropagation(); e.preventDefault();
               if(bmTitle) bmTitle.value = ''; 
               if(bmUrl) bmUrl.value = '';
-              if(addBookmarkModal) {
-                  addBookmarkModal.classList.add('open');
-                  document.body.style.overflow = 'hidden';
-              }
+              toggleModal(addBookmarkModal, true);
           });
       }
       
@@ -1962,23 +2135,31 @@
           editBookmarkBtn.addEventListener('click', (e) => {
               e.stopPropagation(); e.preventDefault();
               isEditMode = !isEditMode;
-              editBookmarkBtn.style.color = isEditMode ? 'var(--primary)' : '';
+              
+              // 활성화 시 색상 변경
+              if(isEditMode) {
+                  editBookmarkBtn.style.color = 'var(--text-main)';
+                  editBookmarkBtn.style.borderColor = 'var(--primary)';
+                  editBookmarkBtn.style.background = 'rgba(59, 130, 246, 0.1)';
+              } else {
+                  editBookmarkBtn.style.color = '';
+                  editBookmarkBtn.style.borderColor = 'transparent';
+                  editBookmarkBtn.style.background = '';
+              }
               renderBookmarks();
           });
       }
 
       if(closeAddBookmarkModal) {
           closeAddBookmarkModal.addEventListener('click', () => {
-              if(addBookmarkModal) addBookmarkModal.classList.remove('open');
-              document.body.style.overflow = '';
+              toggleModal(addBookmarkModal, false);
           });
       }
       
       if(addBookmarkModal) {
           addBookmarkModal.addEventListener('click', (e) => {
               if(e.target === addBookmarkModal) {
-                  addBookmarkModal.classList.remove('open');
-                  document.body.style.overflow = '';
+                  toggleModal(addBookmarkModal, false);
               }
           });
       }
@@ -1991,8 +2172,7 @@
                   if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
                   bookmarks.push({title, url});
                   localStorage.setItem('myBookmarks', JSON.stringify(bookmarks));
-                  if(addBookmarkModal) addBookmarkModal.classList.remove('open');
-                  document.body.style.overflow = '';
+                  toggleModal(addBookmarkModal, false);
                   renderBookmarks();
                   vibrate(20);
               } else {
@@ -2310,6 +2490,26 @@
       if(closeDrawer) closeDrawer.onclick = () => setDrawer(false);
       if(drawerOverlay) drawerOverlay.onclick = () => setDrawer(false);
 
+      // --- 오픈소스 라이선스 모달 ---
+      const openOSSModalBtn = document.getElementById('openOSSModal');
+      const ossModal = document.getElementById('ossModal');
+      const closeOSSModalBtn = document.getElementById('closeOSSModal');
+      
+      if(openOSSModalBtn) {
+          openOSSModalBtn.addEventListener('click', () => {
+              setDrawer(false);
+              setTimeout(() => {
+                  toggleModal(ossModal, true);
+              }, 300);
+          });
+      }
+      if(closeOSSModalBtn) closeOSSModalBtn.addEventListener('click', () => toggleModal(ossModal, false));
+      if(ossModal) {
+          ossModal.addEventListener('click', (e) => {
+              if (e.target === ossModal) toggleModal(ossModal, false);
+          });
+      }
+
       // --- Stopwatch Logic ---
       let timer=null, startT=0, elapsed=0;
       const swDisplay = document.getElementById('swDisplay');
@@ -2424,7 +2624,12 @@
         if(e.code==='Escape') {
           if(swWrap && swWrap.parentNode.classList.contains('fs-mode')) toggleFull();
           else if(fsClockOverlay && fsClockOverlay.classList.contains('active')) toggleClockFull();
-          else setDrawer(false);
+          else {
+              toggleModal(settingsModal, false);
+              toggleModal(addBookmarkModal, false);
+              toggleModal(ossModal, false);
+              setDrawer(false);
+          }
         }
       });
 
