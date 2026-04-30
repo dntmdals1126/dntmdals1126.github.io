@@ -26,7 +26,7 @@
   <!-- 날씨 아이콘 라이브러리 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css">
   
-  <!-- 드래그 앤 드롭 (섹션 설정용) -->
+  <!-- 드래그 앤 드롭 (섹션 설정 및 북마크용) -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   
   <!-- PC용 기본 파비콘 (SVG) -->
@@ -71,10 +71,6 @@
       --glass-highlight: rgba(255, 255, 255, 0.04);
       --header-bg: rgba(20, 20, 25, 0.6); 
       
-      --primary: #3b82f6; 
-      --primary-glow: rgba(59, 130, 246, 0.3);
-      --accent: #22d3ee;
-      
       --time-am: #fb923c; 
       --time-pm: #60a5fa; 
       
@@ -98,17 +94,29 @@
       color-scheme: dark;
     }
 
+    /* --- 다이내믹 포인트 컬러 테마 (CSS Variables) --- */
+    html[data-accent="blue"] { --primary: #3b82f6; --primary-glow: rgba(59, 130, 246, 0.3); }
+    html[data-accent="blue"][data-theme="light"] { --primary: #2563eb; --primary-glow: rgba(37, 99, 235, 0.15); }
+    
+    html[data-accent="pink"] { --primary: #D83A6D; --primary-glow: rgba(216, 58, 109, 0.3); }
+    html[data-accent="pink"][data-theme="light"] { --primary: #B52555; --primary-glow: rgba(181, 37, 85, 0.15); }
+    
+    html[data-accent="green"] { --primary: #10b981; --primary-glow: rgba(16, 185, 129, 0.3); }
+    html[data-accent="green"][data-theme="light"] { --primary: #059669; --primary-glow: rgba(5, 150, 105, 0.15); }
+    
+    html[data-accent="yellow"] { --primary: #F2C14B; --primary-glow: rgba(242, 193, 75, 0.3); }
+    html[data-accent="yellow"][data-theme="light"] { --primary: #d97706; --primary-glow: rgba(217, 119, 6, 0.15); }
+    
+    html[data-accent="orange"] { --primary: #f97316; --primary-glow: rgba(249, 115, 22, 0.3); }
+    html[data-accent="orange"][data-theme="light"] { --primary: #ea580c; --primary-glow: rgba(234, 88, 12, 0.15); }
+
     /* --- 라이트 테마 변수 덮어쓰기 --- */
     html[data-theme="light"] {
       --bg-dark: #f2f4f7; 
       --glass-surface: #ffffff; 
       --glass-border: #e2e8f0; 
       --glass-highlight: rgba(0, 0, 0, 0.03);
-      
       --header-bg: rgba(255, 255, 255, 0.9);
-      
-      --primary: #2563eb; 
-      --primary-glow: rgba(37, 99, 235, 0.15);
       
       --time-am: #f97316;
       --time-pm: #3b82f6;
@@ -139,19 +147,39 @@
     body {
       margin: 0; 
       min-height: 100vh;
-      background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
-                  radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
-      background-attachment: fixed;
       overflow-x: hidden; 
-      transition: background 0.3s;
-    }
-    
-    html[data-theme="light"] body {
-        background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
-        background-attachment: fixed;
+      background-color: var(--bg-dark);
     }
     
     body.locked { overflow: hidden; }
+
+    /* 커스텀 배경 이미지 적용 시 */
+    .custom-bg {
+        position: fixed; inset: 0; z-index: -2;
+        background-size: cover; background-position: center;
+        opacity: 0.6; transition: background-image 0.5s ease, opacity 0.5s ease;
+    }
+    html[data-theme="light"] .custom-bg { opacity: 0.3; }
+
+    /* 기본 오로라 배경 애니메이션 */
+    .default-bg-wrapper {
+        position: fixed; inset: 0; z-index: -3; pointer-events: none;
+        background: radial-gradient(circle at top left, rgba(20, 30, 40, 0.2), transparent 50%),
+                    radial-gradient(circle at bottom right, rgba(20, 30, 40, 0.15), transparent 50%);
+        transition: opacity 0.5s;
+    }
+    html[data-theme="light"] .default-bg-wrapper {
+        background: radial-gradient(circle at top left, rgba(0,0,0,0.02), transparent 50%);
+    }
+    
+    .blobs { position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: blur(90px); opacity: 0.4; overflow: hidden; transition: opacity 0.5s; }
+    .blob { position: absolute; border-radius: 50%; animation: float 25s infinite ease-in-out alternate; }
+    .b1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: rgba(30, 40, 60, 0.2); }
+    .b2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: rgba(20, 30, 40, 0.15); animation-delay: -5s; }
+    html[data-theme="light"] .b1 { background: rgba(0,0,0,0.03); }
+    html[data-theme="light"] .b2 { background: rgba(0,0,0,0.02); }
+
+    @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(20px, -20px) scale(1.05); } }
 
     .no-select { user-select: none; -webkit-user-select: none; }
     input, textarea, select { 
@@ -177,17 +205,6 @@
         transform: scale(0.96) !important;
         transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
-
-    /* --- 우주/오로라 배경 애니메이션 --- */
-    .blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; filter: blur(90px); opacity: 0.4; overflow: hidden; }
-    .blob { position: absolute; border-radius: 50%; animation: float 25s infinite ease-in-out alternate; }
-    .b1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: rgba(30, 40, 60, 0.2); }
-    .b2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: rgba(20, 30, 40, 0.15); animation-delay: -5s; }
-    
-    html[data-theme="light"] .b1 { background: rgba(0,0,0,0.03); }
-    html[data-theme="light"] .b2 { background: rgba(0,0,0,0.02); }
-
-    @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(20px, -20px) scale(1.05); } }
 
     .scroll-mask {
       position: fixed; top: 0; left: 0; right: 0; height: 120px;
@@ -319,6 +336,10 @@
         .bm-action-btn { padding: 0 6px; height: 24px; font-size: 11px; gap: 3px; }
         .bm-action-btn svg { width: 12px; height: 12px; }
         .bm-header-actions { gap: 4px; }
+        
+        /* 모바일 푸터 레이아웃 */
+        footer p { flex-direction: column; gap: 6px; margin-top: 8px; }
+        .footer-sep { display: none; }
     }
 
     /* 캘린더 패널 */
@@ -364,7 +385,10 @@
     }
     
     .engine-chip[data-active="true"] { color: white; border-color: transparent; }
+    /* 구글 관련 컬러는 테마 색상으로 고정되지 않고 독립적인 파란색 유지 */
     .engine-chip[data-engine="google"][data-active="true"] { background: #4285F4; }
+    .engine-chip[data-engine="googlemap"][data-active="true"] { background: #4285F4; }
+    
     .engine-chip[data-engine="naver"][data-active="true"] { background: #03cf5d; }
     .engine-chip[data-engine="youtube"][data-active="true"] { background: #ff0000; }
     .engine-chip[data-engine="namu"][data-active="true"] { background: #00a495; }
@@ -373,7 +397,6 @@
     .engine-chip[data-engine="dbpia"][data-active="true"] { background: #cf393e; }
     .engine-chip[data-engine="riss"][data-active="true"] { background: #F76323; }
     .engine-chip[data-engine="everytime"][data-active="true"] { background: #f91f15; }
-    .engine-chip[data-engine="googlemap"][data-active="true"] { background: #4285F4; }
     html[data-theme="light"] .engine-chip[data-active="true"] { color: #ffffff !important; border-color: transparent; }
 
     .search-bar { position: relative; display: flex; align-items: center; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 18px; padding: 0 6px; transition: all 0.3s; margin-top: 2px; height: 56px; }
@@ -393,9 +416,9 @@
 
     /* --- 아코디언(섹션) 스타일 --- */
     details { background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-md); margin-bottom: var(--section-gap); overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    details[open] { background: rgba(13, 16, 22, 0.95); border-color: rgba(59, 130, 246, 0.25); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    details[open] { background: rgba(13, 16, 22, 0.95); border-color: var(--primary-glow); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
     html[data-theme="light"] details { background: #ffffff; border-color: var(--glass-border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    html[data-theme="light"] details[open] { background: #ffffff; border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    html[data-theme="light"] details[open] { background: #ffffff; border-color: var(--primary-glow); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
 
     summary { list-style: none; margin: 6px; padding: 14px 20px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; transition: background 0.2s; }
     summary::-webkit-details-marker { display: none; }
@@ -509,15 +532,16 @@
       cursor: pointer; opacity: 0; pointer-events: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4); z-index: 10; 
     }
     .bookmark-card-wrapper.edit-mode .bookmark-del-btn { opacity: 1; pointer-events: auto; transform: scale(1); }
-    .bookmark-card-wrapper.edit-mode .card-link { animation: wiggle 0.3s infinite alternate; pointer-events: none; }
+    .bookmark-card-wrapper.edit-mode .card-link { animation: wiggle 0.3s infinite alternate; pointer-events: none; cursor: grab; }
+    .bookmark-card-wrapper.edit-mode .card-link:active { cursor: grabbing; }
     @keyframes wiggle { 0% { transform: rotate(-1deg); } 100% { transform: rotate(1deg); } }
 
     .bm-input { padding:12px; border-radius:12px; border:1px solid var(--glass-border); background:rgba(0,0,0,0.2); color:var(--text-main); font-size:15px; font-family:var(--font-base); width:100%; box-sizing:border-box; }
     html[data-theme="light"] .bm-input { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #0f172a; }
     .bm-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px var(--primary-glow); }
 
-    /* 북마크 헤더 액션 버튼 */
-    .bm-action-btn { width: auto; height: 26px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; gap: 4px; background: rgba(255,255,255,0.05); color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; cursor: pointer; }
+    /* 북마크/음악 헤더 액션 버튼 */
+    .bm-action-btn { width: auto; height: 26px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; gap: 4px; background: rgba(255,255,255,0.05); color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; cursor: pointer; margin-right: 8px; }
     html[data-theme="light"] .bm-action-btn { background: rgba(0,0,0,0.05); color: #475569; }
     @media (hover: hover) { 
         .bm-action-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-main); border-color: var(--glass-border); }
@@ -619,9 +643,19 @@
 
     /* --- 노동요 (음악) 레이아웃 --- */
     .music-grid { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-    @media (min-width: 720px) { .music-grid { flex-direction: row; } .music-grid .yt-container { flex: 1; margin: 0; } }
+    @media (min-width: 720px) { .music-grid { flex-direction: row; flex-wrap: wrap; justify-content: center; } .music-grid > div { flex: 1; min-width: 300px; margin: 0; } }
 
-    .yt-container { width: 100%; max-width: 600px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border); background: #000; }
+    .music-card-wrapper { position: relative; width: 100%; max-width: 600px; margin: 0 auto; transition: all 0.3s; }
+    .music-del-btn {
+        position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; border-radius: 50%;
+        background: #ef4444; color: white; border: none; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; opacity: 0; pointer-events: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4); z-index: 10;
+    }
+    .music-card-wrapper.edit-mode .music-del-btn { opacity: 1; pointer-events: auto; transform: scale(1); }
+    .music-card-wrapper.edit-mode .yt-container { animation: wiggle 0.3s infinite alternate; pointer-events: none; opacity: 0.7; cursor: grab; }
+    .music-card-wrapper.edit-mode .yt-container:active { cursor: grabbing; }
+    
+    .yt-container { width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border); background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .yt-frame { width: 100%; height: 100%; border: none; display: block; }
 
     /* --- 전체화면 모드 (시계/스톱워치) --- */
@@ -699,7 +733,15 @@
       .stat-box { min-width: 70px; flex: 0 0 auto; }
       .weather-forecasts-wrapper { flex-direction: column; gap: 10px; }
       
-      .clock-wrap.show-cal .calendar-box { padding: 16px; } 
+      .clock-wrap.show-cal .calendar-box { padding: 16px; border-top: 1px solid var(--glass-border); } 
+
+      .bm-action-btn { padding: 0 6px; height: 24px; font-size: 11px; gap: 3px; }
+      .bm-action-btn svg { width: 12px; height: 12px; }
+      .bm-header-actions { gap: 4px; }
+      
+      /* 모바일 푸터 레이아웃 */
+      footer p { flex-direction: column; gap: 6px; margin-top: 8px; }
+      .footer-sep { display: none; }
     }
 
     @media (max-width: 768px) {
@@ -718,7 +760,7 @@
     .fs-clock-date { font-size: 4vw; color: var(--text-sub); font-weight: 500; margin-bottom: 20px; }
     .fs-clock-time { font-size: min(20vw, 150px); font-weight: 700; line-height: 1; color: var(--text-main); }
     .fs-clock-sub { display: flex; flex-direction: column; justify-content: space-between; height: min(15vw, 110px); margin-left: 20px; text-align: left; }
-    .fs-clock-ampm { font-size: min(4vw, 30px); font-weight: 700; line-height: 1; transition: all 0.4s ease; }
+    .fs-clock-ampm { font-size: min(4vw, 30px); font-weight: 700; line-height: 1; transition: opacity 0.4s ease; }
     .fs-clock-ampm.am { color: var(--time-am); }
     .fs-clock-ampm.pm { color: var(--time-pm); }
     .fs-clock-sec { font-size: min(6vw, 45px); color: var(--text-sub); font-weight: 500; line-height: 1; }
@@ -744,13 +786,39 @@
     footer p { margin: 4px 0 0; opacity: 0.7; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
     .footer-link { background: none; border: none; padding: 0; margin: 0; color: inherit; font-family: inherit; font-size: inherit; text-decoration: underline; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; }
     .footer-link:hover { opacity: 1; }
+    .footer-divider { max-width: var(--max-w); height: 1px; background: var(--glass-border); margin: 0 auto 16px; opacity: 0.5; }
     
-    .notice-bar { margin: 0 auto 20px; max-width: var(--max-w); background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(34, 211, 238, 0.1)); border: 1px solid var(--glass-border); border-radius: 14px; padding: 8px 16px; display: flex; align-items: center; gap: 12px; position: relative; z-index: 10; overflow: hidden; }
-    .notice-badge { background: var(--primary); color: white; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; z-index: 2; }
-    .notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 24px; }
-    .notice-text { position: absolute; white-space: nowrap; font-size: 13px; color: var(--text-sub); font-weight: 500; top: 4px; animation: marquee 20s linear infinite; }
+    /* --- 노티스 바 (미니멀 & 슬림 디자인) --- */
+    .notice-bar { 
+        margin: 0 auto 20px; max-width: var(--max-w); 
+        background: rgba(20, 20, 25, 0.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
+        border: 1px solid var(--glass-border); border-radius: 12px; padding: 8px 14px; 
+        display: flex; align-items: center; gap: 12px; position: relative; z-index: 10; overflow: hidden; 
+        transition: opacity 0.3s ease, transform 0.3s ease; 
+    }
+    html[data-theme="light"] .notice-bar { background: rgba(255, 255, 255, 0.6); border-color: rgba(0,0,0,0.08); }
+    .notice-bar.hidden { opacity: 0; transform: translateY(10px); pointer-events: none; }
+    
+    .notice-badge { 
+        color: var(--primary); font-size: 11px; font-weight: 800; flex-shrink: 0; 
+        z-index: 2; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;
+    }
+    .notice-badge::before { content: ""; display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 6px var(--primary-glow); }
+    
+    /* 양쪽 끝을 부드럽게 흐리게 만드는 마스크 효과 */
+    .notice-marquee { 
+        flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 18px; display: flex; align-items: center; 
+        mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent); 
+        -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent); 
+    }
+    .notice-text { position: absolute; white-space: nowrap; font-size: 13.5px; color: var(--text-main); font-weight: 500; animation: marquee 20s linear infinite; }
+    html[data-theme="light"] .notice-text { color: #334155; }
+    .notice-marquee:hover .notice-text { animation-play-state: paused; }
     @keyframes marquee { 0% { left: 100%; transform: translateX(0); } 100% { left: -100%; transform: translateX(-100%); } }
-    .notice-close { background: none; border: none; color: var(--text-sub); cursor: pointer; padding: 0 4px; z-index: 2; font-size: 16px; }
+    
+    .notice-close { background: transparent; border: none; color: var(--text-sub); cursor: pointer; width: 20px; height: 20px; z-index: 2; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; padding: 0; }
+    @media (hover: hover) { .notice-close:hover { color: var(--text-main); transform: scale(1.1); } html[data-theme="light"] .notice-close:hover { color: #0f172a; } }
+    .notice-close:active { transform: scale(0.9); }
 
     #det-cbnu[open] { border-color: rgba(216, 58, 109, 0.25); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
     html[data-theme="light"] #det-cbnu[open] { border-color: rgba(181, 37, 85, 0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
@@ -785,7 +853,7 @@
     
     .modal-content { 
         width: 90%; max-width: 400px; background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
-        border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+        border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
         transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
         max-height: 85vh; display: flex; flex-direction: column; 
     }
@@ -796,33 +864,112 @@
     .modal-title { font-size: 18px; font-weight: 700; }
     .modal-close { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 24px; padding: 0 4px; }
     
-    #settingsList { overflow-y: auto; margin-bottom: 20px; overscroll-behavior: contain; }
-    .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--glass-border); user-select: none; opacity: 0; transform: translateY(10px); animation: itemFadeIn 0.3s forwards; transition: all 0.2s ease; }
+    /* 환경설정: 탭 및 테마UI 개편 */
+    .settings-tabs { 
+        display: flex; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 4px; gap: 4px; 
+        border: 1px solid var(--glass-border); flex-shrink: 0; margin-bottom: 20px; 
+    }
+    html[data-theme="light"] .settings-tabs { background: #f1f5f9; border-color: #cbd5e1; }
+    
+    .tab-btn { 
+        flex: 1; background: transparent; border: 1px solid transparent; color: var(--text-sub); 
+        font-size: 14px; font-weight: 600; padding: 10px; cursor: pointer; transition: 0.2s; border-radius: 10px; 
+    }
+    .tab-btn.active { 
+        color: var(--text-main); background: var(--glass-surface); box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+        border-color: var(--glass-border); 
+    }
+    html[data-theme="light"] .tab-btn.active { 
+        background: #ffffff; color: #0f172a; border-color: transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
+    }
+    @media (hover: hover) { 
+        .tab-btn:not(.active):hover { color: var(--text-main); background: rgba(255,255,255,0.03); } 
+        html[data-theme="light"] .tab-btn:not(.active):hover { color: #0f172a; background: rgba(0,0,0,0.03); } 
+    }
+    
+    .modal-body-scroll { flex: 1; overflow-y: auto; min-height: 0; padding-right: 4px; margin-right: -4px; overscroll-behavior: contain; }
+    .modal-body-scroll::-webkit-scrollbar { width: 4px; }
+    .modal-body-scroll::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
+
+    .tab-content { display: none; flex-direction: column; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .setting-box {
+        display: flex; justify-content: space-between; align-items: center;
+        background: rgba(255,255,255,0.04); padding: 14px 16px; border-radius: 14px; 
+        border: 1px solid var(--glass-border); margin-bottom: 12px;
+    }
+    html[data-theme="light"] .setting-box {
+        background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .setting-box-title { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    html[data-theme="light"] .setting-box-title { color: #0f172a; }
+
+    .theme-segment { display: flex; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 4px; gap: 4px; border: 1px solid var(--glass-border); width: 100%; }
+    html[data-theme="light"] .theme-segment { background: #e2e8f0; border-color: #cbd5e1; }
+    .segment-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-sub); background: transparent; border: 1px solid transparent; transition: 0.2s; cursor: pointer; }
+    .segment-btn.active { background: var(--glass-surface); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.2); border-color: var(--glass-border); }
+    html[data-theme="light"] .segment-btn.active { background: #ffffff; color: #0f172a; border-color: transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    @media (hover: hover) { 
+        .segment-btn:not(.active):hover { color: var(--text-main); background: rgba(255,255,255,0.03); } 
+        html[data-theme="light"] .segment-btn:not(.active):hover { color: #0f172a; background: rgba(0,0,0,0.03); } 
+    }
+
+    #settingsList { margin-bottom: 12px; }
+    .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--glass-border); user-select: none; opacity: 0; transform: translateY(10px); animation: itemFadeIn 0.3s forwards; transition: all 0.2s ease; }
     @keyframes itemFadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
-    html[data-theme="light"] .settings-item { background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0,0,0,0.05); }
-    .st-label { display: flex; align-items: center; gap: 14px; font-size: 17px; font-weight: 500; cursor: pointer; flex: 1; }
+    html[data-theme="light"] .settings-item { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+    .st-label { display: flex; align-items: center; gap: 14px; font-size: 15px; font-weight: 600; cursor: pointer; flex: 1; color: var(--text-main); }
+    html[data-theme="light"] .st-label { color: #0f172a; }
     .drag-handle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); cursor: grab; touch-action: none; margin-left: 8px; }
     .drag-handle:active { cursor: grabbing; color: var(--primary); }
     .st-check { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
-    .btn-reset { width: 100%; height: 64px; font-size: 16px; margin-top: auto; border-radius: 14px; background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1); }
-    html[data-theme="light"] .btn-reset { background: #fee2e2; color: #dc2626; border-color: #fca5a5; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1); }
+    .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .color-swatch.active { border-color: var(--text-main); transform: scale(1.15); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+
+    .btn-reset { 
+        width: 100%; height: 48px; font-size: 14px; border-radius: 12px; 
+        background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.25); 
+        font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; margin-top: 10px;
+    }
+    html[data-theme="light"] .btn-reset { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
+    
+    .btn-reset.all-reset { 
+        background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.4); 
+    }
+    
     @media (hover: hover) {
-        .btn-reset:hover { background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.5); color: #f87171; transform: translateY(-2px); }
-        html[data-theme="light"] .btn-reset:hover { background: #fecaca; border-color: #f87171; color: #b91c1c; }
+        .btn-reset:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #f87171; transform: translateY(-2px); }
+        html[data-theme="light"] .btn-reset:hover { background: #fee2e2; border-color: #f87171; color: #b91c1c; }
     }
     .btn-reset:active { transform: scale(0.96); }
+
+    /* --- 오픈소스 라이선스 모달 UI --- */
+    .oss-group-title { font-size: 13px; color: var(--text-sub); font-weight: 600; margin: 16px 0 8px 4px; }
+    .oss-group-title:first-child { margin-top: 4px; }
+    .oss-box { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px; margin-bottom: 8px; }
+    html[data-theme="light"] .oss-box { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+    .oss-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+    html[data-theme="light"] .oss-title { color: #0f172a; }
+    .oss-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; word-break: keep-all; }
+    .oss-link { color: var(--primary); text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
+    .oss-link:hover { opacity: 0.8; text-decoration: underline; }
 
   </style>
 </head>
 <body>
 
-  <div class="scroll-mask"></div>
-
-  <div class="blobs">
-    <div class="blob b1"></div>
-    <div class="blob b2"></div>
+  <div id="customBg" class="custom-bg"></div>
+  <div class="default-bg-wrapper">
+      <div class="blobs" id="bgBlobs">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+      </div>
   </div>
+  
+  <div class="scroll-mask"></div>
 
   <header class="no-select">
     <div class="logo" id="reloadBtn">WebHub <span class="by">by Seungmin Woo</span></div>
@@ -884,15 +1031,61 @@
   <!-- 설정 모달 -->
   <div class="modal-overlay" id="settingsModal">
       <div class="modal-content">
-          <div class="modal-header no-select">
-              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
-                  <span class="modal-title">섹션 설정</span>
-                  <span style="font-size: 11px; color: var(--text-dim); font-weight: 400; letter-spacing: 0.5px;">Section Settings</span>
+          <div class="modal-header no-select" style="margin-bottom: 16px;">
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                  <span class="modal-title">환경 설정</span>
+                  <span style="font-size: 12px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.5px;">Preferences & Sections</span>
               </div>
               <button class="modal-close" id="closeSettingsModal">×</button>
           </div>
-          <div id="settingsList"></div>
-          <button class="btn-reset" id="resetSettings">섹션 설정 초기화</button>
+          
+          <div class="settings-tabs no-select">
+              <button class="tab-btn active" data-tab="tab-theme">화면 및 테마</button>
+              <button class="tab-btn" data-tab="tab-section">섹션 설정</button>
+          </div>
+
+          <div class="modal-body-scroll">
+              
+              <!-- 화면 및 테마 탭 -->
+              <div id="tab-theme" class="tab-content active">
+                  <div class="setting-box" style="flex-direction: column; align-items: stretch; gap: 12px;">
+                      <span class="setting-box-title no-select">다크/라이트 모드</span>
+                      <div class="theme-segment no-select">
+                          <button class="segment-btn active" id="segDark" data-val="dark">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg> 다크 모드
+                          </button>
+                          <button class="segment-btn" id="segLight" data-val="light">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg> 라이트 모드
+                          </button>
+                      </div>
+                  </div>
+                  
+                  <div class="setting-box no-select">
+                      <span class="setting-box-title">포인트 컬러</span>
+                      <div style="display:flex; gap:8px;" id="colorPalette">
+                          <div class="color-swatch" data-accent="blue" style="background:#3b82f6;"></div>
+                          <div class="color-swatch" data-accent="pink" style="background:#D83A6D;"></div>
+                          <div class="color-swatch" data-accent="green" style="background:#10b981;"></div>
+                          <div class="color-swatch" data-accent="yellow" style="background:#F2C14B;"></div>
+                          <div class="color-swatch" data-accent="orange" style="background:#f97316;"></div>
+                      </div>
+                  </div>
+                  
+                  <button class="btn-reset" id="resetThemeBtn">테마 설정 초기화</button>
+              </div>
+
+              <!-- 섹션 순서 탭 -->
+              <div id="tab-section" class="tab-content">
+                  <div style="font-size: 13px; color: var(--text-sub); font-weight: 600; margin-bottom: 12px; margin-left: 4px;" class="no-select">드래그하여 섹션 순서 이동</div>
+                  <div id="settingsList"></div>
+                  <button class="btn-reset" id="resetSectionBtn">섹션 설정 초기화</button>
+              </div>
+
+          </div>
+
+          <div style="margin-top: 16px; border-top: 1px solid var(--glass-border); padding-top: 16px; flex-shrink: 0;">
+              <button class="btn-reset all-reset" id="resetSettings">모든 설정 초기화</button>
+          </div>
       </div>
   </div>
 
@@ -910,41 +1103,76 @@
           <button class="btn btn-pri" id="saveBookmarkBtn" style="width:100%;">추가하기</button>
       </div>
   </div>
+
+  <!-- 음악 추가 모달 -->
+  <div class="modal-overlay" id="addMusicModal">
+      <div class="modal-content">
+          <div class="modal-header no-select">
+              <span class="modal-title">음악 추가</span>
+              <button class="modal-close" id="closeAddMusicModal">×</button>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+              <input type="url" id="musicUrlInput" class="bm-input" placeholder="YouTube 영상 링크 (URL)">
+          </div>
+          <button class="btn btn-pri" id="saveMusicBtn" style="width:100%;">추가하기</button>
+      </div>
+  </div>
   
   <!-- 오픈소스 라이선스 모달 -->
   <div class="modal-overlay" id="ossModal">
-      <div class="modal-content" style="max-height: 70vh;">
-          <div class="modal-header no-select">
-              <span class="modal-title">Open Source Licenses</span>
+      <div class="modal-content" style="max-height: 75vh;">
+          <div class="modal-header no-select" style="margin-bottom: 12px;">
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                  <span class="modal-title">법적 고지 및 라이선스</span>
+                  <span style="font-size: 12px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.5px;">Legal & Licenses</span>
+              </div>
               <button class="modal-close" id="closeOSSModal">×</button>
           </div>
-          <div style="overflow-y: auto; font-size: 13px; color: var(--text-sub); line-height: 1.5; padding-right: 8px;">
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">SortableJS</h4>
-              <p>Copyright (c) 2021 SortableJS and RubaXa<br>MIT License</p>
-              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+          <div class="modal-body-scroll no-select">
               
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Open-Meteo API</h4>
-              <p>Weather data by <a href="https://open-meteo.com/" target="_blank" style="text-decoration:underline;">Open-Meteo.com</a><br>License: CC-BY 4.0</p>
-              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+              <div class="oss-group-title no-select">APIs & Services</div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">Open-Meteo API</div>
+                  <div class="oss-desc">
+                      Weather and geocoding data provided by <a href="https://open-meteo.com/" target="_blank" class="oss-link">Open-Meteo.com</a><br>
+                      Licensed under CC-BY 4.0.
+                  </div>
+              </div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">YouTube Embedded Player</div>
+                  <div class="oss-desc">
+                      Music content is played via YouTube Iframe API. YouTube is a trademark of Google LLC.
+                  </div>
+              </div>
 
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Weather Icons</h4>
-              <p>Copyright (c) 2015 Erik Flowers<br>SIL OFL 1.1 (Fonts) / MIT License (CSS)</p>
-              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
+              <div class="oss-group-title no-select">Libraries & Frameworks</div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">SortableJS</div>
+                  <div class="oss-desc">Copyright (c) 2021 SortableJS and RubaXa. Released under the MIT License.</div>
+              </div>
 
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Lucide / Feather Icons</h4>
-              <p>Copyright (c) Lucide Contributors / Cole Bemis<br>MIT License (Inline SVGs)</p>
-              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
-              
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Google Fonts (Google Sans Flex, Outfit)</h4>
-              <p>SIL Open Font License, 1.1</p>
-              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
-              
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Pretendard</h4>
-              <p>Copyright (c) 2021 Kiliman<br>SIL Open Font License, 1.1</p>
-              <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
-              
-              <h4 style="color: var(--text-main); margin: 0 0 8px 0;">Cal Sans</h4>
-              <p>Copyright (c) 2021 Cal.com, Inc.<br>SIL Open Font License, 1.1</p>
+              <div class="oss-group-title no-select">Fonts & Icons</div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">Pretendard</div>
+                  <div class="oss-desc">Copyright (c) 2021 Kiliman. SIL Open Font License 1.1.</div>
+              </div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">Google Fonts (Google Sans Flex, Outfit)</div>
+                  <div class="oss-desc">Provided by Google Fonts. SIL Open Font License 1.1.</div>
+              </div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">Cal Sans</div>
+                  <div class="oss-desc">Copyright (c) 2021 Cal.com, Inc. SIL Open Font License 1.1.</div>
+              </div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">Weather Icons</div>
+                  <div class="oss-desc">Copyright (c) 2015 Erik Flowers. SIL OFL 1.1 (Fonts) / MIT License (CSS).</div>
+              </div>
+              <div class="oss-box">
+                  <div class="oss-title no-select">Lucide / Feather Icons</div>
+                  <div class="oss-desc">Copyright (c) Lucide Contributors / Cole Bemis. Released under the MIT License.</div>
+              </div>
+
           </div>
       </div>
   </div>
@@ -1039,7 +1267,7 @@
         </div>
         
         <!-- Weather -->
-        <details id="det-weather" open>
+        <details id="det-weather">
             <summary class="no-select">
                 <div class="sum-title">
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></svg>
@@ -1121,7 +1349,7 @@
         </details>
 
         <!-- 북마크 (사용자 정의 즐겨찾기) -->
-        <details id="det-bookmarks" open>
+        <details id="det-bookmarks">
             <summary class="no-select">
                 <div class="sum-title">
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
@@ -1149,7 +1377,7 @@
         </details>
 
         <!-- Graduation & Future Planning -->
-        <details id="det-future" open>
+        <details id="det-future">
             <summary class="no-select">
                 <div class="sum-title">
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
@@ -1331,19 +1559,22 @@
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                 Music
                 </div>
-                <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                <div class="bm-header-actions">
+                    <button class="bm-action-btn" id="editMusicBtn" title="음악 편집">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        <span>편집</span>
+                    </button>
+                    <button class="bm-action-btn" id="addMusicBtn" title="음악 추가">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+                        <span>추가</span>
+                    </button>
+                    <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
             </summary>
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content">
-                    <div class="music-grid no-select">
-                        <div class="yt-container">
-                            <iframe class="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&modestbranding=1" title="Lofi Girl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-                        </div>
-                        <div class="yt-container">
-                            <iframe class="yt-frame" src="https://www.youtube.com/embed/6K05OjoSR14?controls=1&modestbranding=1" title="Studio Ghibli" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-                        </div>
-                    </div>
+                    <div class="music-grid no-select" id="musicGrid"></div>
                 </div>
                 </div>
             </div>
@@ -1369,14 +1600,18 @@
     <div class="notice-bar no-select" id="noticeBar">
       <span class="notice-badge">NOTICE</span>
       <div class="notice-marquee">
-        <span class="notice-text">WebHub Version 5.4.7 업데이트 (라이선스 검토 완료 및 애니메이션 최적화)</span>
+        <span class="notice-text">WebHub Version 5.5.0 업데이트 완료 (디자인 및 사용성 전면 개선, 법적 고지 개편)</span>
       </div>
-      <button class="notice-close" onclick="document.getElementById('noticeBar').style.display='none'">×</button>
+      <button class="notice-close" id="closeNoticeBtn" title="하루 동안 닫기">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
 
+    <div class="footer-divider"></div>
+
     <footer class="no-select">
-      <b>WebHub</b> Ver. 5.4.7<br>
-      <p>© 2026 Seungmin Woo. All rights reserved. <span style="opacity:0.5;">|</span> <button id="openOSSModal" class="footer-link">OSS Licenses</button></p>
+      <b>WebHub</b> Ver. 5.5.0<br>
+      <p>© 2026 Seungmin Woo. All rights reserved. <span class="footer-sep" style="opacity:0.5;">|</span> <button id="openOSSModal" class="footer-link">Legal & Licenses</button></p>
     </footer>
 
     <!-- Floating Buttons -->
@@ -1396,36 +1631,98 @@
           if (navigator.vibrate) navigator.vibrate(ms);
       }
       document.body.addEventListener('pointerdown', (e) => {
-          if (e.target.closest('button, .card-link, summary:not(:has(button:hover)), .engine-chip, .cal-day:not(.other-month)')) {
+          if (e.target.closest('button, .card-link, summary:not(:has(button:hover)), .engine-chip, .cal-day:not(.other-month), .color-swatch, .segment-btn, .tab-btn')) {
               vibrate(10);
           }
       });
 
-      // --- Theme & Settings ---
+      // --- Theme, Colors & Settings ---
       const html = document.documentElement;
       const themeToggle = document.getElementById('themeToggle');
       const savedTheme = localStorage.getItem('theme') || 'dark';
       const iconMoon = document.getElementById('iconMoon');
       const iconSun = document.getElementById('iconSun');
+      
+      const segDark = document.getElementById('segDark');
+      const segLight = document.getElementById('segLight');
 
       function applyTheme(theme) {
         html.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
+        
         if (theme === 'light') {
             if(iconSun) iconSun.style.display = 'block';
             if(iconMoon) iconMoon.style.display = 'none';
+            if(segLight) segLight.classList.add('active');
+            if(segDark) segDark.classList.remove('active');
         } else {
             if(iconSun) iconSun.style.display = 'none';
             if(iconMoon) iconMoon.style.display = 'block';
+            if(segDark) segDark.classList.add('active');
+            if(segLight) segLight.classList.remove('active');
         }
       }
-      
       applyTheme(savedTheme);
 
-      themeToggle.onclick = () => {
-        const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        applyTheme(next);
-      };
+      if (themeToggle) {
+          themeToggle.onclick = () => {
+            const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+          };
+      }
+      
+      if (segDark) segDark.onclick = () => applyTheme('dark');
+      if (segLight) segLight.onclick = () => applyTheme('light');
+
+      // 포인트 컬러 설정 (data-accent 테마 적용)
+      const savedAccent = localStorage.getItem('accentTheme') || 'blue';
+      
+      function applyAccentTheme(accent) {
+          html.setAttribute('data-accent', accent);
+          document.querySelectorAll('.color-swatch').forEach(sw => {
+              if (sw.dataset.accent === accent) sw.classList.add('active');
+              else sw.classList.remove('active');
+          });
+      }
+      applyAccentTheme(savedAccent);
+
+      document.querySelectorAll('.color-swatch').forEach(swatch => {
+          swatch.addEventListener('click', (e) => {
+              const accent = e.target.dataset.accent;
+              localStorage.setItem('accentTheme', accent);
+              applyAccentTheme(accent);
+          });
+      });
+
+      // Settings Modal Tabs
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+              const targetId = btn.dataset.tab;
+              tabBtns.forEach(b => b.classList.remove('active'));
+              tabContents.forEach(c => c.classList.remove('active'));
+              btn.classList.add('active');
+              document.getElementById(targetId).classList.add('active');
+          });
+      });
+
+      // Reset Buttons
+      const resetThemeBtn = document.getElementById('resetThemeBtn');
+      const resetSectionBtn = document.getElementById('resetSectionBtn');
+      const resetSettings = document.getElementById('resetSettings');
+
+      if(resetThemeBtn) {
+          resetThemeBtn.onclick = () => {
+              if(confirm('테마와 배경화면 설정을 초기화하시겠습니까?')) {
+                  localStorage.removeItem('theme');
+                  localStorage.removeItem('accentTheme');
+                  applyTheme('dark');
+                  applyAccentTheme('blue');
+                  vibrate(20);
+              }
+          };
+      }
 
       // --- PWA Manifest Dynamic Generation ---
       function generateManifest() {
@@ -1509,21 +1806,24 @@
       }
 
       // --- Accordion Logic ---
+      // 최초 접속 시(isFirstVisit) 모든 섹션이 닫힌 상태로 시작하도록 처리
+      const isFirstVisit = !localStorage.getItem('sectionsConfig'); 
       const allDetails = document.querySelectorAll('details');
       allDetails.forEach((dt) => {
           const id = dt.id;
           if(id) {
               const state = localStorage.getItem(id);
               if (state === 'open') dt.setAttribute('open', '');
-              else if (state === 'closed') dt.removeAttribute('open');
+              else if (state === 'closed' || isFirstVisit) dt.removeAttribute('open');
+              // 저장된 상태가 없고 첫 접속도 아니라면 HTML에 있는 open 속성 유지
           }
       });
       updateExpandToggleIcon();
 
       document.querySelectorAll('summary').forEach(summary => {
         summary.addEventListener('click', (e) => {
-          // 즐겨찾기 헤더의 추가/편집 버튼 클릭 시 토글 방지
-          if (e.target.closest('#addBookmarkBtn') || e.target.closest('#editBookmarkBtn')) {
+          // 즐겨찾기/음악 헤더의 추가/편집 버튼 클릭 시 토글 방지
+          if (e.target.closest('.bm-action-btn')) {
               e.preventDefault(); 
               return; 
           }
@@ -1556,7 +1856,6 @@
       // --- Section Config (SortableJS Reordering) ---
       const sectionWrapper = document.getElementById('sectionWrapper');
       const settingsList = document.getElementById('settingsList');
-      const resetSettingsBtn = document.getElementById('resetSettings');
       const settingsModal = document.getElementById('settingsModal');
       const floatSettingsBtn = document.getElementById('floatSettingsBtn');
       const closeSettingsModal = document.getElementById('closeSettingsModal');
@@ -1641,6 +1940,8 @@
               handle: '.drag-handle',
               animation: 250,
               easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+              fallbackOnBody: true,
+              swapThreshold: 0.65,
               ghostClass: 'sortable-ghost',
               dragClass: 'sortable-drag',
               onEnd: function (evt) {
@@ -1651,15 +1952,50 @@
           });
       }
 
-      if(resetSettingsBtn) {
-          resetSettingsBtn.onclick = () => {
-              if(confirm('모든 섹션 순서와 숨김 설정을 초기화하시겠습니까?')) {
+      if(resetSectionBtn) {
+          resetSectionBtn.onclick = () => {
+              if(confirm('섹션 순서와 숨김 설정을 초기화하시겠습니까?')) {
                   sectionsConfig = JSON.parse(JSON.stringify(defaultSections));
                   localStorage.setItem('sectionsConfig', JSON.stringify(sectionsConfig));
                   applySectionConfig();
                   renderSettingsUI();
+                  vibrate(20);
               }
           };
+      }
+
+      if(resetSettings) {
+          resetSettings.onclick = () => {
+              if(confirm('모든 설정(테마, 섹션 등)을 초기화하시겠습니까?')) {
+                  localStorage.removeItem('sectionsConfig'); 
+                  localStorage.removeItem('accentTheme');
+                  localStorage.removeItem('theme');
+                  localStorage.removeItem('bgImageUrl');
+                  location.reload(); 
+              }
+          };
+      }
+
+      // --- Notice Bar Logic ---
+      const noticeBar = document.getElementById('noticeBar');
+      const closeNoticeBtn = document.getElementById('closeNoticeBtn');
+      
+      if (noticeBar && closeNoticeBtn) {
+          const dismissedUntil = localStorage.getItem('noticeDismissedUntil');
+          // 저장된 시간이 있고, 현재 시간이 그 시간보다 이전이면 숨김
+          if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
+              noticeBar.style.display = 'none';
+          } else {
+              closeNoticeBtn.addEventListener('click', () => {
+                  noticeBar.classList.add('hidden');
+                  setTimeout(() => { noticeBar.style.display = 'none'; }, 300);
+                  
+                  // 현재 시간 기준으로 24시간(1일) 후의 타임스탬프 저장
+                  const oneDayInMs = 24 * 60 * 60 * 1000;
+                  localStorage.setItem('noticeDismissedUntil', Date.now() + oneDayInMs);
+                  vibrate(10);
+              });
+          }
       }
 
       function toggleModal(modalEl, open) {
@@ -1703,7 +2039,7 @@
               localStorage.setItem('is24HourFormat', is24HourFormat);
               updateClockFmtBtn();
               
-              // 시간 포맷 변경 시 애니메이션 효과 (Jitter 없이 전체 감싸는 부모에)
+              // 시간 포맷 변경 시 애니메이션 효과
               const tc = document.getElementById('timeContainer');
               const fc = document.getElementById('fsTime')?.parentElement;
               
@@ -1757,7 +2093,13 @@
           const name = initialChip.dataset.name;
           document.querySelectorAll('.engine-chip').forEach(c => c.removeAttribute('data-active'));
           initialChip.setAttribute('data-active', 'true');
-          updateSearchColor(color);
+          
+          if(color.includes('var(')) {
+              updateSearchColor('var(--primary)'); 
+          } else {
+              updateSearchColor(color);
+          }
+          
           if(q) q.placeholder = `${name} 검색어를 입력하세요`;
           setTimeout(() => {
             initialChip.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
@@ -1773,7 +2115,13 @@
               const name = chip.dataset.name;
               localStorage.setItem('lastEngine', curEngine);
               [...engineList.children].forEach(c => c.dataset.active = (c === chip));
-              updateSearchColor(color);
+              
+              if(color.includes('var(')) {
+                  updateSearchColor('var(--primary)'); 
+              } else {
+                  updateSearchColor(color);
+              }
+              
               if(q) q.placeholder = `${name} 검색어를 입력하세요`;
               chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             }
@@ -1878,6 +2226,7 @@
         const wd = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][now.getDay()];
         
         let h = now.getHours();
+
         const isAm = h < 12;
         const ampm = isAm ? 'AM' : 'PM';
         
@@ -1896,7 +2245,7 @@
         if(ampmEl) {
             ampmEl.textContent = ampm;
             ampmEl.className = `ampm ${isAm ? 'am' : 'pm'}`;
-            ampmEl.style.opacity = is24HourFormat ? '0' : '1'; // 공간 차지 유지, 자연스러운 페이드 적용
+            ampmEl.style.opacity = is24HourFormat ? '0' : '1'; 
         }
           
         // Fullscreen Clock Sync
@@ -1910,7 +2259,7 @@
         if (fsAmPm) {
             fsAmPm.textContent = ampm;
             fsAmPm.className = `fs-clock-ampm ${isAm ? 'am' : 'pm'}`;
-            fsAmPm.style.opacity = is24HourFormat ? '0' : '1'; // 공간 차지 유지, 자연스러운 페이드 적용
+            fsAmPm.style.opacity = is24HourFormat ? '0' : '1';
         }
 
         if (weatherUpdateTime && updateText) {
@@ -2093,6 +2442,7 @@
       const bmTitle = document.getElementById('bmTitle');
       const bmUrl = document.getElementById('bmUrl');
       let isEditMode = false;
+      let bookmarkSortable;
 
       function renderBookmarks() {
           if(!bookmarkGrid) return;
@@ -2143,16 +2493,16 @@
               e.stopPropagation(); e.preventDefault();
               isEditMode = !isEditMode;
               
-              // 활성화 시 색상 변경
               if(isEditMode) {
                   editBookmarkBtn.style.color = 'var(--text-main)';
                   editBookmarkBtn.style.borderColor = 'var(--primary)';
-                  editBookmarkBtn.style.background = 'rgba(59, 130, 246, 0.1)';
+                  editBookmarkBtn.style.background = 'var(--primary-glow)';
               } else {
                   editBookmarkBtn.style.color = '';
                   editBookmarkBtn.style.borderColor = 'transparent';
                   editBookmarkBtn.style.background = '';
               }
+              if(bookmarkSortable) bookmarkSortable.option('disabled', !isEditMode);
               renderBookmarks();
           });
       }
@@ -2188,6 +2538,146 @@
           });
       }
       renderBookmarks();
+
+      // 북마크 Drag & Drop 설정
+      if (bookmarkGrid) {
+          bookmarkSortable = new Sortable(bookmarkGrid, {
+              animation: 250,
+              easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+              disabled: true,
+              onEnd: function (evt) {
+                  const movedItem = bookmarks.splice(evt.oldIndex, 1)[0];
+                  bookmarks.splice(evt.newIndex, 0, movedItem);
+                  localStorage.setItem('myBookmarks', JSON.stringify(bookmarks));
+              },
+          });
+      }
+
+      // --- Music ---
+      let myMusic = JSON.parse(localStorage.getItem('myMusic')) || [
+          { id: 'jfKfPfyJRdk', title: 'Lofi Girl' },
+          { id: '6K05OjoSR14', title: 'Studio Ghibli' }
+      ];
+      const musicGrid = document.getElementById('musicGrid');
+      const addMusicBtn = document.getElementById('addMusicBtn');
+      const editMusicBtn = document.getElementById('editMusicBtn');
+      const addMusicModal = document.getElementById('addMusicModal');
+      const closeAddMusicModal = document.getElementById('closeAddMusicModal');
+      const saveMusicBtn = document.getElementById('saveMusicBtn');
+      const musicUrlInput = document.getElementById('musicUrlInput');
+      let isMusicEditMode = false;
+      let musicSortable;
+
+      function extractYouTubeId(url) {
+          const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+          const match = url.match(regExp);
+          return (match && match[1]) ? match[1] : null;
+      }
+
+      function renderMusic() {
+          if (!musicGrid) return;
+          musicGrid.innerHTML = '';
+          if (myMusic.length === 0) {
+              musicGrid.innerHTML = '<div style="width:100%; text-align:center; padding:20px; color:var(--text-dim); font-size:14px;">등록된 음악이 없습니다. 추가 버튼을 눌러보세요.</div>';
+              return;
+          }
+          
+          myMusic.forEach((music, idx) => {
+              const wrap = document.createElement('div');
+              wrap.className = `music-card-wrapper ${isMusicEditMode ? 'edit-mode' : ''}`;
+              
+              // lazy 로딩 적용
+              wrap.innerHTML = `
+                  <div class="yt-container">
+                      <iframe class="yt-frame" src="https://www.youtube.com/embed/${music.id}?controls=1&modestbranding=1" title="${music.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                  </div>
+                  <button class="music-del-btn" data-idx="${idx}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+              `;
+              musicGrid.appendChild(wrap);
+          });
+
+          document.querySelectorAll('.music-del-btn').forEach(btn => {
+              btn.addEventListener('click', (e) => {
+                  const idx = parseInt(e.currentTarget.dataset.idx);
+                  myMusic.splice(idx, 1);
+                  localStorage.setItem('myMusic', JSON.stringify(myMusic));
+                  renderMusic();
+                  vibrate(30);
+              });
+          });
+      }
+
+      if (addMusicBtn) {
+          addMusicBtn.addEventListener('click', (e) => {
+              e.stopPropagation(); e.preventDefault();
+              if (musicUrlInput) musicUrlInput.value = '';
+              toggleModal(addMusicModal, true);
+          });
+      }
+
+      if (editMusicBtn) {
+          editMusicBtn.addEventListener('click', (e) => {
+              e.stopPropagation(); e.preventDefault();
+              isMusicEditMode = !isMusicEditMode;
+              
+              if (isMusicEditMode) {
+                  editMusicBtn.style.color = 'var(--text-main)';
+                  editMusicBtn.style.borderColor = 'var(--primary)';
+                  editMusicBtn.style.background = 'var(--primary-glow)';
+              } else {
+                  editMusicBtn.style.color = '';
+                  editMusicBtn.style.borderColor = 'transparent';
+                  editMusicBtn.style.background = '';
+              }
+              if(musicSortable) musicSortable.option('disabled', !isMusicEditMode);
+              renderMusic();
+          });
+      }
+
+      if (closeAddMusicModal) {
+          closeAddMusicModal.addEventListener('click', () => toggleModal(addMusicModal, false));
+      }
+      
+      if (addMusicModal) {
+          addMusicModal.addEventListener('click', (e) => {
+              if (e.target === addMusicModal) toggleModal(addMusicModal, false);
+          });
+      }
+
+      if (saveMusicBtn) {
+          saveMusicBtn.addEventListener('click', () => {
+              const url = musicUrlInput ? musicUrlInput.value.trim() : '';
+              if (url) {
+                  const videoId = extractYouTubeId(url);
+                  if (videoId) {
+                      myMusic.push({ id: videoId, title: 'Custom Music' });
+                      localStorage.setItem('myMusic', JSON.stringify(myMusic));
+                      toggleModal(addMusicModal, false);
+                      renderMusic();
+                      vibrate(20);
+                  } else {
+                      alert('유효한 YouTube 링크가 아닙니다.');
+                  }
+              } else {
+                  alert('URL을 입력해주세요.');
+              }
+          });
+      }
+      renderMusic();
+      
+      if (musicGrid) {
+          musicSortable = new Sortable(musicGrid, {
+              animation: 250,
+              easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+              disabled: true,
+              onEnd: function (evt) {
+                  const movedItem = myMusic.splice(evt.oldIndex, 1)[0];
+                  myMusic.splice(evt.newIndex, 0, movedItem);
+                  localStorage.setItem('myMusic', JSON.stringify(myMusic));
+              },
+          });
+      }
+
 
       // --- Weather ---
       const wMainIcon = document.getElementById('wMainIcon');
@@ -2467,9 +2957,8 @@
                    const countryMap = {
                        'KR': '대한민국', 'KP': '북한', 'US': '미국', 'JP': '일본', 'CN': '중국',
                        'GB': '영국', 'FR': '프랑스', 'DE': '독일', 'IT': '이탈리아', 'RU': '러시아',
-                       'CA': '캐나다', 'AU': '호주', 'TW': '대만', 'VN': '베트남', 'PH': '베트남' // 오타 주의: PH는 필리핀
+                       'CA': '캐나다', 'AU': '호주', 'TW': '대만', 'VN': '베트남', 'PH': '필리핀' 
                    };
-                   countryMap['PH'] = '필리핀'; // 수정된 매핑
                    
                    if (countryMap[countryName]) {
                        countryName = countryMap[countryName];
@@ -2651,6 +3140,7 @@
           else {
               toggleModal(settingsModal, false);
               toggleModal(addBookmarkModal, false);
+              toggleModal(addMusicModal, false);
               toggleModal(ossModal, false);
               setDrawer(false);
           }
