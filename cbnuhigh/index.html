@@ -10,6 +10,9 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Practicum">
   
+  <!-- 동적 PWA 매니페스트 플레이스홀더 -->
+  <link rel="manifest" id="pwaManifest">
+  
   <title>WebHub Practicum</title>
   <meta name="theme-color" content="#050505" />
   
@@ -22,6 +25,39 @@
   
   <!-- 드래그 앤 드롭 (섹션 설정용) -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+  <!-- PC용 기본 파비콘 (SVG) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='2475' height='2475' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' overflow='hidden'%3E%3Cdefs%3E%3CclipPath id='clip0'%3E%3Crect x='963' y='0' width='2475' height='2475'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23clip0)' transform='translate(-963 0)'%3E%3Crect x='963' y='0' width='2475' height='2475' fill='%23050505'/%3E%3Cpath d='M1331 731 1581.12 731 1740 1292.85C1749.51 1324.55 1757.76 1354.61 1764.75 1383.04L1766.45 1391.62 1768.09 1382.53C1774.67 1353.37 1783.08 1326.42 1793.32 1301.67L1992.36 731 2190.42 731 2388.79 1296.21C2399.26 1325.27 2406.94 1353.01 2411.82 1379.43L2415.66 1407.82 2415.96 1403.9C2416.8 1397.25 2418 1390.26 2419.56 1382.93 2425.8 1353.62 2433.5 1323.68 2442.66 1293.12L2601.64 731 2852 731 2519.05 1742 2321.51 1742 2118.59 1177.46C2109.07 1151.29 2101.96 1125.52 2097.26 1100.16L2092.96 1069.17 2092.36 1076.14C2091.46 1082.5 2090.18 1089.1 2088.53 1095.94 2081.94 1123.28 2073.82 1150.45 2064.18 1177.46L1861.25 1742 1663.71 1742Z' fill='%23FFFFFF' fill-rule='evenodd'/%3E%3Cpath d='M2729 1744 2899 1236 3069 1744Z' fill='%23F2C14B' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E" />
+  
+  <script>
+    // SVG 아이콘을 캔버스를 통해 PNG로 동적 변환 (iOS 홈 화면 호환 및 PWA 매니페스트용)
+    (function() {
+      const svgStr = `<svg width="2475" height="2475" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><defs><clipPath id="clip0"><rect x="963" y="0" width="2475" height="2475"/></clipPath></defs><g clip-path="url(#clip0)" transform="translate(-963 0)"><rect x="963" y="0" width="2475" height="2475" fill="#050505"/><path d="M1331 731 1581.12 731 1740 1292.85C1749.51 1324.55 1757.76 1354.61 1764.75 1383.04L1766.45 1391.62 1768.09 1382.53C1774.67 1353.37 1783.08 1326.42 1793.32 1301.67L1992.36 731 2190.42 731 2388.79 1296.21C2399.26 1325.27 2406.94 1353.01 2411.82 1379.43L2415.66 1407.82 2415.96 1403.9C2416.8 1397.25 2418 1390.26 2419.56 1382.93 2425.8 1353.62 2433.5 1323.68 2442.66 1293.12L2601.64 731 2852 731 2519.05 1742 2321.51 1742 2118.59 1177.46C2109.07 1151.29 2101.96 1125.52 2097.26 1100.16L2092.96 1069.17 2092.36 1076.14C2091.46 1082.5 2090.18 1089.1 2088.53 1095.94 2081.94 1123.28 2073.82 1150.45 2064.18 1177.46L1861.25 1742 1663.71 1742Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M2729 1744 2899 1236 3069 1744Z" fill="#F2C14B" fill-rule="evenodd"/></g></svg>`;
+      const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
+      const img = new Image();
+      
+      img.onload = function() {
+          const canvas = document.createElement("canvas");
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, 512, 512);
+          
+          try {
+              const pngUrl = canvas.toDataURL("image/png");
+              const appleIcon = document.createElement("link");
+              appleIcon.rel = "apple-touch-icon";
+              appleIcon.sizes = "512x512";
+              appleIcon.href = pngUrl;
+              document.head.appendChild(appleIcon);
+              
+              window.dynamicPngFavicon = pngUrl;
+              window.dispatchEvent(new CustomEvent('faviconReady'));
+          } catch(e) { console.error("Favicon generation failed", e); }
+      };
+      img.src = svgUrl;
+    })();
+  </script>
   
   <style>
     /* --- 전역 색상 및 변수 설정 --- */
@@ -101,10 +137,6 @@
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeInScale {
-        from { opacity: 0; transform: translateY(8px) scale(0.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-    }
     @keyframes timeFade {
         0% { opacity: 0.5; transform: scale(0.98); }
         100% { opacity: 1; transform: scale(1); }
@@ -159,10 +191,8 @@
     }
     html[data-theme="light"] header { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
 
-    /* 세련된 텍스트 디자인으로 복구된 로고 */
     .logo { font-family: var(--font-logo); font-size: 22px; font-weight: 400; color: var(--text-main); display: flex; align-items: center; cursor: pointer; }
     
-    /* 세련된 디자인으로 변경된 Practicum 뱃지 */
     .logo .by { 
         font-family: var(--font-base); font-size: 15px; font-weight: 700; letter-spacing: 0.3px;
         color: var(--primary); margin-left: 6px; 
@@ -191,7 +221,7 @@
     .clock-wrap { display: flex; flex-direction: column; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .clock-wrap.show-cal { align-items: stretch; }
 
-    .clock-main-panel { position: relative; width: 100%; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 20px; overflow: hidden; }
+    .clock-main-panel { position: relative; width: 100%; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 20px; overflow: hidden; }
     
     .time-container { padding: 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 250px; white-space: nowrap; }
     .date-row { font-size: 15px; color: var(--text-sub); font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.4s ease; }
@@ -223,6 +253,9 @@
     .schedule-inner.fade-out {
         opacity: 0; transform: translateY(5px) scale(0.98);
     }
+
+    /* 시계 모드(달력 닫힘)일 땐 일정 텍스트 강제 숨김 */
+    .clock-wrap:not(.show-cal) .schedule-container { display: none !important; }
 
     .sched-event {
         display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px;
@@ -266,8 +299,13 @@
     @media (max-width: 480px) {
         .clock-cal-btn { left: 10px; top: 10px; width: 32px; height: 32px; }
         .clock-fmt-btn { right: 10px; top: 10px; width: 32px; height: 32px; font-size: 10px; }
-        .clock-main-panel { padding: 14px 20px; min-height: 120px; }
+        .clock-main-panel { padding: 10px 42px; min-height: 90px; }
+        .time-container .date-row { font-size: 13px; }
         .time-container .time-main { font-size: 38px; }
+        .time-container .time-sub { height: 30px; }
+        .time-container .ampm { font-size: 12px; }
+        .time-container .time-sec { font-size: 14px; }
+        
         .sched-event { padding: 8px 14px; font-size: 13.5px; min-height: 40px; }
     }
 
@@ -313,7 +351,7 @@
     html[data-theme="light"] .cal-day.today { background: var(--primary) !important; color: white !important; }
     .cal-day.today .cal-dot { background: white; }
 
-    /* 토, 일 및 공휴일 기본 색상 (선택불가하지만 흐림 효과 제거) */
+    /* 토, 일 및 공휴일 (흐림 효과 없음, 단순 붉은색) */
     .cal-day.sun, .cal-day.holiday { color: #ef4444 !important; }
     .cal-day.sat { color: #3b82f6 !important; }
     
@@ -332,7 +370,7 @@
         color: var(--text-main); font-weight: 600; border-radius: 10px;
     }
     html[data-theme="light"] .cal-day.practicum { background: #fff; border-color: #cbd5e1; color: var(--primary); }
-    .cal-day:not(.practicum):not(.disabled):not(.empty) { opacity: 0.6; } /* 교생 기간 외의 날짜를 살짝 흐리게 하여 강조 효과 극대화 */
+    .cal-day:not(.practicum):not(.disabled):not(.empty) { opacity: 0.6; }
 
     /* --- 아코디언(섹션) 스타일 --- */
     details { background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-md); margin-bottom: var(--section-gap); overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -462,12 +500,20 @@
       
       .lunch-day-card { padding: 16px; }
       .header-action-btn { font-size: 11.5px; padding: 4px 8px; }
+
+      /* 일과 진행표 모바일 대응 */
+      .daily-schedule-table { min-width: 100%; font-size: 11.5px; }
+      .daily-schedule-table th, .daily-schedule-table td { padding: 8px 4px; word-break: keep-all; }
+      .ds-sm { font-size: 11px; }
+
+      /* 공지 iframe 모바일 대응 */
+      .notice-iframe { height: 350px !important; }
       
       footer p { flex-direction: column; gap: 6px; margin-top: 8px; }
     }
 
     footer { text-align: center; padding: 10px 0; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
-    footer b { font-family: 'Cal Sans', sans-serif; font-weight: 400; color: var(--text-main); }
+    footer b { font-family: var(--font-base); font-size: 13px; font-weight: 600; color: var(--text-main); }
     footer p { margin: 4px 0 0; opacity: 0.7; }
     .footer-link { background: none; border: none; padding: 0; margin: 0; color: inherit; font-family: inherit; font-size: inherit; text-decoration: underline; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; }
     .footer-link:hover { opacity: 1; }
@@ -516,9 +562,7 @@
   <div class="scroll-mask"></div>
 
   <header class="no-select">
-    <div class="logo" id="reloadBtn">
-        WebHub <span class="by">Practicum</span>
-    </div>
+    <div class="logo" id="reloadBtn">WebHub <span class="by">Practicum</span></div>
     <div class="header-tools">
       <button class="tool-btn" id="expandToggle" title="전체 펼치기/접기">
         <svg id="iconExpandAll" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none"><path d="M7 11l5 5 5-5M7 5l5 5 5-5"/></svg>
@@ -536,7 +580,7 @@
         </svg>
         <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
           <circle cx="12" cy="12" r="5"></circle>
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 5.64l1.42-1.42"></path>
         </svg>
       </button>
     </div>
@@ -722,7 +766,7 @@
                 <div class="det-inner">
                 <div class="det-content">
                     <!-- 구글 스프레드시트 임베드 -->
-                    <iframe src="https://docs.google.com/spreadsheets/d/1750l6Us6DYlc-u5RovrsJNZko8KYNs4lIUr5dVfp1o8/htmlembed?widget=true&headers=false" width="100%" height="450px" style="border:1px solid var(--glass-border); border-radius:12px; background:#fff; display:block;"></iframe>
+                    <iframe src="https://docs.google.com/spreadsheets/d/1750l6Us6DYlc-u5RovrsJNZko8KYNs4lIUr5dVfp1o8/htmlembed?widget=true&headers=false" width="100%" height="450px" class="notice-iframe" style="border:1px solid var(--glass-border); border-radius:12px; background:#fff; display:block;"></iframe>
                 </div>
                 </div>
             </div>
@@ -733,7 +777,7 @@
     <div class="footer-divider"></div>
 
     <footer class="no-select">
-      <b>WebHub <span style="color:var(--primary); font-family:var(--font-base); font-weight:700;">Practicum</span></b> Ver. 1.8<br>
+      <b>WebHub <span style="color:var(--primary); font-family:var(--font-base); font-weight:700; margin-left:2px;">Practicum</span></b> Ver. 1.9<br>
       <p>© 2026 Seungmin Woo. All rights reserved. <span style="opacity:0.5; margin: 0 6px;">|</span> <button id="openOSSModal" class="footer-link">Legal & Licenses</button></p>
     </footer>
 
@@ -1272,7 +1316,7 @@
       function toggleCalendar() {
           if(clockWrap) {
               if (clockWrap.classList.contains('show-cal')) {
-                  // 달력 닫을 때 '오늘'로 자동 복귀 (요청사항 반영)
+                  // 달력 닫을 때 '오늘'로 자동 복귀
                   calDate = new Date();
                   selectedDateString = getDateString(calDate);
               }
