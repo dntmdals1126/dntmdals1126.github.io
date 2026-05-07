@@ -124,8 +124,10 @@
       color-scheme: light;
     }
 
-    /* --- 기본 초기화 및 애니메이션 --- */
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+    /* --- 기본 초기화 및 애니메이션 (글로벌 텍스트 드래그 금지 적용) --- */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; -webkit-user-select: none; }
+    input, textarea, select { user-select: text !important; -webkit-user-select: text !important; }
+    
     html {
       font-family: var(--font-base); background: var(--bg-dark); color: var(--text-main);
       overflow-y: auto; scroll-behavior: smooth; touch-action: manipulation; min-height: 100%;
@@ -147,6 +149,8 @@
     details:nth-child(1) { animation-delay: 0.05s; }
     details:nth-child(2) { animation-delay: 0.1s; }
     details:nth-child(3) { animation-delay: 0.15s; }
+    details:nth-child(4) { animation-delay: 0.2s; }
+    details:nth-child(5) { animation-delay: 0.25s; }
 
     /* 배경 애니메이션 */
     .default-bg-wrapper {
@@ -165,15 +169,14 @@
 
     @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(20px, -20px) scale(1.05); } }
 
-    .no-select { user-select: none; -webkit-user-select: none; }
-    button, a { font-family: inherit; user-select: none !important; -webkit-user-select: none !important; text-decoration: none; color: inherit; }
+    button, a { font-family: inherit; text-decoration: none; color: inherit; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
     ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-thumb-hover); }
 
-    button:active, summary:not(:has(button:hover)):active, .segment-btn:active, .cal-day:not(.disabled):active, .header-action-btn:active {
+    button:active, summary:not(:has(button:hover)):active, .segment-btn:active, .cal-day:not(.disabled):not(.empty):active, .header-action-btn:active {
         transform: scale(0.96) !important; transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
@@ -191,11 +194,12 @@
     }
     html[data-theme="light"] header { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
 
-    .logo { font-family: var(--font-logo); font-size: 22px; font-weight: 400; color: var(--text-main); display: flex; align-items: center; cursor: pointer; }
+    .logo { font-family: var(--font-logo); font-size: 22px; font-weight: 400; color: var(--text-main); display: flex; align-items: center; cursor: pointer; letter-spacing: -0.3px; }
     
+    /* 볼드 없이 자연스러운 텍스트 디자인으로 통일된 Practicum 로고 */
     .logo .by { 
-        font-family: var(--font-base); font-size: 15px; font-weight: 700; letter-spacing: 0.3px;
-        color: var(--primary); margin-left: 6px; 
+        font-family: var(--font-base); font-size: 15px; font-weight: 600; letter-spacing: 0.3px;
+        color: var(--primary); margin-left: 8px; transform: translateY(-1px); 
     }
     
     .header-tools { display: flex; gap: 4px; align-items: center; }
@@ -233,29 +237,26 @@
     .ampm.pm { color: var(--time-pm); }
     .time-sec { font-size: 16px; font-weight: 500; color: var(--text-sub); font-family: 'Outfit', 'Pretendard', monospace; transition: all 0.4s ease; }
 
-    /* 부드러운 애니메이션이 적용된 일정 표시 컨테이너 */
+    /* 고정된 높이의 일정 표시 컨테이너 (애니메이션 뚝뚝 끊김 방지) */
     .schedule-container {
         display: flex; flex-direction: column; align-items: center; width: 100%;
-        opacity: 0; transform: translateY(10px) scale(0.98);
-        max-height: 0; overflow: hidden; margin-top: 0; padding: 0;
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        pointer-events: none;
+        position: relative; overflow: hidden;
     }
-    .schedule-container.show {
-        opacity: 1; transform: translateY(0) scale(1);
-        max-height: 300px; margin-top: 16px; 
-        pointer-events: auto;
+    
+    /* 시계 모드(달력 닫힘)일 땐 아예 공간을 차지하지 않고 투명 처리 */
+    .clock-wrap:not(.show-cal) .schedule-container { 
+        display: none !important; margin: 0; padding: 0; height: 0; min-height: 0; opacity: 0; 
     }
-    .schedule-inner {
-        display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%;
-        transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-    .schedule-inner.fade-out {
-        opacity: 0; transform: translateY(5px) scale(0.98);
+    .clock-wrap.show-cal .schedule-container { 
+        margin-top: 16px; min-height: 48px; opacity: 1; 
     }
 
-    /* 시계 모드(달력 닫힘)일 땐 일정 텍스트 강제 숨김 */
-    .clock-wrap:not(.show-cal) .schedule-container { display: none !important; }
+    .schedule-inner {
+        display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%;
+        transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+        opacity: 1; transform: translateY(0);
+    }
+    .schedule-inner.fade-out { opacity: 0; transform: translateY(4px); }
 
     .sched-event {
         display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px;
@@ -305,7 +306,6 @@
         .time-container .time-sub { height: 30px; }
         .time-container .ampm { font-size: 12px; }
         .time-container .time-sec { font-size: 14px; }
-        
         .sched-event { padding: 8px 14px; font-size: 13.5px; min-height: 40px; }
     }
 
@@ -343,7 +343,7 @@
     
     @media (hover: hover) { .cal-day:not(.disabled):not(.empty):hover { background: var(--glass-highlight); } html[data-theme="light"] .cal-day:not(.disabled):not(.empty):hover { background: rgba(0,0,0,0.05); } }
     
-    /* 일정 표시 점(Dot) - 붉은색 */
+    /* 일정 표시 점(Dot) - 붉은색으로 강조 */
     .cal-dot { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #ef4444; }
 
     /* 오늘 날짜는 무조건 테마색 적용하여 잘 보이게 설정 */
@@ -351,7 +351,7 @@
     html[data-theme="light"] .cal-day.today { background: var(--primary) !important; color: white !important; }
     .cal-day.today .cal-dot { background: white; }
 
-    /* 토, 일 및 공휴일 (흐림 효과 없음, 단순 붉은색) */
+    /* 토, 일 및 공휴일 기본 색상 */
     .cal-day.sun, .cal-day.holiday { color: #ef4444 !important; }
     .cal-day.sat { color: #3b82f6 !important; }
     
@@ -366,11 +366,43 @@
 
     /* 교육실습 기간 강조를 위한 별도 스타일 */
     .cal-day.practicum { 
-        background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); 
+        background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); 
         color: var(--text-main); font-weight: 600; border-radius: 10px;
     }
     html[data-theme="light"] .cal-day.practicum { background: #fff; border-color: #cbd5e1; color: var(--primary); }
+    
+    /* 교생 기간 외의 날짜를 살짝 흐리게 하여 강조 효과 극대화 */
     .cal-day:not(.practicum):not(.disabled):not(.empty) { opacity: 0.6; }
+
+    /* --- 학교 안내도 (CSS Grid 40-Column 기반 정밀 구성) --- */
+    .map-scroll-container { width: 100%; overflow-x: auto; padding-bottom: 12px; }
+    .map-bldg { min-width: 800px; display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 14px; border: 1px solid var(--glass-border); }
+    html[data-theme="light"] .map-bldg { background: #f8fafc; border-color: #cbd5e1; }
+    .map-bldg-title { font-weight: 800; font-size: 16px; margin-bottom: 4px; color: var(--text-main); padding-left: 4px; display: flex; align-items: center; gap: 6px;}
+    html[data-theme="light"] .map-bldg-title { color: #0f172a; }
+    .map-floor-wrap { display: flex; gap: 4px; align-items: stretch; margin-bottom: 8px; }
+    .map-fl-label { width: 44px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid var(--glass-border); color: var(--text-main); flex-shrink: 0; }
+    html[data-theme="light"] .map-fl-label { background: #e2e8f0; color: #1e293b; border-color: #cbd5e1; }
+    .map-stair { width: 30px; background: rgba(148, 163, 184, 0.15); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.25); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text-sub); writing-mode: vertical-lr; text-orientation: upright; letter-spacing: -1px; flex-shrink: 0; }
+    html[data-theme="light"] .map-stair { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; }
+    
+    .map-grid-40 { display: grid; grid-template-columns: repeat(40, 1fr); gap: 4px; width: 100%; flex: 1; }
+    .map-room { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 6px; font-size: 11.5px; font-weight: 600; padding: 4px 2px; line-height: 1.2; word-break: keep-all; position: relative; overflow: hidden; min-height: 40px; }
+    .map-corridor { grid-column: span 40; min-height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-dim); font-weight: 600; letter-spacing: 4px; }
+    html[data-theme="light"] .map-corridor { background: rgba(0,0,0,0.02); }
+    .map-sm { font-size: 10px; opacity: 0.7; font-weight: 500; margin-top: 2px; }
+    
+    .c-blue { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.25); color: #bae6fd; }
+    .c-yellow { background: rgba(250, 204, 21, 0.15); border: 1px solid rgba(250, 204, 21, 0.25); color: #fef08a; }
+    .c-green { background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.25); color: #bbf7d0; }
+    .c-gray { background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(148, 163, 184, 0.25); color: #e2e8f0; }
+    .c-void { background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.05) 5px, rgba(255,255,255,0.05) 10px); border: 1px solid var(--glass-border); color: transparent; pointer-events: none; }
+
+    html[data-theme="light"] .c-blue { background: #bae6fd; border: 1px solid #7dd3fc; color: #0369a1; }
+    html[data-theme="light"] .c-yellow { background: #fef08a; border: 1px solid #fde047; color: #a16207; }
+    html[data-theme="light"] .c-green { background: #bbf7d0; border: 1px solid #86efac; color: #166534; }
+    html[data-theme="light"] .c-gray { background: #e2e8f0; border: 1px solid #cbd5e1; color: #334155; }
+    html[data-theme="light"] .c-void { background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 10px); border-color: #e2e8f0; }
 
     /* --- 아코디언(섹션) 스타일 --- */
     details { background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-md); margin-bottom: var(--section-gap); overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -378,7 +410,7 @@
     html[data-theme="light"] details { background: #ffffff; border-color: var(--glass-border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
     html[data-theme="light"] details[open] { background: #ffffff; border-color: var(--primary-glow); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
 
-    summary { list-style: none; margin: 6px; padding: 14px 20px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; transition: background 0.2s; }
+    summary { list-style: none; margin: 6px; padding: 14px 20px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s; }
     summary::-webkit-details-marker { display: none; }
     @media (hover: hover) { summary:hover { background: var(--glass-highlight); } }
     
@@ -416,6 +448,8 @@
     html[data-theme="light"] .segment-btn.active { background: #ffffff; color: #0f172a; border-color: transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 
     /* --- 슬림하고 예쁜 급식 정보 스타일 --- */
+    #lunchContentWrapper { transition: opacity 0.3s ease; }
+    
     .lunch-empty { color: var(--text-sub); text-align: center; padding: 24px; font-size: 14.5px; font-weight: 500; background: rgba(255,255,255,0.02); border-radius: 14px; border: 1px dashed var(--glass-border); }
     html[data-theme="light"] .lunch-empty { background: rgba(0,0,0,0.01); border-color: rgba(0,0,0,0.1); }
     
@@ -427,6 +461,7 @@
     }
     html[data-theme="light"] .lunch-chip { background: #ffffff; border-color: #cbd5e1; color: #334155; }
     
+    /* 복원된 급식 카드 기본 스타일 */
     .lunch-day-card { 
         position: relative; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); 
         border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -438,16 +473,18 @@
     .lunch-day-card:nth-child(4) { animation-delay: 0.2s; }
     .lunch-day-card:nth-child(5) { animation-delay: 0.25s; }
 
-    @media(hover: hover) { .lunch-day-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-color: var(--primary); } }
+    /* 호버 미디어 쿼리 제한 해제 */
+    .lunch-day-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-color: var(--primary); }
 
-    /* 일반 날짜는 어둡게 깔리고 오늘 날짜는 화이트 배경 적용 (라이트 모드) */
+    /* 일반 날짜 (라이트 모드) - 옅은 회색 배경으로 깔기 */
     html[data-theme="light"] .lunch-day-card { background: #f8fafc; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-    @media(hover: hover) { html[data-theme="light"] .lunch-day-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); background: #ffffff; border-color: var(--primary); } }
+    html[data-theme="light"] .lunch-day-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); background: #ffffff; border-color: var(--primary); }
     
     /* 오늘 급식 카드 양옆 포인트 색상 강조 ([ ] 느낌) */
     .lunch-day-card.today { border-left: 4px solid var(--primary); border-right: 4px solid var(--primary); background: rgba(255,255,255,0.03); }
+    /* 라이트모드 오늘 급식 카드는 하얀색으로 화사하게 역전 강조 */
     html[data-theme="light"] .lunch-day-card.today { background: #ffffff; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-left: 4px solid var(--primary); border-right: 4px solid var(--primary); box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
-    @media(hover: hover) { html[data-theme="light"] .lunch-day-card.today:hover { border-color: var(--primary); } }
+    html[data-theme="light"] .lunch-day-card.today:hover { border-color: var(--primary); }
     
     .lunch-day-header { border-bottom: 1px solid var(--glass-highlight); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; }
     html[data-theme="light"] .lunch-day-header { border-bottom-color: #e2e8f0; }
@@ -459,29 +496,27 @@
     /* --- 일과 진행표(시간표) 표 스타일 --- */
     .table-container { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--glass-border); }
     .daily-schedule-table { width: 100%; border-collapse: collapse; min-width: 500px; text-align: center; font-size: 14.5px; }
-    .daily-schedule-table th { background: rgba(255,255,255,0.06); padding: 12px 8px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--glass-border); white-space: nowrap; }
-    html[data-theme="light"] .daily-schedule-table th { background: #f1f5f9; color: #0f172a; }
-    .daily-schedule-table td { padding: 12px 8px; border-bottom: 1px solid var(--glass-border); color: var(--text-main); font-weight: 500; transition: all 0.3s ease; }
-    html[data-theme="light"] .daily-schedule-table td { color: #1e293b; border-color: #e2e8f0; }
+    .daily-schedule-table th { background: rgba(255,255,255,0.06); padding: 12px 8px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); white-space: nowrap; }
+    html[data-theme="light"] .daily-schedule-table th { background: #f1f5f9; color: #0f172a; border-right-color: #cbd5e1; }
+    .daily-schedule-table td { padding: 12px 8px; border-bottom: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); color: var(--text-main); font-weight: 500; transition: all 0.3s ease; }
+    html[data-theme="light"] .daily-schedule-table td { color: #1e293b; border-color: #e2e8f0; border-right-color: #e2e8f0; }
     .daily-schedule-table tr:last-child td { border-bottom: none; }
+    .daily-schedule-table th:last-child, .daily-schedule-table td:last-child { border-right: none; }
     
-    /* 일과 진행표 행 호버 효과 */
-    .daily-schedule-table tbody tr { transition: background-color 0.2s; }
-    @media (hover: hover) {
-        .daily-schedule-table tbody tr:hover { background-color: rgba(255,255,255,0.04); }
-        html[data-theme="light"] .daily-schedule-table tbody tr:hover { background-color: rgba(0,0,0,0.03); }
-        .daily-schedule-table tbody tr.current-time-row:hover { background-color: var(--primary-glow) !important; }
-        html[data-theme="light"] .daily-schedule-table tbody tr.current-time-row:hover { background-color: rgba(37, 99, 235, 0.1) !important; }
-    }
-
     .ds-highlight { background: rgba(255, 255, 255, 0.03); }
     html[data-theme="light"] .ds-highlight { background: rgba(0, 0, 0, 0.02); }
     .ds-sm { font-size: 12px; color: var(--text-sub); line-height: 1.4; display: block; margin-top: 4px; }
+
+    /* 일과 진행표 행 호버 효과 및 호버 미디어 쿼리 제한 해제 */
+    .daily-schedule-table tbody tr { transition: background-color 0.2s; }
+    .daily-schedule-table tbody tr:hover td { background-color: rgba(255,255,255,0.08); }
+    html[data-theme="light"] .daily-schedule-table tbody tr:hover td { background-color: rgba(0,0,0,0.05); }
+    .daily-schedule-table tbody tr.current-time-row:hover td { background-color: var(--primary-glow) !important; }
+    html[data-theme="light"] .daily-schedule-table tbody tr.current-time-row:hover td { background-color: rgba(37, 99, 235, 0.15) !important; }
     
-    /* 현재 진행 중인 시간표 행 하이라이트 */
-    .current-time-row { background: var(--primary-glow) !important; position: relative; }
-    .current-time-row td { color: var(--primary) !important; font-weight: 700 !important; }
-    html[data-theme="light"] .current-time-row { background: rgba(37, 99, 235, 0.1) !important; }
+    /* 현재 진행 중인 시간표 행 하이라이트 (명시적으로 td 배경 지정) */
+    .current-time-row td { background-color: var(--primary-glow); position: relative; color: var(--primary) !important; font-weight: 700 !important; }
+    html[data-theme="light"] .current-time-row td { background-color: rgba(37, 99, 235, 0.1); }
     .current-time-row td:first-child { border-left: 4px solid var(--primary); }
 
     /* 모바일 반응형 */
@@ -507,8 +542,13 @@
       .ds-sm { font-size: 11px; }
 
       /* 공지 iframe 모바일 대응 */
-      .notice-iframe { height: 350px !important; }
+      .notice-iframe { height: 500px !important; }
       
+      /* 학교 안내도 맵 모바일 대응 */
+      .map-bldg { min-width: 600px; padding: 10px; }
+      .map-fl-label { width: 34px; font-size: 12px; }
+      .map-room { padding: 8px 2px; font-size: 11px; }
+
       footer p { flex-direction: column; gap: 6px; margin-top: 8px; }
     }
 
@@ -562,25 +602,35 @@
   <div class="scroll-mask"></div>
 
   <header class="no-select">
-    <div class="logo" id="reloadBtn">WebHub <span class="by">Practicum</span></div>
+    <div class="logo" id="reloadBtn">
+        WebHub <span class="by">Practicum</span>
+    </div>
     <div class="header-tools">
       <button class="tool-btn" id="expandToggle" title="전체 펼치기/접기">
         <svg id="iconExpandAll" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none"><path d="M7 11l5 5 5-5M7 5l5 5 5-5"/></svg>
         <svg id="iconCollapseAll" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 13l-5-5-5 5M17 19l-5-5-5 5"/></svg>
       </button>
 
-      <!-- 상위 페이지 버튼을 접기 버튼 우측으로 배치 -->
+      <!-- 상위 페이지 버튼 (Home 아이콘) -->
       <a href="https://www.v1ctorym1n.kro.kr/" class="tool-btn" title="상위 페이지로 이동">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       </a>
       
       <button class="tool-btn" id="themeToggle" title="테마 변경">
-        <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
           <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path>
         </svg>
+        <!-- 정상적인 형태의 해(Sun) 아이콘 -->
         <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
           <circle cx="12" cy="12" r="5"></circle>
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 5.64l1.42-1.42"></path>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
       </button>
     </div>
@@ -604,7 +654,7 @@
                             </div>
                         </div>
                         
-                        <!-- 부드러운 애니메이션이 적용된 일정 표시 컨테이너 -->
+                        <!-- 고정 공간을 유지하며 부드럽게 내용만 변경되는 일정 표시 컨테이너 -->
                         <div class="schedule-container" id="scheduleLine">
                             <div class="schedule-inner" id="scheduleInner"></div>
                         </div>
@@ -755,7 +805,7 @@
                 교육실습생 공지
                 </div>
                 <div class="bm-header-actions">
-                    <a href="https://docs.google.com/spreadsheets/d/1750l6Us6DYlc-u5RovrsJNZko8KYNs4lIUr5dVfp1o8/edit?gid=49225711#gid=49225711" target="_blank" class="header-action-btn" title="새 탭에서 열기">
+                    <a href="https://docs.google.com/spreadsheets/d/1750l6Us6DYlc-u5RovrsJNZko8KYNs4lIUr5dVfp1o8/edit?gid=1204048421#gid=1204048421" target="_blank" class="header-action-btn" title="새 탭에서 열기">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                         새 탭에서 열기
                     </a>
@@ -765,8 +815,231 @@
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content">
-                    <!-- 구글 스프레드시트 임베드 -->
-                    <iframe src="https://docs.google.com/spreadsheets/d/1750l6Us6DYlc-u5RovrsJNZko8KYNs4lIUr5dVfp1o8/htmlembed?widget=true&headers=false" width="100%" height="450px" class="notice-iframe" style="border:1px solid var(--glass-border); border-radius:12px; background:#fff; display:block;"></iframe>
+                    <!-- 구글 스프레드시트 공지 탭으로 고정 임베드 -->
+                    <iframe src="https://docs.google.com/spreadsheets/d/1750l6Us6DYlc-u5RovrsJNZko8KYNs4lIUr5dVfp1o8/htmlembed?gid=1204048421&widget=true&headers=false" width="100%" height="450px" class="notice-iframe" style="height: 600px; border:1px solid var(--glass-border); border-radius:12px; background:#fff; display:block;"></iframe>
+                </div>
+                </div>
+            </div>
+        </details>
+
+        <!-- 학교안내도 섹션 (CSS Grid 40-Column 기반 정밀 구성) -->
+        <details id="det-map">
+            <summary class="no-select">
+                <div class="sum-title">
+                    <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 6l9-4 9 4v12l-9 4-9-4z"/><path d="M3 6l9 4 9-4"/><path d="M12 10v12"/></svg>
+                    학교안내도
+                </div>
+                <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="details-wrapper">
+                <div class="det-inner">
+                <div class="det-content">
+                    <div class="map-scroll-container no-select">
+                        
+                        <!-- 본관 -->
+                        <div class="map-bldg">
+                            <div class="map-bldg-title">
+                                <svg width="18" height="18" fill="none" stroke="var(--primary)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 10v14h16V10"/><path d="M12 14v7"/><path d="M2 10l10-7 10 7"/></svg>
+                                본관
+                            </div>
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">4F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-blue" style="grid-column: span 4;">수학-1<br><span class="map-sm">(3-1)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">수학-2<br><span class="map-sm">(3-2)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">수학-3<br><span class="map-sm">(3-3)</span></div>
+                                    <div class="map-room c-yellow" style="grid-column: span 4;">교무실<br><span class="map-sm">(3학년)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">수학-4<br><span class="map-sm">(3-4)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">국어-1<br><span class="map-sm">(3-5)</span></div>
+                                    <div class="map-room c-gray" style="grid-column: span 3;">남직원<br>휴게실</div>
+                                    <div class="map-room c-green" style="grid-column: span 7;">스마트이음실</div>
+                                    <div class="map-room c-blue" style="grid-column: span 6;">국어전용교실<br><span class="map-sm">(3-6)</span></div>
+                                    
+                                    <div class="map-corridor">복 도</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">화(남)<br>화(여)</div>
+                                    <div class="map-room c-blue" style="grid-column: span 5;">지능형<br>수학교실</div>
+                                    <div class="map-room c-green" style="grid-column: span 4;">수학 미디어<br>스페이스</div>
+                                    <div class="map-room c-green" style="grid-column: span 3;">진학<br>상담실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 4;">홈베이스<br>(남)</div>
+                                    <div class="map-room c-void" style="grid-column: span 4;"></div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">화(남)<br>화(여)</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 5;">홈베이스<br>(여)</div>
+                                    <div class="map-room c-green" style="grid-column: span 7;">공용교실-4</div>
+                                </div>
+                                <div class="map-stair">계단</div>
+                            </div>
+                            
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">3F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-blue" style="grid-column: span 4;">사회전용<br><span class="map-sm">(2-1)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">공용교실-2<br><span class="map-sm">(2-2)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">공용교실-3<br><span class="map-sm">(2-3)</span></div>
+                                    <div class="map-room c-yellow" style="grid-column: span 4;">교무실<br><span class="map-sm">(2학년)</span></div>
+                                    <div class="map-room c-green" style="grid-column: span 3;">수업연구<br>1실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">여학생<br>탈의실</div>
+                                    <div class="map-room c-blue" style="grid-column: span 3;">사회-3실<br><span class="map-sm">(2-4)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 3;">사회-2실<br><span class="map-sm">(2-5)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">사회-1실<br><span class="map-sm">(2-6)</span></div>
+                                    <div class="map-room c-yellow" style="grid-column: span 6;">보건실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 3;">창고</div>
+
+                                    <div class="map-corridor">복 도</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">화(남)<br>화(여)</div>
+                                    <div class="map-room c-green" style="grid-column: span 6;">글빛<br>(도서실)</div>
+                                    <div class="map-room c-green" style="grid-column: span 4;">스마트<br>글빛교실</div>
+                                    <div class="map-room c-green" style="grid-column: span 4;">가온책방</div>
+                                    <div class="map-room c-void" style="grid-column: span 6;"></div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">화(남)<br>화(여)</div>
+                                    
+                                    <div class="map-room c-green" style="grid-column: span 5;">스마트<br>온누리</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 3;">학생자치<br>회의실</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 4;">교무실<br><span class="map-sm">(학생부)</span></div>
+                                </div>
+                                <div class="map-stair">계단</div>
+                            </div>
+                            
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">2F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-blue" style="grid-column: span 4;">영어-1<br><span class="map-sm">(1-1)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">영어-2<br><span class="map-sm">(1-2)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">영어-3<br><span class="map-sm">(1-3)</span></div>
+                                    <div class="map-room c-yellow" style="grid-column: span 5;">교무실<br><span class="map-sm">(1학년)</span></div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">여직원<br>휴게실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">남학생<br>탈의실</div>
+                                    <div class="map-room c-blue" style="grid-column: span 3;">영어전용<br><span class="map-sm">(1-4)</span></div>
+                                    <div class="map-room c-blue" style="grid-column: span 4;">국어-2<br><span class="map-sm">(1-5)</span></div>
+                                    <div class="map-room c-yellow" style="grid-column: span 6;">교무실</div>
+                                    <div class="map-room c-blue" style="grid-column: span 6;">공용교실-1<br><span class="map-sm">(1-6)</span></div>
+                                    
+                                    <div class="map-corridor">복 도</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 3; font-size:9px;">화(여)<br>화(남)</div>
+                                    <div class="map-room c-green" style="grid-column: span 5;">온라인<br>스튜디오</div>
+                                    <div class="map-room c-green" style="grid-column: span 4;">스마트<br>on교실</div>
+                                    <div class="map-room c-green" style="grid-column: span 5;">예담갤러리</div>
+                                    <div class="map-room c-void" style="grid-column: span 5;"></div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">화(남)<br>화(여)</div>
+                                    
+                                    <div class="map-room c-yellow" style="grid-column: span 4;">평가<br>관리실</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 3;">교감실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">인쇄실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 3;">서고</div>
+                                </div>
+                                <div class="map-stair">계단</div>
+                            </div>
+                            
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">1F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-green" style="grid-column: span 13; font-size:14px;">식생활관 - 식당</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 5;">행정실</div>
+                                    <div class="map-room c-green" style="grid-column: span 2; font-size:9px;">행정실장<br>서버실</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 4;">교장실</div>
+                                    <div class="map-room c-green" style="grid-column: span 3;">당직실</div>
+                                    <div class="map-room c-green" style="grid-column: span 13;">다담사랑방</div>
+                                    
+                                    <div class="map-corridor">복 도 / 중 앙 현 관</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 3; font-size:9px;">조리원<br>휴게실</div>
+                                    <div class="map-room c-green" style="grid-column: span 8;">조리실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">영양<br>상담실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 9; font-size:14px;">중앙현관</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:9px;">화(남)<br>화(여)</div>
+                                    
+                                    <div class="map-room c-yellow" style="grid-column: span 5;">Wee Class<br>상담실</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 7;">진로교육실</div>
+                                </div>
+                                <div class="map-stair">계단</div>
+                            </div>
+                        </div>
+
+                        <!-- 별관 -->
+                        <div class="map-bldg" style="margin-top: 16px;">
+                            <div class="map-bldg-title">
+                                <svg width="18" height="18" fill="none" stroke="var(--primary)" stroke-width="2.5" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+                                별관
+                            </div>
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">3F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-green" style="grid-column: span 6;">지능형<br>과학실</div>
+                                    <div class="map-room c-green" style="grid-column: span 3;">과학1<br>준비실</div>
+                                    <div class="map-room c-green" style="grid-column: span 5;">과학교사<br>연구실</div>
+                                    <div class="map-room c-green" style="grid-column: span 5;">과학 미디어<br>스페이스</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:10px;">화(여)</div>
+                                    
+                                    <div class="map-room c-green" style="grid-column: span 7;">무한상상실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-green" style="grid-column: span 5;">과학2<br>준비실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 3; font-size:10px;">화(남)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">2F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-green" style="grid-column: span 9;">소담공방</div>
+                                    <div class="map-room c-green" style="grid-column: span 10;">교담공방</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    <div class="map-room c-yellow" style="grid-column: span 2; font-size:10px;">수연2</div>
+                                    
+                                    <!-- 동아리/휴담책방 상하 분리형 디자인을 위한 서브 그리드 처리 -->
+                                    <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 2px;">
+                                        <div class="map-room c-green" style="flex:1; min-height:18px;">동아리실1, 2</div>
+                                        <div class="map-room c-green" style="flex:1; min-height:18px;">휴담책방</div>
+                                    </div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-green" style="grid-column: span 8;">빛담공방</div>
+                                </div>
+                            </div>
+                            
+                            <div class="map-floor-wrap">
+                                <div class="map-fl-label">1F</div>
+                                <div class="map-stair">계단</div>
+                                <div class="map-center map-grid-40">
+                                    <div class="map-room c-green" style="grid-column: span 9;">음악실</div>
+                                    <div class="map-room c-gray" style="grid-column: span 10;">운동부<br>휴게실</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:10px;">현관</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">계단</div>
+                                    
+                                    <div class="map-room c-gray" style="grid-column: span 2; font-size:10px;">화(여)</div>
+                                    <div class="map-room c-blue" style="grid-column: span 5;">학습도움실1</div>
+                                    <div class="map-room c-gray" style="grid-column: span 2;">EV</div>
+                                    <div class="map-room c-blue" style="grid-column: span 5;">학습도움실2</div>
+                                    <div class="map-room c-gray" style="grid-column: span 3; font-size:10px;">화(남)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
                 </div>
             </div>
@@ -777,7 +1050,7 @@
     <div class="footer-divider"></div>
 
     <footer class="no-select">
-      <b>WebHub <span style="color:var(--primary); font-family:var(--font-base); font-weight:700; margin-left:2px;">Practicum</span></b> Ver. 1.9<br>
+      <b>WebHub <span style="color:var(--primary); font-family:var(--font-base); font-weight:700; margin-left:2px;">Practicum</span></b> Ver. 2.6<br>
       <p>© 2026 Seungmin Woo. All rights reserved. <span style="opacity:0.5; margin: 0 6px;">|</span> <button id="openOSSModal" class="footer-link">Legal & Licenses</button></p>
     </footer>
 
@@ -985,7 +1258,8 @@
           "2026-05-13": "7교시 교육정보부장 실무특강",
           "2026-05-14": "종일 진로캠프, 7교시 교육과정부장 실무특강",
           "2026-05-15": "종일 체육한마당",
-          "2026-05-20": "7교시 미래교육부장 실무특강",
+          "2026-05-20": "2-3교시 미래교육부장 실무특강",
+          "2026-05-21": "6교시 영어과 순회지도",
           "2026-05-27": "교육실습 수료식"
       };
 
@@ -1042,55 +1316,43 @@
       }
 
       function updateScheduleText(dateStr) {
-          const schedLine = document.getElementById('scheduleLine');
           const schedInner = document.getElementById('scheduleInner');
-          if(!schedLine || !schedInner) return;
+          if(!schedInner) return;
           
-          // 시계 모드일 땐 일정 표시 컨테이너 자체를 숨김 처리 (클래스로만 제어)
-          if(clockWrap && !clockWrap.classList.contains('show-cal')) {
-              schedLine.classList.remove('show');
-              return;
-          }
+          schedInner.classList.add('fade-out');
           
-          let hasEvents = false;
-          let html = '';
-          if (isPracticumPeriod(dateStr)) {
-              const d = new Date(dateStr);
-              // 주말/공휴일 등은 위 isPracticumPeriod에서 이미 제외되지만 한 번 더 방어
-              if (d.getDay() !== 0 && d.getDay() !== 6 && dateStr !== "2026-05-25") {
-                  const specialEvent = scheduleData[dateStr];
-                  if (specialEvent) {
-                      hasEvents = true;
-                      const events = specialEvent.split(',').map(ev => ev.trim());
-                      events.forEach(ev => {
-                          const match = ev.match(/^(\d+교시|종일)\s+(.*)/);
-                          if (match) {
-                              html += `<div class="sched-event"><span class="sched-period-badge">${match[1]}</span><span class="sched-desc">${match[2]}</span></div>`;
-                          } else {
-                              html += `<div class="sched-event"><span class="sched-desc">${ev}</span></div>`;
-                          }
-                      });
+          setTimeout(() => {
+              let html = '';
+              if (isPracticumPeriod(dateStr)) {
+                  const d = new Date(dateStr);
+                  // 주말/공휴일 등은 위 isPracticumPeriod에서 이미 제외되지만 방어 코드
+                  if (d.getDay() !== 0 && d.getDay() !== 6 && dateStr !== "2026-05-25") {
+                      const specialEvent = scheduleData[dateStr];
+                      if (specialEvent) {
+                          const events = specialEvent.split(',').map(ev => ev.trim());
+                          events.forEach(ev => {
+                              // '2-3교시' 등 범위를 포함하도록 정규식 수정
+                              const match = ev.match(/^([\d~\-]+교시|종일)\s+(.*)/);
+                              if (match) {
+                                  html += `<div class="sched-event"><span class="sched-period-badge">${match[1]}</span><span class="sched-desc">${match[2]}</span></div>`;
+                              } else {
+                                  html += `<div class="sched-event"><span class="sched-desc">${ev}</span></div>`;
+                              }
+                          });
+                      } else {
+                          // 일정이 없을 경우 박스 자체는 유지하되 투명/흐리게 문구만 표시
+                          html = `<div class="sched-event" style="background:transparent; border-color:transparent; box-shadow:none;"><span class="sched-desc" style="color:var(--text-dim); font-weight:500;">특별한 일정이 없습니다.</span></div>`;
+                      }
+                  } else {
+                      html = `<div class="sched-event" style="background:transparent; border-color:transparent; box-shadow:none;"><span class="sched-desc" style="color:var(--text-dim); font-weight:500;">휴일입니다.</span></div>`;
                   }
-              }
-          }
-          
-          if (hasEvents) {
-              if (schedLine.classList.contains('show')) {
-                  // 이미 열려 있는 상태에서 날짜만 변경 (부드러운 페이드 교체)
-                  schedInner.classList.add('fade-out');
-                  setTimeout(() => {
-                      schedInner.innerHTML = html;
-                      schedInner.classList.remove('fade-out');
-                  }, 200);
               } else {
-                  // 닫혀 있다가 열리는 경우
-                  schedInner.innerHTML = html;
-                  schedLine.classList.add('show');
+                  html = `<div class="sched-event" style="background:transparent; border-color:transparent; box-shadow:none;"><span class="sched-desc" style="color:var(--text-dim); font-weight:500;">교육실습 기간이 아닙니다.</span></div>`;
               }
-          } else {
-              // 일정이 없는 경우 부드럽게 닫힘
-              schedLine.classList.remove('show');
-          }
+              
+              schedInner.innerHTML = html;
+              schedInner.classList.remove('fade-out');
+          }, 250); // fade out 애니메이션 시간 대기 후 내용 교체
       }
 
       // --- Lunch Rendering Logic ---
@@ -1163,7 +1425,7 @@
                               <div class="lunch-day-header">
                                 <span class="lunch-day-date">${dateObj.getMonth()+1}월 ${dateObj.getDate()}일 <span class="lunch-day-dow">${dayName}</span></span>
                               </div>
-                              ${menu ? getLunchChipsHTML(menu) : '<div class="lunch-empty" style="padding:16px;">오늘 급식 없음</div>'}
+                              ${menu ? getLunchChipsHTML(menu) : '<div class="lunch-empty" style="padding:16px;">급식 없음</div>'}
                           </div>
                       `;
                   }
@@ -1191,7 +1453,7 @@
                               <div class="lunch-day-header">
                                 <span class="lunch-day-date">${dateObj.getMonth()+1}월 ${dateObj.getDate()}일 <span class="lunch-day-dow">${dayName}</span></span>
                               </div>
-                              ${menu ? getLunchChipsHTML(menu) : '<div class="lunch-empty" style="padding:16px;">오늘 급식 없음</div>'}
+                              ${menu ? getLunchChipsHTML(menu) : '<div class="lunch-empty" style="padding:16px;">급식 없음</div>'}
                           </div>
                       `;
                   }
@@ -1202,12 +1464,15 @@
               }
           }
           
-          lunchContentWrapper.style.opacity = '0';
+          lunchContentWrapper.classList.add('lunch-fade-out');
+          lunchContentWrapper.classList.remove('lunch-fade-in');
           setTimeout(() => {
               lunchContentWrapper.innerHTML = html;
-              lunchContentWrapper.style.transition = 'all 0.3s ease';
-              lunchContentWrapper.style.opacity = '1';
-          }, 100);
+              requestAnimationFrame(() => {
+                  lunchContentWrapper.classList.remove('lunch-fade-out');
+                  lunchContentWrapper.classList.add('lunch-fade-in');
+              });
+          }, 250);
       }
 
       if(btnLunchToday && btnLunchWeek && btnLunchAll) {
@@ -1437,7 +1702,7 @@
               calDate = new Date();
               selectedDateString = getDateString(new Date());
               updateScheduleText(selectedDateString);
-              // 오늘 버튼 누르면 달력, 일정 갱신
+              // 오늘 버튼 누르면 달력 갱신
               renderCalendar();
               vibrate(10);
           });
@@ -1471,6 +1736,7 @@
       setInterval(updateTime, 1000);
       updateTime();
       updateCalIndicator();
+      updateScheduleText(selectedDateString);
 
       // --- Scroll to Top ---
       const scrollBtn = document.getElementById('scrollBtn');
