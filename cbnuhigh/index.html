@@ -145,6 +145,12 @@
     }
     .time-animate { animation: timeFade 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     
+    /* 급식 박스 차례대로 나타나는 애니메이션 추가 */
+    @keyframes fadeInScale {
+        0% { opacity: 0; transform: translateY(15px) scale(0.97); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     details { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
     details:nth-child(1) { animation-delay: 0.05s; }
     details:nth-child(2) { animation-delay: 0.1s; }
@@ -493,33 +499,72 @@
     html[data-theme="light"] .lunch-day-date { color: #0f172a; }
     .lunch-day-dow { font-size: 13px; font-weight: 600; color: var(--text-dim); margin-left: 6px; }
 
-    /* --- 일과 진행표(시간표) 표 스타일 --- */
-    .table-container { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--glass-border); }
-    .daily-schedule-table { width: 100%; border-collapse: collapse; min-width: 500px; text-align: center; font-size: 14.5px; }
-    .daily-schedule-table th { background: rgba(255,255,255,0.06); padding: 12px 8px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); white-space: nowrap; }
-    html[data-theme="light"] .daily-schedule-table th { background: #f1f5f9; color: #0f172a; border-right-color: #cbd5e1; }
-    .daily-schedule-table td { padding: 12px 8px; border-bottom: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); color: var(--text-main); font-weight: 500; transition: all 0.3s ease; }
-    html[data-theme="light"] .daily-schedule-table td { color: #1e293b; border-color: #e2e8f0; border-right-color: #e2e8f0; }
-    .daily-schedule-table tr:last-child td { border-bottom: none; }
-    .daily-schedule-table th:last-child, .daily-schedule-table td:last-child { border-right: none; }
-    
-    .ds-highlight { background: rgba(255, 255, 255, 0.03); }
-    html[data-theme="light"] .ds-highlight { background: rgba(0, 0, 0, 0.02); }
-    .ds-sm { font-size: 12px; color: var(--text-sub); line-height: 1.4; display: block; margin-top: 4px; }
+    /* --- 테이블 범용 스타일 (세로선 제거, 모던하고 시원한 UI) --- */
+    .table-container { width: 100%; max-width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--glass-border); -webkit-overflow-scrolling: touch; background: rgba(255,255,255,0.01); }
+    html[data-theme="light"] .table-container { background: #ffffff; }
 
-    /* 일과 진행표 행 호버 효과 및 호버 미디어 쿼리 제한 해제 */
-    .daily-schedule-table tbody tr { transition: background-color 0.2s; }
-    .daily-schedule-table tbody tr:hover td { background-color: rgba(255,255,255,0.08); }
-    html[data-theme="light"] .daily-schedule-table tbody tr:hover td { background-color: rgba(0,0,0,0.05); }
-    .daily-schedule-table tbody tr.current-time-row:hover td { background-color: var(--primary-glow) !important; }
-    html[data-theme="light"] .daily-schedule-table tbody tr.current-time-row:hover td { background-color: rgba(37, 99, 235, 0.15) !important; }
+    .practicum-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14.5px; font-variant-numeric: tabular-nums; }
     
-    /* 현재 진행 중인 시간표 행 하이라이트 (명시적으로 td 배경 지정) */
-    .current-time-row td { background-color: var(--primary-glow); position: relative; color: var(--primary) !important; font-weight: 700 !important; }
-    html[data-theme="light"] .current-time-row td { background-color: rgba(37, 99, 235, 0.1); }
-    .current-time-row td:first-child { border-left: 4px solid var(--primary); }
+    /* 테이블 헤더 */
+    .practicum-table th { padding: 14px 10px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--glass-border); white-space: nowrap; font-size: 13.5px; letter-spacing: 0.5px; background: rgba(255,255,255,0.04); }
+    html[data-theme="light"] .practicum-table th { background: #f8fafc; color: #334155; border-bottom: 2px solid #e2e8f0; }
+    
+    /* 테이블 셀 (가로선만 유지) */
+    .practicum-table td { padding: 14px 10px; border-bottom: 1px solid var(--glass-border); color: var(--text-main); font-weight: 500; transition: background-color 0.2s; word-break: keep-all; }
+    html[data-theme="light"] .practicum-table td { color: #1e293b; border-bottom: 1px solid #f1f5f9; }
+    
+    .practicum-table tr:last-child td { border-bottom: none; }
+    
+    /* 행 호버 효과 */
+    .practicum-table tbody tr { transition: background-color 0.2s; }
+    .practicum-table tbody tr:hover td { background-color: rgba(255,255,255,0.04); }
+    html[data-theme="light"] .practicum-table tbody tr:hover td { background-color: #f8fafc; }
+    
+    /* 일과 진행표 전용 디자인 (구분자 텍스트 포인트 부여) */
+    .daily-schedule-table { min-width: 480px; }
+    .daily-schedule-table td:nth-child(1),
+    .daily-schedule-table td:nth-child(3) { color: var(--primary); font-weight: 700; font-size: 13.5px; }
+    html[data-theme="light"] .daily-schedule-table td:nth-child(1),
+    html[data-theme="light"] .daily-schedule-table td:nth-child(3) { color: var(--primary); }
 
-    /* 모바일 반응형 */
+    .ds-sm { font-size: 11.5px; color: var(--text-sub); line-height: 1.4; display: block; margin-top: 4px; font-weight: 500; }
+    
+    .ds-highlight { background: rgba(255, 255, 255, 0.015); }
+    html[data-theme="light"] .ds-highlight { background: rgba(0, 0, 0, 0.015); }
+    
+    /* 현재 진행 중인 교시 하이라이트 (측면 인라인 그림자로 세련되게 처리) */
+    .current-time-row td { background-color: rgba(var(--primary-rgb), 0.1) !important; color: var(--primary) !important; font-weight: 700 !important; }
+    html[data-theme="light"] .current-time-row td { background-color: rgba(var(--primary-rgb), 0.08) !important; }
+    .current-time-row td:first-child { box-shadow: inset 4px 0 0 var(--primary); border-left: none; }
+
+    /* 교생 시간표 전용 레이아웃 및 디자인 */
+    .timetable-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; width: 100%; }
+    .timetable-wrap { display: flex; flex-direction: column; gap: 10px; }
+    .timetable-title { font-size: 15px; font-weight: 800; text-align: center; color: var(--primary); margin-bottom: 4px; }
+    .timetable-table { min-width: 100%; table-layout: fixed; }
+    
+    /* 시간표 헤더 포인트 강조 */
+    .timetable-table th { background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border-bottom: 1px solid rgba(var(--primary-rgb), 0.2); }
+    html[data-theme="light"] .timetable-table th { background: rgba(var(--primary-rgb), 0.08); border-bottom: 2px solid rgba(var(--primary-rgb), 0.15); }
+    
+    /* 시간표 1열(교시) 은은한 배경 강조 */
+    .timetable-table td:first-child { font-weight: 800; color: var(--text-dim); background: rgba(255,255,255,0.02); }
+    html[data-theme="light"] .timetable-table td:first-child { background: #f8fafc; color: #64748b; }
+    .timetable-table th, .timetable-table td { padding: 12px 4px; font-size: 13px; letter-spacing: -0.3px; }
+    @media (max-width: 768px) { .timetable-grid { grid-template-columns: minmax(0, 1fr); } }
+
+    /* --- 학교 안내도 스타일 (CSS Grid 40-Column 기반) --- */
+    .map-scroll-container { width: 100%; max-width: 100%; overflow-x: auto; padding-bottom: 12px; -webkit-overflow-scrolling: touch; }
+    .map-bldg { min-width: 800px; display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 14px; border: 1px solid var(--glass-border); margin-bottom: 16px; }
+    .c-void { background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.05) 5px, rgba(255,255,255,0.05) 10px); border: 1px solid var(--glass-border); color: transparent; pointer-events: none; }
+
+    html[data-theme="light"] .c-blue { background: #bae6fd; border: 1px solid #7dd3fc; color: #0369a1; }
+    html[data-theme="light"] .c-yellow { background: #fef08a; border: 1px solid #fde047; color: #a16207; }
+    html[data-theme="light"] .c-green { background: #bbf7d0; border: 1px solid #86efac; color: #166534; }
+    html[data-theme="light"] .c-gray { background: #e2e8f0; border: 1px solid #cbd5e1; color: #334155; }
+    html[data-theme="light"] .c-void { background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 10px); border-color: #e2e8f0; }
+
+    /* --- 모바일 반응형 조율 --- */
     @media (max-width: 480px) {
       :root { --header-h: 60px; --section-gap: 16px; }
       header { top: 0; width: 100%; border-radius: 0; border-top: none; border-left: none; border-right: none; padding: 0 16px; padding-top: env(safe-area-inset-top); height: calc(var(--header-h) + env(safe-area-inset-top)); align-items: center; left: 0; transform: none; max-width: none; background: var(--header-bg); border-bottom: 1px solid var(--glass-border); }
@@ -536,9 +581,10 @@
       .lunch-day-card { padding: 16px; }
       .header-action-btn { font-size: 11.5px; padding: 4px 8px; }
 
-      /* 일과 진행표 모바일 대응 */
-      .daily-schedule-table { min-width: 100%; font-size: 11.5px; }
-      .daily-schedule-table th, .daily-schedule-table td { padding: 8px 4px; word-break: keep-all; }
+      /* 일과 진행표 및 시간표 모바일 여백 대응 */
+      .daily-schedule-table { min-width: 380px; font-size: 12.5px; }
+      .daily-schedule-table th, .daily-schedule-table td { padding: 12px 6px; word-break: keep-all; }
+      .timetable-table th, .timetable-table td { padding: 10px 2px; font-size: 12px; letter-spacing: -0.5px; }
       .ds-sm { font-size: 11px; }
 
       /* 공지 iframe 모바일 대응 */
@@ -546,12 +592,6 @@
       
       /* 학교 안내도 맵 모바일 대응 */
       .map-bldg { min-width: 600px; padding: 10px; }
-      .map-fl-label { width: 34px; font-size: 12px; }
-      .map-room { padding: 8px 2px; font-size: 11px; }
-
-      footer p { flex-direction: column; gap: 6px; margin-top: 8px; }
-    }
-
     footer { text-align: center; padding: 10px 0; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
     footer b { font-family: var(--font-base); font-size: 13px; font-weight: 600; color: var(--text-main); }
     footer p { margin: 4px 0 0; opacity: 0.7; }
@@ -716,19 +756,13 @@
                 <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
                 일과 진행표
                 </div>
-                <div class="bm-header-actions">
-                    <a href="http://xn--s39aqy283b66bj2x.kr/" target="_blank" class="header-action-btn" title="컴시간알리미 새 탭에서 열기">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        컴시간알리미 (27021)
-                    </a>
-                    <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
+                <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
             <div class="details-wrapper">
                 <div class="det-inner">
                 <div class="det-content">
                     <div class="table-container">
-                        <table class="daily-schedule-table no-select">
+                        <table class="practicum-table daily-schedule-table no-select">
                             <thead>
                                 <tr>
                                     <th>구분</th>
@@ -744,17 +778,17 @@
                                     <td>담임시간</td><td>08:20 ~ 08:30</td>
                                     <td></td>
                                 </tr>
-                                <tr data-start="08:30" data-end="09:30">
+                                <tr data-start="08:30" data-end="09:20">
                                     <td>1교시</td><td>08:30 ~ 09:20</td>
                                     <td>1교시</td><td>08:30 ~ 09:20</td>
                                     <td></td>
                                 </tr>
-                                <tr data-start="09:30" data-end="10:30">
+                                <tr data-start="09:30" data-end="10:20">
                                     <td>2교시</td><td>09:30 ~ 10:20</td>
                                     <td>2교시</td><td>09:30 ~ 10:20</td>
                                     <td></td>
                                 </tr>
-                                <tr data-start="10:30" data-end="11:30">
+                                <tr data-start="10:30" data-end="11:20">
                                     <td>3교시</td><td>10:30 ~ 11:20</td>
                                     <td>3교시</td><td>10:30 ~ 11:20</td>
                                     <td></td>
@@ -769,12 +803,12 @@
                                     <td>중식</td><td>12:20 ~ 13:10 (50분)</td>
                                     <td><span class="ds-sm">2,3학년 수업 실습생<br>급식: 12:30</span></td>
                                 </tr>
-                                <tr data-start="13:10" data-end="14:10">
+                                <tr data-start="13:10" data-end="14:00">
                                     <td>5교시</td><td>13:10 ~ 14:00</td>
                                     <td>5교시</td><td>13:10 ~ 14:00</td>
                                     <td></td>
                                 </tr>
-                                <tr data-start="14:10" data-end="15:10">
+                                <tr data-start="14:10" data-end="15:00">
                                     <td>6교시</td><td>14:10 ~ 15:00</td>
                                     <td>6교시</td><td>14:10 ~ 15:00</td>
                                     <td></td>
@@ -785,12 +819,71 @@
                                     <td></td>
                                 </tr>
                                 <tr data-start="16:00" data-end="16:20">
-                                    <td>청소 및 종례</td><td>16:00 ~ 16:20</td>
-                                    <td>청소 및 종례</td><td>16:00 ~ 16:20</td>
+                                    <td>청소/종례</td><td>16:00 ~ 16:20</td>
+                                    <td>청소/종례</td><td>16:00 ~ 16:20</td>
                                     <td></td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </details>
+
+        <!-- 교생 시간표 섹션 추가 -->
+        <details id="det-timetable" open>
+            <summary class="no-select">
+                <div class="sum-title">
+                    <svg class="sum-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+                    교생 시간표
+                </div>
+                <div class="bm-header-actions">
+                    <a href="http://xn--s39aqy283b66bj2x.kr/" target="_blank" class="header-action-btn" title="컴시간알리미 새 탭에서 열기">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        컴시간알리미 (27021)
+                    </a>
+                    <svg class="chevron" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+            </summary>
+            <div class="details-wrapper">
+                <div class="det-inner">
+                <div class="det-content">
+                    <div class="timetable-grid">
+                        <div class="timetable-wrap">
+                            <div class="timetable-title">1학년 공통영어 시간표</div>
+                            <div class="table-container">
+                                <table class="practicum-table timetable-table no-select">
+                                    <thead><tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>1</td><td></td><td></td><td></td><td>1-3</td><td>1-1</td></tr>
+                                        <tr><td>2</td><td></td><td></td><td>1-1</td><td></td><td></td></tr>
+                                        <tr><td>3</td><td>1-5</td><td>1-3</td><td>1-3</td><td>1-5</td><td></td></tr>
+                                        <tr><td>4</td><td>1-3</td><td>1-5</td><td></td><td></td><td>1-5</td></tr>
+                                        <tr><td>5</td><td></td><td></td><td>1-1</td><td></td><td></td></tr>
+                                        <tr><td>6</td><td>1-1</td><td></td><td></td><td></td><td>2-7</td></tr>
+                                        <tr><td>7</td><td></td><td></td><td></td><td></td><td>2-7</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="timetable-wrap">
+                            <div class="timetable-title">1학년 1반 시간표</div>
+                            <div class="table-container">
+                                <table class="practicum-table timetable-table no-select">
+                                    <thead><tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>1</td><td>통합사회</td><td>공통국어</td><td>공통수학</td><td>통합과학</td><td>공통영어</td></tr>
+                                        <tr><td>2</td><td>공통수학</td><td>기술가정</td><td>공통영어</td><td>기술가정</td><td>한국사</td></tr>
+                                        <tr><td>3</td><td>통합과학</td><td>공통수학</td><td>음악</td><td>기술가정</td><td>과탐실</td></tr>
+                                        <tr><td>4</td><td>진로</td><td>한국사</td><td>통합사회</td><td>공통수학</td><td>통합사회</td></tr>
+                                        <tr><td>5</td><td>통합사회</td><td>통합과학</td><td>통합과학</td><td>공통영어</td><td>공통국어</td></tr>
+                                        <tr><td>6</td><td>공통영어</td><td>공통국어</td><td>창체</td><td>체육</td><td>음악</td></tr>
+                                        <tr><td>7</td><td>자율</td><td>체육</td><td>창체</td><td>한국사</td><td>공통국어</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 </div>
