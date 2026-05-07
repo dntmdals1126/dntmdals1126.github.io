@@ -494,63 +494,49 @@
     
     .lunch-day-header { border-bottom: 1px solid var(--glass-highlight); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; }
     html[data-theme="light"] .lunch-day-header { border-bottom-color: #e2e8f0; }
-    
     .lunch-day-date { font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
     html[data-theme="light"] .lunch-day-date { color: #0f172a; }
     .lunch-day-dow { font-size: 13px; font-weight: 600; color: var(--text-dim); margin-left: 6px; }
 
-    /* --- 테이블 범용 스타일 (세로선 제거, 모던하고 시원한 UI) --- */
+    /* --- 테이블 범용 스타일 (가로세로 십자 격자선 예쁘게 추가) --- */
     .table-container { width: 100%; max-width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--glass-border); -webkit-overflow-scrolling: touch; background: rgba(255,255,255,0.01); }
-    html[data-theme="light"] .table-container { background: #ffffff; }
+    html[data-theme="light"] .table-container { background: #ffffff; border-color: #cbd5e1; }
 
-    .practicum-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+    /* 테이블 외곽선은 컨테이너와 겹치지 않게 숨기고, 내부 선만 표출 */
+    .practicum-table { width: 100%; border-collapse: collapse; min-width: 500px; text-align: center; font-size: 14.5px; border-style: hidden; }
     
-    /* 테이블 헤더 */
-    .practicum-table th { padding: 14px 10px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--glass-border); white-space: nowrap; font-size: 13.5px; letter-spacing: 0.5px; background: rgba(255,255,255,0.04); }
-    html[data-theme="light"] .practicum-table th { background: #f8fafc; color: #334155; border-bottom: 2px solid #e2e8f0; }
+    /* 테이블 헤더 블루 포인트 강조 및 격자선 */
+    .practicum-table th { background: rgba(var(--primary-rgb), 0.1); padding: 12px 8px; font-weight: 700; color: var(--primary); border: 1px solid var(--glass-border); white-space: nowrap; }
+    html[data-theme="light"] .practicum-table th { background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border-color: #cbd5e1; }
     
-    /* 테이블 셀 (가로선만 유지) */
-    .practicum-table td { padding: 14px 10px; border-bottom: 1px solid var(--glass-border); color: var(--text-main); font-weight: 500; transition: background-color 0.2s; word-break: keep-all; }
-    html[data-theme="light"] .practicum-table td { color: #1e293b; border-bottom: 1px solid #f1f5f9; }
+    /* 테이블 셀 격자선 추가 */
+    .practicum-table td { padding: 12px 8px; border: 1px solid var(--glass-border); color: var(--text-main); font-weight: 500; transition: background-color 0.2s; }
+    html[data-theme="light"] .practicum-table td { color: #1e293b; border-color: #e2e8f0; }
     
-    .practicum-table tr:last-child td { border-bottom: none; }
-    
-    /* 행 호버 효과 */
+    /* 행 호버 효과 (미디어 쿼리 해제로 모바일 터치 대응) */
     .practicum-table tbody tr { transition: background-color 0.2s; }
-    .practicum-table tbody tr:hover td { background-color: rgba(255,255,255,0.04); }
-    html[data-theme="light"] .practicum-table tbody tr:hover td { background-color: #f8fafc; }
+    .practicum-table tbody tr:hover td { background-color: rgba(255,255,255,0.08); }
+    html[data-theme="light"] .practicum-table tbody tr:hover td { background-color: rgba(0,0,0,0.04); }
     
-    /* 일과 진행표 전용 디자인 (구분자 텍스트 포인트 부여) */
-    .daily-schedule-table { min-width: 480px; }
-    .daily-schedule-table td:nth-child(1),
-    .daily-schedule-table td:nth-child(3) { color: var(--primary); font-weight: 700; font-size: 13.5px; }
-    html[data-theme="light"] .daily-schedule-table td:nth-child(1),
-    html[data-theme="light"] .daily-schedule-table td:nth-child(3) { color: var(--primary); }
+    .ds-sm { font-size: 12px; color: var(--text-sub); line-height: 1.4; display: block; margin-top: 4px; }
+    
+    /* 현재 진행 중인 교시 하이라이트 */
+    .current-time-row td { background-color: var(--primary-glow) !important; position: relative; color: var(--primary) !important; font-weight: 700 !important; }
+    html[data-theme="light"] .current-time-row td { background-color: rgba(37, 99, 235, 0.1) !important; }
+    .current-time-row td:first-child { border-left: 4px solid var(--primary); }
 
-    .ds-sm { font-size: 11.5px; color: var(--text-sub); line-height: 1.4; display: block; margin-top: 4px; font-weight: 500; }
-    
-    .ds-highlight { background: rgba(255, 255, 255, 0.015); }
-    html[data-theme="light"] .ds-highlight { background: rgba(0, 0, 0, 0.015); }
-    
-    /* 현재 진행 중인 교시 하이라이트 (측면 인라인 그림자로 세련되게 처리) */
-    .current-time-row td { background-color: rgba(var(--primary-rgb), 0.1) !important; color: var(--primary) !important; font-weight: 700 !important; }
-    html[data-theme="light"] .current-time-row td { background-color: rgba(var(--primary-rgb), 0.08) !important; }
-    .current-time-row td:first-child { box-shadow: inset 4px 0 0 var(--primary); border-left: none; }
-
-    /* 교생 시간표 전용 레이아웃 및 디자인 */
+    /* 교생 시간표 레이아웃 */
     .timetable-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; width: 100%; }
     .timetable-wrap { display: flex; flex-direction: column; gap: 10px; }
     .timetable-title { font-size: 15px; font-weight: 800; text-align: center; color: var(--primary); margin-bottom: 4px; }
-    .timetable-table { min-width: 100%; table-layout: fixed; }
     
-    /* 시간표 헤더 포인트 강조 */
-    .timetable-table th { background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border-bottom: 1px solid rgba(var(--primary-rgb), 0.2); }
-    html[data-theme="light"] .timetable-table th { background: rgba(var(--primary-rgb), 0.08); border-bottom: 2px solid rgba(var(--primary-rgb), 0.15); }
+    /* 시간표 전용 테이블 설정 (가로 스크롤 방지 및 폭 압축) */
+    .timetable-table { min-width: 100% !important; width: 100%; table-layout: fixed; }
+    .timetable-table th:first-child { width: 13%; } /* 교시 열 너비 축소 */
+    .timetable-table th, .timetable-table td { padding: 10px 2px; font-size: 13px; letter-spacing: -0.5px; word-break: break-all; }
+    .timetable-table td:first-child { font-weight: 700; color: var(--primary); background: rgba(var(--primary-rgb), 0.03); }
+    html[data-theme="light"] .timetable-table td:first-child { background: rgba(var(--primary-rgb), 0.02); }
     
-    /* 시간표 1열(교시) 은은한 배경 강조 */
-    .timetable-table td:first-child { font-weight: 800; color: var(--text-dim); background: rgba(255,255,255,0.02); }
-    html[data-theme="light"] .timetable-table td:first-child { background: #f8fafc; color: #64748b; }
-    .timetable-table th, .timetable-table td { padding: 12px 4px; font-size: 13px; letter-spacing: -0.3px; }
     @media (max-width: 768px) { .timetable-grid { grid-template-columns: minmax(0, 1fr); } }
 
     /* --- 학교 안내도 스타일 (CSS Grid 40-Column 기반) --- */
@@ -566,37 +552,29 @@
 
     /* --- 모바일 반응형 조율 --- */
     @media (max-width: 480px) {
-      :root { --header-h: 60px; --section-gap: 16px; }
-      header { top: 0; width: 100%; border-radius: 0; border-top: none; border-left: none; border-right: none; padding: 0 16px; padding-top: env(safe-area-inset-top); height: calc(var(--header-h) + env(safe-area-inset-top)); align-items: center; left: 0; transform: none; max-width: none; background: var(--header-bg); border-bottom: 1px solid var(--glass-border); }
-      main { padding-top: calc(80px + env(safe-area-inset-top)); } 
-      .scroll-mask { top: env(safe-area-inset-top); height: 80px; }
-      .logo { font-size: 20px; }
-      .header-tools { gap: 4px; }
-      .tool-btn { width: 36px; height: 36px; }
-      .section-card { padding: 12px; } 
-      summary { padding: 18px 16px; margin: 0; }
-      .sum-title { font-weight: 600; font-size: 15px; } 
-      .det-content { padding: 8px 12px 20px; }
-      
-      .lunch-day-card { padding: 16px; }
-      .header-action-btn { font-size: 11.5px; padding: 4px 8px; }
-
-      /* 일과 진행표 및 시간표 모바일 여백 대응 */
-      .daily-schedule-table { min-width: 380px; font-size: 12.5px; }
-      .daily-schedule-table th, .daily-schedule-table td { padding: 12px 6px; word-break: keep-all; }
-      .timetable-table th, .timetable-table td { padding: 10px 2px; font-size: 12px; letter-spacing: -0.5px; }
-      .ds-sm { font-size: 11px; }
-
-      /* 공지 iframe 모바일 대응 */
+      .clock-main-panel { padding: 14px 20px; min-height: 90px; }
       .notice-iframe { height: 500px !important; }
       
-      /* 학교 안내도 맵 모바일 대응 */
+      .practicum-table { min-width: 100%; font-size: 11.5px; }
+      .practicum-table th, .practicum-table td { padding: 8px 4px; word-break: keep-all; }
+      
+      /* 시간표 모바일 폰트 및 여백 극한 압축 (스크롤 완벽 방지) */
+      .timetable-table th, .timetable-table td { padding: 6px 1px; font-size: 11.5px; }
+      
+      .ds-sm { font-size: 11px; }
       .map-bldg { min-width: 600px; padding: 10px; }
-    footer { text-align: center; padding: 10px 0; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
+      .map-fl-label { width: 34px; font-size: 12px; }
+      .map-room { padding: 8px 2px; font-size: 11px; }
+      footer p { flex-direction: column; gap: 6px; margin-top: 12px; }
+      footer p .footer-sep { display: none; } /* 모바일에서는 구분선 숨김 */
+    }
+
+    /* --- 푸터, 스크롤 버튼, 모달 --- */
+    footer { text-align: center; padding: 16px 0 24px; color: var(--text-sub); font-size: 12px; margin-top: 10px; }
     footer b { font-family: var(--font-base); font-size: 13px; font-weight: 600; color: var(--text-main); }
-    footer p { margin: 4px 0 0; opacity: 0.7; }
+    footer p { margin: 8px 0 0; opacity: 0.7; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
     .footer-link { background: none; border: none; padding: 0; margin: 0; color: inherit; font-family: inherit; font-size: inherit; text-decoration: underline; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; }
-    .footer-link:hover { opacity: 1; }
+    @media (hover: hover) { .footer-link:hover { opacity: 1; } }
     
     .footer-divider { max-width: var(--max-w); height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.2) 80%, transparent); margin: 0 auto 16px; }
     html[data-theme="light"] .footer-divider { background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.15) 80%, transparent); }
@@ -606,7 +584,6 @@
     @media (hover: hover) { .scroll-btn:hover { transform: translateY(-4px); } }
     html[data-theme="light"] .scroll-btn { background: rgba(255, 255, 255, 0.9); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.15); color: #1e293b; }
 
-    /* --- 모달 공통 스타일 --- */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1300; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease; }
     .modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
     .modal-content { width: 90%; max-width: 440px; background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); max-height: 85vh; display: flex; flex-direction: column; }
@@ -619,7 +596,6 @@
     .modal-body-scroll::-webkit-scrollbar { width: 4px; }
     .modal-body-scroll::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
 
-    /* 오픈소스 모달 내용 */
     .oss-group-title { font-size: 13px; color: var(--text-sub); font-weight: 600; margin: 16px 0 8px 4px; }
     .oss-group-title:first-child { margin-top: 4px; }
     .oss-box { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px; margin-bottom: 8px; }
@@ -627,7 +603,6 @@
     .oss-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
     html[data-theme="light"] .oss-title { color: #0f172a; }
     .oss-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; word-break: keep-all; }
-
   </style>
 </head>
 <body>
@@ -1136,23 +1111,23 @@
                 </div>
                 </div>
             </div>
-        </details>
-
-    </div>
+        </div></div></div>
+    </details>
 
     <div class="footer-divider"></div>
 
     <footer class="no-select">
-      <b>WebHub <span style="color:var(--primary); font-family:var(--font-base); font-weight:700; margin-left:2px;">Practicum</span></b> Ver. 2.6<br>
-      <p>© 2026 Seungmin Woo. All rights reserved. <span style="opacity:0.5; margin: 0 6px;">|</span> <button id="openOSSModal" class="footer-link">Legal & Licenses</button></p>
+      <b>WebHub <span style="color:var(--primary); font-family:var(--font-base); font-weight:700;">Practicum</span></b> Ver. 3.2<br>
+      <p>
+          <span>© 2026 Seungmin Woo. All rights reserved.</span>
+          <span class="footer-sep" style="opacity:0.5; margin: 0 6px;">|</span> 
+          <button id="openOSSModal" class="footer-link">Legal & Licenses</button>
+      </p>
     </footer>
-
-    <button class="scroll-btn no-select" id="scrollBtn" aria-label="스크롤 이동">
-      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-    </button>
+    <button class="scroll-btn no-select" id="scrollBtn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
   </main>
   
-  <!-- 오픈소스 라이선스 모달 -->
+  <!-- 오픈소스 라이선스 모달 복원 -->
   <div class="modal-overlay" id="ossModal">
       <div class="modal-content">
           <div class="modal-header no-select" style="margin-bottom: 12px;">
