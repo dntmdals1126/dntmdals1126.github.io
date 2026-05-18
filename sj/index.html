@@ -1,0 +1,362 @@
+import React, { useState, useEffect } from 'react';
+import { Trophy, Star, X, Edit, Play, HelpCircle, Plus, Minus, Wand2 } from 'lucide-react';
+
+// 초기 팀 데이터 (5팀)
+const initialTeams = [
+  { id: 1, name: '1팀', score: 0 },
+  { id: 2, name: '2팀', score: 0 },
+  { id: 3, name: '3팀', score: 0 },
+  { id: 4, name: '4팀', score: 0 },
+  { id: 5, name: '5팀', score: 0 },
+];
+
+// 초기 문제 데이터 (A~M) - 이미지를 기반으로 30, 20, 10점 순서로 배치
+const initialQuestions = [
+  { id: 'A', category: '문법', points: 30, question: '문법 30점 (A) - 문제를 여기에 입력하세요.', answer: '정답 A', isAnswered: false },
+  { id: 'D', category: '단어', points: 30, question: '단어 30점 (D) - 문제를 여기에 입력하세요.', answer: '정답 D', isAnswered: false },
+  { id: 'G', category: '독해', points: 30, question: '독해 30점 (G) - 문제를 여기에 입력하세요.', answer: '정답 G', isAnswered: false },
+  { id: 'K', category: '기타', points: 30, question: '기타 30점 (K) - 문제를 여기에 입력하세요.', answer: '정답 K', isAnswered: false },
+  
+  { id: 'B', category: '문법', points: 20, question: '문법 20점 (B) - 문제를 여기에 입력하세요.', answer: '정답 B', isAnswered: false },
+  { id: 'E', category: '단어', points: 20, question: '단어 20점 (E) - 문제를 여기에 입력하세요.', answer: '정답 E', isAnswered: false },
+  { id: 'H', category: '독해', points: 20, question: '독해 20점 (H) - 문제를 여기에 입력하세요.', answer: '정답 H', isAnswered: false },
+  { id: 'L', category: '기타', points: 20, question: '기타 20점 (L) - 문제를 여기에 입력하세요.', answer: '정답 L', isAnswered: false },
+  
+  { id: 'C', category: '문법', points: 10, question: '문법 10점 (C) - 문제를 여기에 입력하세요.', answer: '정답 C', isAnswered: false },
+  { id: 'F', category: '단어', points: 10, question: '단어 10점 (F) - 문제를 여기에 입력하세요.', answer: '정답 F', isAnswered: false },
+  { id: 'J', category: '독해', points: 10, question: '독해 10점 (J) - 문제를 여기에 입력하세요.', answer: '정답 J', isAnswered: false },
+  { id: 'M', category: '기타', points: 10, question: '기타 10점 (M) - 문제를 여기에 입력하세요.', answer: '정답 M', isAnswered: false },
+];
+
+// 미스터리 카드 6종
+const mysteryCards = [
+  { id: 1, title: '점수 스틸러!', desc: '원하는 팀의 점수 20점을 우리 팀으로 가져옵니다.', type: 'good' },
+  { id: 2, title: '천사 강림', desc: '우리 팀을 제외한 모든 팀에게 10점씩 선물합니다.', type: 'neutral' },
+  { id: 3, title: '더블 찬스', desc: '다음 문제의 점수가 2배가 됩니다! (맞춘 경우 선생님이 수동으로 점수 추가)', type: 'good' },
+  { id: 4, title: '침묵의 시간', desc: '지정한 한 팀은 다음 문제의 정답을 외칠 수 없습니다.', type: 'bad' },
+  { id: 5, title: '행운의 여신', desc: '문제 풀이 없이, 우리 팀 점수 무조건 +30점!', type: 'good' },
+  { id: 6, title: '앗, 실수!', desc: '안타깝게도 우리 팀 점수 -10점 감점.', type: 'bad' },
+];
+
+export default function App() {
+  const [teams, setTeams] = useState(initialTeams);
+  const [questions, setQuestions] = useState(initialQuestions);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [showAnswer, setShowAnswer] = useState(false);
+  
+  // 미스터리 카드 관련 상태
+  const [drawnCard, setDrawnCard] = useState(null);
+  const [availableCards, setAvailableCards] = useState([...mysteryCards]);
+
+  const categories = ['문법', '단어', '독해', '기타'];
+  const rows = [30, 20, 10];
+
+  // 점수 수동 조절
+  const updateScore = (teamId, amount) => {
+    setTeams(teams.map(t => t.id === teamId ? { ...t, score: t.score + amount } : t));
+  };
+
+  // 문제 클릭 핸들러
+  const handleQuestionClick = (q) => {
+    if (q.isAnswered && !isEditMode) return;
+    setSelectedQuestion(q);
+    setShowAnswer(false);
+  };
+
+  // 정답 맞춘 팀 처리
+  const handleCorrectAnswer = (teamId) => {
+    if (selectedQuestion) {
+      updateScore(teamId, selectedQuestion.points);
+      setQuestions(questions.map(q => q.id === selectedQuestion.id ? { ...q, isAnswered: true } : q));
+      setSelectedQuestion(null);
+    }
+  };
+
+  // 문제 패스 (아무도 못 맞춤)
+  const handlePassQuestion = () => {
+    setQuestions(questions.map(q => q.id === selectedQuestion.id ? { ...q, isAnswered: true } : q));
+    setSelectedQuestion(null);
+  };
+
+  // 문제 수정 핸들러
+  const handleQuestionEdit = (id, field, value) => {
+    setQuestions(questions.map(q => q.id === id ? { ...q, [field]: value } : q));
+  };
+
+  // 미스터리 카드 뽑기
+  const drawMysteryCard = () => {
+    if (availableCards.length === 0) {
+      alert("모든 미스터리 카드를 소진했습니다!");
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * availableCards.length);
+    const selectedCard = availableCards[randomIndex];
+    
+    setDrawnCard(selectedCard);
+    
+    // 뽑은 카드 제거 (중복 방지)
+    const newAvailableCards = [...availableCards];
+    newAvailableCards.splice(randomIndex, 1);
+    setAvailableCards(newAvailableCards);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0f172a] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900 via-[#0f172a] to-black text-white font-pretendard flex flex-col selection:bg-pink-500 selection:text-white">
+      {/* 헤더 */}
+      <header className="bg-white/5 backdrop-blur-md p-5 px-8 shadow-2xl flex justify-between items-center border-b border-white/10 z-10 sticky top-0">
+        <h1 className="text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-400 tracking-tight flex items-center gap-3">
+          <Star className="text-yellow-400 fill-yellow-400 animate-[float_3s_ease-in-out_infinite]" />
+          도전! 골든벨 퀴즈
+          <Star className="text-yellow-400 fill-yellow-400 animate-[float_3s_ease-in-out_infinite_0.5s]" />
+        </h1>
+        <div className="flex gap-4">
+          <button 
+            onClick={drawMysteryCard}
+            className="flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-full font-bold shadow-[0_4px_0_rgb(157,23,77)] active:shadow-[0_0px_0_rgb(157,23,77)] active:translate-y-1 transition-all border border-pink-400/30"
+          >
+            <Wand2 size={20} />
+            미스터리 카드 뽑기 ({availableCards.length}/6)
+          </button>
+          <button 
+            onClick={() => setIsEditMode(!isEditMode)}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold shadow-[0_4px_0_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_rgba(0,0,0,0.3)] active:translate-y-1 transition-all border border-white/10 ${isEditMode ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500' : 'bg-white/10 hover:bg-white/20 backdrop-blur-md'}`}
+          >
+            {isEditMode ? <Play size={20} /> : <Edit size={20} />}
+            {isEditMode ? '게임 모드로 전환' : '문제 출제 모드'}
+          </button>
+        </div>
+      </header>
+
+      <main className="flex-1 p-6 lg:p-8 flex flex-col lg:flex-row gap-8 max-w-[1600px] mx-auto w-full">
+        
+        {/* 왼쪽 퀴즈 보드 */}
+        <section className="flex-[3] bg-white/5 backdrop-blur-sm rounded-[2rem] p-6 lg:p-8 shadow-2xl border border-white/10 flex flex-col">
+          <div className="grid grid-cols-5 gap-4 lg:gap-5 h-full">
+            
+            {/* 헤더 행 (빈칸 + 카테고리 4개) */}
+            <div className="bg-white/5 rounded-2xl flex items-center justify-center font-bold text-slate-400 backdrop-blur-sm border border-white/5">
+              점수 \ 과목
+            </div>
+            {categories.map(cat => (
+              <div key={cat} className="bg-gradient-to-b from-blue-500/20 to-indigo-600/20 rounded-2xl flex items-center justify-center text-2xl font-black text-blue-300 border border-blue-500/30 shadow-inner">
+                {cat}
+              </div>
+            ))}
+
+            {/* 점수 행 (30, 20, 10 순서) */}
+            {rows.map(rowPoint => (
+              <React.Fragment key={rowPoint}>
+                {/* 왼쪽 점수 표시 셀 */}
+                <div className="bg-gradient-to-b from-pink-500/20 to-rose-600/20 rounded-2xl flex items-center justify-center text-3xl font-black text-pink-300 border border-pink-500/30 shadow-inner">
+                  {rowPoint}
+                </div>
+                {/* 해당 점수의 4개 카테고리 문제들 */}
+                {categories.map(cat => {
+                  const q = questions.find(q => q.points === rowPoint && q.category === cat);
+                  if (!q) return <div key={`${rowPoint}-${cat}`} />;
+                  
+                  return (
+                    <button
+                      key={q.id}
+                      onClick={() => handleQuestionClick(q)}
+                      disabled={q.isAnswered && !isEditMode}
+                      className={`relative w-full aspect-[4/3] rounded-2xl flex flex-col items-center justify-center text-4xl md:text-5xl font-black transition-all duration-200 transform group 
+                        ${q.isAnswered && !isEditMode 
+                          ? 'bg-slate-800/40 text-slate-600 border border-white/5 shadow-none opacity-60 cursor-not-allowed' 
+                          : 'bg-gradient-to-b from-amber-300 to-orange-500 text-orange-950 hover:from-amber-200 hover:to-orange-400 shadow-[0_8px_0_#9a3412] active:shadow-[0_0px_0_#9a3412] active:translate-y-2 border border-white/20'}`}
+                    >
+                      <span className="drop-shadow-sm">{q.id}</span>
+                      {isEditMode && <span className="absolute bottom-3 text-xs font-bold mt-2 bg-black/40 text-white px-3 py-1.5 rounded-full tracking-wider">수정하기</span>}
+                    </button>
+                  );
+                })}
+              </React.Fragment>
+            ))}
+          </div>
+        </section>
+
+        {/* 오른쪽 스코어 보드 */}
+        <section className="flex-[1] bg-white/5 backdrop-blur-sm rounded-[2rem] p-6 lg:p-8 shadow-2xl border border-white/10 flex flex-col min-w-[320px]">
+          <h2 className="text-2xl font-black text-center mb-8 flex items-center justify-center gap-3 text-white tracking-wider">
+            <Trophy className="text-yellow-400" size={28} /> 팀별 스코어
+          </h2>
+          <div className="flex-1 flex flex-col gap-4">
+            {teams.map((team, index) => {
+              const isFirst = teams.length > 0 && Math.max(...teams.map(t=>t.score)) > 0 && team.score === Math.max(...teams.map(t=>t.score));
+              return (
+              <div key={team.id} className={`transition-all p-5 rounded-2xl border flex flex-col gap-3 relative overflow-hidden group ${isFirst ? 'bg-gradient-to-br from-indigo-500/40 to-purple-600/40 border-indigo-400/50 shadow-[0_0_20px_rgba(99,102,241,0.2)]' : 'bg-white/5 hover:bg-white/10 border-white/10'}`}>
+                <div className="flex justify-between items-center z-10">
+                  <div className="flex items-center gap-3 w-1/2">
+                    <span className="text-slate-400 font-black text-lg w-6">{index + 1}</span>
+                    <input 
+                      type="text" 
+                      value={team.name}
+                      onChange={(e) => setTeams(teams.map(t => t.id === team.id ? { ...t, name: e.target.value } : t))}
+                      className="bg-transparent text-xl font-bold w-full outline-none border-b border-transparent focus:border-indigo-400 transition-colors"
+                    />
+                  </div>
+                  <div className={`text-4xl font-black ${isFirst ? 'text-yellow-300 drop-shadow-[0_2px_10px_rgba(253,224,71,0.4)]' : 'text-slate-200'}`}>
+                    {team.score}
+                  </div>
+                </div>
+                {/* 점수 수동 조절 버튼 */}
+                <div className="flex justify-end gap-2 mt-1 z-10 opacity-50 group-hover:opacity-100 transition-opacity">
+                   <button onClick={() => updateScore(team.id, -10)} className="bg-red-500/20 hover:bg-red-500/40 text-red-300 p-1.5 rounded-lg backdrop-blur-sm transition-colors"><Minus size={16} /></button>
+                   <button onClick={() => updateScore(team.id, 10)} className="bg-green-500/20 hover:bg-green-500/40 text-green-300 p-1.5 rounded-lg backdrop-blur-sm transition-colors"><Plus size={16} /></button>
+                </div>
+                {/* 1등 표시 이펙트 */}
+                {isFirst && (
+                   <div className="absolute -right-4 -top-4 text-yellow-400/10 z-0 rotate-12">
+                     <Trophy size={100} />
+                   </div>
+                )}
+              </div>
+            )})}
+          </div>
+        </section>
+      </main>
+
+      {/* 문제 모달창 */}
+      {selectedQuestion && (
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-6 z-50">
+          <div className="bg-white text-slate-800 w-full max-w-4xl rounded-[2.5rem] p-10 md:p-14 flex flex-col relative shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-[popUp_0.3s_cubic-bezier(0.16,1,0.3,1)]">
+            <button 
+              onClick={() => setSelectedQuestion(null)}
+              className="absolute top-8 right-8 text-slate-400 hover:text-slate-800 transition-colors bg-slate-100 hover:bg-slate-200 p-2 rounded-full"
+            >
+              <X size={28} />
+            </button>
+
+            <div className="text-center mb-10">
+              <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-indigo-800 px-6 py-2 rounded-full font-bold text-lg inline-flex items-center gap-2 shadow-sm border border-indigo-200">
+                <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                {selectedQuestion.category} · {selectedQuestion.points}점
+              </span>
+            </div>
+
+            {/* 출제 모드 vs 게임 모드 */}
+            {isEditMode ? (
+              <div className="flex flex-col gap-6 mb-4">
+                <div>
+                  <label className="block text-slate-600 font-bold mb-3 text-lg">질문 (Q)</label>
+                  <textarea 
+                    className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 text-xl font-medium focus:border-indigo-500 focus:bg-white outline-none transition-all resize-none shadow-inner"
+                    rows={4}
+                    value={selectedQuestion.question}
+                    onChange={(e) => handleQuestionEdit(selectedQuestion.id, 'question', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-600 font-bold mb-3 text-lg">정답 (A)</label>
+                  <input 
+                    type="text"
+                    className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 text-xl font-medium focus:border-indigo-500 focus:bg-white outline-none transition-all shadow-inner"
+                    value={selectedQuestion.answer}
+                    onChange={(e) => handleQuestionEdit(selectedQuestion.id, 'answer', e.target.value)}
+                  />
+                </div>
+                <button 
+                  onClick={() => setSelectedQuestion(null)}
+                  className="mt-6 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-5 rounded-2xl text-xl hover:from-emerald-400 hover:to-teal-500 shadow-lg transition-all active:scale-[0.98]"
+                >
+                  수정 완료
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center flex-1">
+                <div className="text-4xl md:text-5xl font-black text-center leading-tight min-h-[180px] flex items-center justify-center break-keep w-full whitespace-pre-wrap px-4 text-slate-800">
+                  {selectedQuestion.question}
+                </div>
+
+                <div className="w-full max-w-2xl mt-12 mb-10">
+                  {showAnswer ? (
+                     <div className="bg-gradient-to-br from-green-50 to-emerald-100 border-4 border-emerald-400 text-emerald-900 rounded-3xl p-8 text-center text-4xl font-black shadow-lg animate-[popUp_0.4s_cubic-bezier(0.16,1,0.3,1)]">
+                       정답: {selectedQuestion.answer}
+                     </div>
+                  ) : (
+                    <button 
+                      onClick={() => setShowAnswer(true)}
+                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-black py-6 rounded-3xl text-2xl flex items-center justify-center gap-3 transition-colors border-2 border-slate-200 shadow-sm active:scale-[0.98]"
+                    >
+                      <HelpCircle size={32} className="text-slate-500" /> 정답 확인하기
+                    </button>
+                  )}
+                </div>
+
+                {/* 점수 부여 영역 */}
+                <div className="w-full bg-slate-50 rounded-3xl p-6 border border-slate-100 mt-auto">
+                  <p className="text-center font-bold text-slate-400 mb-5">정답을 맞춘 팀을 선택하세요 (선택 시 자동으로 점수가 올라갑니다)</p>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    {teams.map(team => (
+                      <button
+                        key={team.id}
+                        onClick={() => handleCorrectAnswer(team.id)}
+                        className="bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 font-bold py-4 rounded-2xl transition-all flex flex-col items-center shadow-sm active:scale-[0.95]"
+                      >
+                        <span className="text-lg">{team.name}</span>
+                        <span className="text-sm text-indigo-500 mt-1 font-black">+{selectedQuestion.points}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <button 
+                    onClick={handlePassQuestion}
+                    className="w-full mt-4 bg-transparent hover:bg-slate-200 text-slate-500 font-bold py-4 rounded-2xl transition-colors"
+                  >
+                    아무도 못맞춤 (문제 닫기)
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 미스터리 카드 모달 */}
+      {drawnCard && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 z-[60]">
+          <div className={`bg-gradient-to-br ${drawnCard.type === 'good' ? 'from-yellow-300 via-amber-400 to-orange-500' : drawnCard.type === 'bad' ? 'from-red-400 via-rose-500 to-pink-600' : 'from-blue-300 via-indigo-400 to-violet-500'} w-full max-w-md rounded-[2.5rem] p-1.5 shadow-[0_0_60px_-15px_rgba(255,255,255,0.3)] animate-[popUp_0.4s_cubic-bezier(0.16,1,0.3,1)]`}>
+            <div className="bg-white rounded-[2.2rem] p-10 flex flex-col items-center text-center relative h-full">
+               <div className="text-7xl mb-6 animate-[float_3s_ease-in-out_infinite]">🃏</div>
+               <h3 className="text-sm font-black text-slate-400 mb-3 tracking-widest uppercase">Mystery Card</h3>
+               <h2 className="text-4xl font-black text-slate-800 mb-6 break-keep">{drawnCard.title}</h2>
+               <div className="w-12 h-1.5 rounded-full bg-slate-200 mb-6"></div>
+               <p className="text-2xl text-slate-600 font-bold leading-snug mb-10 break-keep">
+                 {drawnCard.desc}
+               </p>
+               
+               <p className="text-sm text-slate-400 mt-auto mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                 점수 적용은 우측 스코어보드의 <br/><span className="font-bold text-slate-600">+ - 버튼</span>으로 직접 조절해주세요!
+               </p>
+
+               <button 
+                  onClick={() => setDrawnCard(null)}
+                  className={`w-full text-white font-black py-5 rounded-2xl text-xl transition-all shadow-lg active:scale-[0.98] ${drawnCard.type === 'good' ? 'bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 shadow-orange-500/30' : drawnCard.type === 'bad' ? 'bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 shadow-rose-500/30' : 'bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 shadow-indigo-500/30'}`}
+               >
+                 확인
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+        
+        .font-pretendard {
+          font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+        }
+        
+        @keyframes popUp {
+          0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+      `}} />
+    </div>
+  );
+}
