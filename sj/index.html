@@ -92,6 +92,7 @@
       { id: 3, name: '3팀', score: 0 },
       { id: 4, name: '4팀', score: 0 },
       { id: 5, name: '5팀', score: 0 },
+      { id: 6, name: '6팀', score: 0 },
     ];
 
     // 12가지 미스터리 카드 목록 (좋은 것 8개, 나쁜 것 4개)
@@ -104,7 +105,7 @@
       { id: 5, title: '천사 강림', desc: '모든 팀에게 10점씩 선물합니다! (선생님이 모든 팀 +10 해주세요)', type: 'good' },
       { id: 6, title: '하이패스', desc: '이번 문제는 무조건 우리 팀이 맞춘 것으로 인정! 점수를 획득합니다.', type: 'good' },
       { id: 7, title: '어부지리', desc: '현재 1등 팀의 점수 10점을 우리 팀으로 가져옵니다.', type: 'good' },
-      { id: 8, title: '럭키 세븐', desc: '행운의 숫자! 무려 우리 팀 점수 +70점 대박!', type: 'good' },
+      { id: 8, title: '럭키 세븐', desc: '행운의 숫자! 무려 우리 팀 점수 +50점 대박!', type: 'good' },
       
       // --- 나쁜 카드 4개 ---
       { id: 9, title: '침묵의 시간', desc: '안타깝게도 우리 팀은 다음 문제의 정답을 외칠 수 없습니다.', type: 'bad' },
@@ -471,7 +472,7 @@
 
               <div class="w-full bg-slate-50 rounded-3xl p-5 border border-slate-100 mt-auto">
                 <p class="text-center font-bold text-slate-400 mb-4">정답을 맞춘 팀을 선택하세요 (선택 시 자동으로 점수가 올라갑니다)</p>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                   ${teamsButtonsHtml}
                 </div>
                 <button onclick="handlePassQuestion()" class="w-full mt-3 bg-transparent hover:bg-slate-200 text-slate-500 font-bold py-3 rounded-2xl transition-colors">
