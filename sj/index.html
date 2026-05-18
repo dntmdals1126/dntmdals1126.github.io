@@ -145,8 +145,8 @@
       if (confirm("게임을 초기화하시겠습니까? 팀 점수와 문제 풀이 내역이 모두 리셋됩니다. (문제 내용은 유지됨)")) {
         // 문제는 isAnswered만 false로 변경
         state.questions.forEach(q => q.isAnswered = false);
-        // 팀 점수 0으로
-        state.teams.forEach(t => t.score = 0);
+        // 팀 데이터 완전 초기화 (6팀으로 복구)
+        state.teams = JSON.parse(JSON.stringify(initialTeams));
         // 카드 12장으로 초기화
         state.availableCards = [...ALL_MYSTERY_CARDS];
         
