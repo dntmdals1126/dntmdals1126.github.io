@@ -151,7 +151,7 @@
             font-family: var(--font-base);
             background: var(--bg-dark);
             color: var(--text-main);
-            overflow-y: scroll; 
+            overflow-y: auto; 
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
@@ -505,49 +505,56 @@
 <body>
 
     <!-- 강제 인증 오버레이 (Access Code가 없거나 만료되면 표시됨) -->
-    <div id="authOverlay" class="fixed inset-0 z-[3000] bg-[var(--bg-dark)]/90 backdrop-blur-md flex flex-col items-center justify-center p-4 transition-opacity duration-300 hidden">
-        <div class="logo mb-6 fade-in-up">
-            <span class="text-4xl font-logo font-semibold italic tracking-tight text-text-main">Enged<span class="text-highlight">.</span></span>
-        </div>
-        <div class="section-card w-full max-w-sm p-6 text-center shadow-2xl border border-[var(--glass-border)] bg-[var(--glass-surface)]/80 fade-in-up" style="animation-delay: 0.1s;">
-            <div class="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto mb-3">
-                <i class="fa-solid fa-lock text-xl"></i>
-            </div>
-            <h2 class="text-xl font-bold text-text-main mb-2 font-sans tracking-tight">Access Required</h2>
-            <p class="text-[12px] text-text-dim mb-5 break-keep leading-relaxed font-medium">
-                이용을 위해 만료되지 않은 <span class="text-primary font-bold">Access Code</span> 또는<br>이미 인증된 기기의 <span class="text-sub-accent font-bold">동기화 코드</span>가 필요합니다.
-            </p>
-            
-            <div class="flex flex-col gap-4">
-                <!-- Option 1: Access Code -->
-                <div>
-                    <input type="text" id="auth-code-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-primary/50 transition-colors placeholder:text-text-dim/50 text-sm" placeholder="ACCESS CODE" autocomplete="off">
-                    <button onclick="submitAuthCode()" id="auth-submit-btn" class="btn btn-pri w-full h-11 text-[13px] shadow-lg shadow-primary/20 mt-2">
-                        새 코드로 인증
-                    </button>
-                </div>
-
-                <div class="flex items-center gap-3 opacity-50 my-0.5">
-                    <div class="h-px bg-text-dim flex-1"></div>
-                    <span class="text-[9px] text-text-dim font-bold uppercase tracking-widest">or</span>
-                    <div class="h-px bg-text-dim flex-1"></div>
-                </div>
-
-                <!-- Option 2: Sync Code -->
-                <div>
-                    <input type="text" id="auth-sync-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-sub-accent/50 transition-colors placeholder:text-text-dim/50 text-sm uppercase" placeholder="동기화 코드 (6자리)" maxlength="6" autocomplete="off">
-                    <button onclick="submitAuthSyncCode()" id="auth-sync-btn" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] w-full h-11 text-[13px] text-text-main hover:bg-[var(--glass-highlight)] mt-2">
-                        기존 기기와 연결
-                    </button>
-                </div>
+    <div id="authOverlay" class="fixed inset-0 z-[3000] bg-[var(--bg-dark)]/95 backdrop-blur-lg transition-all duration-500 hidden overflow-y-auto">
+        <div class="flex flex-col items-center justify-center min-h-full p-4 py-8">
+            <div class="logo mb-6 fade-in-up shrink-0">
+                <span class="text-4xl font-logo font-semibold italic tracking-tight text-text-main drop-shadow-md">Enged<span class="text-highlight">.</span></span>
             </div>
             
-            <p id="auth-error-msg" class="text-red-400 text-xs mt-3 hidden font-medium bg-red-500/10 py-2 rounded-lg border border-red-500/20"></p>
-            
-            <div class="mt-5 pt-4 border-t border-[var(--glass-border)]">
-                <button onclick="exportData()" class="text-[11px] text-text-dim hover:text-text-main transition-colors flex items-center justify-center gap-1.5 mx-auto">
-                    <i class="fa-solid fa-download"></i> 현재 학습 데이터 백업 (.json)
-                </button>
+            <div class="w-full max-w-[360px] p-6 sm:p-8 text-center shadow-2xl border border-[var(--glass-border)] bg-[var(--glass-surface)] backdrop-blur-xl rounded-[32px] fade-in-up relative overflow-hidden shrink-0" style="animation-delay: 0.1s;">
+                <!-- Decorative Glows -->
+                <div class="absolute -top-16 -right-16 w-32 h-32 bg-[var(--primary-glow)] rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-[var(--sub-accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="w-14 h-14 rounded-2xl bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] text-[var(--primary)] flex items-center justify-center mx-auto mb-4 shadow-inner relative z-10">
+                    <i class="fa-solid fa-lock text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-text-main mb-2 font-sans tracking-tight relative z-10">Access Required</h2>
+                <p class="text-[12px] text-text-dim mb-5 break-keep leading-relaxed font-medium relative z-10">
+                    이용을 위해 만료되지 않은 <span class="text-[var(--primary)] font-bold">Access Code</span> 또는<br>이미 인증된 기기의 <span class="text-[var(--primary)] font-bold">동기화 코드</span>가 필요합니다.
+                </p>
+                
+                <div class="flex flex-col gap-3 relative z-10">
+                    <!-- Option 1: Access Code -->
+                    <div class="group">
+                        <input type="text" id="auth-code-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-2xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-[var(--primary)] transition-all placeholder:text-text-dim/50 text-sm shadow-inner" placeholder="ACCESS CODE" autocomplete="off">
+                        <button onclick="submitAuthCode()" id="auth-submit-btn" class="w-full h-11 text-[13px] font-bold rounded-2xl btn-pri mt-2 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2 border-none">
+                            새 코드로 인증
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-3 opacity-60 my-1">
+                        <div class="h-px bg-[var(--glass-border)] flex-1"></div>
+                        <span class="text-[10px] text-text-dim font-bold uppercase tracking-widest">or</span>
+                        <div class="h-px bg-[var(--glass-border)] flex-1"></div>
+                    </div>
+
+                    <!-- Option 2: Sync Code -->
+                    <div class="group">
+                        <input type="text" id="auth-sync-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-2xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-[var(--primary)] transition-all placeholder:text-text-dim/50 text-sm uppercase shadow-inner" placeholder="동기화 코드 (6자리)" maxlength="6" autocomplete="off">
+                        <button onclick="submitAuthSyncCode()" id="auth-sync-btn" class="w-full h-11 text-[13px] font-bold rounded-2xl bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-text-main hover:bg-[var(--glass-surface)] mt-2 transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                            기존 기기와 연결
+                        </button>
+                    </div>
+                </div>
+                
+                <p id="auth-error-msg" class="text-red-500 text-[12px] mt-3 hidden font-medium bg-red-500/10 py-2 rounded-xl border border-red-500/20 relative z-10 animate-pulse"></p>
+                
+                <div class="mt-5 pt-4 border-t border-[var(--glass-border)] relative z-10">
+                    <button onclick="exportData()" class="text-[11px] text-text-dim hover:text-text-main transition-colors flex items-center justify-center gap-1.5 mx-auto font-medium cursor-pointer">
+                        <i class="fa-solid fa-download"></i> 데이터 로컬 백업 (.json)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1132,21 +1139,33 @@
                 </div>
 
                 <!-- 동기화 횟수 현황 & Access Code 입력 -->
-                <div class="flex justify-between items-center mt-3 px-1 mb-1">
-                    <span class="text-[10px] text-text-dim font-medium flex items-center gap-1">
-                        사용량: <span id="sync-usage-text" class="text-text-main font-bold ml-0.5">0 / 700회</span>
-                    </span>
-                    <div class="flex gap-2 items-center">
-                        <button onclick="verifyAccessCode()" id="btn-access-code" class="text-[10px] text-sub-accent underline hover:text-primary transition-colors">Access Code 갱신</button>
-                        <button onclick="removeAccessCode()" id="btn-remove-code" class="hidden text-[10px] text-red-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark"></i> 삭제</button>
+                <div class="bg-[var(--glass-highlight)] rounded-xl p-3 mt-4 border border-[var(--glass-border)] flex flex-col gap-2">
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-[11px] text-text-dim font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt text-highlight"></i> 일일 사용량
+                        </span>
+                        <span id="sync-usage-text" class="text-[11px] text-text-main font-bold tracking-wide">0 / 700회</span>
+                    </div>
+                    
+                    <div class="h-px w-full bg-[var(--glass-border)] my-1"></div>
+                    
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-[11px] text-text-dim font-medium flex items-center gap-1.5">
+                            Access 기한 <span id="access-status-text" class="ml-1 text-highlight font-bold">D-0</span>
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="verifyAccessCode()" id="btn-access-code" class="px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 text-[10px] font-bold transition-colors flex items-center gap-1.5">
+                                <i class="fa-solid fa-key"></i> 코드 갱신
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mt-1 px-1">
+                <div class="flex justify-between items-center mt-3 px-2">
                     <span class="text-[10px] text-text-dim font-medium flex items-center gap-1.5">
                         <i class="fa-solid fa-cloud-arrow-up"></i> <span class="sync-time-display">마지막 동기화: 없음</span>
                     </span>
-                    <button onclick="manualCloudSync()" id="manual-sync-btn" class="text-[10px] font-bold text-primary hover:text-blue-400 px-2.5 py-1.5 bg-primary/10 rounded-md transition-colors flex items-center gap-1.5">
+                    <button onclick="manualCloudSync()" id="manual-sync-btn" class="text-[10px] font-bold text-primary hover:text-blue-400 px-3 py-1.5 bg-primary/10 rounded-lg transition-colors flex items-center gap-1.5">
                         <i class="fa-solid fa-rotate"></i> 수동 백업
                     </button>
                 </div>
@@ -1251,9 +1270,11 @@
             
             if (!usage.isPremium) {
                 overlay.classList.remove('hidden');
+                document.documentElement.style.overflow = 'hidden';
                 document.body.style.overflow = 'hidden';
             } else {
                 overlay.classList.add('hidden');
+                document.documentElement.style.overflow = '';
                 document.body.style.overflow = '';
                 
                 const diffDays = Math.ceil((usage.premiumExpiry - Date.now()) / (1000 * 60 * 60 * 24));
@@ -1312,6 +1333,7 @@
                     window.updateSyncCodeUI();
                     
                     document.getElementById('authOverlay').classList.add('hidden');
+                    document.documentElement.style.overflow = '';
                     document.body.style.overflow = '';
                     alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
                 } else {
@@ -1363,6 +1385,7 @@
                     const usage = getSyncUsage();
                     if(usage.isPremium) {
                         document.getElementById('authOverlay').classList.add('hidden');
+                        document.documentElement.style.overflow = '';
                         document.body.style.overflow = '';
                         alert("성공적으로 기기가 연결되었습니다!\n공유된 데이터와 이용 기간을 불러왔습니다.");
                     } else {
@@ -1445,8 +1468,7 @@
             const headerBtn = document.getElementById('headerSyncBtn');
             const disconnectBtn = document.getElementById('btn-disconnect-sync');
             const usageText = document.getElementById('sync-usage-text');
-            const accessCodeBtn = document.getElementById('btn-access-code');
-            const removeCodeBtn = document.getElementById('btn-remove-code');
+            const accessStatusEl = document.getElementById('access-status-text');
             
             if(codeSpan) codeSpan.innerText = state.syncCode || '없음';
             if(headerBtn) {
@@ -1463,9 +1485,10 @@
                 const diffDays = Math.ceil((usage.premiumExpiry - Date.now()) / (1000 * 60 * 60 * 24));
                 let displayDays = diffDays > 0 ? diffDays : 0;
                 
-                usageText.innerHTML = `${usage.count} / 700회 <span class="text-highlight text-[9px] ml-1">(D-${displayDays})</span>`;
-                
-                if(accessCodeBtn) accessCodeBtn.innerText = "코드 갱신";
+                usageText.innerHTML = `${usage.count} <span class="text-text-dim font-normal">/ 700회</span>`;
+                if (accessStatusEl) {
+                    accessStatusEl.innerHTML = `D-${displayDays}`;
+                }
             }
         };
 
@@ -1493,10 +1516,17 @@
         };
 
         window.disconnectSync = () => {
-            if(confirm("기기 간 동기화를 해제하시겠습니까?\n해제해도 서버의 사용량이나 기기에 저장된 데이터는 안전하게 유지됩니다.")) {
+            if(confirm("기기 간 동기화를 해제하시겠습니까?\n해제 시 Access 권한도 함께 초기화되며 코드를 다시 입력해야 합니다.")) {
                 const state = window.getAppState();
                 state.syncCode = null;
                 state.autoSyncEnabled = false;
+                
+                // 동기화 해제 시 권한도 초기화하여 튕겨내기
+                const usage = getSyncUsage();
+                usage.premiumExpiry = 0;
+                usage.isPremium = false;
+                state.syncUsage = usage;
+
                 window.updateLocalState(state, true);
                 if(unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
                 if(autoSyncInterval) { clearInterval(autoSyncInterval); autoSyncInterval = null; }
@@ -1505,7 +1535,10 @@
                 const autoSyncCheckbox = document.getElementById('setting-auto-sync');
                 if (autoSyncCheckbox) autoSyncCheckbox.checked = false;
                 
-                alert("동기화가 안전하게 해제되었습니다.");
+                alert("동기화 및 Access 권한이 안전하게 해제되었습니다.");
+                
+                closeSettingsModal();
+                window.checkAccessStatus(); // 즉시 인증 창 띄우기
             }
         };
 
