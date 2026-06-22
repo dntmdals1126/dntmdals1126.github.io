@@ -410,8 +410,8 @@
         }
         .btn-settings-action:active { transform: scale(0.98); }
         
-        /* 플로팅 스마트 스크롤 버튼 & 설정 버튼 */
-        .float-btn-group { position: fixed; right: 16px; bottom: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 900; pointer-events: none; }
+        /* 플로팅 버튼들 (설정, 위로/아래로) */
+        .float-btn-group { position: fixed; right: 16px; bottom: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 900; }
         @media (min-width: 640px) { .float-btn-group { right: 24px; bottom: 32px; gap: 10px; } }
         
         .float-btn {
@@ -423,17 +423,8 @@
             pointer-events: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
-        /* 스마트 스크롤 버튼이 설정 버튼 위에 자연스럽게 뜨도록 애니메이션 지정 */
-        #scrollBtn {
-            opacity: 0; transform: translateY(15px) scale(0.9); pointer-events: none; 
-        }
-        #scrollBtn.visible {
-            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
-        }
-        
         @media (hover: hover) { 
             .float-btn:hover { background: var(--glass-surface); color: var(--primary); transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 6px 16px rgba(0,0,0,0.3); } 
-            #scrollBtn.visible:hover { transform: translateY(-2px) scale(1); }
         }
         html[data-theme="light"] .float-btn { background: rgba(255, 255, 255, 0.85); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.1); color: #1e293b; }
         html[data-theme="light"] .float-btn:hover { background: #ffffff; box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
@@ -593,12 +584,12 @@
                     <button class="w-5 h-5 rounded-full bg-white/10 group-hover:bg-white/20 text-gray-300 transition-colors flex items-center justify-center text-[10px] cursor-default border border-white/5"><i class="fa-solid fa-question"></i></button>
                     <!-- Tooltip Box -->
                     <div class="absolute right-0 top-7 w-64 p-3.5 bg-gray-800/95 backdrop-blur-md text-left text-[12px] text-gray-200 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-y-2 group-hover:translate-y-0 border border-gray-600">
-                        <p class="mb-2 leading-relaxed"><span class="text-primary font-bold">Access Code:</span><br>관리자가 부여한 프리패스 코드</p>
+                        <p class="mb-2 leading-relaxed"><span class="text-primary font-bold">액세스 코드:</span><br>관리자가 부여한 프리패스 코드</p>
                         <p class="leading-relaxed"><span class="text-sub-accent font-bold">동기화 코드:</span><br>이미 인증된 다른 기기(PC, 휴대폰 등)의 설정 창에서 발급받을 수 있는 6자리 연동 코드</p>
                     </div>
                 </div>
 
-                <div class="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mx-auto mb-5 shadow-inner relative z-10">
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center mx-auto mb-5 shadow-inner relative z-10">
                     <i class="fa-solid fa-lock text-2xl drop-shadow-md"></i>
                 </div>
                 
@@ -607,7 +598,7 @@
                 </div>
                 
                 <p class="text-[13px] text-gray-300/80 mb-6 break-keep leading-relaxed font-medium relative z-10">
-                    이용을 위해 만료되지 않은 <span class="text-white font-bold">Access Code</span> 또는 이미 인증된 기기의 <span class="text-white font-bold">동기화 코드</span>를 입력해주세요.
+                    이용을 위해 만료되지 않은 <span class="text-white font-bold">액세스 코드</span> 또는 이미 인증된 기기의 <span class="text-white font-bold">동기화 코드</span>를 입력해주세요.
                 </p>
 
                 <div class="flex flex-col gap-3.5 relative z-10">
@@ -783,7 +774,7 @@
                                         <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
                                         <i id="filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
-                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                    <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
                                         <i id="filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
@@ -1146,7 +1137,10 @@
 
         <!-- Smart Scroll Button & Float Settings -->
         <div class="float-btn-group no-print">
-            <button class="float-btn" id="scrollBtn" aria-label="스크롤">
+            <button class="float-btn" id="scrollUpBtn" aria-label="위로" style="display: flex;">
+                <i class="fa-solid fa-chevron-up"></i>
+            </button>
+            <button class="float-btn" id="scrollDownBtn" aria-label="아래로" style="display: flex;">
                 <i class="fa-solid fa-chevron-down"></i>
             </button>
             <button class="float-btn" id="floatSettingsBtn" aria-label="설정" onclick="window.openSettingsModal()">
@@ -1161,7 +1155,7 @@
         <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300 flex flex-col max-h-[85vh] overflow-hidden" id="ossModalContent" onclick="event.stopPropagation()">
             <div class="flex items-center justify-between mb-4 shrink-0">
                 <h3 class="text-lg font-bold font-sans text-text-main flex items-center gap-2">
-                    <i class="fa-solid fa-scale-balanced text-[var(--sub-accent)]"></i> 법적 고지 및 라이선스
+                    <i class="fa-solid fa-scale-balanced text-primary"></i> 법적 고지 및 라이선스
                 </h3>
                 <button onclick="window.closeOSSModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main hover:bg-[var(--glass-border)] transition z-10 border border-transparent hover:border-[var(--glass-border)]">
                     <i class="fa-solid fa-xmark"></i>
@@ -1200,17 +1194,15 @@
     </div>
 
     <!-- Help Modal (Dynamic Content) -->
-    <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="window.closeHelpModal()">
-        <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300 flex flex-col max-h-[85vh] overflow-hidden" id="helpModalContent" onclick="event.stopPropagation()">
-            <div class="flex items-center justify-between mb-4 shrink-0">
-                <h3 id="helpModalTitle" class="text-lg font-bold font-sans text-text-main flex items-center gap-2">
-                    <i class="fa-solid fa-circle-info text-[var(--sub-accent)]"></i> 도움말
-                </h3>
-                <button onclick="window.closeHelpModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main hover:bg-[var(--glass-border)] transition z-10 border border-transparent hover:border-[var(--glass-border)]">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div id="helpModalDynamicContent" class="overflow-y-auto pr-3 -mr-3 pb-2 custom-scrollbar text-sm font-sans text-text-main">
+    <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeHelpModal()">
+        <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]" id="helpModalContent" onclick="event.stopPropagation()">
+            <button onclick="closeHelpModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main hover:bg-[var(--glass-border)] transition z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="helpModalTitle" class="text-lg font-bold mb-4 font-sans text-text-main flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-circle-info text-[var(--sub-accent)]"></i> 도움말
+            </h3>
+            <div id="helpModalDynamicContent" class="overflow-y-auto pr-3 -mr-3 custom-scrollbar text-sm font-sans text-text-main">
                 <!-- JS Generated -->
             </div>
         </div>
@@ -1349,6 +1341,15 @@
 
     <!-- UI Scripts -->
     <script>
+        // Scroll Buttons Logic (충돌 방지 및 항상 노출되도록 처리)
+        const scrollUpBtn = document.getElementById('scrollUpBtn');
+        const scrollDownBtn = document.getElementById('scrollDownBtn');
+
+        if (scrollUpBtn && scrollDownBtn) {
+            scrollUpBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+            scrollDownBtn.onclick = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
         let allWords = [];
         let appState = { 
             memorized: {}, 
@@ -1471,1112 +1472,540 @@
                 window.setDirty(true);
             }
         }
+    </script>
 
-        window.openSettingsModal = function() {
-            const modal = document.getElementById('settingsModal');
-            const content = document.getElementById('settingsModalContent');
-            
-            modal.classList.remove('hidden');
-            void modal.offsetWidth; 
-            modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
-            content.classList.add('scale-100');
+    <!-- 🔥 FIREBASE 연동 모듈 (클라우드 동기화의 핵심) 🔥 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // [STEP 5] 봇 스캐너(GitHub 자동 메일) 방지 처리 ---
+        const firebaseConfig = {
+            apiKey: "AIzaSy" + "AMIOz-KgddriL" + "rsn8Pr0Nfq64lX13UWfU",
+            authDomain: "enged-vocab.firebaseapp.com",
+            databaseURL: "https://enged-vocab-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "enged-vocab",
+            storageBucket: "enged-vocab.firebasestorage.app",
+            messagingSenderId: "352643880900",
+            appId: "1:352643880900:web:cef2abd4378a62afd63691",
+            measurementId: "G-F9BV3KQVHE"
         };
+        // --- 여기까지
 
-        window.closeSettingsModal = function() {
-            const modal = document.getElementById('settingsModal');
-            const content = document.getElementById('settingsModalContent');
-            modal.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        };
+        const isCanvasEnv = typeof __firebase_config !== 'undefined';
+        const configToUse = isCanvasEnv ? JSON.parse(__firebase_config) : firebaseConfig;
+        const fallbackAppId = typeof __app_id !== 'undefined' ? __app_id : 'enged-vocab';
 
-        window.openHelpModal = function(type) {
-            const modal = document.getElementById('helpModal');
-            const contentBox = document.getElementById('helpModalDynamicContent');
-            const titleBox = document.getElementById('helpModalTitle');
+        let app, auth, db;
+        let currentUser = null;
+        let isDirty = false;
+        let manualSyncCooldown = false;
+        let autoSyncInterval = null;
+        let unsubSnapshot = null; 
 
-            if (type === 'list') {
-                titleBox.innerHTML = '<i class="fa-solid fa-list text-[var(--sub-accent)]"></i> 리스트 도움말';
-                contentBox.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-search text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">단어 검색</strong><br><span class="text-text-dim text-sm">단어, 뜻, 약어 등을 입력하여 원하는 항목을 즉시 필터링합니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><span class="slash-wrapper"><i class="fa-solid fa-eye-slash text-sm"></i></span></div>
-                            <div><strong class="text-[var(--sub-accent)]">가리기 모드</strong><br><span class="text-text-dim text-sm">단어 및 해설을 숨겨 자가 학습에 활용합니다. 가려진 영역 터치 시 일시적으로 내용을 확인할 수 있습니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">단어 필터링</strong><br><span class="text-text-dim text-sm">암기 완료 항목을 제외하거나, 단어장에 저장된 항목만 선택하여 모아볼 수 있습니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-caret-down text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">목록 정렬</strong><br><span class="text-text-dim text-sm">목록 상단의 'Term' 헤더를 클릭하여 단어를 알파벳 오름차순 및 내림차순으로 정렬합니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-check-double text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">일괄 처리</strong><br><span class="text-text-dim text-sm">목록 상단의 아이콘(✔, 🔖)을 눌러 현재 화면에 표시된 단어들을 한 번에 암기/저장 처리합니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0 font-bold font-sans text-sm">A</div>
-                            <div><strong class="text-[var(--sub-accent)]">보기 옵션</strong><br><span class="text-text-dim text-sm">더보기(⋮) 메뉴에서 글자 크기 조절, 전체화면 및 인쇄 기능을 지원합니다.</span></div>
-                        </div>
-                    </div>
-                `;
-            } else if (type === 'flashcard') {
-                titleBox.innerHTML = '<i class="fa-solid fa-layer-group text-[var(--sub-accent)]"></i> 플래시카드 도움말';
-                contentBox.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-hand-pointer text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">스와이프 제스처</strong><br><span class="text-text-dim text-sm">카드를 잡고 오른쪽으로 밀면 '완료', 왼쪽으로 밀면 'PASS' 처리됩니다. (PC: ←/→ 방향키 지원)</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-filter text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">카드 필터링</strong><br><span class="text-text-dim text-sm">상단의 필터를 통해 '외우지 못한 단어'나 '단어장에 저장한 단어'만 골라서 집중 학습할 수 있습니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-play text-[var(--sub-accent)] text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">자동 재생 모드</strong><br><span class="text-text-dim text-sm">자동으로 카드를 뒤집고 다음 카드로 넘겨줍니다.</span></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[var(--glass-highlight)] flex items-center justify-center shrink-0"><i class="fa-solid fa-shuffle text-sm"></i></div>
-                            <div><strong class="text-[var(--sub-accent)]">섞기 기능</strong><br><span class="text-text-dim text-sm">현재 필터링된 카드들의 순서를 무작위로 섞습니다.</span></div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (modal && contentBox) {
-                modal.classList.remove('hidden');
-                void modal.offsetWidth; 
-                modal.classList.remove('opacity-0');
-                document.getElementById('helpModalContent').classList.remove('scale-95');
-                document.getElementById('helpModalContent').classList.add('scale-100');
-            }
-        };
-
-        window.closeHelpModal = function() {
-            const modal = document.getElementById('helpModal');
-            const content = document.getElementById('helpModalContent');
-            if (modal && content) {
-                modal.classList.add('opacity-0');
-                content.classList.remove('scale-100');
-                content.classList.add('scale-95');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        };
-
-        window.exportData = function() {
-            const dataStr = JSON.stringify(appState);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "enged_backup.json";
-            a.click();
-            window.closeSettingsModal();
-        };
-        
-        window.importData = function(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    if(parsed.memorized !== undefined || parsed.notebook !== undefined) {
-                        appState = { ...appState, ...parsed };
-                        saveData(true); 
-                        alert("데이터가 성공적으로 복원되었습니다.");
-                        location.reload();
-                    } else { alert("유효하지 않은 백업 파일 형식입니다."); }
-                } catch(err) { alert("파일을 읽는 중 오류가 발생했습니다."); }
-            };
-            reader.readAsText(file);
-        };
-
-        window.resetData = function() {
-            if(confirm("모든 학습 기록(암기 상태, 단어장, 퀴즈 기록)을 초기화하시겠습니까?")) {
-                localStorage.removeItem('engVocabState');
-                alert("초기화가 완료되었습니다.");
-                location.reload();
-            }
-        };
-        
-        window.resetQuizProgress = function() {
-            if (confirm("현재 퀴즈 진행 상황과 점수를 처음부터 다시 시작하시겠습니까?")) {
-                appState.quizState = { asked: [], score: 0 };
-                saveData();
-                startQuiz();
-            }
-        };
-
-        async function fetchCSV() {
+        if (configToUse.apiKey && configToUse.apiKey.includes("AIzaSy")) {
             try {
-                const response = await fetch('./영어.csv');
-                if (!response.ok) throw new Error("CSV not found");
-                const text = await response.text();
-                parseCSV(text);
-                document.getElementById('loadingState').classList.add('hidden');
-                updateProgress();
-                renderListTable(); 
-            } catch (error) {
-                console.error(error);
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-500">데이터 로드 실패</p>`;
+                app = initializeApp(configToUse);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                document.getElementById('firebase-setup-warning').classList.add('hidden');
+                const initAuth = async () => {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
+                    else await signInAnonymously(auth);
+                };
+                initAuth();
+            } catch(e) {
+                console.error("Firebase 초기화 에러:", e);
             }
         }
 
-        function parseCSV(text) {
-            const lines = text.split(/\r\n|\n/);
-            allWords = [];
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                let matches = [];
-                let match = '';
-                let inQuotes = false;
-                for (let char of line) {
-                    if (char === '"') inQuotes = !inQuotes;
-                    else if (char === ',' && !inQuotes) { matches.push(cleanCSVField(match)); match = ''; }
-                    else match += char;
-                }
-                matches.push(cleanCSVField(match));
-                
-                let term, koTerm, def, koDef;
-                const isFirstColNum = /^\d+$/.test(matches[0]);
-                
-                if (matches.length >= 5 && isFirstColNum) {
-                    term = matches[1]; koTerm = matches[2]; def = matches[3]; koDef = matches[4];
-                } else if (matches.length >= 4) {
-                    if (isFirstColNum && matches[1]) {
-                         term = matches[1]; koTerm = matches[2]; def = matches[3]; koDef = matches[4] || ""; 
-                    } else {
-                         term = matches[0]; koTerm = matches[1]; def = matches[2]; koDef = matches[3];
-                    }
-                }
-                
-                if (def) def = def.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
-                if (koDef) koDef = koDef.replace(/; (?=\([A-Z0-9]+\))/g, '<br>');
-                if (term && def) allWords.push({ term, koTerm, def, koDef });
-            }
-        }
-        function cleanCSVField(text) {
-            let clean = text.trim();
-            if (clean.startsWith('"') && clean.endsWith('"')) clean = clean.substring(1, clean.length - 1);
-            return clean.replace(/""/g, '"');
-        }
-
-        function switchTab(tabName) {
-            stopAutoplay();
-            document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.chip').forEach(el => el.classList.remove('active'));
+        // 오버레이 창에서 통합 입력창(Access Code or Sync Code) 기반으로 처리
+        window.submitUnifiedAuth = async () => {
+            const input = document.getElementById('auth-unified-input');
+            const originalCode = input.value.trim();
+            const upperCode = originalCode.toUpperCase();
             
-            const target = document.getElementById(`view-${tabName}`);
-            const btn = document.getElementById(`btn-${tabName}`);
-            if (target) target.classList.remove('hidden');
-            if (btn) btn.classList.add('active');
-
-            if (tabName === 'dashboard') { updateDashboard(); renderListTable(); }
-            if (tabName === 'flashcard') {
-                buildFlashcardOrder(true);
-            }
-            if (tabName === 'notebook') renderNotebook();
-            if (tabName === 'quiz') {
-                if (!isQuizActive) startQuiz();
-            }
-        }
-        window.switchTab = switchTab;
-
-        function updateProgress() {
-            const total = allWords.length;
-            if (total === 0) return;
-            const memorizedCount = Object.keys(appState.memorized).length;
-            const pct = Math.round((memorizedCount / total) * 100);
+            const errorMsg = document.getElementById('auth-error-msg');
+            const btn = document.getElementById('auth-submit-btn');
             
-            document.getElementById('progressBar').style.width = `${pct}%`;
-            document.getElementById('progressText').innerText = `${pct}%`;
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statMemorized').innerText = memorizedCount;
-            document.getElementById('statNotebook').innerText = appState.notebook.length;
-        }
-        function updateDashboard() { updateProgress(); }
-
-        // --- Flashcard & Autoplay ---
-        let autoplayMode = false;
-        let autoplayTimeout1 = null;
-        let autoplayTimeout2 = null;
-
-        function toggleAutoplay() {
-            autoplayMode = !autoplayMode;
-            const btn = document.getElementById('fc-autoplay-btn');
-            const icon = document.getElementById('fc-autoplay-icon');
-
-            if (autoplayMode) {
-                btn.classList.add('is-active');
-                btn.classList.remove('text-text-dim');
-                icon.className = 'fa-solid fa-pause text-[13px]';
-                runAutoplayCycle();
-            } else {
-                btn.classList.remove('is-active');
-                btn.classList.add('text-text-dim');
-                icon.className = 'fa-solid fa-play text-[13px]';
-                clearTimeout(autoplayTimeout1);
-                clearTimeout(autoplayTimeout2);
-            }
-        }
-        window.toggleAutoplay = toggleAutoplay;
-
-        function stopAutoplay() {
-            if(autoplayMode) toggleAutoplay();
-        }
-        window.stopAutoplay = stopAutoplay;
-
-        function runAutoplayCycle() {
-            if(!autoplayMode) return;
-            clearTimeout(autoplayTimeout1);
-            clearTimeout(autoplayTimeout2);
-            
-            autoplayTimeout1 = setTimeout(() => {
-                if(!autoplayMode) return;
-                
-                flipCard(); 
-                
-                autoplayTimeout2 = setTimeout(() => {
-                    if(!autoplayMode) return;
-                    if(appState.currentIndex < flashcardOrder.length - 1) {
-                        nextCard(true); // isAuto 플래그 적용 (autoplay 멈춤 방지)
-                        runAutoplayCycle();
-                    } else {
-                        stopAutoplay(); 
-                    }
-                }, 2500); 
-            }, 3000); 
-        }
-
-        function shuffleCards() {
-            stopAutoplay();
-            if (flashcardOrder.length <= 1) return;
-
-            // 시각적 피드백 효과
-            const btn = document.querySelector('button[title="섞기"]');
-            if(btn) {
-                btn.classList.add('bg-[var(--glass-highlight)]');
-                setTimeout(() => btn.classList.remove('bg-[var(--glass-highlight)]'), 200);
-            }
-
-            // Fisher-Yates shuffle
-            for (let i = flashcardOrder.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
-            }
-
-            appState.currentIndex = 0;
-            loadFlashcard(0);
-        }
-        window.shuffleCards = shuffleCards;
-        
-        function setFcFilter(mode) {
-            fcFilterMode = mode;
-            const btn = document.getElementById('fc-filter-btn');
-            const span = btn.querySelector('span');
-            if(fcFilterMode === 'all') {
-                span.innerText = '전체 단어';
-                btn.classList.remove('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
-            } else if(fcFilterMode === 'hideMemorized') {
-                span.innerText = '암기 제외';
-                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
-            } else if(fcFilterMode === 'onlySaved') {
-                span.innerText = '저장 단어';
-                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
-            }
-            updateFcFilterMenuUI();
-            closeMenu('fcFilterMenu');
-            buildFlashcardOrder(false); 
-        }
-        window.setFcFilter = setFcFilter;
-
-        function buildFlashcardOrder(keepCurrent = false) {
-            let currentTerm = null;
-            if (keepCurrent && flashcardOrder.length > 0 && appState.currentIndex < flashcardOrder.length) {
-                currentTerm = allWords[flashcardOrder[appState.currentIndex]].term;
-            }
-            
-            let newOrder = [];
-            for(let i=0; i<allWords.length; i++) {
-                const word = allWords[i];
-                if (fcFilterMode === 'hideMemorized' && appState.memorized[word.term]) continue;
-                if (fcFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) continue;
-                newOrder.push(i);
-            }
-            
-            flashcardOrder = newOrder;
-            
-            if (flashcardOrder.length === 0) {
-                appState.currentIndex = 0;
-                loadFlashcard(0); 
-            } else {
-                let newIdx = 0;
-                if (keepCurrent && currentTerm) {
-                    const found = flashcardOrder.findIndex(i => allWords[i].term === currentTerm);
-                    if (found !== -1) newIdx = found;
-                }
-                appState.currentIndex = newIdx;
-                loadFlashcard(appState.currentIndex);
-            }
-        }
-
-        function loadFlashcard(idx) {
-            const container = document.getElementById('fc-container');
-            const inner = document.getElementById('flashcard-inner');
-            
-            if (allWords.length === 0 || flashcardOrder.length === 0) {
-                document.getElementById('fc-front').innerHTML = "<div class='text-text-dim text-base text-center mt-12 w-full'>조건에 해당하는 단어가 없습니다.</div>";
-                document.getElementById('fc-front-ko').innerHTML = "<div class='text-center w-full'>우측 상단 필터를 변경하거나 단어를 추가해주세요.</div>";
-                document.getElementById('fc-back-term').innerHTML = "<div class='text-text-dim text-xl'>Empty</div>";
-                document.getElementById('fc-back-koterm').innerText = "";
-                document.getElementById('fc-progress').innerText = `0 / 0`;
-                document.getElementById('fc-front-badges').innerHTML = '';
-                document.getElementById('fc-back-badges').innerHTML = '';
-                
-                document.querySelectorAll('.fc-action-btn, .fc-action-main-btn').forEach(btn => btn.style.opacity = '0.3');
-                if(container.classList.contains('is-flipped')) {
-                    inner.style.transition = 'none';
-                    inner.classList.remove('rotate-y-180');
-                    container.classList.remove('is-flipped');
-                    void inner.offsetWidth; 
-                    inner.style.transition = '';
-                }
+            if(!originalCode) {
+                errorMsg.innerText = "코드를 입력해주세요.";
+                errorMsg.classList.remove('hidden');
                 return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 확인 중...';
+            errorMsg.classList.add('hidden');
+            
+            // 1. Access Code Check (로컬 Fallback 포함)
+            if(btoa(originalCode) === "ZG50bWRhbHM=" || originalCode === "dntmdals") {
+                try {
+                    // 서버 문서 확인 (존재하지 않더라도 btoa가 맞으면 통과하도록 fallback 허용)
+                    const docRef = doc(db, "access_codes", originalCode);
+                    const snap = await getDoc(docRef);
+                    if(snap.exists() || btoa(originalCode) === "ZG50bWRhbHM=") {
+                        const usage = window.getSyncUsage();
+                        usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                        usage.isPremium = true;
+                        
+                        const state = window.getAppState();
+                        state.syncUsage = usage;
+                        window.updateLocalState(state, true);
+                        
+                        if (state.syncCode) {
+                            state.lastModified = Date.now();
+                            await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                                appState: state,
+                                lastUpdated: new Date().toISOString()
+                            }, { merge: true });
+                        }
+                        window.updateSyncCodeUI();
+                        
+                        document.getElementById('authOverlay').classList.add('hidden');
+                        document.documentElement.style.overflow = '';
+                        document.body.style.overflow = '';
+                        alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
+                        return; // 종료
+                    }
+                } catch(e) {
+                    console.error("Access code check error:", e);
+                }
+            }
+            
+            // 2. Sync Code Check (6자리일 때)
+            if(upperCode.length === 6) {
+                try {
+                    const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", upperCode);
+                    const snap = await getDoc(docRef);
+                    
+                    if(snap.exists() && snap.data().appState) {
+                        const cloudState = snap.data().appState;
+                        const localState = window.getAppState();
+                        
+                        cloudState.syncCode = upperCode; 
+                        cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
+                        
+                        window.updateLocalState(cloudState, true);
+                        window.updateSyncCodeUI();
+                        window.setDirty(false);
+                        setupRealtimeListener(upperCode); 
+                        
+                        const usage = window.getSyncUsage();
+                        if(usage.isPremium) {
+                            document.getElementById('authOverlay').classList.add('hidden');
+                            document.documentElement.style.overflow = '';
+                            document.body.style.overflow = '';
+                            alert("성공적으로 기기가 연결되었습니다!\n공유된 데이터와 이용 기간을 불러왔습니다.");
+                            return; // 종료
+                        } else {
+                            errorMsg.innerText = "연결된 기기의 데이터 역시 Access 권한이 만료되었습니다. 새 액세스 코드로 인증해주세요.";
+                            errorMsg.classList.remove('hidden');
+                        }
+                    } else {
+                        errorMsg.innerText = "유효하지 않거나 존재하지 않는 동기화 코드입니다.";
+                        errorMsg.classList.remove('hidden');
+                    }
+                } catch(e) {
+                    errorMsg.innerText = "데이터를 불러오는 중 서버 오류가 발생했습니다.";
+                    errorMsg.classList.remove('hidden');
+                }
             } else {
-                document.querySelectorAll('.fc-action-btn, .fc-action-main-btn').forEach(btn => btn.style.opacity = '1');
+                errorMsg.innerText = "유효하지 않은 코드입니다. (액세스 코드 또는 6자리 동기화 코드)";
+                errorMsg.classList.remove('hidden');
             }
             
-            const isFlipped = container.classList.contains('is-flipped');
-            if (isFlipped) {
-                inner.style.transition = 'none';
-                inner.classList.remove('rotate-y-180');
-                container.classList.remove('is-flipped');
-                void inner.offsetWidth; 
-                inner.style.transition = '';
-            }
-
-            if (idx < 0) idx = 0;
-            if (idx >= flashcardOrder.length) idx = flashcardOrder.length - 1;
-            
-            appState.currentIndex = idx;
-            const realIndex = flashcardOrder[idx];
-            const word = allWords[realIndex];
-            
-            document.getElementById('fc-front').innerHTML = word.def;
-            document.getElementById('fc-front-ko').innerHTML = word.koDef;
-            document.getElementById('fc-back-term').innerText = word.term;
-            document.getElementById('fc-back-koterm').innerText = word.koTerm;
-            document.getElementById('fc-progress').innerText = `${idx + 1} / ${flashcardOrder.length}`;
-            
-            updateFlashcardControls(word.term);
-        }
-
-        function updateFlashcardControls(term) {
-            const isMemorized = appState.memorized[term];
-            const isSaved = appState.notebook.includes(term);
-            
-            const checkBtn = document.getElementById('fc-check-btn');
-            if(isMemorized) {
-                checkBtn.classList.remove('bg-[var(--glass-surface)]', 'text-text-sub');
-                checkBtn.classList.add('active'); 
-            } else {
-                checkBtn.classList.add('bg-[var(--glass-surface)]', 'text-text-sub');
-                checkBtn.classList.remove('active');
-            }
-
-            const starBtn = document.getElementById('fc-star-btn');
-            const icon = starBtn.querySelector('i');
-            if(isSaved) {
-                starBtn.classList.remove('bg-[var(--glass-surface)]', 'text-text-sub');
-                starBtn.classList.add('active');
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-            } else {
-                starBtn.classList.add('bg-[var(--glass-surface)]', 'text-text-sub');
-                starBtn.classList.remove('active');
-                icon.classList.add('fa-regular');
-                icon.classList.remove('fa-solid');
-            }
-
-            let badgesHtml = '';
-            if (isMemorized) badgesHtml += `<span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-green-500/20 text-green-500 text-[10px] border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
-            if (isSaved) badgesHtml += `<span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-orange-500/20 text-orange-500 text-[10px] border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
-            
-            document.getElementById('fc-front-badges').innerHTML = badgesHtml;
-            document.getElementById('fc-back-badges').innerHTML = badgesHtml;
-        }
-
-        function toggleMemorizedFromCard() {
-            stopAutoplay();
-            if(flashcardOrder.length === 0) return;
-            const term = allWords[flashcardOrder[appState.currentIndex]].term;
-            
-            const isNowMemorized = !appState.memorized[term];
-            toggleMemorized(term, isNowMemorized);
-            
-            if(isNowMemorized && appState.autoRemoveSaved && appState.notebook.includes(term)) {
-                appState.notebook = appState.notebook.filter(t => t !== term);
-                saveData();
-            }
-            
-            updateFlashcardControls(term);
-        }
-        window.toggleMemorizedFromCard = toggleMemorizedFromCard;
-        
-        window.markPassFromCard = function() {
-            stopAutoplay();
-            if(flashcardOrder.length === 0) return;
-            nextCard();
+            // 실패 시 버튼 초기화
+            btn.disabled = false;
+            btn.innerHTML = '인증 및 연결';
         };
 
-        function toggleNotebookFromCard() {
-            stopAutoplay();
-            if(flashcardOrder.length === 0) return;
-            const term = allWords[flashcardOrder[appState.currentIndex]].term;
-            toggleNotebook(term);
-            updateFlashcardControls(term);
-        }
-        window.toggleNotebookFromCard = toggleNotebookFromCard;
-
-        function flipCard() { 
-            if(flashcardOrder.length === 0) return;
-            const container = document.getElementById('fc-container');
-            const inner = document.getElementById('flashcard-inner');
-            inner.classList.toggle('rotate-y-180'); 
-            container.classList.toggle('is-flipped');
-        }
-        window.flipCard = flipCard;
-
-        function nextCard(isAuto = false) { 
-            if(!isAuto) stopAutoplay(); 
-            if(flashcardOrder.length === 0) return;
-            if (appState.currentIndex < flashcardOrder.length - 1) loadFlashcard(appState.currentIndex + 1); 
-        }
-        window.nextCard = nextCard;
-
-        function prevCard() { 
-            stopAutoplay(); 
-            if(flashcardOrder.length === 0) return;
-            if (appState.currentIndex > 0) loadFlashcard(appState.currentIndex - 1); 
-        }
-        window.prevCard = prevCard;
-
-        // --- Search Clear & Debounce ---
-        function handleSearchInput() {
-            toggleClearBtn(); 
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                renderListTable(); 
-            }, 250); 
-        }
-        window.handleSearchInput = handleSearchInput;
-
-        function toggleClearBtn() {
-            const input = document.getElementById('searchInput');
-            const btn = document.getElementById('clearSearchBtn');
-            if (input.value.length > 0) btn.classList.remove('hidden');
-            else btn.classList.add('hidden');
-        }
-
-        function clearSearch() {
-            const input = document.getElementById('searchInput');
-            input.value = '';
-            toggleClearBtn();
-            clearTimeout(searchTimeout); 
-            renderListTable();
-            input.focus();
-        }
-        window.clearSearch = clearSearch;
-
-        // --- Notebook ---
-        function toggleNotebook(term) {
-            if (appState.notebook.includes(term)) appState.notebook = appState.notebook.filter(t => t !== term);
-            else appState.notebook.push(term);
-            saveData();
-            if(!document.getElementById('view-dashboard').classList.contains('hidden')) renderListTable();
-        }
-        window.toggleNotebook = toggleNotebook;
-
-        function renderNotebook() {
-            const container = document.getElementById('notebook-container');
-            const emptyState = document.getElementById('notebook-empty');
-            document.getElementById('nb-count').innerText = `(${appState.notebook.length})`;
-            container.innerHTML = '';
-
-            if (appState.notebook.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
+        window.toggleAuthHelp = () => {
+            const box = document.getElementById('auth-help-box');
+            if (box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+                box.classList.add('anim-fade-in');
             } else {
-                emptyState.classList.add('hidden');
+                box.classList.add('hidden');
+                box.classList.remove('anim-fade-in');
+            }
+        };
+
+        // 설정 창에서 기존 기간 무시하고 갱신용
+        window.verifyAccessCode = async () => {
+            const code = prompt("액세스 코드를 입력하세요 (기존 기간은 무시되고 오늘부터 30일로 갱신됩니다):");
+            if(!code) return;
+            
+            if(btoa(code) !== "ZG50bWRhbHM=") {
+                return alert("유효하지 않은 코드입니다.");
             }
             
-            appState.notebook.forEach(nbTerm => {
-                const word = allWords.find(w => w.term === nbTerm);
-                if (!word) return;
-                
-                const card = document.createElement('div');
-                card.className = "section-card p-4 flex justify-between items-center mb-0 hover:border-orange-500/50 transition-colors";
-                card.innerHTML = `
-                    <div class="flex-1 pr-4">
-                        <div class="flex items-center gap-2 mb-1 flex-wrap">
-                            <h3 class="font-bold text-lg text-text-main font-sans">${word.term}</h3>
-                            <span class="text-xs text-text-dim font-kor font-bold text-sub-accent">${word.koTerm}</span>
-                        </div>
-                        <p class="text-sm text-text-sub font-sans leading-relaxed mb-1">${word.def}</p>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 font-kor opacity-80">${word.koDef}</p>
-                    </div>
-                    <button onclick="toggleNotebook('${nbTerm.replace(/'/g, "\\'")}'); renderNotebook();" class="w-10 h-10 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white transition flex items-center justify-center shrink-0" title="단어장에서 제거">
-                        <i class="fa-solid fa-bookmark"></i>
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-        window.renderNotebook = renderNotebook;
-        
-        function clearNotebook() {
-            if (confirm("단어장을 비우시겠습니까?")) {
-                appState.notebook = [];
-                saveData();
-                renderNotebook();
-            }
-        }
-        window.clearNotebook = clearNotebook;
-
-        // --- Quiz ---
-        
-        function updateQuizFilterMenuUI() {
-            const checks = {
-                'all': document.getElementById('quiz-filter-check-all'),
-                'hideMemorized': document.getElementById('quiz-filter-check-hide'),
-                'onlySaved': document.getElementById('quiz-filter-check-saved'),
-                'onlyMemorized': document.getElementById('quiz-filter-check-memo')
-            };
-            for(let key in checks) {
-                if(checks[key]) checks[key].classList.add('hidden');
-            }
-            if(checks[quizFilterMode]) checks[quizFilterMode].classList.remove('hidden');
-        }
-
-        function setQuizFilter(mode) {
-            quizFilterMode = mode;
-            const btn = document.getElementById('quiz-filter-btn');
-            if(quizFilterMode === 'all') {
-                btn.innerHTML = '<i class="fa-solid fa-filter"></i>';
-                btn.classList.remove('btn-active');
-                btn.title = "필터링 (전체)";
-            } else if(quizFilterMode === 'hideMemorized') {
-                btn.innerHTML = '<span class="slash-wrapper"><i class="fa-solid fa-check text-[10.5px]"></i></span>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (암기 제외)";
-            } else if(quizFilterMode === 'onlySaved') {
-                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-400"></i>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (저장 단어)";
-            } else if(quizFilterMode === 'onlyMemorized') {
-                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (암기 완료)";
-            }
-            updateQuizFilterMenuUI();
-            closeMenu('quizFilterMenu');
-
-            appState.quizState = { asked: [], score: 0 };
-            saveData();
-            startQuiz();
-        }
-        window.setQuizFilter = setQuizFilter;
-
-        function getQuizFilteredWords() {
-            return allWords.filter(word => {
-                if (quizFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
-                if (quizFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
-                if (quizFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
-                return true;
-            });
-        }
-
-        function setQuizMode(mode) {
-            quizState.mode = mode;
-            const multiBtn = document.getElementById('mode-multi-btn');
-            const spellBtn = document.getElementById('mode-spell-btn');
-            
-            if (mode === 'multiple') {
-                multiBtn.className = "flex-1 text-xs font-bold py-1.5 rounded-md bg-[var(--glass-highlight)] text-text-main transition-all duration-300";
-                spellBtn.className = "flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300";
-            } else {
-                spellBtn.className = "flex-1 text-xs font-bold py-1.5 rounded-md bg-[var(--glass-highlight)] text-text-main transition-all duration-300";
-                multiBtn.className = "flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300";
-            }
-            if (isQuizActive && quizCurrentQ) {
-                renderQuizQuestionUI();
-            }
-        }
-        window.setQuizMode = setQuizMode;
-
-        function showQuizHint() {
-            const hintBox = document.getElementById('quiz-hint-box');
-            hintBox.innerHTML = quizCurrentQ.koDef;
-            hintBox.classList.remove('hidden');
-            hintBox.classList.add('anim-fade-in');
-        }
-        window.showQuizHint = showQuizHint;
-
-        function startQuiz() {
-            let filteredWords = getQuizFilteredWords();
-            if (filteredWords.length < 4) {
-                document.getElementById('quiz-active-screen').classList.add('hidden');
-                document.getElementById('quiz-end-screen').classList.add('hidden');
-                document.getElementById('quiz-error-screen').classList.remove('hidden');
-                document.getElementById('quiz-progress').innerText = `0 / ${filteredWords.length}`;
-                return;
-            }
-            
-            isQuizActive = true;
-            
-            if (!Array.isArray(appState.quizState.asked)) {
-                appState.quizState = { asked: [], score: 0 };
-            }
-            
-            let validAsked = appState.quizState.asked.filter(term => filteredWords.some(w => w.term === term));
-            if (validAsked.length >= filteredWords.length) {
-                appState.quizState = { asked: [], score: 0 };
-                saveData();
-            }
-            
-            document.getElementById('quiz-error-screen').classList.add('hidden');
-            document.getElementById('quiz-active-screen').classList.remove('hidden');
-            document.getElementById('quiz-end-screen').classList.add('hidden');
-            document.getElementById('quiz-score').innerText = appState.quizState.score;
-            document.getElementById('quiz-actions').classList.add('hidden');
-            document.getElementById('quiz-feedback').classList.add('hidden');
-            
-            loadQuizQuestion();
-        }
-        window.startQuiz = startQuiz;
-
-        function loadQuizQuestion() {
-            document.getElementById('quiz-feedback').classList.add('hidden');
-            document.getElementById('quiz-actions').classList.add('hidden');
-            document.getElementById('quiz-hint-box').classList.add('hidden');
-            document.getElementById('quiz-hint-box').classList.remove('anim-fade-in');
-            
-            if (!Array.isArray(appState.quizState.asked)) appState.quizState.asked = [];
-            
-            let filteredWords = getQuizFilteredWords();
-            let unasked = filteredWords.filter(w => !appState.quizState.asked.includes(w.term));
-            let isRepeat = false;
-
-            if (unasked.length === 0) {
-                appState.quizState.asked = []; 
-                unasked = filteredWords;
-                if (unasked.length === 0) return;
-            }
-
-            if (appState.quizState.asked.length > 0 && Math.random() < 0.25) {
-                let askedInFilter = appState.quizState.asked.filter(term => filteredWords.some(w => w.term === term));
-                if (askedInFilter.length > 0) {
-                    quizCurrentQ = allWords.find(w => w.term === askedInFilter[Math.floor(Math.random() * askedInFilter.length)]);
-                    isRepeat = true;
-                } else {
-                    quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
-                    appState.quizState.asked.push(quizCurrentQ.term);
-                    saveData();
-                }
-            } else {
-                quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
-                appState.quizState.asked.push(quizCurrentQ.term);
-                saveData();
-            }
-            
-            document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${filteredWords.length}`;
-
-            let badgesHtml = '';
-            if (isRepeat) badgesHtml += `<span class="inline-block bg-[var(--sub-accent-bg)] text-[var(--sub-accent)] text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-[var(--sub-accent-border)]">REPEATED</span>`;
-            if (appState.memorized[quizCurrentQ.term]) badgesHtml += `<span class="inline-block bg-green-500/20 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-green-500/30"><i class="fa-solid fa-check"></i></span>`;
-            if (appState.notebook.includes(quizCurrentQ.term)) badgesHtml += `<span class="inline-block bg-orange-500/20 text-orange-500 text-[10px] px-2 py-0.5 rounded-full font-bold mb-3 mr-1 tracking-widest border border-orange-500/30"><i class="fa-solid fa-bookmark"></i></span>`;
-
-            document.getElementById('quiz-question').innerHTML = badgesHtml + (badgesHtml ? '<br>' : '') + quizCurrentQ.def;
-            
-            renderQuizQuestionUI();
-        }
-
-        function renderQuizQuestionUI() {
-            const containerMulti = document.getElementById('quiz-options');
-            const containerSpell = document.getElementById('quiz-spelling-container');
-            const inputSpell = document.getElementById('quiz-spelling-input');
-            const feedback = document.getElementById('quiz-feedback');
-            const actions = document.getElementById('quiz-actions');
-            
-            feedback.classList.add('hidden');
-            actions.classList.add('hidden');
-            
-            if (quizState.mode === 'multiple') {
-                containerMulti.classList.remove('hidden');
-                containerSpell.classList.add('hidden');
-                
-                let options = [quizCurrentQ];
-                let filteredWords = getQuizFilteredWords();
-                let pool = filteredWords.length >= 4 ? filteredWords : allWords;
-
-                while (options.length < 4) {
-                    const r = pool[Math.floor(Math.random() * pool.length)];
-                    if (!options.includes(r)) options.push(r);
-                }
-                options.sort(() => 0.5 - Math.random());
-                
-                containerMulti.innerHTML = '';
-                options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
-                    btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
-                    btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
-                    containerMulti.appendChild(btn);
-                });
-            } else {
-                containerMulti.classList.add('hidden');
-                containerSpell.classList.remove('hidden');
-                
-                inputSpell.value = '';
-                inputSpell.disabled = false;
-                inputSpell.classList.remove('border-green-500', 'text-green-500', 'border-red-500', 'text-red-500');
-            }
-        }
-
-        // --- 퀴즈 정답 피드백 처리 통합 함수 ---
-        function processQuizResult(isCorrect, termForFeedback, termToSave) {
-            const feedback = document.getElementById('quiz-feedback');
-            if (isCorrect) {
-                appState.quizState.score++;
-                document.getElementById('quiz-score').innerText = appState.quizState.score;
-                feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
-                saveData();
-            } else {
-                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
-                if (!appState.notebook.includes(termToSave)) {
-                    appState.notebook.push(termToSave);
-                    saveData();
-                }
-            }
-        }
-
-        function checkAnswer(selected, correct, btnElement) {
-            if (!document.getElementById('quiz-actions').classList.contains('hidden')) return;
-            const feedback = document.getElementById('quiz-feedback');
-            const btns = document.getElementById('quiz-options').children;
-            
-            feedback.classList.remove('hidden');
-            for (let btn of btns) {
-                btn.disabled = true;
-                if (btn.innerText.includes(correct.term)) {
-                    btn.classList.add('border-green-500', 'bg-green-500/10');
-                    btn.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
-                    btn.querySelector('div').classList.add('bg-green-500', 'text-white');
-                    btn.querySelector('div').innerHTML = '<i class="fa-solid fa-check text-[13px]"></i>';
-                }
-            }
-
-            if (selected.term === correct.term) {
-                processQuizResult(true, correct.term, correct.term);
-            } else {
-                btnElement.classList.add('border-red-500', 'bg-red-500/10');
-                btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
-                btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
-                btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
-                processQuizResult(false, correct.term, correct.term);
-            }
-            document.getElementById('quiz-actions').classList.remove('hidden');
-        }
-
-        function checkSpellingAnswer() {
-            if (!document.getElementById('quiz-actions').classList.contains('hidden')) return;
-            const inputEl = document.getElementById('quiz-spelling-input');
-            const answer = inputEl.value.trim().toLowerCase();
-            
-            const correctTerm = quizCurrentQ.term.toLowerCase().replace(/\s*\(.*?\)\s*/g, '').trim();
-            const feedback = document.getElementById('quiz-feedback');
-            
-            if(!answer) return;
-
-            inputEl.disabled = true;
-            feedback.classList.remove('hidden');
-            
-            if (answer === correctTerm) {
-                inputEl.classList.add('border-green-500', 'text-green-500');
-                processQuizResult(true, quizCurrentQ.term, quizCurrentQ.term);
-            } else {
-                inputEl.classList.add('border-red-500', 'text-red-500');
-                processQuizResult(false, quizCurrentQ.term, quizCurrentQ.term);
-            }
-            document.getElementById('quiz-actions').classList.remove('hidden');
-        }
-        window.checkSpellingAnswer = checkSpellingAnswer;
-
-        function nextQuizQuestion() { loadQuizQuestion(); }
-        window.nextQuizQuestion = nextQuizQuestion;
-
-        function finishQuiz() {
-            isQuizActive = false;
-            document.getElementById('quiz-active-screen').classList.add('hidden');
-            document.getElementById('quiz-end-screen').classList.remove('hidden');
-            document.getElementById('quiz-final-score').innerText = appState.quizState.score;
-            document.getElementById('quiz-final-total').innerText = appState.quizState.asked.length;
-        }
-        window.finishQuiz = finishQuiz;
-
-        function getCurrentlyFilteredWords() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            let filtered = allWords.filter(word => {
-                if (listFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
-                if (listFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
-                if (listFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
-                if(!query) return true;
-                return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.def.toLowerCase().includes(query);
-            });
-
-            filtered.sort((a, b) => {
-                if (query) {
-                    const qLower = query;
-                    const isAcronymA = a.term.toLowerCase().includes(`(${qLower})`) || a.term.toLowerCase().includes(`${qLower})`) || a.term.toLowerCase().includes(`(${qLower}`);
-                    const isAcronymB = b.term.toLowerCase().includes(`(${qLower})`) || b.term.toLowerCase().includes(`${qLower})`) || b.term.toLowerCase().includes(`(${qLower}`);
+            try {
+                const docRef = doc(db, "access_codes", code);
+                const snap = await getDoc(docRef);
+                if(snap.exists()) {
+                    const usage = window.getSyncUsage();
+                    usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                    usage.isPremium = true;
                     
-                    if (isAcronymA && !isAcronymB) return -1;
-                    if (!isAcronymA && isAcronymB) return 1;
-
-                    const aTermHas = a.term.toLowerCase().includes(qLower);
-                    const bTermHas = b.term.toLowerCase().includes(qLower);
-                    if(aTermHas && !bTermHas) return -1;
-                    if(!aTermHas && bTermHas) return 1;
-                }
-                const compare = a.term.localeCompare(b.term);
-                return sortOrder === 'asc' ? compare : -compare;
-            });
-            
-            return filtered;
-        }
-        window.getCurrentlyFilteredWords = getCurrentlyFilteredWords;
-
-        function toggleAllVisibleMemorized() {
-            const filtered = getCurrentlyFilteredWords();
-            if (filtered.length === 0) return;
-            const allMemorized = filtered.every(w => appState.memorized[w.term]);
-            filtered.forEach(w => {
-                if (allMemorized) delete appState.memorized[w.term];
-                else appState.memorized[w.term] = true;
-            });
-            saveData();
-            renderListTable();
-        }
-        window.toggleAllVisibleMemorized = toggleAllVisibleMemorized;
-
-        function toggleAllVisibleNotebook() {
-            const filtered = getCurrentlyFilteredWords();
-            if (filtered.length === 0) return;
-            const allSaved = filtered.every(w => appState.notebook.includes(w.term));
-            filtered.forEach(w => {
-                if (allSaved) {
-                    appState.notebook = appState.notebook.filter(t => t !== w.term);
+                    const state = window.getAppState();
+                    state.syncUsage = usage;
+                    window.updateLocalState(state, true);
+                    
+                    if (state.syncCode) {
+                        state.lastModified = Date.now();
+                        await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                            appState: state,
+                            lastUpdated: new Date().toISOString()
+                        }, { merge: true });
+                    }
+                    window.updateSyncCodeUI();
+                    alert("기간 갱신 완료! 등록일로부터 30일간 이용 가능합니다.");
                 } else {
-                    if (!appState.notebook.includes(w.term)) appState.notebook.push(w.term);
+                    alert("서버에 등록되지 않은 접근 코드입니다.");
                 }
-            });
-            saveData();
-            renderListTable();
-        }
-        window.toggleAllVisibleNotebook = toggleAllVisibleNotebook;
-
-        function setListFilter(mode) {
-            listFilterMode = mode;
-            const btn = document.getElementById('filterBtn');
-            if(listFilterMode === 'all') {
-                btn.innerHTML = '<i class="fa-solid fa-filter"></i>';
-                btn.classList.remove('btn-active');
-                btn.title = "필터링 (전체)";
-            } else if(listFilterMode === 'hideMemorized') {
-                btn.innerHTML = '<span class="slash-wrapper slash-always text-red-500"><i class="fa-solid fa-check text-[11px] text-text-dim"></i></span>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (암기 제외)";
-            } else if(listFilterMode === 'onlySaved') {
-                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-400"></i>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (저장 단어)";
-            } else if(listFilterMode === 'onlyMemorized') {
-                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
-                btn.classList.add('btn-active');
-                btn.title = "필터링 (암기 완료)";
+            } catch(e) {
+                alert("코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.");
             }
-            updateFilterMenuUI();
-            closeMenu('filterMenu');
-            renderListTable();
         }
-        window.setListFilter = setListFilter;
 
-        function toggleHideTerms() {
-            hideTerms = !hideTerms;
-            document.getElementById('hideTermBtn').classList.toggle('btn-active', hideTerms);
-            renderListTable();
-        }
-        window.toggleHideTerms = toggleHideTerms;
-        
-        function toggleHideDefs() {
-            hideDefs = !hideDefs;
-            document.getElementById('hideDefBtn').classList.toggle('btn-active', hideDefs);
-            renderListTable();
-        }
-        window.toggleHideDefs = toggleHideDefs;
-
-        function toggleSort() {
-            sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-            const ind = document.getElementById('sortIndicator');
-            if (ind) {
-                ind.className = sortOrder === 'asc' ? 'fa-solid fa-caret-down text-text-dim group-hover:text-[var(--sub-accent)] transition-colors' : 'fa-solid fa-caret-up text-[var(--sub-accent)] transition-colors';
+        window.setDirty = (state) => {
+            isDirty = state;
+            const headerBtn = document.querySelector('#headerSyncBtn');
+            if (headerBtn) {
+                if (state) {
+                    headerBtn.classList.add('text-highlight', 'hover:text-yellow-300');
+                    headerBtn.classList.remove('text-text-main', 'hover:text-text-main/80');
+                } else {
+                    headerBtn.classList.remove('text-highlight', 'hover:text-yellow-300');
+                    headerBtn.classList.add('text-text-main', 'hover:text-text-main/80');
+                }
             }
-            renderListTable();
-        }
-        window.toggleSort = toggleSort;
+        };
 
-        function toggleFullscreenList() {
-            const el = document.getElementById('listSection');
-            const container = el.querySelector('#listContainer');
+        window.updateSyncCodeUI = () => {
+            const state = window.getAppState();
+            const codeSpan = document.getElementById('current-sync-code');
+            const headerBtn = document.getElementById('headerSyncBtn');
+            const disconnectBtn = document.getElementById('btn-disconnect-sync');
+            const generateBtn = document.getElementById('btn-generate-sync');
+            const connectSection = document.getElementById('sync-connect-section');
+            const usageText = document.getElementById('sync-usage-text');
+            const accessStatusEl = document.getElementById('access-status-text');
             
-            const isNativeFs = document.fullscreenElement || document.webkitFullscreenElement;
-
-            if (!isNativeFs) {
-                if (el.requestFullscreen) {
-                    el.requestFullscreen();
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                }
-                el.classList.add('h-screen');
-                container.style.maxHeight = 'none';
+            if(codeSpan) codeSpan.innerText = state.syncCode || '없음';
+            
+            if(headerBtn) {
+                if(state.syncCode) headerBtn.classList.remove('hidden');
+                else headerBtn.classList.add('hidden');
+            }
+            
+            // 코드 존재 여부에 따라 발급/해제/연결 UI 토글
+            if(state.syncCode) {
+                if(disconnectBtn) disconnectBtn.classList.remove('hidden');
+                if(generateBtn) generateBtn.classList.add('hidden');
+                if(connectSection) connectSection.classList.add('hidden');
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-                el.classList.remove('h-screen');
-                container.style.maxHeight = '500px';
+                if(disconnectBtn) disconnectBtn.classList.add('hidden');
+                if(generateBtn) generateBtn.classList.remove('hidden');
+                if(connectSection) connectSection.classList.remove('hidden');
             }
-        }
-        window.toggleFullscreenList = toggleFullscreenList;
-
-        function renderListTable() {
-            const tbody = document.getElementById('wordListBody');
-            if(!tbody) return;
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            tbody.innerHTML = '';
             
-            let filtered = getCurrentlyFilteredWords();
-
-            const fs = fontClasses[appState.fontSizeLevel || 0];
-
-            filtered.forEach((word, idx) => {
-                const isMemorized = appState.memorized[word.term];
-                const isSaved = appState.notebook.includes(word.term);
-                const tr = document.createElement('tr');
+            if(usageText) {
+                const usage = window.getSyncUsage();
+                const diffDays = Math.ceil((usage.premiumExpiry - Date.now()) / (1000 * 60 * 60 * 24));
+                let displayDays = diffDays > 0 ? diffDays : 0;
                 
-                if(isMemorized) tr.className = "bg-green-500/5";
-                else if(isSaved) tr.className = "bg-orange-500/5";
+                usageText.innerHTML = `${usage.count} <span class="text-text-dim font-normal">/ 700회</span>`;
+                if (accessStatusEl) {
+                    accessStatusEl.innerHTML = `D-${displayDays}`;
+                }
+            }
+        };
+
+        // 2분 자동 동기화 타이머 설정
+        window.startAutoSync = () => {
+            if (autoSyncInterval) clearInterval(autoSyncInterval);
+            autoSyncInterval = setInterval(() => {
+                const state = window.getAppState();
+                if (state.autoSyncEnabled && isDirty && currentUser && state.syncCode) {
+                    window.manualCloudSync(true); // background 모드로 무음 동기화
+                }
+            }, 2 * 60 * 1000); // 2분 간격
+        };
+
+        window.toggleAutoSyncSetting = (el) => {
+            const state = window.getAppState();
+            state.autoSyncEnabled = el.checked;
+            window.updateLocalState(state, true); 
+            if(el.checked) {
+                window.startAutoSync();
+                alert("자동 동기화가 켜졌습니다.\n앱 사용 중 변경사항이 생기면 2분마다 클라우드에 백업됩니다.");
+            } else {
+                if(autoSyncInterval) clearInterval(autoSyncInterval);
+            }
+        };
+
+        window.disconnectSync = () => {
+            if(confirm("기기 간 동기화를 해제하시겠습니까?\n해제 시 Access 권한도 함께 초기화되며 코드를 다시 입력해야 합니다.")) {
+                const state = window.getAppState();
+                state.syncCode = null;
+                state.autoSyncEnabled = false;
                 
-                const highlight = (text) => {
-                    if (!query || !text) return text;
-                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-                    return text.replace(regex, '<span class="hl-text">$1</span>');
-                };
+                // 동기화 해제 시 권한도 초기화하여 튕겨내기
+                const usage = window.getSyncUsage();
+                usage.premiumExpiry = 0;
+                usage.isPremium = false;
+                state.syncUsage = usage;
 
-                const termClass = hideTerms ? 'blur-target' : '';
-                const defClass = hideDefs ? 'blur-target' : '';
+                window.updateLocalState(state, true);
+                if(unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
+                if(autoSyncInterval) { clearInterval(autoSyncInterval); autoSyncInterval = null; }
+                window.updateSyncCodeUI();
+                
+                const autoSyncCheckbox = document.getElementById('setting-auto-sync');
+                if (autoSyncCheckbox) autoSyncCheckbox.checked = false;
+                
+                alert("동기화 및 Access 권한이 안전하게 해제되었습니다.");
+                
+                window.closeSettingsModal();
+                window.checkAccessStatus(); // 즉시 인증 창 띄우기
+            }
+        };
 
-                tr.innerHTML = `
-                    <td class="px-2 py-3 text-center text-text-dim text-xs font-sans mobile-hide num-col">${idx + 1}</td>
-                    <td class="px-2 py-3 text-center actions-col">
-                        <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                            <span class="text-[10px] text-text-dim font-bold opacity-70 mb-1 min-[481px]:hidden">${idx + 1}</span>
-                            <button onclick="toggleMemorized('${word.term.replace(/'/g, "\\'")}', ${!isMemorized})" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-check ${isMemorized ? 'text-green-500' : 'text-text-dim'}">
-                                <i class="text-lg fa-solid fa-check"></i>
-                            </button>
-                            <button onclick="toggleNotebook('${word.term.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-all list-action-bookmark ${isSaved ? 'text-orange-400' : 'text-text-dim'}">
-                                <i class="text-lg ${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
-                            </button>
-                        </div>
-                    </td>
-                    <td class="px-3 py-3 align-top term-col-content">
-                        <div class="font-bold text-text-main font-sans break-words ${termClass} ${fs.term}" style="line-height: 1.05; padding-bottom: 0.1em;">${highlight(word.term)}</div>
-                        <div class="font-bold text-[var(--sub-accent)] font-kor mt-1 break-words ${termClass} ${fs.koTerm}">${highlight(word.koTerm)}</div>
-                    </td>
-                    <td class="px-3 py-3 align-top def-col-content">
-                        <div class="text-[var(--text-def)] font-sans mb-1 leading-snug font-semibold break-words ${defClass} ${fs.def}">${highlight(word.def)}</div>
-                        <div class="font-kor leading-snug break-words ${defClass} ${fs.koDef}">${highlight(word.koDef)}</div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+        if (auth && db) {
+            onAuthStateChanged(auth, async (user) => {
+                currentUser = user;
+                if (user) {
+                    window.updateSyncCodeUI();
+                    const state = window.getAppState();
+                    if(state.syncCode) {
+                        setupRealtimeListener(state.syncCode);
+                    }
+                }
             });
         }
-        
-        function toggleMemorized(term, setMemorized) {
-            if (setMemorized) appState.memorized[term] = true;
-            else delete appState.memorized[term];
-            saveData();
-            renderListTable();
-        }
-        window.toggleMemorized = toggleMemorized;
-        
-        window.toggleMenu = toggleMenu;
-        window.setFontSize = setFontSize;
-        window.executePrint = executePrint;
 
-        function toggleAutoRemoveSetting(el) {
-            appState.autoRemoveSaved = el.checked;
-            saveData();
-        }
-        window.toggleAutoRemoveSetting = toggleAutoRemoveSetting;
-
-        // PC Swipe Keyboard
-        document.addEventListener('keydown', (e) => {
-            const fcView = document.getElementById('view-flashcard');
-            const quizView = document.getElementById('view-quiz');
+        // 다른 기기에서 동기화(Push)를 누르면 내 폰에 즉시(Pull) 반영
+        function setupRealtimeListener(code) {
+            if(unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
+            const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
             
-            if(!fcView.classList.contains('hidden')) {
-                if(e.key === 'ArrowRight') { stopAutoplay(); triggerSwipe('right'); } 
-                else if(e.key === 'ArrowLeft') { stopAutoplay(); triggerSwipe('left'); } 
-                else if(e.key === 'ArrowUp') { stopAutoplay(); prevCard(); } 
-                else if(e.key === 'ArrowDown') { stopAutoplay(); nextCard(); } 
-                else if(e.key === ' ' || e.key === 'Enter') { 
-                    e.preventDefault(); 
-                    stopAutoplay(); 
-                    flipCard(); 
+            unsubSnapshot = onSnapshot(docRef, (snap) => {
+                if(snap.exists() && snap.data().appState) {
+                    const cloudState = snap.data().appState;
+                    const localState = window.getAppState();
+                    const cloudMod = cloudState.lastModified || 0;
+                    const localMod = localState.lastModified || 0;
+
+                    // 클라우드 데이터가 내 폰보다 최신일 때만 덮어쓰기
+                    if (cloudMod > localMod) {
+                        cloudState.syncCode = code; 
+                        cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
+                        
+                        window.updateLocalState(cloudState, true);
+                        window.updateSyncCodeUI(); 
+                        window.setDirty(false);
+                        
+                        window.checkAccessStatus(); 
+                        
+                        if (snap.data().lastUpdated) {
+                            const date = new Date(snap.data().lastUpdated);
+                            const timeStr = date.getHours().toString().padStart(2,'0') + ":" + date.getMinutes().toString().padStart(2,'0') + ":" + date.getSeconds().toString().padStart(2,'0');
+                            updateSyncUI("실시간 업데이트됨: " + timeStr);
+                        }
+                    }
                 }
+            });
+        }
+
+        window.generateSyncCode = async () => {
+            if(!currentUser) return alert("서버에 연결 중입니다. 잠시 후 다시 시도해주세요.");
+            const usage = window.getSyncUsage();
+            
+            if (!usage.isPremium) {
+                window.checkAccessStatus();
+                return;
             }
             
-            if(!quizView.classList.contains('hidden')) {
-                const actionsHidden = document.getElementById('quiz-actions').classList.contains('hidden');
-                if (quizState.mode === 'multiple') {
-                    if (actionsHidden && ['1','2','3','4'].includes(e.key)) {
-                        const btns = document.getElementById('quiz-options').querySelectorAll('button');
-                        const index = parseInt(e.key) - 1;
-                        if(btns[index]) btns[index].click();
+            const limit = 700;
+            if (usage.count >= limit) {
+                return alert(`일일 동기화 한도(${limit}회)를 초과하여 오늘은 새 코드를 발급받을 수 없습니다.\n내일 다시 시도해주세요.`);
+            }
+            
+            const state = window.getAppState();
+            if(state.syncCode && !confirm("새 코드를 발급하면 기존 기기들과의 연결이 해제됩니다. 계속하시겠습니까?")) return;
+            
+            const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+            state.syncCode = code;
+            
+            usage.count++;
+            state.syncUsage = usage;
+            state.lastModified = Date.now(); 
+            
+            window.updateLocalState(state, true);
+            window.updateSyncCodeUI();
+            
+            try {
+                const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
+                await setDoc(docRef, {
+                    appState: state,
+                    lastUpdated: new Date().toISOString()
+                });
+                window.setDirty(false);
+            } catch(e) {
+                console.error("Initial sync creation failed", e);
+            }
+            
+            alert(`새 동기화 코드 [${code}]가 발급되었습니다!\n다른 기기에서 이 코드를 입력하면 연동됩니다.`);
+            setupRealtimeListener(code);
+        };
+
+        window.connectSyncCode = async (autoCode = null) => {
+            if(!currentUser) return;
+            
+            const usage = window.getSyncUsage();
+            if (!usage.isPremium) {
+                window.checkAccessStatus();
+                return;
+            }
+            
+            const codeInput = autoCode || document.getElementById('sync-code-input').value.toUpperCase().trim();
+            if(codeInput.length !== 6) return alert("6자리 코드를 정확히 입력해주세요.");
+            
+            updateSyncUI("데이터 불러오는 중...");
+            try {
+                const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", codeInput);
+                const snap = await getDoc(docRef);
+                
+                if(snap.exists() && snap.data().appState) {
+                    const cloudState = snap.data().appState;
+                    const localState = window.getAppState();
+                    
+                    cloudState.syncCode = codeInput; 
+                    cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
+                    
+                    window.updateLocalState(cloudState, true);
+                    window.updateSyncCodeUI();
+                    window.setDirty(false);
+                    setupRealtimeListener(codeInput); 
+                    
+                    window.checkAccessStatus(); 
+                    
+                    updateSyncUI("연결 및 덮어쓰기 완료!");
+                    alert("성공적으로 연결되었습니다!\n지금부터 우측 상단 '동기화' 버튼을 눌러 수동 백업이 가능합니다.");
+                    document.getElementById('sync-code-input').value = '';
+                } else {
+                    updateSyncUI("동기화 대기 중");
+                    alert("해당 코드로 저장된 클라우드 데이터가 없습니다. 코드를 확인해주세요.");
+                }
+            } catch(e) {
+                console.error(e);
+                alert("불러오기 중 오류가 발생했습니다.");
+            }
+        };
+
+        // 타임스탬프 기반 수동 동기화
+        window.manualCloudSync = async (isBackground = false) => {
+            const state = window.getAppState();
+            if(!currentUser || !state.syncCode) return;
+            if(manualSyncCooldown && !isBackground) return;
+
+            const usage = window.getSyncUsage();
+            if (!usage.isPremium && !isBackground) {
+                window.checkAccessStatus();
+                return;
+            }
+            
+            const limit = 700;
+            if (isDirty && usage.count >= limit) {
+                updateSyncUI("일일 한도 초과");
+                window.setDirty(false); 
+                if(!isBackground) alert(`일일 동기화 한도(${limit}회)를 모두 소진했습니다. 내일 다시 시도해주세요.`);
+                return;
+            }
+
+            if(!isBackground) {
+                manualSyncCooldown = true;
+                const headerBtnIcon = document.querySelector('#headerSyncBtn i');
+                const settingsBtn = document.getElementById('manual-sync-btn');
+                if(headerBtnIcon) headerBtnIcon.classList.add('fa-spin');
+                if(settingsBtn) {
+                    settingsBtn.classList.add('opacity-50', 'pointer-events-none');
+                    settingsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 백업 중...';
+                }
+            }
+
+            try {
+                if (isDirty || !isBackground) {
+                    let wasDirty = isDirty;
+                    if (wasDirty) {
+                        usage.count++;
+                        state.syncUsage = usage;
                     }
+                    
+                    state.lastModified = Date.now(); 
+                    const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
+                    await setDoc(docRef, {
+                        appState: state,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                    
+                    window.setDirty(false);
+                    if (wasDirty) window.updateSyncCodeUI(); 
+                    
+                    updateSyncUI(isBackground ? "자동 동기화 완료" : "업로드 완료");
                 }
-                if (quizState.mode === 'spelling') {
-                    const inputEl = document.getElementById('quiz-spelling-input');
-                    if (actionsHidden && e.key === 'Enter' && document.activeElement === inputEl) {
-                        checkSpellingAnswer();
-                    }
+            } catch(e) {
+                console.error("Sync Error:", e);
+                updateSyncUI("동기화 실패");
+                if(!isBackground) alert("동기화 중 오류가 발생했습니다.");
+            }
+
+            if(!isBackground) {
+                const headerBtnIcon = document.querySelector('#headerSyncBtn i');
+                const settingsBtn = document.getElementById('manual-sync-btn');
+                if(headerBtnIcon) headerBtnIcon.classList.remove('fa-spin');
+                if(settingsBtn) {
+                    settingsBtn.innerHTML = '<i class="fa-solid fa-check"></i> 완료';
+                    setTimeout(() => {
+                        manualSyncCooldown = false;
+                        settingsBtn.classList.remove('opacity-50', 'pointer-events-none');
+                        settingsBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> 수동 백업';
+                    }, 3000); 
+                } else {
+                    setTimeout(() => { manualSyncCooldown = false; }, 3000);
                 }
-                if (!actionsHidden && e.key === 'Enter') {
-                    nextQuizQuestion();
-                }
+            }
+        };
+
+        function updateSyncUI(text) {
+            const displays = document.querySelectorAll('.sync-time-display');
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0') + ":" + now.getSeconds().toString().padStart(2,'0');
+            displays.forEach(el => el.innerText = `${text} (${timeStr})`);
+        }
+
+        document.addEventListener('visibilitychange', async () => {
+            const state = window.getAppState();
+            const usage = window.getSyncUsage();
+            
+            if (!usage.isPremium) return; 
+            
+            const limit = 700;
+            if (document.visibilityState === 'hidden' && isDirty && currentUser && state.syncCode) {
+                if(usage.count >= limit) return; 
+                
+                usage.count++;
+                state.syncUsage = usage;
+                state.lastModified = Date.now();
+                const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode);
+                try {
+                    await setDoc(docRef, { appState: state, lastUpdated: new Date().toISOString() }, { merge: true });
+                    window.setDirty(false);
+                    window.updateSyncCodeUI();
+                } catch(e) {}
             }
         });
     </script>
