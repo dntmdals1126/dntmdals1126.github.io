@@ -372,9 +372,7 @@
             .toolbar-btn:not(.btn-active):hover { background-color: rgba(255, 255, 255, 0.12); }
             html[data-theme="light"] .toolbar-btn:not(.btn-active):hover { background-color: #e2e8f0; }
 
-            /* 설정 모달 버튼 호버 효과 */
-            .settings-action-btn:hover, input.import-input:hover + .settings-action-btn { background-color: var(--glass-highlight); }
-            html[data-theme="light"] .settings-action-btn:hover, html[data-theme="light"] input.import-input:hover + .settings-action-btn { background-color: #e2e8f0; }
+            /* 설정 모달 버튼 호버 효과 수정 완료 */
             .settings-danger-btn:hover { background-color: rgba(239, 68, 68, 0.2) !important; border-color: rgba(239, 68, 68, 0.4) !important; }
         }
 
@@ -386,6 +384,29 @@
         }
 
         .fc-btn-auto.is-active { color: var(--sub-accent) !important; background-color: var(--sub-accent-bg) !important; }
+
+        /* 설정 모달 유틸리티 버튼 통일 */
+        .btn-settings-util {
+            padding: 6px 12px; border-radius: 8px; background-color: var(--glass-highlight); border: 1px solid var(--glass-border);
+            color: var(--text-main); font-size: 11px; font-weight: 700; transition: all 0.2s; display: flex; align-items: center; gap: 6px; cursor: pointer;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .btn-settings-util:hover { background-color: var(--glass-surface); color: var(--primary); border-color: rgba(59, 130, 246, 0.4); transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        }
+        .btn-settings-util:active { transform: scale(0.95); }
+
+        /* 설정창 하단 큰 액션 버튼들 */
+        .btn-settings-action {
+            width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; height: 44px;
+            background-color: var(--glass-highlight); border: 1px solid var(--glass-border); border-radius: 12px;
+            color: var(--text-main); font-size: 13px; font-weight: 600; transition: all 0.2s; cursor: pointer;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .btn-settings-action:hover { background-color: var(--sub-accent-bg); border-color: rgba(59, 130, 246, 0.4); transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+            .btn-settings-action:hover .icon-dim { color: var(--primary); }
+            html[data-theme="light"] .btn-settings-action:hover { background-color: #e2e8f0; }
+        }
+        .btn-settings-action:active { transform: scale(0.98); }
 
         /* 인쇄 (Print) 전용: 동적 생성 테이블만 표시되도록 철저히 차단 */
         @media print {
@@ -511,53 +532,53 @@
 <body>
 
     <!-- 강제 인증 오버레이 (Access Code가 없거나 만료되면 표시됨) -->
-    <div id="authOverlay" class="fixed inset-0 z-[3000] bg-[var(--bg-dark)]/95 backdrop-blur-lg flex flex-col items-center justify-center p-4 transition-all duration-500 hidden overflow-y-auto overscroll-none" style="touch-action: none;">
+    <div id="authOverlay" class="fixed inset-0 z-[3000] bg-[var(--bg-dark)]/90 backdrop-blur-xl flex flex-col items-center justify-center p-4 transition-all duration-500 hidden overflow-y-auto overscroll-none" style="touch-action: none;">
         <div class="flex flex-col items-center justify-center min-h-full p-4 py-8">
-            <div class="logo mb-6 fade-in-up shrink-0">
-                <span class="text-4xl font-logo font-semibold italic tracking-tight text-text-main drop-shadow-md">Enged<span class="text-highlight">.</span></span>
+            <div class="logo mb-8 fade-in-up shrink-0">
+                <span class="text-[44px] font-logo font-bold italic tracking-tight text-text-main drop-shadow-lg">Enged<span class="text-primary">.</span></span>
             </div>
             
-            <div class="w-full max-w-[360px] p-6 sm:p-8 text-center shadow-2xl border border-[var(--glass-border)] bg-[var(--glass-surface)] backdrop-blur-xl rounded-[32px] fade-in-up relative overflow-hidden shrink-0 transform-gpu" style="animation-delay: 0.1s; transform: translateZ(0); clip-path: inset(0 round 32px);">
+            <div class="w-full max-w-[360px] p-8 text-center shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-[var(--glass-border)] bg-[var(--glass-surface)]/80 backdrop-blur-2xl rounded-[32px] fade-in-up relative overflow-hidden shrink-0 transform-gpu" style="animation-delay: 0.1s; transform: translateZ(0); clip-path: inset(0 round 32px);">
                 <!-- Decorative Glows -->
-                <div class="absolute -top-16 -right-16 w-32 h-32 bg-[var(--primary-glow)] rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-[var(--sub-accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-blue-500/10 rounded-full blur-[40px] pointer-events-none"></div>
 
-                <div class="w-14 h-14 rounded-2xl bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] text-[var(--primary)] flex items-center justify-center mx-auto mb-4 shadow-inner relative z-10">
-                    <i class="fa-solid fa-lock text-xl"></i>
+                <div class="w-16 h-16 rounded-[20px] bg-gradient-to-b from-white/10 to-white/5 border border-white/10 text-white flex items-center justify-center mx-auto mb-5 shadow-inner relative z-10">
+                    <i class="fa-solid fa-lock text-2xl drop-shadow-md"></i>
                 </div>
-                <h2 class="text-xl font-bold text-text-main mb-2 font-sans tracking-tight relative z-10">Access Required</h2>
-                <p class="text-[12px] text-text-dim mb-5 break-keep leading-relaxed font-medium relative z-10">
-                    이용을 위해 만료되지 않은 <span class="text-[var(--primary)] font-bold">Access Code</span> 또는<br>이미 인증된 기기의 <span class="text-[var(--primary)] font-bold">동기화 코드</span>가 필요합니다.
+                <h2 class="text-2xl font-bold text-white mb-2 font-sans tracking-tight relative z-10">Access Required</h2>
+                <p class="text-[12.5px] text-gray-300/80 mb-7 break-keep leading-relaxed font-medium relative z-10">
+                    이용을 위해 만료되지 않은 <span class="text-white font-bold">Access Code</span> 또는<br>이미 인증된 기기의 <span class="text-white font-bold">동기화 코드</span>가 필요합니다.
                 </p>
                 
-                <div class="flex flex-col gap-3 relative z-10">
+                <div class="flex flex-col gap-3.5 relative z-10">
                     <!-- Option 1: Access Code -->
-                    <div class="group">
-                        <input type="text" id="auth-code-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-2xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-[var(--primary)] transition-all placeholder:text-text-dim/50 text-sm shadow-inner" placeholder="ACCESS CODE" autocomplete="off">
-                        <button onclick="submitAuthCode()" id="auth-submit-btn" class="w-full h-11 text-[13px] font-bold rounded-2xl btn-pri mt-2 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2 border-none">
+                    <div class="group relative">
+                        <input type="text" id="auth-code-input" class="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3.5 text-center font-bold tracking-widest text-white outline-none focus:border-primary/60 focus:bg-black/60 transition-all placeholder:text-gray-500 text-sm shadow-inner" placeholder="ACCESS CODE" autocomplete="off">
+                        <button onclick="submitAuthCode()" id="auth-submit-btn" class="w-full h-12 text-[14px] font-bold rounded-2xl bg-gradient-to-r from-blue-600 to-primary hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-primary/20 mt-3 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 hover:-translate-y-0.5 border border-white/10">
                             새 코드로 인증
                         </button>
                     </div>
 
-                    <div class="flex items-center gap-3 opacity-60 my-1">
-                        <div class="h-px bg-[var(--glass-border)] flex-1"></div>
-                        <span class="text-[10px] text-text-dim font-bold uppercase tracking-widest">or</span>
-                        <div class="h-px bg-[var(--glass-border)] flex-1"></div>
+                    <div class="flex items-center gap-3 opacity-30 my-1">
+                        <div class="h-px bg-white flex-1"></div>
+                        <span class="text-[10px] text-white font-bold uppercase tracking-widest">or</span>
+                        <div class="h-px bg-white flex-1"></div>
                     </div>
 
                     <!-- Option 2: Sync Code -->
-                    <div class="group">
-                        <input type="text" id="auth-sync-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-2xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-[var(--primary)] transition-all placeholder:text-text-dim/50 text-sm uppercase shadow-inner" placeholder="동기화 코드 (6자리)" maxlength="6" autocomplete="off">
-                        <button onclick="submitAuthSyncCode()" id="auth-sync-btn" class="w-full h-11 text-[13px] font-bold rounded-2xl bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-text-main hover:bg-[var(--glass-surface)] mt-2 transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                    <div class="group relative">
+                        <input type="text" id="auth-sync-input" class="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3.5 text-center font-bold tracking-widest text-white outline-none focus:border-blue-400/60 focus:bg-black/60 transition-all placeholder:text-gray-500 text-sm uppercase shadow-inner" placeholder="동기화 코드 (6자리)" maxlength="6" autocomplete="off">
+                        <button onclick="submitAuthSyncCode()" id="auth-sync-btn" class="w-full h-12 text-[14px] font-bold rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:shadow-md mt-3 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 hover:-translate-y-0.5 cursor-pointer">
                             기존 기기와 연결
                         </button>
                     </div>
                 </div>
                 
-                <p id="auth-error-msg" class="text-red-500 text-[12px] mt-3 hidden font-medium bg-red-500/10 py-2 rounded-xl border border-red-500/20 relative z-10 animate-pulse"></p>
+                <p id="auth-error-msg" class="text-red-400 text-[12px] mt-4 hidden font-medium bg-red-500/10 py-2.5 rounded-xl border border-red-500/20 relative z-10 animate-pulse"></p>
                 
-                <div class="mt-5 pt-4 border-t border-[var(--glass-border)] relative z-10">
-                    <button onclick="exportData()" class="text-[11px] text-text-dim hover:text-text-main transition-colors flex items-center justify-center gap-1.5 mx-auto font-medium cursor-pointer">
+                <div class="mt-6 pt-5 border-t border-white/10 relative z-10">
+                    <button onclick="exportData()" class="text-[11px] text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1.5 mx-auto font-medium cursor-pointer">
                         <i class="fa-solid fa-download"></i> 데이터 로컬 백업 (.json)
                     </button>
                 </div>
@@ -1123,7 +1144,7 @@
                         <span class="text-[11px] text-text-dim font-medium">남은 기간</span>
                         <div class="flex items-center gap-2.5">
                             <span id="access-status-text" class="text-[12.5px] text-highlight font-bold tracking-wide">D-0</span>
-                            <button onclick="verifyAccessCode()" class="px-2.5 py-1.5 rounded-md bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main hover:text-primary text-[10px] font-bold transition-colors shadow-sm active:scale-95">
+                            <button onclick="verifyAccessCode()" class="btn-settings-util">
                                 코드 갱신
                             </button>
                         </div>
@@ -1150,8 +1171,8 @@
                             <span id="current-sync-code" class="text-[15px] font-logo font-bold text-primary tracking-widest leading-none">없음</span>
                         </div>
                         <div id="sync-code-actions" class="flex gap-1.5">
-                            <button onclick="generateSyncCode()" id="btn-generate-sync" class="text-[10px] font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main px-2.5 py-1.5 rounded shadow-sm hover:bg-[var(--glass-highlight)] transition-colors active:scale-95">새로 발급</button>
-                            <button onclick="disconnectSync()" id="btn-disconnect-sync" class="hidden text-[10px] font-bold bg-red-500/10 border border-red-500/20 text-red-400 px-2.5 py-1.5 rounded shadow-sm hover:bg-red-500/20 transition-colors active:scale-95">연결 해제</button>
+                            <button onclick="generateSyncCode()" id="btn-generate-sync" class="btn-settings-util">새로 발급</button>
+                            <button onclick="disconnectSync()" id="btn-disconnect-sync" class="hidden px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[10.5px] font-bold hover:bg-red-500/20 hover:-translate-y-[1px] hover:shadow-md transition-all active:scale-95 shadow-sm">연결 해제</button>
                         </div>
                     </div>
                     
@@ -1189,25 +1210,29 @@
                         <span class="text-[10px] text-text-dim font-medium flex items-center gap-1.5">
                             <i class="fa-solid fa-cloud-arrow-up"></i> <span class="sync-time-display">마지막 백업: 없음</span>
                         </span>
-                        <button onclick="manualCloudSync()" id="manual-sync-btn" class="text-[10px] font-bold text-primary hover:text-blue-400 px-2.5 py-1.5 bg-primary/10 border border-primary/20 rounded-md transition-colors flex items-center gap-1.5 active:scale-95">
+                        <button onclick="manualCloudSync()" id="manual-sync-btn" class="btn-settings-util">
                             <i class="fa-solid fa-rotate"></i> 수동 백업
                         </button>
                     </div>
                 </div>
 
                 <!-- 3. 로컬 데이터 관리 섹션 -->
-                <div class="space-y-2.5">
-                    <div class="text-[11px] font-bold text-text-sub ml-1 mb-1">로컬 데이터 관리</div>
-                    <button onclick="exportData()" class="btn btn-sec settings-action-btn w-full justify-between px-4 text-sm transition-colors h-11">
-                        <span><i class="fa-solid fa-download mr-2 text-text-dim"></i> 학습 데이터 로컬 백업</span>
-                        <span class="text-[10px] text-text-dim bg-[var(--glass-highlight)] px-2 py-1 rounded-md border border-[var(--glass-border)]">.json</span>
-                    </button>
-                    <div class="relative w-full">
-                        <input type="file" id="importFile" accept=".json" class="import-input absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="importData(event)">
-                        <button class="btn btn-sec settings-action-btn w-full justify-between px-4 pointer-events-none text-sm transition-colors h-11">
-                            <span><i class="fa-solid fa-upload mr-2 text-text-dim"></i> 학습 데이터 로컬 복원</span>
-                            <span class="text-[10px] text-text-dim">파일 선택</span>
+                <div class="bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-xl p-4 shadow-sm relative overflow-hidden transform-gpu">
+                    <div class="flex items-center gap-2 mb-3 text-text-main font-bold text-sm">
+                        <i class="fa-solid fa-folder-open text-sub-accent"></i> 로컬 데이터 관리
+                    </div>
+                    <div class="space-y-2.5">
+                        <button onclick="exportData()" class="btn-settings-action">
+                            <span><i class="fa-solid fa-download mr-2 text-text-dim icon-dim transition-colors"></i> 데이터 로컬 백업</span>
+                            <span class="text-[10px] text-text-dim bg-[var(--glass-surface)] px-2 py-1 rounded-md border border-[var(--glass-border)] shadow-sm">.json</span>
                         </button>
+                        <div class="relative w-full">
+                            <input type="file" id="importFile" accept=".json" class="import-input absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="importData(event)">
+                            <button class="btn-settings-action pointer-events-none">
+                                <span><i class="fa-solid fa-upload mr-2 text-text-dim icon-dim transition-colors"></i> 데이터 로컬 복원</span>
+                                <span class="text-[10px] text-text-dim">파일 선택</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -1374,7 +1399,7 @@
                 errorMsg.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.innerText = "새 코드로 인증";
+                btn.innerHTML = '새 코드로 인증';
             }
         }
         
@@ -1430,7 +1455,7 @@
                 errorMsg.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.innerText = "기존 기기와 연결";
+                btn.innerHTML = '기존 기기와 연결';
             }
         };
 
@@ -1740,7 +1765,7 @@
                 if(headerBtnIcon) headerBtnIcon.classList.add('fa-spin');
                 if(settingsBtn) {
                     settingsBtn.classList.add('opacity-50', 'pointer-events-none');
-                    settingsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 동기화 중';
+                    settingsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 백업 중...';
                 }
             }
 
