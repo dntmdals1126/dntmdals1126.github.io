@@ -154,6 +154,8 @@
             overflow-y: auto; 
             overflow-x: hidden;
             scroll-behavior: smooth;
+            /* 스크롤바 생성/소멸로 인한 좌우 흔들림 방지 */
+            scrollbar-gutter: stable;
         }
         
         body {
@@ -221,6 +223,7 @@
             .fc-action-main-btn:hover { transform: scale(1.08); }
             .fc-action-main-btn.btn-check:not(.active):hover { color: #22c55e; border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
             .fc-action-main-btn.btn-saved:not(.active):hover { color: #f97316; border-color: #f97316; background: rgba(249, 115, 22, 0.1); }
+            .fc-action-main-btn.btn-pass:hover { color: #ef4444 !important; border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
         }
         .fc-action-main-btn.btn-check.active {
             background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; box-shadow: 0 4px 14px rgba(34,197,94,0.3);
@@ -372,8 +375,12 @@
             .toolbar-btn:not(.btn-active):hover { background-color: rgba(255, 255, 255, 0.12); }
             html[data-theme="light"] .toolbar-btn:not(.btn-active):hover { background-color: #e2e8f0; }
 
-            /* 설정 모달 버튼 호버 효과 수정 완료 */
+            /* 설정 모달 버튼 호버 효과 복원 및 강화 */
             .settings-danger-btn:hover { background-color: rgba(239, 68, 68, 0.2) !important; border-color: rgba(239, 68, 68, 0.4) !important; }
+            
+            .btn-settings-action:hover, .import-input:hover + .btn-settings-action { background-color: var(--sub-accent-bg); border-color: rgba(59, 130, 246, 0.4); transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+            .btn-settings-action:hover .icon-dim, .import-input:hover + .btn-settings-action .icon-dim { color: var(--primary); }
+            html[data-theme="light"] .btn-settings-action:hover, html[data-theme="light"] .import-input:hover + .btn-settings-action { background-color: #e2e8f0; }
         }
 
         /* 터치 반응 효과 (Mobile & PC 공통) */
@@ -401,12 +408,38 @@
             background-color: var(--glass-highlight); border: 1px solid var(--glass-border); border-radius: 12px;
             color: var(--text-main); font-size: 13px; font-weight: 600; transition: all 0.2s; cursor: pointer;
         }
-        @media (hover: hover) and (pointer: fine) {
-            .btn-settings-action:hover { background-color: var(--sub-accent-bg); border-color: rgba(59, 130, 246, 0.4); transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-            .btn-settings-action:hover .icon-dim { color: var(--primary); }
-            html[data-theme="light"] .btn-settings-action:hover { background-color: #e2e8f0; }
-        }
         .btn-settings-action:active { transform: scale(0.98); }
+        
+        /* 플로팅 버튼들 (설정, 위로, 아래로) */
+        .float-btn-group { position: fixed; right: 16px; bottom: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 900; pointer-events: none; }
+        @media (min-width: 640px) { .float-btn-group { right: 24px; bottom: 32px; gap: 10px; } }
+        
+        .float-btn {
+            width: 44px; height: 44px; border-radius: 14px;
+            background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); color: var(--text-main);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto; shadow-lg;
+        }
+        .float-btn.hidden-scroll { opacity: 0; transform: translateY(10px); pointer-events: none; }
+        
+        @media (hover: hover) { 
+            .float-btn:hover { background: var(--glass-surface); color: var(--primary); transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.1); } 
+        }
+        html[data-theme="light"] .float-btn { background: rgba(255, 255, 255, 0.85); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.1); color: #1e293b; }
+        html[data-theme="light"] .float-btn:hover { background: #ffffff; }
+
+        /* --- 오픈소스 라이선스 모달 UI (푸터에서 가져옴) --- */
+        .oss-group-title { font-size: 13px; color: var(--text-sub); font-weight: 600; margin: 16px 0 8px 4px; }
+        .oss-group-title:first-child { margin-top: 4px; }
+        .oss-box { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px; margin-bottom: 8px; }
+        html[data-theme="light"] .oss-box { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        .oss-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        html[data-theme="light"] .oss-title { color: #0f172a; }
+        .oss-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; word-break: keep-all; }
+        .oss-link { color: var(--primary); text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
+        .oss-link:hover { opacity: 0.8; text-decoration: underline; }
 
         /* 인쇄 (Print) 전용: 동적 생성 테이블만 표시되도록 철저히 차단 */
         @media print {
@@ -415,7 +448,7 @@
             html { -webkit-text-size-adjust: 100% !important; }
             
             /* 기존 앱 화면의 모든 요소를 강제 숨김 */
-            .scroll-mask, .blobs, header, main, footer, #helpModal, #settingsModal, #glow-left, #glow-right, #authOverlay { display: none !important; }
+            .scroll-mask, .blobs, header, main, footer, #helpModal, #settingsModal, #ossModal, #glow-left, #glow-right, #authOverlay, .float-btn-group { display: none !important; }
             
             /* 자바스크립트로 생성한 프린트 전용 영역만 표시 */
             #print-area { display: block !important; width: 100%; max-width: 100%; background: white; color: black; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -527,50 +560,52 @@
             /* Term cell (Top) & Def cell (Bottom) */
             #listContainer td.term-col-content { margin-bottom: 6px; }
         }
+        
+        /* 푸터 링크 */
+        .footer-link { background: none; border: none; padding: 0; margin: 0; color: inherit; font-family: inherit; font-size: inherit; text-decoration: underline; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; }
+        .footer-link:hover { opacity: 1; }
     </style>
 </head>
 <body>
 
     <!-- 강제 인증 오버레이 (Access Code가 없거나 만료되면 표시됨) -->
-    <div id="authOverlay" class="fixed inset-0 z-[3000] bg-[var(--bg-dark)]/90 backdrop-blur-xl flex flex-col items-center justify-center p-4 transition-all duration-500 hidden overflow-y-auto overscroll-none" style="touch-action: none;">
-        <div class="flex flex-col items-center justify-center min-h-full p-4 py-8">
+    <div id="authOverlay" class="fixed inset-0 z-[3000] bg-[var(--bg-dark)]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-4 transition-all duration-500 hidden overflow-y-auto overscroll-none" style="touch-action: none;">
+        <div class="flex flex-col items-center justify-center min-h-full p-4 py-8 w-full">
             <div class="logo mb-8 fade-in-up shrink-0">
-                <span class="text-[44px] font-logo font-bold italic tracking-tight text-text-main drop-shadow-lg">Enged<span class="text-primary">.</span></span>
+                <span class="text-[44px] font-logo font-bold italic tracking-tight text-text-main drop-shadow-lg">Enged<span class="text-highlight">.</span></span>
             </div>
             
-            <div class="w-full max-w-[360px] p-8 text-center shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-[var(--glass-border)] bg-[var(--glass-surface)]/80 backdrop-blur-2xl rounded-[32px] fade-in-up relative overflow-hidden shrink-0 transform-gpu" style="animation-delay: 0.1s; transform: translateZ(0); clip-path: inset(0 round 32px);">
+            <div class="w-full max-w-[400px] p-8 text-center shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-[var(--glass-border)] bg-[var(--glass-surface)]/80 backdrop-blur-2xl rounded-[32px] fade-in-up relative overflow-hidden shrink-0 transform-gpu" style="animation-delay: 0.1s; transform: translateZ(0); clip-path: inset(0 round 32px);">
                 <!-- Decorative Glows -->
                 <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-[40px] pointer-events-none"></div>
                 <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-blue-500/10 rounded-full blur-[40px] pointer-events-none"></div>
 
-                <div class="w-16 h-16 rounded-[20px] bg-gradient-to-b from-white/10 to-white/5 border border-white/10 text-white flex items-center justify-center mx-auto mb-5 shadow-inner relative z-10">
-                    <i class="fa-solid fa-lock text-2xl drop-shadow-md"></i>
+                <!-- Hover Tooltip Help Button -->
+                <div class="absolute top-5 right-5 group z-20">
+                    <button class="w-5 h-5 rounded-full bg-white/10 group-hover:bg-white/20 text-gray-300 transition-colors flex items-center justify-center text-[10px] cursor-default border border-white/5"><i class="fa-solid fa-question"></i></button>
+                    <!-- Tooltip Box -->
+                    <div class="absolute right-0 top-7 w-64 p-3.5 bg-gray-800/95 backdrop-blur-md text-left text-[12px] text-gray-200 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-y-2 group-hover:translate-y-0 border border-gray-600">
+                        <p class="mb-2 leading-relaxed"><span class="text-primary font-bold">Access Code:</span><br>관리자가 부여한 프리패스 코드</p>
+                        <p class="leading-relaxed"><span class="text-sub-accent font-bold">동기화 코드:</span><br>이미 인증된 다른 기기(PC, 휴대폰 등)의 설정 창에서 발급받을 수 있는 6자리 연동 코드</p>
+                    </div>
                 </div>
-                <h2 class="text-2xl font-bold text-white mb-2 font-sans tracking-tight relative z-10">Access Required</h2>
-                <p class="text-[12.5px] text-gray-300/80 mb-7 break-keep leading-relaxed font-medium relative z-10">
-                    이용을 위해 만료되지 않은 <span class="text-white font-bold">Access Code</span> 또는<br>이미 인증된 기기의 <span class="text-white font-bold">동기화 코드</span>가 필요합니다.
-                </p>
+
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center mx-auto mb-5 relative z-10">
+                    <i class="fa-solid fa-lock text-xl drop-shadow-md"></i>
+                </div>
                 
+                <h2 class="text-2xl font-bold text-white font-sans tracking-tight mb-2 relative z-10">Access Required</h2>
+                
+                <p class="text-[13px] text-gray-300/80 mb-6 break-keep leading-relaxed font-medium relative z-10">
+                    이용을 위해 만료되지 않은 <span class="text-white font-bold">Access Code</span> 또는 이미 인증된 기기의 <span class="text-white font-bold">동기화 코드</span>를 입력해주세요.
+                </p>
+
                 <div class="flex flex-col gap-3.5 relative z-10">
-                    <!-- Option 1: Access Code -->
+                    <!-- Unified Input -->
                     <div class="group relative">
-                        <input type="text" id="auth-code-input" class="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3.5 text-center font-bold tracking-widest text-white outline-none focus:border-primary/60 focus:bg-black/60 transition-all placeholder:text-gray-500 text-sm shadow-inner" placeholder="ACCESS CODE" autocomplete="off">
-                        <button onclick="submitAuthCode()" id="auth-submit-btn" class="w-full h-12 text-[14px] font-bold rounded-2xl bg-gradient-to-r from-blue-600 to-primary hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-primary/20 mt-3 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 hover:-translate-y-0.5 border border-white/10">
-                            새 코드로 인증
-                        </button>
-                    </div>
-
-                    <div class="flex items-center gap-3 opacity-30 my-1">
-                        <div class="h-px bg-white flex-1"></div>
-                        <span class="text-[10px] text-white font-bold uppercase tracking-widest">or</span>
-                        <div class="h-px bg-white flex-1"></div>
-                    </div>
-
-                    <!-- Option 2: Sync Code -->
-                    <div class="group relative">
-                        <input type="text" id="auth-sync-input" class="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3.5 text-center font-bold tracking-widest text-white outline-none focus:border-blue-400/60 focus:bg-black/60 transition-all placeholder:text-gray-500 text-sm uppercase shadow-inner" placeholder="동기화 코드 (6자리)" maxlength="6" autocomplete="off">
-                        <button onclick="submitAuthSyncCode()" id="auth-sync-btn" class="w-full h-12 text-[14px] font-bold rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:shadow-md mt-3 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 hover:-translate-y-0.5 cursor-pointer">
-                            기존 기기와 연결
+                        <input type="text" id="auth-unified-input" class="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-4 text-center font-bold tracking-widest text-white outline-none focus:border-primary/60 focus:bg-black/60 transition-all placeholder:text-gray-500 text-[15px] shadow-inner uppercase" placeholder="코드를 입력하세요" autocomplete="off">
+                        <button onclick="submitUnifiedAuth()" id="auth-submit-btn" class="w-full h-14 text-[16px] font-bold rounded-2xl bg-gradient-to-r from-blue-600 to-primary hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-primary/20 mt-4 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 hover:-translate-y-0.5 border border-white/10">
+                            인증 및 연결
                         </button>
                     </div>
                 </div>
@@ -596,7 +631,7 @@
     </div>
     
     <!-- 플래시카드 스와이프 시 나타나는 배경 가장자리 그라데이션 글로우 -->
-    <div id="glow-left" class="fixed inset-y-0 left-0 w-full md:w-1/2 bg-gradient-to-r from-orange-500/20 via-orange-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
+    <div id="glow-left" class="fixed inset-y-0 left-0 w-full md:w-1/2 bg-gradient-to-r from-red-500/20 via-red-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
     <div id="glow-right" class="fixed inset-y-0 right-0 w-full md:w-1/2 bg-gradient-to-l from-green-500/20 via-green-500/5 to-transparent opacity-0 pointer-events-none z-0 transition-opacity"></div>
 
     <header class="no-select">
@@ -612,7 +647,6 @@
             </div>
             
             <!-- 수동 동기화 버튼 (코드가 연결/발급되었을 때만 표시) -->
-            <!-- 기본은 흰색(text-text-main), 변경사항이 있으면 노란색(text-highlight)으로 변합니다 -->
             <button class="tool-btn hidden transition-colors text-text-main hover:text-text-main/80" id="headerSyncBtn" onclick="manualCloudSync()" title="수동 동기화">
                 <i class="fa-solid fa-rotate"></i>
             </button>
@@ -620,14 +654,9 @@
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
-            <!-- 하위 페이지 이동 링크 -->
             <a href="https://www.v1ctorym1n.kro.kr/enged/voca" class="tool-btn" title="Voca로 이동">
                 <i class="fa-solid fa-v text-sm"></i>
             </a>
-            <!-- 설정 모달 열기 버튼 -->
-            <button class="tool-btn" onclick="openSettingsModal()" title="설정 및 데이터 관리">
-                <i class="fa-solid fa-gear text-sm"></i>
-            </button>
             <button class="tool-btn" id="themeToggle" title="테마 변경">
                 <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
                 <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
@@ -788,7 +817,7 @@
                     </div>
                 </div>
                 
-                <div class="overflow-y-auto flex-1 relative" id="listContainer">
+                <div class="overflow-y-auto flex-1 relative custom-scrollbar" id="listContainer">
                     <table class="w-full text-left border-collapse table-fixed">
                         <thead class="text-xs uppercase text-text-dim font-bold shadow-sm">
                             <tr>
@@ -873,7 +902,7 @@
                         </div>
                         
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
-                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
+                            <div class="fc-scroll-box w-full h-full custom-scrollbar" onclick="event.stopPropagation()">
                                 <div class="fc-inner-content">
                                     <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
                                     <div class="w-16 h-[2px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
@@ -896,7 +925,7 @@
                         </div>
                         
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
-                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
+                            <div class="fc-scroll-box w-full h-full custom-scrollbar" onclick="event.stopPropagation()">
                                 <div class="fc-inner-content justify-center min-h-full">
                                     <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
                                     <p id="fc-back-koterm" class="text-sub-accent text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
@@ -912,44 +941,48 @@
             </div>
 
             <!-- Bottom Controls -->
-            <div class="w-full max-w-[500px] mx-auto mt-6 flex flex-col gap-5">
+            <div class="w-full max-w-[500px] mx-auto mt-6 flex flex-col gap-4">
                 
+                <!-- 2. 메인 액션 버튼 묶음 -->
+                <div class="flex items-center justify-center gap-3 sm:gap-4 w-full px-2">
+                    <button onclick="stopAutoplay(); prevCard();" class="btn btn-sec w-10 h-10 sm:w-12 sm:h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main shrink-0" title="이전">
+                        <i class="fa-solid fa-chevron-left text-sm sm:text-base"></i>
+                    </button>
+
+                    <button onclick="markPassFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-pass w-14 h-14 sm:w-16 sm:h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" title="암기 못함 (Pass)">
+                        <i class="fa-solid fa-xmark text-xl sm:text-2xl"></i>
+                    </button>
+
+                    <button onclick="toggleNotebookFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-saved w-14 h-14 sm:w-16 sm:h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-star-btn" title="저장">
+                        <i class="fa-regular fa-bookmark text-lg sm:text-xl"></i>
+                    </button>
+
+                    <button onclick="toggleMemorizedFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-check w-14 h-14 sm:w-16 sm:h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-check-btn" title="완료">
+                        <i class="fa-solid fa-check text-xl sm:text-2xl"></i>
+                    </button>
+
+                    <button onclick="stopAutoplay(); nextCard();" class="btn btn-sec w-10 h-10 sm:w-12 sm:h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main shrink-0" title="다음">
+                        <i class="fa-solid fa-chevron-right text-sm sm:text-base"></i>
+                    </button>
+                </div>
+
                 <!-- 1. 보조 알약 버튼 그룹 (Shuffle & Auto) -->
-                <div class="flex items-center justify-center">
+                <div class="flex items-center justify-center mt-1">
                     <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-full p-1 gap-1 shadow-sm">
                         <button onclick="shuffleCards()" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim transition group fc-btn-shuffle" title="섞기">
-                            <i class="fa-solid fa-shuffle text-[13px]"></i>
-                            <span class="text-[11px] font-bold tracking-wider">SHUFFLE</span>
+                            <i class="fa-solid fa-shuffle text-[12px]"></i>
+                            <span class="text-[10.5px] font-bold tracking-wider">SHUFFLE</span>
                         </button>
                         <div class="w-[1px] bg-[var(--glass-border)] my-2"></div>
                         <button onclick="toggleAutoplay()" id="fc-autoplay-btn" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-text-dim transition group fc-btn-auto" title="자동 재생">
-                            <i id="fc-autoplay-icon" class="fa-solid fa-play text-[13px]"></i>
-                            <span class="text-[11px] font-bold tracking-wider">AUTO</span>
+                            <i id="fc-autoplay-icon" class="fa-solid fa-play text-[12px]"></i>
+                            <span class="text-[10.5px] font-bold tracking-wider">AUTO</span>
                         </button>
                     </div>
                 </div>
-
-                <!-- 2. 메인 액션 버튼 묶음 -->
-                <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-2">
-                    <button onclick="stopAutoplay(); prevCard();" class="btn btn-sec w-12 h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main" title="이전">
-                        <i class="fa-solid fa-chevron-left text-base"></i>
-                    </button>
-
-                    <button onclick="toggleNotebookFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-saved w-16 h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-star-btn" title="저장">
-                        <i class="fa-regular fa-bookmark text-xl md:text-2xl"></i>
-                    </button>
-
-                    <button onclick="toggleMemorizedFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-check w-16 h-16 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-check-btn" title="완료">
-                        <i class="fa-solid fa-check text-2xl md:text-3xl"></i>
-                    </button>
-
-                    <button onclick="stopAutoplay(); nextCard();" class="btn btn-sec w-12 h-12 rounded-full !p-0 shadow-sm text-text-dim hover:text-text-main" title="다음">
-                        <i class="fa-solid fa-chevron-right text-base"></i>
-                    </button>
-                </div>
                 
                 <!-- 3. 암기 완료 시 자동 저장 해제 토글 -->
-                <div class="flex items-center justify-center mt-2">
+                <div class="flex items-center justify-center mt-1">
                     <label class="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity group">
                         <div class="relative inline-flex items-center shrink-0">
                             <input type="checkbox" id="setting-auto-remove" class="sr-only peer" onchange="toggleAutoRemoveSetting(this)">
@@ -1096,10 +1129,64 @@
             <span style="font-family: var(--font-base); font-weight: 600; font-style: italic;">Enged.</span>
             <span style="font-family: var(--font-base); opacity: 0.7; margin-left: 6px; margin-right: 2px;">powered by</span>
             <span style="font-family: var(--font-logo);">WebHub</span><br>
-            <p style="margin: 4px 0 0; opacity: 0.7;">© 2026 Seungmin Woo. All rights reserved.</p>
+            <p style="margin: 4px 0 0; opacity: 0.7; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                © 2026 Seungmin Woo. All rights reserved. <span class="footer-sep" style="opacity:0.5;">|</span> <button onclick="openOSSModal()" class="footer-link">Legal & Licenses</button>
+            </p>
         </footer>
 
+        <!-- Floating Buttons -->
+        <div class="float-btn-group no-print">
+            <button class="float-btn" id="floatSettingsBtn" aria-label="설정" onclick="openSettingsModal()">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <button class="float-btn hidden-scroll" id="scrollUpBtn" aria-label="위로">
+                <i class="fa-solid fa-chevron-up"></i>
+            </button>
+            <button class="float-btn hidden-scroll" id="scrollDownBtn" aria-label="아래로">
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+        </div>
+
     </main>
+
+    <!-- 오픈소스 라이선스 모달 -->
+    <div id="ossModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeOSSModal()">
+        <div class="section-card w-full max-w-sm m-0 p-6 relative cursor-default scale-95 transition-transform duration-300 flex flex-col max-h-[85vh] overflow-hidden" id="ossModalContent" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4 shrink-0">
+                <h3 class="text-lg font-bold font-sans text-text-main flex items-center gap-2">
+                    <i class="fa-solid fa-scale-balanced text-[var(--sub-accent)]"></i> 법적 고지 및 라이선스
+                </h3>
+                <button onclick="closeOSSModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-highlight)] text-text-dim hover:text-text-main hover:bg-[var(--glass-border)] transition z-10">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="overflow-y-auto pr-3 -mr-3 pb-2 custom-scrollbar no-select">
+                <div class="oss-group-title">Fonts & Icons</div>
+                <div class="oss-box">
+                    <div class="oss-title">Pretendard</div>
+                    <div class="oss-desc">Copyright (c) 2021 Kiliman. SIL Open Font License 1.1.</div>
+                </div>
+                <div class="oss-box">
+                    <div class="oss-title">Google Fonts (Google Sans Flex)</div>
+                    <div class="oss-desc">Provided by Google Fonts. SIL Open Font License 1.1.</div>
+                </div>
+                <div class="oss-box">
+                    <div class="oss-title">Cal Sans</div>
+                    <div class="oss-desc">Copyright (c) 2021 Cal.com, Inc. SIL Open Font License 1.1.</div>
+                </div>
+                <div class="oss-box">
+                    <div class="oss-title">FontAwesome</div>
+                    <div class="oss-desc">Fonticons, Inc. Licensed under CC BY 4.0, SIL OFL 1.1, and MIT License.</div>
+                </div>
+                
+                <div class="oss-group-title">Cloud Services</div>
+                <div class="oss-box">
+                    <div class="oss-title">Firebase (Google)</div>
+                    <div class="oss-desc">Data syncing and storage powered by Google Firebase.</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Help Modal (Dynamic Content) -->
     <div id="helpModal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 bg-black/50 backdrop-blur-sm" onclick="closeHelpModal()">
@@ -1341,22 +1428,17 @@
             }
         };
 
-        // 오버레이 창에서 최초 인증용
-        window.submitAuthCode = async () => {
-            const input = document.getElementById('auth-code-input');
-            const code = input.value.trim();
+        // 오버레이 창에서 통합 입력창(Access Code or Sync Code) 기반으로 처리
+        window.submitUnifiedAuth = async () => {
+            const input = document.getElementById('auth-unified-input');
+            const originalCode = input.value.trim();
+            const upperCode = originalCode.toUpperCase();
+            
             const errorMsg = document.getElementById('auth-error-msg');
             const btn = document.getElementById('auth-submit-btn');
             
-            if(!code) {
+            if(!originalCode) {
                 errorMsg.innerText = "코드를 입력해주세요.";
-                errorMsg.classList.remove('hidden');
-                return;
-            }
-            
-            // 1차 프론트엔드 방어
-            if(btoa(code) !== "ZG50bWRhbHM=") {
-                errorMsg.innerText = "유효하지 않은 코드입니다.";
                 errorMsg.classList.remove('hidden');
                 return;
             }
@@ -1365,98 +1447,86 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 확인 중...';
             errorMsg.classList.add('hidden');
             
-            try {
-                const docRef = doc(db, "access_codes", code);
-                const snap = await getDoc(docRef);
-                if(snap.exists()) {
-                    const usage = getSyncUsage();
-                    usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
-                    usage.isPremium = true;
-                    
-                    const state = window.getAppState();
-                    state.syncUsage = usage;
-                    window.updateLocalState(state, true);
-                    
-                    if (state.syncCode) {
-                        state.lastModified = Date.now();
-                        await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
-                            appState: state,
-                            lastUpdated: new Date().toISOString()
-                        }, { merge: true });
-                    }
-                    window.updateSyncCodeUI();
-                    
-                    document.getElementById('authOverlay').classList.add('hidden');
-                    document.documentElement.style.overflow = '';
-                    document.body.style.overflow = '';
-                    alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
-                } else {
-                    errorMsg.innerText = "서버에 등록되지 않은 접근 코드입니다.";
-                    errorMsg.classList.remove('hidden');
-                }
-            } catch(e) {
-                errorMsg.innerText = "코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.";
-                errorMsg.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '새 코드로 인증';
-            }
-        }
-        
-        // 오버레이 창에서 동기화 코드 기반으로 기기 연결 및 우회 인증
-        window.submitAuthSyncCode = async () => {
-            const input = document.getElementById('auth-sync-input');
-            const code = input.value.trim().toUpperCase();
-            const errorMsg = document.getElementById('auth-error-msg');
-            const btn = document.getElementById('auth-sync-btn');
-            
-            if(code.length !== 6) {
-                errorMsg.innerText = "6자리 동기화 코드를 정확히 입력해주세요.";
-                errorMsg.classList.remove('hidden');
-                return;
-            }
-            
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 연결 중...';
-            errorMsg.classList.add('hidden');
-            
-            try {
-                const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
-                const snap = await getDoc(docRef);
-                
-                if(snap.exists() && snap.data().appState) {
-                    const cloudState = snap.data().appState;
-                    const localState = window.getAppState();
-                    
-                    cloudState.syncCode = code; 
-                    cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
-                    
-                    window.updateLocalState(cloudState, true);
-                    window.updateSyncCodeUI();
-                    window.setDirty(false);
-                    setupRealtimeListener(code); 
-                    
-                    const usage = getSyncUsage();
-                    if(usage.isPremium) {
+            // 1. Access Code Check (로컬 Fallback 포함)
+            if(btoa(originalCode) === "ZG50bWRhbHM=" || originalCode === "dntmdals") {
+                try {
+                    // 서버 문서 확인 (존재하지 않더라도 btoa가 맞으면 통과하도록 fallback 허용)
+                    const docRef = doc(db, "access_codes", originalCode);
+                    const snap = await getDoc(docRef);
+                    if(snap.exists() || btoa(originalCode) === "ZG50bWRhbHM=") {
+                        const usage = getSyncUsage();
+                        usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                        usage.isPremium = true;
+                        
+                        const state = window.getAppState();
+                        state.syncUsage = usage;
+                        window.updateLocalState(state, true);
+                        
+                        if (state.syncCode) {
+                            state.lastModified = Date.now();
+                            await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                                appState: state,
+                                lastUpdated: new Date().toISOString()
+                            }, { merge: true });
+                        }
+                        window.updateSyncCodeUI();
+                        
                         document.getElementById('authOverlay').classList.add('hidden');
                         document.documentElement.style.overflow = '';
                         document.body.style.overflow = '';
-                        alert("성공적으로 기기가 연결되었습니다!\n공유된 데이터와 이용 기간을 불러왔습니다.");
+                        alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
+                        return; // 종료
+                    }
+                } catch(e) {
+                    console.error("Access code check error:", e);
+                }
+            }
+            
+            // 2. Sync Code Check (6자리일 때)
+            if(upperCode.length === 6) {
+                try {
+                    const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", upperCode);
+                    const snap = await getDoc(docRef);
+                    
+                    if(snap.exists() && snap.data().appState) {
+                        const cloudState = snap.data().appState;
+                        const localState = window.getAppState();
+                        
+                        cloudState.syncCode = upperCode; 
+                        cloudState.autoSyncEnabled = localState.autoSyncEnabled; 
+                        
+                        window.updateLocalState(cloudState, true);
+                        window.updateSyncCodeUI();
+                        window.setDirty(false);
+                        setupRealtimeListener(upperCode); 
+                        
+                        const usage = getSyncUsage();
+                        if(usage.isPremium) {
+                            document.getElementById('authOverlay').classList.add('hidden');
+                            document.documentElement.style.overflow = '';
+                            document.body.style.overflow = '';
+                            alert("성공적으로 기기가 연결되었습니다!\n공유된 데이터와 이용 기간을 불러왔습니다.");
+                            return; // 종료
+                        } else {
+                            errorMsg.innerText = "연결된 기기의 데이터 역시 Access 권한이 만료되었습니다. 새 Access Code로 인증해주세요.";
+                            errorMsg.classList.remove('hidden');
+                        }
                     } else {
-                        errorMsg.innerText = "연결된 기기의 데이터 역시 Access 권한이 만료되었습니다. 새 Access Code로 인증해주세요.";
+                        errorMsg.innerText = "유효하지 않거나 존재하지 않는 동기화 코드입니다.";
                         errorMsg.classList.remove('hidden');
                     }
-                } else {
-                    errorMsg.innerText = "유효하지 않거나 존재하지 않는 동기화 코드입니다.";
+                } catch(e) {
+                    errorMsg.innerText = "데이터를 불러오는 중 서버 오류가 발생했습니다.";
                     errorMsg.classList.remove('hidden');
                 }
-            } catch(e) {
-                errorMsg.innerText = "데이터를 불러오는 중 서버 오류가 발생했습니다.";
+            } else {
+                errorMsg.innerText = "유효하지 않은 코드입니다. (Access Code 또는 6자리 동기화 코드)";
                 errorMsg.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '기존 기기와 연결';
             }
+            
+            // 실패 시 버튼 초기화
+            btn.disabled = false;
+            btn.innerHTML = '인증 및 연결';
         };
 
         // 설정 창에서 기존 기간 무시하고 갱신용
@@ -1840,6 +1910,48 @@
                 } catch(e) {}
             }
         });
+        
+        function openOSSModal() {
+            const modal = document.getElementById('ossModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; 
+                modal.classList.remove('opacity-0');
+                document.getElementById('ossModalContent').classList.remove('scale-95');
+                document.getElementById('ossModalContent').classList.add('scale-100');
+            }
+        }
+        function closeOSSModal() {
+            const modal = document.getElementById('ossModal');
+            const content = document.getElementById('ossModalContent');
+            if (modal && content) {
+                modal.classList.add('opacity-0');
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+        
+        // 플로팅 스크롤 버튼 로직
+        const scrollUpBtn = document.getElementById('scrollUpBtn');
+        const scrollDownBtn = document.getElementById('scrollDownBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                scrollUpBtn.classList.remove('hidden-scroll');
+            } else {
+                scrollUpBtn.classList.add('hidden-scroll');
+            }
+
+            if ((window.innerHeight + window.scrollY) < document.body.offsetHeight - 100) {
+                scrollDownBtn.classList.remove('hidden-scroll');
+            } else {
+                scrollDownBtn.classList.add('hidden-scroll');
+            }
+        });
+
+        scrollUpBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollDownBtn.onclick = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     </script>
 
     <script>
@@ -2082,9 +2194,9 @@
                 if (glowRight) glowRight.style.opacity = 0;
                 
                 badgeContainer.style.opacity = progress;
-                badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-orange-500/80 border border-orange-400/50";
-                badgeIcon.className = "fa-solid fa-bookmark";
-                badgeText.innerText = "SAVED";
+                badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-red-500/80 border border-red-400/50";
+                badgeIcon.className = "fa-solid fa-xmark";
+                badgeText.innerText = "PASS";
             }
         }, {passive: true});
 
@@ -2130,7 +2242,7 @@
                             saveData();
                         }
                     } else { 
-                        if(!appState.notebook.includes(term)) toggleNotebook(term);
+                        // 왼쪽 스와이프: PASS 동작으로 아무것도 저장하지 않고 그냥 넘기기.
                     }
                     updateFlashcardControls(term);
                 }
@@ -2161,6 +2273,12 @@
         window.addEventListener('pointerup', handlePointerEnd);
         window.addEventListener('pointercancel', handlePointerEnd);
 
+        window.markPassFromCard = () => {
+            stopAutoplay();
+            if(flashcardOrder.length === 0) return;
+            nextCard();
+        };
+
         function triggerSwipe(direction) {
             if (flashcardOrder.length === 0) return;
             const term = allWords[flashcardOrder[appState.currentIndex]].term;
@@ -2188,11 +2306,11 @@
                 
                 if (glowRight) glowRight.style.opacity = 0.8;
             } else {
-                if(!appState.notebook.includes(term)) toggleNotebook(term);
+                // PASS
                 badgeContainer.style.opacity = 1;
-                badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-orange-500/80 border border-orange-400/50";
-                badgeIcon.className = "fa-solid fa-bookmark";
-                badgeText.innerText = "SAVED";
+                badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-red-500/80 border border-red-400/50";
+                badgeIcon.className = "fa-solid fa-xmark";
+                badgeText.innerText = "PASS";
                 
                 if (glowLeft) glowLeft.style.opacity = 0.8;
             }
