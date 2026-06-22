@@ -154,8 +154,7 @@
             overflow-y: auto; 
             overflow-x: hidden;
             scroll-behavior: smooth;
-            /* 스크롤바 생성/소멸로 인한 좌우 흔들림 방지 */
-            scrollbar-gutter: stable;
+            scrollbar-gutter: stable; /* 스크롤바 튐 방지 */
         }
         
         body {
@@ -410,8 +409,8 @@
         }
         .btn-settings-action:active { transform: scale(0.98); }
         
-        /* 스마트 스크롤 단일 플로팅 버튼 & 설정 버튼 */
-        .float-btn-group { position: fixed; right: 16px; bottom: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 900; pointer-events: none; }
+        /* 플로팅 버튼들 (설정, 스마트 스크롤) */
+        .float-btn-group { position: fixed; right: 16px; bottom: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 900; }
         @media (min-width: 640px) { .float-btn-group { right: 24px; bottom: 32px; gap: 10px; } }
         
         .float-btn {
@@ -602,7 +601,7 @@
                 </p>
 
                 <div class="flex flex-col gap-3.5 relative z-10">
-                    <!-- Unified Input (NO UPPERCASE for case distinction) -->
+                    <!-- Unified Input -->
                     <div class="group relative">
                         <input type="text" id="auth-unified-input" class="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-4 text-center font-bold tracking-widest text-white outline-none focus:border-primary/60 focus:bg-black/60 transition-all placeholder:text-gray-500 text-[15px] shadow-inner" placeholder="코드를 입력하세요" autocomplete="off">
                         <button onclick="window.submitUnifiedAuth()" id="auth-submit-btn" class="w-full h-14 text-[16px] font-bold rounded-2xl bg-gradient-to-r from-blue-600 to-primary hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-primary/20 mt-4 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 hover:-translate-y-0.5 border border-white/10">
@@ -646,11 +645,6 @@
                 <i class="fa-regular fa-calendar-check"></i>
                 <span id="dday-text"></span>
             </div>
-            
-            <!-- 수동 동기화 버튼 (코드가 연결/발급되었을 때만 표시) -->
-            <button class="tool-btn hidden transition-colors text-text-main hover:text-text-main/80" id="headerSyncBtn" onclick="window.manualCloudSync()" title="수동 동기화">
-                <i class="fa-solid fa-rotate"></i>
-            </button>
             
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
