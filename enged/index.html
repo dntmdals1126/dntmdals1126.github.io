@@ -420,15 +420,15 @@
             border: 1px solid var(--glass-border); color: var(--text-main);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: auto; shadow-lg;
+            pointer-events: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        .float-btn.hidden-scroll { opacity: 0; transform: translateY(10px); pointer-events: none; }
+        .float-btn.hidden-scroll { opacity: 0; transform: translateY(15px) scale(0.9); pointer-events: none; }
         
         @media (hover: hover) { 
-            .float-btn:hover { background: var(--glass-surface); color: var(--primary); transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.1); } 
+            .float-btn:hover { background: var(--glass-surface); color: var(--primary); transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 6px 16px rgba(0,0,0,0.3); } 
         }
         html[data-theme="light"] .float-btn { background: rgba(255, 255, 255, 0.85); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.1); color: #1e293b; }
-        html[data-theme="light"] .float-btn:hover { background: #ffffff; }
+        html[data-theme="light"] .float-btn:hover { background: #ffffff; box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
 
         /* --- 오픈소스 라이선스 모달 UI (푸터에서 가져옴) --- */
         .oss-group-title { font-size: 13px; color: var(--text-sub); font-weight: 600; margin: 16px 0 8px 4px; }
@@ -1136,14 +1136,14 @@
 
         <!-- Floating Buttons -->
         <div class="float-btn-group no-print">
-            <button class="float-btn" id="floatSettingsBtn" aria-label="설정" onclick="openSettingsModal()">
-                <i class="fa-solid fa-gear"></i>
-            </button>
             <button class="float-btn hidden-scroll" id="scrollUpBtn" aria-label="위로">
                 <i class="fa-solid fa-chevron-up"></i>
             </button>
             <button class="float-btn hidden-scroll" id="scrollDownBtn" aria-label="아래로">
                 <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <button class="float-btn" id="floatSettingsBtn" aria-label="설정" onclick="openSettingsModal()">
+                <i class="fa-solid fa-gear"></i>
             </button>
         </div>
 
