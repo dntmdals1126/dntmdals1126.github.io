@@ -1137,10 +1137,10 @@
 
         <!-- Smart Scroll Button & Float Settings -->
         <div class="float-btn-group no-print">
-            <button class="float-btn" id="scrollUpBtn" aria-label="위로" style="display: flex;">
+            <button class="float-btn hidden-scroll" id="scrollUpBtn" aria-label="위로" style="display: flex;">
                 <i class="fa-solid fa-chevron-up"></i>
             </button>
-            <button class="float-btn" id="scrollDownBtn" aria-label="아래로" style="display: flex;">
+            <button class="float-btn hidden-scroll" id="scrollDownBtn" aria-label="아래로" style="display: flex;">
                 <i class="fa-solid fa-chevron-down"></i>
             </button>
             <button class="float-btn" id="floatSettingsBtn" aria-label="설정" onclick="window.openSettingsModal()">
@@ -1350,6 +1350,7 @@
             scrollDownBtn.onclick = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
+        // MISSING VARIABLES RESTORED HERE 
         let allWords = [];
         let appState = { 
             memorized: {}, 
@@ -1358,9 +1359,30 @@
             quizState: { asked: [], score: 0 },
             fontSizeLevel: 0,
             autoRemoveSaved: true,
-            lastModified: 0, // 타임스탬프 기록용
-            autoSyncEnabled: false // 자동 동기화 옵션 (기본 꺼짐)
+            lastModified: 0, 
+            autoSyncEnabled: false 
         };
+
+        let listFilterMode = 'all'; 
+        let fcFilterMode = 'all';
+        let quizFilterMode = 'all'; 
+
+        const fontClasses = [
+            { term: "text-[16px] lg:text-[18px]", koTerm: "text-[12px]", def: "text-[12px] sm:text-[13.5px]", koDef: "text-[12px] text-gray-500" },
+            { term: "text-[17px] lg:text-[19px]", koTerm: "text-[13px]", def: "text-[13px] sm:text-[14.5px]", koDef: "text-[13px] text-gray-500" },
+            { term: "text-[18px] lg:text-[20px]", koTerm: "text-[14px]", def: "text-[14px] sm:text-[15.5px]", koDef: "text-[14px] text-gray-500" }
+        ];
+        
+        let isQuizActive = false;
+        let quizState = { mode: 'spelling' }; 
+        let quizCurrentQ = null;
+        
+        let sortOrder = 'asc'; 
+        let flashcardOrder = []; 
+        let hideTerms = false; 
+        let hideDefs = false;
+
+        let searchTimeout = null; 
         
         window.getAppState = () => appState;
         window.getSyncUsage = () => {
@@ -1405,6 +1427,16 @@
         };
 
         window.onload = async function() {
+            // D-day 계산 로직 복구
+            const ddayTextEl = document.getElementById('dday-text');
+            if(ddayTextEl) {
+                const targetDate = new Date('2026-09-16T00:00:00');
+                const now = new Date();
+                const diff = targetDate - now;
+                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                ddayTextEl.innerText = days > 0 ? `D-${days}` : "D-?"; 
+            }
+
             loadLocalData();
             window.checkAccessStatus();
             
