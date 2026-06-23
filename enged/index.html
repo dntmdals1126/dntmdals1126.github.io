@@ -618,7 +618,10 @@
                 <div class="flex flex-col justify-center">
                     <div class="flex justify-between items-end mb-1">
                         <span class="text-xs font-bold text-text-sub uppercase tracking-wider">Total Progress</span>
-                        <span id="progressText" class="text-sm font-bold text-primary">0%</span>
+                        <div class="flex items-center gap-2">
+                            <span id="streakBadge" class="hidden text-[11px] font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-md border border-orange-500/20 shadow-sm"><i class="fa-solid fa-fire"></i> <span id="streakCountText">0</span>일 연속</span>
+                            <span id="progressText" class="text-sm font-bold text-primary">0%</span>
+                        </div>
                     </div>
                     <div class="progress-bar-bg h-2">
                         <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
@@ -699,6 +702,10 @@
                                     <button onclick="setListFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
                                         <i id="filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                     <button onclick="setListFilter('weakWords');" class="flex items-center justify-between w-full px-4 py-2.5 text-[14.5px] text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-fire text-orange-500 w-5 text-center mr-2"></i> 취약 단어</span>
+                                        <i id="filter-check-weak" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
                                  </div>
                              </div>
@@ -794,6 +801,10 @@
                             <button onclick="setFcFilter('onlySaved');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                 <span><i class="fa-solid fa-bookmark text-orange-400 w-5 text-center mr-2"></i> 저장 단어</span>
                                 <i id="fc-filter-check-saved" class="fa-solid fa-check text-sub-accent hidden"></i>
+                            </button>
+                            <button onclick="setFcFilter('weakWords');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                <span><i class="fa-solid fa-fire text-orange-500 w-5 text-center mr-2"></i> 취약 단어</span>
+                                <i id="fc-filter-check-weak" class="fa-solid fa-check text-sub-accent hidden"></i>
                             </button>
                         </div>
                     </div>
@@ -955,6 +966,10 @@
                                     <button onclick="setQuizFilter('onlyMemorized');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
                                         <span><i class="fa-solid fa-check text-green-500 w-5 text-center mr-2"></i> 암기 완료</span>
                                         <i id="quiz-filter-check-memo" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                    <button onclick="setQuizFilter('weakWords');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-fire text-orange-500 w-5 text-center mr-2"></i> 취약 단어</span>
+                                        <i id="quiz-filter-check-weak" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
                                 </div>
                             </div>
@@ -2058,7 +2073,7 @@
                 'all': document.getElementById('filter-check-all'),
                 'hideMemorized': document.getElementById('filter-check-hide'),
                 'onlySaved': document.getElementById('filter-check-saved'),
-                'onlyMemorized': document.getElementById('filter-check-memo')
+                'onlyMemorized': document.getElementById('filter-check-memo'),'weakWords': document.getElementById('filter-check-weak')
             };
             for(let key in checks) {
                 if(checks[key]) checks[key].classList.add('hidden');
@@ -2070,7 +2085,7 @@
             const checks = {
                 'all': document.getElementById('fc-filter-check-all'),
                 'hideMemorized': document.getElementById('fc-filter-check-hide'),
-                'onlySaved': document.getElementById('fc-filter-check-saved')
+                'onlySaved': document.getElementById('fc-filter-check-saved'),'weakWords': document.getElementById('fc-filter-check-weak')
             };
             for(let key in checks) {
                 if(checks[key]) checks[key].classList.add('hidden');
@@ -2159,6 +2174,8 @@
                 badge.className = "px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl backdrop-blur-md text-white bg-red-500/80 border border-red-400/50";
                 badgeIcon.className = "fa-solid fa-xmark";
                 badgeText.innerText = "PASS";
+                appState.mistakeCount[term] = (appState.mistakeCount[term] || 0) + 1;
+                saveData(true);
             }
         }, {passive: true});
 
@@ -2380,7 +2397,10 @@
             fontSizeLevel: 0,
             autoRemoveSaved: true,
             lastModified: 0, 
-            autoSyncEnabled: false 
+            autoSyncEnabled: false,
+            lastLoginDate: "",
+            streakCount: 0,
+            mistakeCount: {}
         };
         
         let listFilterMode = 'all'; 
@@ -2405,7 +2425,7 @@
         let searchTimeout = null; 
 
         const ddayTextEl = document.getElementById('dday-text');
-        const targetDate = new Date('2026-09-16T00:00:00');
+        const targetDate = new Date('2026-09-18T13:30:00');
         const now2 = new Date();
         const diff = targetDate - now2;
         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -2429,10 +2449,31 @@
             if(!skipDirty) window.setDirty(true);
         };
 
+        function checkStreak() {
+            const today = new Date().toISOString().split('T')[0];
+            if (!appState.lastLoginDate) {
+                appState.lastLoginDate = today;
+                appState.streakCount = 1;
+            } else if (appState.lastLoginDate !== today) {
+                const lastDate = new Date(appState.lastLoginDate);
+                const currentDate = new Date(today);
+                const diffDays = Math.ceil(Math.abs(currentDate - lastDate) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    appState.streakCount++;
+                } else {
+                    appState.streakCount = 1; // 하루라도 끊기면 1로 초기화
+                }
+                appState.lastLoginDate = today;
+            }
+            saveData(true); // 동기화 쿨타임 방지를 위해 skipDirty=true로 저장
+        }
+
         window.onload = async function() {
             loadLocalData();
+            checkStreak();
             
-            window.updateSyncCodeUI(); // 마이그레이션된 데이터를 로드 즉시 화면에 반영
+            window.updateSyncCodeUI();
             if (window.checkAccessStatus) window.checkAccessStatus();
             
             const autoRemoveCheck = document.getElementById('setting-auto-remove');
@@ -2464,6 +2505,9 @@
                     if (parsed.fontSizeLevel > 2) parsed.fontSizeLevel = 0; 
                     if (parsed.autoRemoveSaved === undefined) parsed.autoRemoveSaved = true; 
                     if (parsed.autoSyncEnabled === undefined) parsed.autoSyncEnabled = false;
+                    if (parsed.streakCount === undefined) parsed.streakCount = 0;
+                    if (parsed.mistakeCount === undefined) parsed.mistakeCount = {};
+                    if (parsed.lastLoginDate === undefined) parsed.lastLoginDate = "";
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
             }
@@ -2669,6 +2713,15 @@
             document.getElementById('statTotal').innerText = total;
             document.getElementById('statMemorized').innerText = memorizedCount;
             document.getElementById('statNotebook').innerText = appState.notebook.length;
+            const streakBadge = document.getElementById('streakBadge');
+            if (streakBadge) {
+                if (appState.streakCount > 0) {
+                    streakBadge.classList.remove('hidden');
+                    document.getElementById('streakCountText').innerText = appState.streakCount;
+                } else {
+                    streakBadge.classList.add('hidden');
+                }
+            }
         }
         function updateDashboard() { updateProgress(); }
 
@@ -2754,6 +2807,9 @@
             } else if(fcFilterMode === 'onlySaved') {
                 span.innerText = '저장 단어';
                 btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
+            } else if(fcFilterMode === 'weakWords') {
+                span.innerText = '취약 단어';
+                btn.classList.add('text-sub-accent', 'border-[var(--sub-accent-border)]', 'bg-[var(--sub-accent-bg)]');
             }
             updateFcFilterMenuUI();
             closeMenu('fcFilterMenu');
@@ -2771,6 +2827,7 @@
                 const word = allWords[i];
                 if (fcFilterMode === 'hideMemorized' && appState.memorized[word.term]) continue;
                 if (fcFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) continue;
+                if (fcFilterMode === 'weakWords' && !(appState.mistakeCount[word.term] > 0)) continue;
                 newOrder.push(i);
             }
             
@@ -3002,7 +3059,7 @@
                 'all': document.getElementById('quiz-filter-check-all'),
                 'hideMemorized': document.getElementById('quiz-filter-check-hide'),
                 'onlySaved': document.getElementById('quiz-filter-check-saved'),
-                'onlyMemorized': document.getElementById('quiz-filter-check-memo')
+                'onlyMemorized': document.getElementById('quiz-filter-check-memo'),'weakWords': document.getElementById('quiz-filter-check-weak')
             };
             for(let key in checks) {
                 if(checks[key]) checks[key].classList.add('hidden');
@@ -3029,6 +3086,10 @@
                 btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
                 btn.classList.add('btn-active');
                 btn.title = "필터링 (암기 완료)";
+            } else if(quizFilterMode === 'weakWords') {
+                btn.innerHTML = '<i class="fa-solid fa-fire text-orange-500"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (취약 단어)";
             }
             updateQuizFilterMenuUI();
             closeMenu('quizFilterMenu');
@@ -3043,6 +3104,7 @@
                 if (quizFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
                 if (quizFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
                 if (quizFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
+                if (quizFilterMode === 'weakWords' && !(appState.mistakeCount[word.term] > 0)) return false;
                 return true;
             });
         }
@@ -3176,7 +3238,7 @@
                 containerMulti.innerHTML = '';
                 options.forEach(opt => {
                     const btn = document.createElement('button');
-                    btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] transition-all font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
+                    btn.className = "w-full text-left p-3.5 md:p-4 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-surface)] shadow-sm hover:bg-[var(--glass-highlight)] hover:-translate-y-1 hover:shadow-md active:scale-95 transition-all duration-200 font-medium text-text-main flex items-center gap-3.5 text-[15px] md:text-[17px]";
                     btn.innerHTML = `<div class="w-5 h-5 rounded-full border-[1.5px] border-text-dim flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-text-dim opacity-70 transition-colors duration-200"></div></div><span class="font-sans font-bold flex-1">${opt.term}</span>`;
                     btn.onclick = () => checkAnswer(opt, quizCurrentQ, btn);
                     containerMulti.appendChild(btn);
@@ -3230,6 +3292,8 @@
                 btnElement.querySelector('div').classList.replace('border-text-dim', 'border-transparent');
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
+                appState.mistakeCount[correct.term] = (appState.mistakeCount[correct.term] || 0) + 1;
+                saveData(true);
                 processQuizResult(false, correct.term, correct.term);
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
@@ -3253,6 +3317,8 @@
                 processQuizResult(true, quizCurrentQ.term, quizCurrentQ.term);
             } else {
                 inputEl.classList.add('border-red-500', 'text-red-500');
+                appState.mistakeCount[quizCurrentQ.term] = (appState.mistakeCount[quizCurrentQ.term] || 0) + 1;
+                saveData(true);
                 processQuizResult(false, quizCurrentQ.term, quizCurrentQ.term);
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
@@ -3274,6 +3340,7 @@
                 if (listFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
                 if (listFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
                 if (listFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
+                if (listFilterMode === 'weakWords' && !(appState.mistakeCount[word.term] > 0)) return false;
                 if(!query) return true;
                 return word.term.toLowerCase().includes(query) || word.koTerm.includes(query) || word.def.toLowerCase().includes(query);
             });
@@ -3345,6 +3412,10 @@
                 btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
                 btn.classList.add('btn-active');
                 btn.title = "필터링 (암기 완료)";
+            } else if(listFilterMode === 'weakWords') {
+                btn.innerHTML = '<i class="fa-solid fa-fire text-orange-500"></i>';
+                btn.classList.add('btn-active');
+                btn.title = "필터링 (취약 단어)";
             }
             updateFilterMenuUI();
             closeMenu('filterMenu');
