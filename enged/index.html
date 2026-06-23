@@ -1266,11 +1266,11 @@
         </div>
     </div>
 
-    <!-- 🔥 FIREBASE 연동 모듈 (클라우드 동기화의 핵심) 🔥 -->
+    <!-- 🔥 FIREBASE 연동 모듈 🔥 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase 설정 유지
         const firebaseConfig = {
@@ -1430,45 +1430,61 @@
         };
 
         async function submitAuthCodeLogic(code, errorMsg, btn) {
-            try {
-                const docRef = doc(db, "access_codes", code);
-                const snap = await getDoc(docRef);
-                if(snap.exists()) {
-                    const usage = getSyncUsage();
-                    usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
-                    usage.isPremium = true;
-                    
-                    const state = window.getAppState();
-                    state.syncUsage = usage;
-                    window.updateLocalState(state, true);
-                    
-                    if (state.syncCode) {
-                        state.lastModified = Date.now();
-                        await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
-                            appState: state,
-                            lastUpdated: new Date().toISOString(),
-                            activeDevices: { [deviceId]: Date.now() }
-                        }, { merge: true });
-                    }
-                    window.updateSyncCodeUI();
-                    
-                    document.getElementById('authOverlay').classList.add('hidden');
-                    document.documentElement.style.overflow = '';
-                    document.body.style.overflow = '';
-                    alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
-                } else {
-                    errorMsg.innerText = "서버에 등록되지 않은 액세스 코드입니다.";
-                    errorMsg.classList.remove('hidden');
-                }
-            } catch(e) {
-                errorMsg.innerText = "코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.";
-                errorMsg.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "인증 및 연결";
-            }
-        }
+    try {
+        await runTransaction(db, async (transaction) => {
+            const docRef = doc(db, "access_codes", code);
+            const snap = await transaction.get(docRef);
 
+            if (!snap.exists()) throw "Invalid"; 
+            
+            const data = snap.data();
+            
+            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모
+            if (data.isAdmin !== true) {
+                if (data.used === true) throw "Used";
+                transaction.update(docRef, { 
+                    used: true, 
+                    usedAt: serverTimestamp() 
+                });
+            }
+        });
+
+        // 인증 성공 이후 로직
+        const usage = getSyncUsage();
+        usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+        usage.isPremium = true;
+        
+        const state = window.getAppState();
+        state.syncUsage = usage;
+        window.updateLocalState(state, true);
+        
+        if (state.syncCode) {
+            state.lastModified = Date.now();
+            await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                appState: state,
+                lastUpdated: new Date().toISOString(),
+                activeDevices: { [deviceId]: Date.now() }
+            }, { merge: true });
+        }
+        
+        window.updateSyncCodeUI();
+        
+        document.getElementById('authOverlay').classList.add('hidden');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
+
+    } catch(e) {
+        if (e === "Invalid") errorMsg.innerText = "존재하지 않는 액세스 코드입니다.";
+        else if (e === "Used") errorMsg.innerText = "이미 사용된 액세스 코드입니다.";
+        else errorMsg.innerText = "인증 중 오류가 발생했습니다.";
+        
+        errorMsg.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "인증 및 연결";
+    }
+}
         async function connectSyncCodeLogic(code, errorMsg, btn) {
             try {
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code.toUpperCase());
@@ -1560,55 +1576,61 @@
             }
         };
 
-        window.verifyAccessCode = async () => {
-            const code = prompt("액세스 코드를 입력하세요 (기존 기간은 무시되고 오늘부터 30일로 갱신됩니다):");
-            if(!code) return;
+window.verifyAccessCode = async () => {
+    const code = prompt("액세스 코드를 입력하세요 (기존 기간은 무시되고 오늘부터 30일로 갱신됩니다):");
+    if (!code) return;
+    
+    try {
+        await runTransaction(db, async (transaction) => {
+            const docRef = doc(db, "access_codes", code);
+            const snap = await transaction.get(docRef);
             
-            try {
-                const docRef = doc(db, "access_codes", code);
-                const snap = await getDoc(docRef);
-                if(snap.exists()) {
-                    const usage = getSyncUsage();
-                    usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
-                    usage.isPremium = true;
-                    
-                    const state = window.getAppState();
-                    state.syncUsage = usage;
-                    window.updateLocalState(state, true);
-                    
-                    if (state.syncCode) {
-                        state.lastModified = Date.now();
-                        await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
-                            appState: state,
-                            lastUpdated: new Date().toISOString(),
-                            activeDevices: { [deviceId]: Date.now() }
-                        }, { merge: true });
-                    }
-                    window.updateSyncCodeUI();
-                    alert("기간 갱신 완료! 등록일로부터 30일간 이용 가능합니다.");
-                    window.checkAccessStatus();
-                } else {
-                    alert("서버에 등록되지 않은 액세스 코드입니다.");
-                }
-            } catch(e) {
-                alert("코드 검증 중 오류가 발생했거나 접근 권한이 없습니다.");
+            if (!snap.exists()) throw "Invalid";
+            
+            const data = snap.data();
+            
+            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모
+            if (data.isAdmin !== true) {
+                if (data.used === true) throw "Used";
+                transaction.update(docRef, { 
+                    used: true, 
+                    usedAt: serverTimestamp() 
+                });
             }
+        });
+        
+        // 연장 성공 이후 로직
+        const usage = getSyncUsage();
+        usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+        usage.isPremium = true;
+        
+        const state = window.getAppState();
+        state.syncUsage = usage;
+        window.updateLocalState(state, true);
+        
+        if (state.syncCode) {
+            state.lastModified = Date.now();
+            await setDoc(doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", state.syncCode), {
+                appState: state,
+                lastUpdated: new Date().toISOString(),
+                activeDevices: { [deviceId]: Date.now() }
+            }, { merge: true });
         }
         
-        window.setDirty = (state) => {
-            isDirty = state;
-            const headerBtn = document.querySelector('#headerSyncBtn');
-            if (headerBtn) {
-                if (state) {
-                    headerBtn.classList.add('text-highlight', 'hover:text-yellow-300');
-                    headerBtn.classList.remove('text-text-main', 'hover:text-text-main/80');
-                } else {
-                    headerBtn.classList.remove('text-highlight', 'hover:text-yellow-300');
-                    headerBtn.classList.add('text-text-main', 'hover:text-text-main/80');
-                }
-            }
-        };
-
+        window.updateSyncCodeUI();
+        alert("기간 갱신 완료! 등록일로부터 30일간 이용 가능합니다.");
+        window.checkAccessStatus();
+        
+    } catch(e) {
+        if (e === "Invalid") alert("서버에 등록되지 않은 액세스 코드입니다.");
+        else if (e === "Used") alert("이미 사용된 액세스 코드입니다.");
+        else {
+            console.error(e);
+            alert("코드 검증 중 오류가 발생했습니다.");
+        }
+    }
+};
+        
         window.updateSyncCodeUI = () => {
             const state = window.getAppState();
             const codeSpan = document.getElementById('current-sync-code');
