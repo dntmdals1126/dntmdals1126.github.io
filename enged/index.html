@@ -2385,14 +2385,10 @@
 
         async function fetchCSV() {
             try {
-                // Mock data since we can't load external CSV easily
-                const mockCSV = `Num,Term,koTerm,Definition,koDef
-1,abandon,버리다,"cease to support or look after; desert",지지를 그만두다; 버리다
-2,ability,능력,possession of the means or skill to do something,어떤 일을 할 수 있는 수단이나 기술의 소유
-3,abnormal,비정상적인,deviating from what is normal or usual,정상적이거나 평범한 것에서 벗어난
-4,absolute,절대적인,"not qualified or diminished in any way; total",어떤 식으로든 자격이 없거나 줄어들지 않은; 완전한
-5,absorb,흡수하다,take in or soak up,받아들이거나 흡수하다`;
-                parseCSV(mockCSV);
+                const response = await fetch('./영어.csv');
+                if (!response.ok) throw new Error("CSV not found");
+                const text = await response.text();
+                parseCSV(text);
                 document.getElementById('loadingState').classList.add('hidden');
                 updateProgress();
                 renderListTable(); 
