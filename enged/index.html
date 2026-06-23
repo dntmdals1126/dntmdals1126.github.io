@@ -1472,7 +1472,7 @@
         document.getElementById('authOverlay').classList.add('hidden');
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
-        alert("인증 완료! 30일간 Enged를 이용하실 수 있습니다.");
+        alert("코드 인증 완료! 100일간 Enged를 이용하실 수 있습니다.");
 
     } catch(e) {
         if (e === "Invalid") errorMsg.innerText = "존재하지 않는 액세스 코드입니다.";
@@ -1577,7 +1577,7 @@
         };
 
 window.verifyAccessCode = async () => {
-    const code = prompt("액세스 코드를 입력하세요 (기존 기간은 무시되고 오늘부터 30일로 갱신됩니다):");
+    const code = prompt("액세스 코드를 입력하세요 (기존 기간은 무시되고 오늘부터 100일로 갱신됩니다):");
     if (!code) return;
     
     try {
@@ -1618,7 +1618,7 @@ window.verifyAccessCode = async () => {
         }
         
         window.updateSyncCodeUI();
-        alert("기간 갱신 완료! 등록일로부터 30일간 이용 가능합니다.");
+        alert("기간 갱신 완료! 등록일로부터 100일간 이용 가능합니다.");
         window.checkAccessStatus();
         
     } catch(e) {
@@ -2580,8 +2580,8 @@ window.verifyAccessCode = async () => {
                 migrated = true;
             } else if (appState.isPremium && (!appState.syncUsage || !appState.syncUsage.premiumExpiry)) {
                 appState.syncUsage = appState.syncUsage || {};
-                // 과거 무제한 권한이었던 사람들에게 일단 30일 복구
-                appState.syncUsage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                // 과거 무제한 권한이었던 사람들에게 일단 100일 복구
+                appState.syncUsage.premiumExpiry = Date.now() + (100 * 24 * 60 * 60 * 1000);
                 migrated = true;
             }
 
