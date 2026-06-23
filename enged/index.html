@@ -522,8 +522,8 @@
                 <!-- 통합 입력창 -->
                 <div class="flex flex-col gap-3 relative z-10">
                     <div class="group">
-                        <input type="text" id="unified-auth-input" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-2xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-[var(--primary)] transition-all placeholder:text-text-dim/50 text-sm shadow-inner" placeholder="코드 입력" autocomplete="off">
-                        <button onclick="submitUnifiedAuth()" id="unified-auth-btn" class="w-full h-11 text-[13px] font-bold rounded-2xl btn-pri mt-2 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2 border-none">
+                        <input type="text" id="unified-auth-input" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-2xl px-4 py-3 text-center font-bold tracking-widest text-text-main outline-none focus:border-[var(--primary)] transition-all placeholder:text-text-dim/50 text-sm shadow-inner" placeholder="코드 입력" autocomplete="off">
+                        <button onclick="submitUnifiedAuth()" id="unified-auth-btn" class="w-full h-12 text-[15px] font-bold rounded-2xl btn-pri mt-2 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2 border-none">
                             인증 및 연결
                         </button>
                     </div>
@@ -573,7 +573,7 @@
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
             <a href="https://www.v1ctorym1n.kro.kr/enged/voca" class="tool-btn" title="Voca로 이동">
-                <i class="fa-solid fa-v text-sm"></i>
+                <i class="fa-solid fa-book text-sm"></i>
             </a>
             <button class="tool-btn" id="themeToggle" title="테마 변경">
                 <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"></path></svg>
@@ -808,7 +808,7 @@
             </div>
 
             <!-- 카드 영역 -->
-            <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container">
+            <div class="flashcard-container perspective-1000 h-[380px] md:h-[420px] w-full max-w-[500px]" id="fc-container" onclick="if(!wasDragged) flipCard()">
                 <div id="flashcard-inner" class="flashcard-inner duration-500">
                     <!-- Front (Def) -->
                     <div class="flashcard-face front bg-[var(--glass-surface)] backdrop-blur-xl shadow-xl border border-[var(--glass-border)]">
@@ -820,7 +820,7 @@
                         </div>
                         
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
-                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
+                            <div class="fc-scroll-box w-full h-full">
                                 <div class="fc-inner-content">
                                     <h2 id="fc-front" class="text-[19px] md:text-[22px] font-semibold text-text-main break-words font-sans leading-relaxed text-left w-full">Loading...</h2>
                                     <div class="w-16 h-[2px] bg-[var(--glass-border)] my-5 self-start shrink-0"></div>
@@ -843,7 +843,7 @@
                         </div>
                         
                         <div class="absolute top-14 bottom-12 left-5 right-5 sm:left-6 sm:right-6">
-                            <div class="fc-scroll-box w-full h-full" onclick="event.stopPropagation()">
+                            <div class="fc-scroll-box w-full h-full">
                                 <div class="fc-inner-content justify-center min-h-full">
                                     <h3 id="fc-back-term" class="text-[28px] md:text-[34px] font-black text-text-main mb-3 font-sans tracking-tight text-center w-full break-words leading-tight"></h3>
                                     <p id="fc-back-koterm" class="text-sub-accent text-[17px] md:text-[19px] font-kor text-center font-bold w-full"></p>
@@ -871,11 +871,11 @@
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
 
-                    <button onclick="toggleNotebookFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-saved w-14 h-14 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-star-btn" title="저장">
+                    <button onclick="toggleNotebookFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-saved w-14 h-14 rounded-full !p-0 shadow-md text-orange-400 flex items-center justify-center" id="fc-star-btn" title="저장">
                         <i class="fa-regular fa-bookmark text-xl"></i>
                     </button>
 
-                    <button onclick="toggleMemorizedFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-check w-14 h-14 rounded-full !p-0 shadow-md text-text-sub flex items-center justify-center" id="fc-check-btn" title="완료">
+                    <button onclick="toggleMemorizedFromCard()" class="btn bg-[var(--glass-surface)] border border-[var(--glass-border)] fc-action-main-btn btn-check w-14 h-14 rounded-full !p-0 shadow-md text-green-500 flex items-center justify-center" id="fc-check-btn" title="완료">
                         <i class="fa-solid fa-check text-xl"></i>
                     </button>
 
@@ -1200,7 +1200,7 @@
                         <span class="text-[10px] text-text-dim font-medium flex items-center gap-1.5">
                             <i class="fa-solid fa-cloud-arrow-up"></i> <span class="sync-time-display">마지막 백업: 없음</span>
                         </span>
-                        <button onclick="manualCloudSync()" id="manual-sync-btn" class="text-[10px] font-bold text-primary px-2.5 py-1.5 bg-primary/10 border border-primary/20 rounded-md transition-colors flex items-center gap-1.5 active:scale-95 hover:bg-primary/20">
+                        <button onclick="manualCloudSync()" id="manual-sync-btn" class="text-[10px] font-bold text-[var(--primary)] px-2.5 py-1.5 bg-[var(--sub-accent-bg)] border border-[var(--sub-accent-border)] rounded-md transition-colors flex items-center gap-1.5 active:scale-95 hover:bg-[var(--glass-highlight)]">
                             <i class="fa-solid fa-rotate"></i> 수동 백업
                         </button>
                     </div>
@@ -1238,6 +1238,7 @@
     <!-- 🔥 FIREBASE 연동 모듈 (클라우드 동기화의 핵심) 🔥 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase 설정 유지
@@ -1256,7 +1257,8 @@
         const configToUse = isCanvasEnv ? JSON.parse(__firebase_config) : firebaseConfig;
         const fallbackAppId = typeof __app_id !== 'undefined' ? __app_id : 'enged-vocab';
 
-        let app, db;
+        let app, auth, db;
+        let currentUser = null;
         let isDirty = false;
         let manualSyncCooldown = false;
         let autoSyncInterval = null;
@@ -1265,8 +1267,31 @@
         if (configToUse.apiKey && configToUse.apiKey.includes("AIzaSy")) {
             try {
                 app = initializeApp(configToUse);
+                auth = getAuth(app);
                 db = getFirestore(app);
                 document.getElementById('firebase-setup-warning').classList.add('hidden');
+
+                const initAuth = async () => {
+                    try {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch(e) { console.error("Auth init error:", e); }
+                };
+                initAuth();
+
+                onAuthStateChanged(auth, (user) => {
+                    currentUser = user;
+                    if (user) {
+                        const state = window.getAppState();
+                        if (state.syncCode) {
+                            setupRealtimeListener(state.syncCode);
+                        }
+                    }
+                });
+
             } catch(e) {
                 console.error("Firebase 초기화 에러:", e);
             }
@@ -1329,6 +1354,21 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 확인 중...';
             errorMsg.classList.add('hidden');
+
+            // DB 접근 전 Auth 대기
+            let retries = 10;
+            while (!currentUser && retries > 0) {
+                await new Promise(r => setTimeout(r, 200));
+                retries--;
+            }
+
+            if (!currentUser) {
+                errorMsg.innerText = "클라우드 서비스에 연결할 수 없습니다. 인터넷을 확인해주세요.";
+                errorMsg.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerText = "인증 및 연결";
+                return;
+            }
 
             if (val.length === 6) {
                 // 동기화 코드 연결 시도
@@ -1426,6 +1466,18 @@
             const originalText = btn.innerText;
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+            let retries = 10;
+            while (!currentUser && retries > 0) {
+                await new Promise(r => setTimeout(r, 200));
+                retries--;
+            }
+
+            if (!currentUser) {
+                btn.disabled = false;
+                btn.innerText = originalText;
+                return alert("클라우드 서비스에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
+            }
 
             try {
                 const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", val.toUpperCase());
@@ -1548,7 +1600,7 @@
             if (autoSyncInterval) clearInterval(autoSyncInterval);
             autoSyncInterval = setInterval(() => {
                 const state = window.getAppState();
-                if (state.autoSyncEnabled && isDirty && state.syncCode) {
+                if (state.autoSyncEnabled && isDirty && state.syncCode && currentUser) {
                     window.manualCloudSync(true);
                 }
             }, 2 * 60 * 1000); 
@@ -1594,6 +1646,8 @@
 
         function setupRealtimeListener(code) {
             if(unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
+            if(!currentUser) return;
+
             const docRef = doc(db, "artifacts", fallbackAppId, "public", "data", "syncRooms", code);
             
             unsubSnapshot = onSnapshot(docRef, (snap) => {
@@ -1624,8 +1678,15 @@
         }
 
         window.generateSyncCode = async () => {
-            const usage = getSyncUsage();
+            let retries = 10;
+            while (!currentUser && retries > 0) {
+                await new Promise(r => setTimeout(r, 200));
+                retries--;
+            }
+
+            if(!currentUser) return alert("서버에 연결 중입니다. 잠시 후 다시 시도해주세요.");
             
+            const usage = getSyncUsage();
             if (!usage.isPremium) {
                 window.checkAccessStatus();
                 return;
@@ -1668,6 +1729,17 @@
             const state = window.getAppState();
             if(!state.syncCode) return;
             if(manualSyncCooldown && !isBackground) return;
+
+            let retries = 10;
+            while (!currentUser && retries > 0) {
+                await new Promise(r => setTimeout(r, 200));
+                retries--;
+            }
+
+            if (!currentUser) {
+                if(!isBackground) alert("클라우드 서비스에 연결 중입니다. 잠시 후 다시 시도해주세요.");
+                return;
+            }
 
             const usage = getSyncUsage();
             if (!usage.isPremium && !isBackground) {
@@ -1748,7 +1820,7 @@
             const state = window.getAppState();
             const usage = getSyncUsage();
             
-            if (!usage.isPremium) return; 
+            if (!usage.isPremium || !currentUser) return; 
             
             const limit = 700;
             if (document.visibilityState === 'hidden' && isDirty && state.syncCode) {
@@ -1959,6 +2031,7 @@
         // === 플래시카드 Tinder 스와이프 기능 ===
         let isDragging = false;
         let isScrolling = false;
+        let wasDragged = false;
         let startX = 0, startY = 0;
         let currentX = 0, currentY = 0;
         
@@ -1976,6 +2049,7 @@
             if(flashcardOrder.length === 0) return; 
             isDragging = true;
             isScrolling = false;
+            wasDragged = false;
             startX = e.clientX;
             startY = e.clientY;
             fcContainer.style.transition = 'none';
@@ -1987,6 +2061,10 @@
             if(!isDragging) return;
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
+
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                wasDragged = true;
+            }
 
             if (!currentX && !currentY && Math.abs(dy) > Math.abs(dx)) {
                 isScrolling = true;
@@ -2036,9 +2114,6 @@
             
             if (isScrolling) {
                 isScrolling = false;
-                if (Math.abs(e.clientX - startX) < 5 && Math.abs(e.clientY - startY) < 5) {
-                    flipCard(); 
-                }
                 return;
             }
 
@@ -2083,10 +2158,6 @@
                 badgeContainer.style.opacity = 0;
                 if (glowLeft) glowLeft.style.opacity = 0;
                 if (glowRight) glowRight.style.opacity = 0;
-                
-                if (Math.abs(currentX) < 5 && Math.abs(currentY) < 5) {
-                    flipCard();
-                }
             }
             currentX = 0; currentY = 0;
         };
@@ -2302,12 +2373,32 @@
                 } catch(e) {}
             }
             
+            // 기존 사용자들을 위한 데이터 마이그레이션(변환)
+            const oldSyncCode1 = localStorage.getItem('syncCode');
+            const oldSyncCode2 = localStorage.getItem('engedSyncCode');
+            if (!appState.syncCode) {
+                if (oldSyncCode1) appState.syncCode = oldSyncCode1;
+                else if (oldSyncCode2) appState.syncCode = oldSyncCode2;
+            }
+
             const oldUsageStr = localStorage.getItem('engedSyncUsage');
-            if (oldUsageStr && !appState.syncUsage) {
+            if (oldUsageStr && (!appState.syncUsage || !appState.syncUsage.premiumExpiry)) {
                 try {
-                    appState.syncUsage = JSON.parse(oldUsageStr);
+                    const oldUsage = JSON.parse(oldUsageStr);
+                    appState.syncUsage = { ...appState.syncUsage, ...oldUsage };
                 } catch(e) {}
                 localStorage.removeItem('engedSyncUsage'); 
+            }
+
+            // Access 권한이 D-0으로 뜨는 현상 방지 (과거 데이터 호환)
+            if (appState.premiumExpiry) {
+                appState.syncUsage = appState.syncUsage || {};
+                appState.syncUsage.premiumExpiry = appState.premiumExpiry;
+                delete appState.premiumExpiry;
+            } else if (appState.isPremium && (!appState.syncUsage || !appState.syncUsage.premiumExpiry)) {
+                appState.syncUsage = appState.syncUsage || {};
+                // 과거 무제한 권한이었던 사람들에게 일단 30일 복구
+                appState.syncUsage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
             }
         }
 
@@ -2647,22 +2738,22 @@
             
             const checkBtn = document.getElementById('fc-check-btn');
             if(isMemorized) {
-                checkBtn.classList.remove('bg-[var(--glass-surface)]', 'text-text-sub');
+                checkBtn.classList.remove('bg-[var(--glass-surface)]', 'text-green-500');
                 checkBtn.classList.add('active'); 
             } else {
-                checkBtn.classList.add('bg-[var(--glass-surface)]', 'text-text-sub');
+                checkBtn.classList.add('bg-[var(--glass-surface)]', 'text-green-500');
                 checkBtn.classList.remove('active');
             }
 
             const starBtn = document.getElementById('fc-star-btn');
             const icon = starBtn.querySelector('i');
             if(isSaved) {
-                starBtn.classList.remove('bg-[var(--glass-surface)]', 'text-text-sub');
+                starBtn.classList.remove('bg-[var(--glass-surface)]', 'text-orange-400');
                 starBtn.classList.add('active');
                 icon.classList.remove('fa-regular');
                 icon.classList.add('fa-solid');
             } else {
-                starBtn.classList.add('bg-[var(--glass-surface)]', 'text-text-sub');
+                starBtn.classList.add('bg-[var(--glass-surface)]', 'text-orange-400');
                 starBtn.classList.remove('active');
                 icon.classList.add('fa-regular');
                 icon.classList.remove('fa-solid');
