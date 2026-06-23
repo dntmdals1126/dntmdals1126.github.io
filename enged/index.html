@@ -985,17 +985,7 @@
 
                 <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-2">
                     </div>
-
-                <div class="flex items-center justify-center mt-2 mb-4">
-                    <label class="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity group">
-                        <div class="relative inline-flex items-center shrink-0">
-                            <input type="checkbox" id="setting-auto-save" class="sr-only peer" onchange="toggleAutoSaveSetting(this)">
-                            <div class="w-8 h-4 bg-gray-500/40 rounded-full peer peer-checked:bg-[var(--sub-accent)] transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-4 shadow-inner"></div>
-                        </div>
-                        <span class="text-[12px] font-medium text-text-dim group-hover:text-text-main transition-colors select-none">틀린 단어 단어장에 자동 저장</span>
-                    </label>
-                </div>
-
+                
                 <div id="quiz-active-screen">
                     <!-- 문제 영역 -->
                     <div class="section-card mb-3 min-h-[140px] flex flex-col justify-center items-center text-center relative">
@@ -1033,6 +1023,16 @@
                     <div id="quiz-actions" class="hidden flex justify-center gap-3 w-full max-w-[240px] mx-auto mt-4 anim-fade-in">
                         <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-10">END</button>
                         <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-10">NEXT</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-center mt-8 mb-2">
+                        <label class="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity group">
+                            <div class="relative inline-flex items-center shrink-0">
+                                <input type="checkbox" id="setting-auto-save" class="sr-only peer" onchange="toggleAutoSaveSetting(this)">
+                                <div class="w-8 h-4 bg-gray-500/40 rounded-full peer peer-checked:bg-[var(--sub-accent)] transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-4 shadow-inner"></div>
+                            </div>
+                            <span class="text-[12px] font-medium text-text-dim group-hover:text-text-main transition-colors select-none">틀린 단어 단어장에 자동 저장</span>
+                        </label>
                     </div>
                 </div>
 
