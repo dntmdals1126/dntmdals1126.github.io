@@ -1439,11 +1439,17 @@
             
             const data = snap.data();
             
-            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모 (문자열 "true"도 관리자로 인정)
-            if (data.isAdmin === true || data.isAdmin === "true") {
-                // 관리자 코드이므로 아무것도 업데이트하지 않고 통과!
+            // 🚨 추적용 로그: Firebase에서 가져온 데이터를 콘솔에 출력합니다.
+            console.log("🚀 [디버그] Firebase 데이터:", data);
+            
+            // 어떤 형태의 true(불리언, 문자열, 대문자 TRUE 등)든 전부 관리자로 찰떡같이 인식하게 만듭니다.
+            const isAdminCode = (data.isAdmin === true || String(data.isAdmin).toLowerCase() === "true");
+
+            if (isAdminCode) {
+                console.log("👑 관리자 코드 확인됨! 사용 횟수 무제한 패스.");
+                // 관리자는 여기서 아무것도 안 하고 놔둡니다.
             } else {
-                // 일반 코드일 경우
+                console.log("👤 일반 코드 확인됨! 사용 처리 진행.");
                 if (data.used === true) throw "Used";
                 transaction.update(docRef, { 
                     used: true, 
@@ -1587,16 +1593,22 @@ window.verifyAccessCode = async () => {
         await runTransaction(db, async (transaction) => {
             const docRef = doc(db, "access_codes", code);
             const snap = await transaction.get(docRef);
-            
-            if (!snap.exists()) throw "Invalid";
+
+            if (!snap.exists()) throw "Invalid"; 
             
             const data = snap.data();
             
-            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모 (문자열 "true"도 관리자로 인정)
-            if (data.isAdmin === true || data.isAdmin === "true") {
-                // 관리자 코드이므로 아무것도 업데이트하지 않고 통과!
+            // 🚨 추적용 로그: Firebase에서 가져온 데이터를 콘솔에 출력합니다.
+            console.log("🚀 [디버그] Firebase 데이터:", data);
+            
+            // 어떤 형태의 true(불리언, 문자열, 대문자 TRUE 등)든 전부 관리자로 찰떡같이 인식하게 만듭니다.
+            const isAdminCode = (data.isAdmin === true || String(data.isAdmin).toLowerCase() === "true");
+
+            if (isAdminCode) {
+                console.log("👑 관리자 코드 확인됨! 사용 횟수 무제한 패스.");
+                // 관리자는 여기서 아무것도 안 하고 놔둡니다.
             } else {
-                // 일반 코드일 경우
+                console.log("👤 일반 코드 확인됨! 사용 처리 진행.");
                 if (data.used === true) throw "Used";
                 transaction.update(docRef, { 
                     used: true, 
