@@ -1451,7 +1451,7 @@
 
         // 인증 성공 이후 로직
         const usage = getSyncUsage();
-        usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+        usage.premiumExpiry = Date.now() + (100 * 24 * 60 * 60 * 1000);
         usage.isPremium = true;
         
         const state = window.getAppState();
@@ -1601,7 +1601,7 @@ window.verifyAccessCode = async () => {
         
         // 연장 성공 이후 로직
         const usage = getSyncUsage();
-        usage.premiumExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+        usage.premiumExpiry = Date.now() + (100 * 24 * 60 * 60 * 1000);
         usage.isPremium = true;
         
         const state = window.getAppState();
