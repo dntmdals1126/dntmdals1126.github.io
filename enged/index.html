@@ -983,6 +983,19 @@
                     <button id="mode-multi-btn" onclick="setQuizMode('multiple')" class="flex-1 text-xs font-bold py-1.5 rounded-md text-text-dim hover:text-text-main hover:bg-[var(--glass-highlight)] transition-all duration-300">객관식</button>
                 </div>
 
+                <div class="flex bg-[var(--glass-surface)] border border-[var(--glass-border)] rounded-lg p-1 gap-1 w-[200px] mx-auto mb-2">
+                    </div>
+
+                <div class="flex items-center justify-center mt-2 mb-4">
+                    <label class="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity group">
+                        <div class="relative inline-flex items-center shrink-0">
+                            <input type="checkbox" id="setting-auto-save" class="sr-only peer" onchange="toggleAutoSaveSetting(this)">
+                            <div class="w-8 h-4 bg-gray-500/40 rounded-full peer peer-checked:bg-[var(--sub-accent)] transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-4 shadow-inner"></div>
+                        </div>
+                        <span class="text-[12px] font-medium text-text-dim group-hover:text-text-main transition-colors select-none">틀린 단어 단어장에 자동 저장</span>
+                    </label>
+                </div>
+
                 <div id="quiz-active-screen">
                     <!-- 문제 영역 -->
                     <div class="section-card mb-3 min-h-[140px] flex flex-col justify-center items-center text-center relative">
@@ -2098,6 +2111,11 @@
             saveData();
         }
 
+        function toggleAutoSaveSetting(el) {
+            appState.autoSaveMistakes = el.checked;
+            saveData(true);
+        }
+
         // === 플래시카드 Tinder 스와이프 기능 ===
         let isDragging = false;
         let isScrolling = false;
@@ -2400,7 +2418,8 @@
             autoSyncEnabled: false,
             lastLoginDate: "",
             streakCount: 0,
-            mistakeCount: {}
+            mistakeCount: {},
+            autoSaveMistakes: true
         };
         
         let listFilterMode = 'all'; 
@@ -2479,6 +2498,9 @@
             const autoRemoveCheck = document.getElementById('setting-auto-remove');
             if(autoRemoveCheck) autoRemoveCheck.checked = appState.autoRemoveSaved;
             
+            const autoSaveCheck = document.getElementById('setting-auto-save');
+            if(autoSaveCheck) autoSaveCheck.checked = appState.autoSaveMistakes;
+            
             const autoSyncCheckbox = document.getElementById('setting-auto-sync');
             if (autoSyncCheckbox) autoSyncCheckbox.checked = appState.autoSyncEnabled || false;
             if (appState.autoSyncEnabled && window.startAutoSync) window.startAutoSync();
@@ -2507,6 +2529,7 @@
                     if (parsed.autoSyncEnabled === undefined) parsed.autoSyncEnabled = false;
                     if (parsed.streakCount === undefined) parsed.streakCount = 0;
                     if (parsed.mistakeCount === undefined) parsed.mistakeCount = {};
+                    if (parsed.autoSaveMistakes === undefined) parsed.autoSaveMistakes = true;
                     if (parsed.lastLoginDate === undefined) parsed.lastLoginDate = "";
                     appState = { ...appState, ...parsed };
                 } catch(e) {}
@@ -3262,7 +3285,7 @@
                 saveData();
             } else {
                 feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
-                if (!appState.notebook.includes(termToSave)) {
+                if (appState.autoSaveMistakes && !appState.notebook.includes(termToSave)) {
                     appState.notebook.push(termToSave);
                     saveData();
                 }
