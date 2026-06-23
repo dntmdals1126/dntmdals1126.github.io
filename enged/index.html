@@ -1439,8 +1439,11 @@
             
             const data = snap.data();
             
-            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모
-            if (data.isAdmin !== true) {
+            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모 (문자열 "true"도 관리자로 인정)
+            if (data.isAdmin === true || data.isAdmin === "true") {
+                // 관리자 코드이므로 아무것도 업데이트하지 않고 통과!
+            } else {
+                // 일반 코드일 경우
                 if (data.used === true) throw "Used";
                 transaction.update(docRef, { 
                     used: true, 
@@ -1589,8 +1592,11 @@ window.verifyAccessCode = async () => {
             
             const data = snap.data();
             
-            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모
-            if (data.isAdmin !== true) {
+            // 관리자 코드가 아닐 때만 사용 여부 체크 및 소모 (문자열 "true"도 관리자로 인정)
+            if (data.isAdmin === true || data.isAdmin === "true") {
+                // 관리자 코드이므로 아무것도 업데이트하지 않고 통과!
+            } else {
+                // 일반 코드일 경우
                 if (data.used === true) throw "Used";
                 transaction.update(docRef, { 
                     used: true, 
