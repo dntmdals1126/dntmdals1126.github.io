@@ -1291,6 +1291,7 @@
         let app, auth, db;
         let currentUser = null;
         let isDirty = false;
+        window.setDirty = (val) => { isDirty = val; };
         let manualSyncCooldown = false;
         let autoSyncInterval = null;
         let unsubSnapshot = null; 
