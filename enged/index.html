@@ -577,7 +577,6 @@
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
-            <!-- 하드코딩된 도메인 링크. 필요 시 href="/" 등으로 변경해 주세요. -->
             <a href="https://www.v1ctorym1n.kro.kr/enged/voca" class="tool-btn" title="Voca로 이동">
                 <i class="fa-solid fa-book text-sm"></i>
             </a>
@@ -1009,7 +1008,7 @@
                         <div id="quiz-hint-box" class="hidden w-full text-center mt-4 text-[14.5px] font-kor font-medium text-sub-accent"></div>
                     </div>
 
-                    <!-- 주관식 스펠링 컨테이너 -->
+                    <!-- 주관식 스펠링 컨테이너 (숫자 입력 지원) -->
                     <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
                         <div class="relative w-full shadow-sm rounded-2xl">
                             <!-- 정규식 수정: 숫자(0-9) 허용 -->
@@ -1067,14 +1066,17 @@
             <div class="flex justify-between items-center mb-4 px-1">
                 <h2 class="text-lg font-bold text-text-main font-kor">단어장 <span id="nb-count" class="text-sm font-normal text-text-dim ml-1">(0)</span></h2>
                 <div class="flex items-center gap-2">
-                    <select id="notebook-sort" onchange="renderNotebook()" class="bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main text-xs font-bold rounded-md px-2 py-1.5 outline-none focus:border-primary shadow-sm cursor-pointer">
-                        <option value="newest">최신순</option>
-                        <option value="oldest">오래된순</option>
-                        <option value="az">A - Z</option>
-                        <option value="za">Z - A</option>
-                    </select>
-                    <button onclick="clearNotebook()" class="text-xs btn btn-sec h-8 px-3 font-sans">
-                        비우기
+                    <div class="relative inline-block">
+                        <select id="notebook-sort" onchange="renderNotebook()" class="appearance-none bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main text-xs font-bold rounded-xl h-8 pl-3 pr-7 outline-none focus:border-[var(--primary)] shadow-sm cursor-pointer hover:bg-[var(--glass-highlight)] transition-colors">
+                            <option value="newest" class="bg-[var(--bg-dark)] text-text-main">최신순</option>
+                            <option value="oldest" class="bg-[var(--bg-dark)] text-text-main">오래된순</option>
+                            <option value="az" class="bg-[var(--bg-dark)] text-text-main">A - Z</option>
+                            <option value="za" class="bg-[var(--bg-dark)] text-text-main">Z - A</option>
+                        </select>
+                        <i class="fa-solid fa-caret-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[12px] text-text-dim pointer-events-none"></i>
+                    </div>
+                    <button onclick="clearNotebook()" class="h-8 px-3 text-xs font-bold bg-[var(--glass-surface)] border border-[var(--glass-border)] text-text-main rounded-xl hover:bg-[var(--glass-highlight)] transition-colors shadow-sm flex items-center justify-center">
+                        <i class="fa-solid fa-trash-can mr-1.5 opacity-70"></i> 비우기
                     </button>
                 </div>
             </div>
@@ -1452,7 +1454,6 @@
                     if (!snap.exists()) throw "Invalid"; 
                     
                     const data = snap.data();
-                    console.log("🚀 [디버그] Firebase 데이터:", data);
                     
                     const isAdminCode = (data.isAdmin === true || String(data.isAdmin).toLowerCase() === "true");
 
@@ -1607,7 +1608,6 @@
                     if (!snap.exists()) throw "Invalid"; 
                     
                     const data = snap.data();
-                    console.log("🚀 [디버그] Firebase 데이터:", data);
                     
                     const isAdminCode = (data.isAdmin === true || String(data.isAdmin).toLowerCase() === "true");
 
@@ -2584,6 +2584,7 @@
                 } catch(e) {}
             }
             
+            // 기존 사용자들을 위한 데이터 마이그레이션(변환)
             const oldSyncCode1 = localStorage.getItem('syncCode');
             const oldSyncCode2 = localStorage.getItem('engedSyncCode');
             if (!appState.syncCode) {
@@ -2601,6 +2602,7 @@
                 localStorage.removeItem('engedSyncUsage'); 
             }
 
+            // Access 권한이 D-0으로 뜨는 현상 방지 (과거 데이터 호환)
             if (appState.premiumExpiry) {
                 appState.syncUsage = appState.syncUsage || {};
                 appState.syncUsage.premiumExpiry = appState.premiumExpiry;
@@ -2608,15 +2610,18 @@
                 migrated = true;
             } else if (appState.isPremium && (!appState.syncUsage || !appState.syncUsage.premiumExpiry)) {
                 appState.syncUsage = appState.syncUsage || {};
+                // 과거 무제한 권한이었던 사람들에게 일단 100일 복구
                 appState.syncUsage.premiumExpiry = Date.now() + (100 * 24 * 60 * 60 * 1000);
                 migrated = true;
             }
 
+            // 구버전에서 syncUsage 자체가 없는 경우 구조 생성
             if (!appState.syncUsage) {
                 appState.syncUsage = { date: "", count: 0, premiumExpiry: 0 };
                 migrated = true;
             }
 
+            // 마이그레이션이 발생했다면 즉시 저장하여 데이터 유실 방지
             if (migrated) {
                 localStorage.setItem('engVocabState', JSON.stringify(appState));
             }
@@ -3608,7 +3613,6 @@
             }
         }
 
-        // === 맞춤형 도움말 모달(팝업) 기능 ===
         function openHelpModal(type) {
             const modal = document.getElementById('helpModal');
             const contentBox = document.getElementById('helpModalDynamicContent');
