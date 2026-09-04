@@ -972,6 +972,17 @@
                                         <span><i class="fa-solid fa-fire text-orange-500 w-5 text-center mr-2"></i> 취약 단어</span>
                                         <i id="quiz-filter-check-weak" class="fa-solid fa-check text-sub-accent hidden"></i>
                                     </button>
+                                    
+                                    <!-- 출제 범위 설정 -->
+                                    <div class="px-4 py-2 border-t border-[var(--glass-border)] mt-1">
+                                        <div class="text-[11px] text-text-dim mb-1.5 font-bold">출제 범위 (A-Z 정렬 기준)</div>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" id="quiz-range-start" placeholder="시작" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-md px-2 py-1.5 text-[11px] font-bold text-text-main text-center outline-none focus:border-primary/50" min="1">
+                                            <span class="text-text-dim text-xs">~</span>
+                                            <input type="number" id="quiz-range-end" placeholder="끝" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-md px-2 py-1.5 text-[11px] font-bold text-text-main text-center outline-none focus:border-primary/50" min="1">
+                                        </div>
+                                        <button onclick="applyQuizRange()" class="w-full mt-2 text-[11px] font-bold bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-text-main py-1.5 rounded-md hover:bg-[var(--glass-border)] transition-colors">범위 적용하여 재시작</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1013,24 +1024,15 @@
                     <!-- 다중선택 객관식 -->
                     <div id="quiz-options" class="hidden grid grid-cols-1 gap-3.5 mt-4 mb-6 anim-fade-in">
                         <!-- JS Generated -->
-                                    <button onclick="setQuizFilter('weakWords');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
-                                        <span><i class="fa-solid fa-fire text-orange-500 w-5 text-center mr-2"></i> 취약 단어</span>
-                                        <i id="quiz-filter-check-weak" class="fa-solid fa-check text-sub-accent hidden"></i>
-                                    </button>
-                                    
-                                    <!-- 출제 범위 설정 -->
-                                    <div class="px-4 py-2 border-t border-[var(--glass-border)] mt-1">
-                                        <div class="text-[11px] text-text-dim mb-1.5 font-bold">출제 범위 (A-Z 정렬 기준)</div>
-                                        <div class="flex items-center gap-2">
-                                            <input type="number" id="quiz-range-start" placeholder="시작" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-md px-2 py-1.5 text-[11px] font-bold text-text-main text-center outline-none focus:border-primary/50" min="1">
-                                            <span class="text-text-dim text-xs">~</span>
-                                            <input type="number" id="quiz-range-end" placeholder="끝" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-md px-2 py-1.5 text-[11px] font-bold text-text-main text-center outline-none focus:border-primary/50" min="1">
-                                        </div>
-                                        <button onclick="applyQuizRange()" class="w-full mt-2 text-[11px] font-bold bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-text-main py-1.5 rounded-md hover:bg-[var(--glass-border)] transition-colors">범위 적용하여 재시작</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+
+                    <!-- 피드백 메시지 (정답/오답) -->
+                    <div id="quiz-feedback" class="text-center mb-6 min-h-[30px] font-sans font-bold text-lg hidden anim-fade-in"></div>
+
+                    <!-- 다음 문제 / 종료 버튼 -->
+                    <div id="quiz-actions" class="hidden flex justify-center gap-3 anim-fade-in">
+                        <button onclick="finishQuiz()" class="btn btn-sec flex-1">종료</button>
+                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1">다음 문제</button>
                     </div>
                 </div>
 
