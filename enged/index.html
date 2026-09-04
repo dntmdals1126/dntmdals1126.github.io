@@ -574,6 +574,7 @@
                 <i class="fa-solid fa-rotate"></i>
             </button>
             
+            <!-- GitHub Pages 도메인 변경 시 이 부분을 상대 경로("/")로 변경 고려 -->
             <a href="https://www.v1ctorym1n.kro.kr" class="tool-btn" title="홈으로 이동">
                 <i class="fa-solid fa-house text-sm"></i>
             </a>
@@ -991,7 +992,7 @@
                             문제 내용이 여기에 표시됩니다.
                         </p>
                         <!-- 힌트 버튼 -->
-                        <button onclick="showQuizHint()" class="absolute top-3 right-3 text-[11px] text-sub-accent opacity-80 hover:opacity-100 font-bold px-2 py-1 rounded-md bg-sub-accent-bg transition flex items-center gap-1.5">
+                        <button id="quiz-hint-btn" onclick="toggleQuizHint()" class="absolute top-3 right-3 text-[11px] text-sub-accent opacity-80 hover:opacity-100 font-bold px-2 py-1 rounded-md bg-sub-accent-bg transition flex items-center gap-1.5">
                             <i class="fa-regular fa-lightbulb"></i> 힌트
                         </button>
                         <!-- 힌트 텍스트 박스 (해설 한글 뜻) -->
@@ -1001,8 +1002,8 @@
                     <!-- 주관식 스펠링 컨테이너 디자인 개선 -->
                     <div id="quiz-spelling-container" class="w-full mt-4 mb-4 anim-fade-in">
                         <div class="relative w-full shadow-sm rounded-2xl">
-                            <!-- 영어만 입력되도록 oninput 정규식 유지 -->
-                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/40 focus:bg-[var(--glass-highlight)] transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <!-- 영어 및 숫자만 입력되도록 oninput 정규식 유지 -->
+                            <input type="text" id="quiz-spelling-input" oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s\-\'\.\,]/g, '')" class="w-full bg-[var(--glass-surface)] border-2 border-[var(--glass-border)] rounded-2xl py-4 px-5 text-center text-[19px] font-medium text-text-main focus:border-primary/40 focus:bg-[var(--glass-highlight)] transition-all outline-none" placeholder="답안을 입력하세요" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button onclick="checkSpellingAnswer()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
                                 <i class="fa-solid fa-check"></i>
                             </button>
@@ -1012,24 +1013,24 @@
                     <!-- 다중선택 객관식 -->
                     <div id="quiz-options" class="hidden grid grid-cols-1 gap-3.5 mt-4 mb-6 anim-fade-in">
                         <!-- JS Generated -->
-                    </div>
-
-                    <div id="quiz-feedback" class="hidden mt-2 mb-2 p-3 rounded-xl text-center font-bold text-text-main bg-[var(--glass-highlight)] border border-[var(--glass-border)] font-sans"></div>
-
-                    <!-- 하단 액션버튼 여백 넉넉하게 -->
-                    <div id="quiz-actions" class="hidden flex justify-center gap-3 w-full max-w-[240px] mx-auto mt-4 anim-fade-in">
-                        <button onclick="finishQuiz()" class="btn btn-sec flex-1 justify-center font-sans text-[14.5px] font-bold h-10">END</button>
-                        <button onclick="nextQuizQuestion()" class="btn btn-pri flex-1 justify-center font-sans text-[14.5px] font-bold h-10">NEXT</button>
-                    </div>
-                    
-                    <div class="flex items-center justify-center mt-8 mb-2">
-                        <label class="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity group">
-                            <div class="relative inline-flex items-center shrink-0">
-                                <input type="checkbox" id="setting-auto-save" class="sr-only peer" onchange="toggleAutoSaveSetting(this)">
-                                <div class="w-8 h-4 bg-gray-500/40 rounded-full peer peer-checked:bg-[var(--sub-accent)] transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-4 shadow-inner"></div>
+                                    <button onclick="setQuizFilter('weakWords');" class="flex items-center justify-between w-full px-4 py-2.5 text-text-main hover:bg-[var(--glass-highlight)] transition-colors">
+                                        <span><i class="fa-solid fa-fire text-orange-500 w-5 text-center mr-2"></i> 취약 단어</span>
+                                        <i id="quiz-filter-check-weak" class="fa-solid fa-check text-sub-accent hidden"></i>
+                                    </button>
+                                    
+                                    <!-- 출제 범위 설정 -->
+                                    <div class="px-4 py-2 border-t border-[var(--glass-border)] mt-1">
+                                        <div class="text-[11px] text-text-dim mb-1.5 font-bold">출제 범위 (A-Z 정렬 기준)</div>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" id="quiz-range-start" placeholder="시작" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-md px-2 py-1.5 text-[11px] font-bold text-text-main text-center outline-none focus:border-primary/50" min="1">
+                                            <span class="text-text-dim text-xs">~</span>
+                                            <input type="number" id="quiz-range-end" placeholder="끝" class="w-full bg-[var(--bg-dark)] border border-[var(--glass-border)] rounded-md px-2 py-1.5 text-[11px] font-bold text-text-main text-center outline-none focus:border-primary/50" min="1">
+                                        </div>
+                                        <button onclick="applyQuizRange()" class="w-full mt-2 text-[11px] font-bold bg-[var(--glass-highlight)] border border-[var(--glass-border)] text-text-main py-1.5 rounded-md hover:bg-[var(--glass-border)] transition-colors">범위 적용하여 재시작</button>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="text-[12px] font-medium text-text-dim group-hover:text-text-main transition-colors select-none">틀린 단어 단어장에 자동 저장</span>
-                        </label>
+                        </div>
                     </div>
                 </div>
 
@@ -2463,6 +2464,8 @@ window.verifyAccessCode = async () => {
         let listFilterMode = 'all'; 
         let fcFilterMode = 'all';
         let quizFilterMode = 'all'; 
+        let quizRange = { start: null, end: null }; // 퀴즈 출제 범위 추가
+        let previousQuizTerm = null; // 방금 출제된 문제 방지용
 
         const fontClasses = [
             { term: "text-[16px] lg:text-[18px]", koTerm: "text-[12px]", def: "text-[12px] sm:text-[13.5px]", koDef: "text-[12px] text-gray-500" },
@@ -3160,8 +3163,31 @@ window.verifyAccessCode = async () => {
             startQuiz();
         }
 
+        function applyQuizRange() {
+            const s = parseInt(document.getElementById('quiz-range-start').value);
+            const e = parseInt(document.getElementById('quiz-range-end').value);
+            
+            quizRange.start = isNaN(s) ? null : s;
+            quizRange.end = isNaN(e) ? null : e;
+            
+            closeMenu('quizFilterMenu');
+            appState.quizState = { asked: [], score: 0 };
+            saveData();
+            startQuiz();
+        }
+
         function getQuizFilteredWords() {
-            return allWords.filter(word => {
+            let baseWords = [...allWords];
+            
+            // A-Z 정렬 기준 범위 적용
+            if (quizRange.start !== null || quizRange.end !== null) {
+                baseWords.sort((a, b) => a.term.localeCompare(b.term));
+                const startIdx = quizRange.start !== null ? Math.max(0, quizRange.start - 1) : 0;
+                const endIdx = quizRange.end !== null ? Math.min(baseWords.length, quizRange.end) : baseWords.length;
+                baseWords = baseWords.slice(startIdx, endIdx);
+            }
+
+            return baseWords.filter(word => {
                 if (quizFilterMode === 'hideMemorized' && appState.memorized[word.term]) return false;
                 if (quizFilterMode === 'onlySaved' && !appState.notebook.includes(word.term)) return false;
                 if (quizFilterMode === 'onlyMemorized' && !appState.memorized[word.term]) return false;
@@ -3187,11 +3213,19 @@ window.verifyAccessCode = async () => {
             }
         }
 
-        function showQuizHint() {
+        function toggleQuizHint() {
             const hintBox = document.getElementById('quiz-hint-box');
-            hintBox.innerHTML = quizCurrentQ.koDef;
-            hintBox.classList.remove('hidden');
-            hintBox.classList.add('anim-fade-in');
+            const hintBtn = document.getElementById('quiz-hint-btn');
+            if (hintBox.classList.contains('hidden')) {
+                hintBox.innerHTML = quizCurrentQ.koDef;
+                hintBox.classList.remove('hidden');
+                hintBox.classList.add('anim-fade-in');
+                hintBtn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> 가리기';
+            } else {
+                hintBox.classList.add('hidden');
+                hintBox.classList.remove('anim-fade-in');
+                hintBtn.innerHTML = '<i class="fa-regular fa-lightbulb"></i> 힌트';
+            }
         }
 
         function startQuiz() {
@@ -3232,6 +3266,9 @@ window.verifyAccessCode = async () => {
             document.getElementById('quiz-hint-box').classList.add('hidden');
             document.getElementById('quiz-hint-box').classList.remove('anim-fade-in');
             
+            const hintBtn = document.getElementById('quiz-hint-btn');
+            if(hintBtn) hintBtn.innerHTML = '<i class="fa-regular fa-lightbulb"></i> 힌트';
+            
             if (!Array.isArray(appState.quizState.asked)) appState.quizState.asked = [];
             
             let filteredWords = getQuizFilteredWords();
@@ -3244,21 +3281,33 @@ window.verifyAccessCode = async () => {
                 if (unasked.length === 0) return;
             }
 
+            let candidateUnasked = unasked;
+            if (candidateUnasked.length > 1 && previousQuizTerm) {
+                candidateUnasked = candidateUnasked.filter(w => w.term !== previousQuizTerm);
+            }
+            if (candidateUnasked.length === 0) candidateUnasked = unasked; 
+
             if (appState.quizState.asked.length > 0 && Math.random() < 0.25) {
                 let askedInFilter = appState.quizState.asked.filter(term => filteredWords.some(w => w.term === term));
+                if (askedInFilter.length > 1 && previousQuizTerm) {
+                    askedInFilter = askedInFilter.filter(term => term !== previousQuizTerm);
+                }
+                
                 if (askedInFilter.length > 0) {
                     quizCurrentQ = allWords.find(w => w.term === askedInFilter[Math.floor(Math.random() * askedInFilter.length)]);
                     isRepeat = true;
                 } else {
-                    quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                    quizCurrentQ = candidateUnasked[Math.floor(Math.random() * candidateUnasked.length)];
                     appState.quizState.asked.push(quizCurrentQ.term);
                     saveData();
                 }
             } else {
-                quizCurrentQ = unasked[Math.floor(Math.random() * unasked.length)];
+                quizCurrentQ = candidateUnasked[Math.floor(Math.random() * candidateUnasked.length)];
                 appState.quizState.asked.push(quizCurrentQ.term);
                 saveData();
             }
+            
+            previousQuizTerm = quizCurrentQ.term;
             
             document.getElementById('quiz-progress').innerText = `${appState.quizState.asked.length} / ${filteredWords.length}`;
 
@@ -3316,17 +3365,23 @@ window.verifyAccessCode = async () => {
 
         function processQuizResult(isCorrect, termForFeedback, termToSave) {
             const feedback = document.getElementById('quiz-feedback');
-            if (isCorrect) {
-                appState.quizState.score++;
-                document.getElementById('quiz-score').innerText = appState.quizState.score;
-                feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
-                saveData();
-            } else {
-                feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
-                if (appState.autoSaveMistakes && !appState.notebook.includes(termToSave)) {
-                    appState.notebook.push(termToSave);
+            try {
+                if (isCorrect) {
+                    appState.quizState.score++;
+                    document.getElementById('quiz-score').innerText = appState.quizState.score;
+                    feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
                     saveData();
+                } else {
+                    feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
+                    if (appState.autoSaveMistakes && !appState.notebook.includes(termToSave)) {
+                        appState.notebook.push(termToSave);
+                        saveData();
+                    }
                 }
+            } catch(e) {
+                console.error(e);
+                if (isCorrect) feedback.innerHTML = '<span class="text-green-500">Correct!</span>';
+                else feedback.innerHTML = `<div class="text-red-500 font-bold text-lg mb-1">Wrong!</div><div class="text-text-dim text-[15px] font-medium">Answer: <span class="text-red-500 font-bold">${termForFeedback}</span></div>`;
             }
         }
 
@@ -3354,7 +3409,7 @@ window.verifyAccessCode = async () => {
                 btnElement.querySelector('div').classList.add('bg-red-500', 'text-white');
                 btnElement.querySelector('div').innerHTML = '<i class="fa-solid fa-xmark text-[13px]"></i>';
                 appState.mistakeCount[correct.term] = (appState.mistakeCount[correct.term] || 0) + 1;
-                saveData(true);
+                try { saveData(true); } catch(e) {}
                 processQuizResult(false, correct.term, correct.term);
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
@@ -3365,7 +3420,14 @@ window.verifyAccessCode = async () => {
             const inputEl = document.getElementById('quiz-spelling-input');
             const answer = inputEl.value.trim().toLowerCase();
             
-            const correctTerm = quizCurrentQ.term.toLowerCase().replace(/\s*\(.*?\)\s*/g, '').trim();
+            const correctTermMain = quizCurrentQ.term.toLowerCase().replace(/\s*\(.*?\)\s*/g, '').trim();
+            
+            let correctTermInParenthesis = null;
+            const match = quizCurrentQ.term.match(/\((.*?)\)/);
+            if (match) {
+                correctTermInParenthesis = match[1].trim().toLowerCase();
+            }
+            
             const feedback = document.getElementById('quiz-feedback');
             
             if(!answer) return;
@@ -3373,13 +3435,13 @@ window.verifyAccessCode = async () => {
             inputEl.disabled = true;
             feedback.classList.remove('hidden');
             
-            if (answer === correctTerm) {
+            if (answer === correctTermMain || (correctTermInParenthesis && answer === correctTermInParenthesis)) {
                 inputEl.classList.add('border-green-500', 'text-green-500');
                 processQuizResult(true, quizCurrentQ.term, quizCurrentQ.term);
             } else {
                 inputEl.classList.add('border-red-500', 'text-red-500');
                 appState.mistakeCount[quizCurrentQ.term] = (appState.mistakeCount[quizCurrentQ.term] || 0) + 1;
-                saveData(true);
+                try { saveData(true); } catch(e) {}
                 processQuizResult(false, quizCurrentQ.term, quizCurrentQ.term);
             }
             document.getElementById('quiz-actions').classList.remove('hidden');
